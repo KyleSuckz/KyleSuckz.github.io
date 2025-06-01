@@ -1,6 +1,6 @@
 // Ensure Firebase is loaded before initializing
 if (typeof firebase === 'undefined') {
-  console.error('Firebase not loaded. Ensure Firebase scripts are included in index2.html');
+  console.error('Firebase not loaded. Ensure Firebase scripts are included in index2.html.');
 } else {
   // Firebase configuration (replace with your actual config)
   const firebaseConfig = {
@@ -24,7 +24,7 @@ if (typeof firebase === 'undefined') {
 
     preload() {
       console.log('BootScene: Starting preload');
-      // Load assets (adjust paths if different)
+      // Load assets (replace with your actual asset keys and paths)
       this.load.image('city', 'assets/city.png');
       this.load.image('player', 'assets/player.png');
       this.load.image('car', 'assets/car.png');
@@ -34,6 +34,7 @@ if (typeof firebase === 'undefined') {
       console.log('BootScene: Create called, starting MenuScene');
       this.scene.start('MenuScene');
     }
+  }
 
   class MenuScene extends Phaser.Scene {
     constructor() {
@@ -54,6 +55,7 @@ if (typeof firebase === 'undefined') {
         this.scene.start('GameScene');
       });
     }
+  }
 
   class GameScene extends Phaser.Scene {
     constructor() {
@@ -73,7 +75,7 @@ if (typeof firebase === 'undefined') {
       Object.values(this.players).forEach(player => player.destroy());
       this.players = {};
 
-      // Initialize player group
+      // Initialize player group with Arcade physics
       this.playerGroup = this.physics.add.group();
 
       // Clear Firebase players data (remove for multiplayer)
