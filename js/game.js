@@ -3,11 +3,31 @@ class BootScene extends Phaser.Scene {
         super({ key: 'BootScene' });
     }
     preload() {
-        this.load.image('city', 'assets/images/city_background.png');
-        this.load.spritesheet('player', 'assets/images/1920s_character.png', { frameWidth: 32, frameHeight: 48 });
-        this.load.image('car', 'assets/images/ford_model_t.png');
+        console.log('BootScene: Starting asset preload');
+        try {
+            this.load.image('city', 'assets/images/city_background.png');
+            this.load.spritesheet('player', 'assets/images/1920s_character.png', { frameWidth: 32, frameHeight: 48 });
+            this.load.image('car', 'assets/images/ford_model_t.png');
+        } catch (error) {
+            console.error('BootScene: Error loading assets:', error);
+        }
+
+        this.load.on('filecomplete', (key) => {
+            console.log(`BootScene: Loaded asset: ${key}`);
+        });
+        this.load.on('loaderror', (file) => {
+            console.error(`BootScene: Failed to load asset: ${file.key} at ${file.src}`);
+        });
+
+        // Ensure scene transitions even if assets fail
+        this.load.on('complete', () => {
+            console.log('BootScene: Preload complete');
+            this.scene.start('MenuScene');
+        });
     }
     create() {
+        // Fallback if preload doesn't trigger
+        console.log('BootScene: Create called, forcing MenuScene start');
         this.scene.start('MenuScene');
     }
 }
@@ -17,9 +37,16 @@ class MenuScene extends Phaser.Scene {
         super({ key: 'MenuScene' });
     }
     create() {
+        console.log('MenuScene: Creating');
+        if (!this.textures.exists('city')) {
+            this.add.text(100, 50, 'Error: Background image not loaded', { fontSize: '20px', color: '#f00' });
+        }
         this.add.text(100, 100, '1920s Bootlegger Mafia', { fontSize: '32px', color: '#fff' });
         this.add.text(100, 200, 'Click to Start', { fontSize: '24px', color: '#fff' }).setInteractive()
-            .on('pointerdown', () => this.scene.start('GameScene'));
+            .on('pointerdown', () => {
+                console.log('MenuScene: Starting GameScene');
+                this.scene.start('GameScene');
+            });
     }
 }
 
@@ -28,12 +55,25 @@ class GameScene extends Phaser.Scene {
         super({ key: 'GameScene' });
     }
     create() {
-        // Add background and static car
-        this.add.image(400, 300, 'city');
-        this.add.sprite(200, 200, 'car');
+        console.log('GameScene: Creating');
+        // Add background or fallback
+        if (this.textures.exists('city')) {
+            this.add.image(400, 300, 'city');
+        } else {
+            this.add.text(100, 50, 'Error: Background image not loaded', { fontSize: '20px', color: '#f00' });
+        }
+
+        // Add car or fallback
+        if (this.textures.exists('car')) {
+            this.add.sprite(200, 200, 'car');
+        } else {
+            this.add.text(200, 200, 'Car', { fontSize: '16px', color: '#f00' });
+        }
 
         // Create player sprite
-        this.player = this.add.sprite(100, 100, 'player');
+        this.player = this.textures.exists('player')
+            ? this.add.sprite(100, 100, 'player')
+            : this.add.text(100, 100, 'Player', { fontSize: '16px', color: '#f00' });
         this.player.id = 'player_' + Math.random().toString(36).substr(2, 9);
 
         // Other players' sprites
@@ -43,15 +83,20 @@ class GameScene extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
 
         // Initialize localStorage for players
-        if (!localStorage.getItem('mafia_players')) {
-            localStorage.setItem('mafia_players', JSON.stringify({}));
+        try {
+            if (!localStorage.getItem('mafia_players')) {
+                localStorage.setItem('mafia_players', JSON.stringify({}));
+            }
+        } catch (error) {
+            console.error('GameScene: Error initializing localStorage:', error);
         }
 
         // Update localStorage with this player
         this.updatePlayerStorage();
 
-        // Listen for storage changes (from other tabs)
+        // Listen for storage changes
         window.addEventListener('storage', () => {
+            console.log('GameScene: Storage event detected');
             this.updateOtherPlayers();
         });
 
@@ -78,35 +123,65 @@ class GameScene extends Phaser.Scene {
         this.player.x = Phaser.Math.Clamp(this.player.x, 0, 800);
         this.player.y = Phaser.Math.Clamp(this.player.y, 0, 600);
 
-        // Update localStorage with new position
+        // Update localStorage
         this.updatePlayerStorage();
     }
     updatePlayerStorage() {
-        let players = JSON.parse(localStorage.getItem('mafia_players'));
-        players[this.player.id] = { x: this.player.x, y: this.player.y };
-        localStorage.setItem('mafia_players', JSON.stringify(players));
-        console.log(`Updated player ${this.player.id} at (${this.player.x}, ${this.player.y})`);
+        try {
+            let players = JSON.parse(localStorage.getItem('mafia_players'));
+            players[this.player.id] = { x: this.player.x, y: this.player.y };
+            localStorage.setItem('mafia_players', JSON.stringify(players));
+            console.log(`GameScene: Updated player ${this.player.id} at (${this.player.x}, ${this.player.y})`);
+        } catch (error) {
+            console.error('GameScene: Error updating localStorage:', error);
+        }
     }
     updateOtherPlayers() {
-        let players = JSON.parse(localStorage.getItem('mafia_players'));
-        for (let id in players) {
-            if (id !== this.player.id) {
-                if (!this.otherPlayers[id]) {
-                    this.otherPlayers[id] = this.add.sprite(players[id].x, players[id].y, 'player');
-                    this.otherPlayers[id].id = id;
-                    console.log(`Added player ${id} at (${players[id].x}, ${players[id].y})`);
-                } else {
-                    this.otherPlayers[id].setPosition(players[id].x, players[id].y);
+        try {
+            let players = JSON.parse(localStorage.getItem('mafia_players'));
+            for (let id in players) {
+                if (id !== this.player.id) {
+                    if (!this.otherPlayers[id]) {
+                        this.otherPlayers[id] = this.textures.exists('player')
+                            ? this.add.sprite(players[id].x, players[id].y, 'player')
+                            : this.add.text(players[id].x, players[id].y, 'P', { fontSize: 16, color: '#f00' });
+                        this.otherPlayers[id].id = id;
+                        console.log(`GameScene: Added player ${id} at (${players[id].x}, ${players[id].y})`);
+                    } else {
+                        this.otherPlayers[id].setPosition(players[id].x, players[id].y);
+                    }
                 }
             }
-        }
-        // Remove players no longer in storage
-        for (let id in this.otherPlayers) {
-            if (!players[id]) {
-                this.otherPlayers[id].destroy();
-                delete this.otherPlayers[id];
-                console.log(`Removed player ${id}`);
+            for (let id in this.otherPlayers) {
+                if (!players[id]) {
+                    this.otherPlayers[id].destroy();
+                    delete this.otherPlayers[id];
+                    console.log(`GameScene: Removed player ${id}`);
+                }
             }
+        } catch (error) {
+            console.error('GameScene: Error updating other players:', error);
         }
     }
 }
+
+// Initialize Phaser game
+window.addEventListener('load', function() {
+    console.log('Initializing Phaser game');
+    try {
+        const config = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            parent: 'game-container',
+            scene: [BootScene, MenuScene, GameScene]
+        };
+        const game = new Phaser.Game(config);
+        console.log('Phaser game initialized successfully');
+    } catch (error) {
+        console.error('Error initializing Phaser game:', error);
+        // Fallback: show error on canvas
+        const div = document.getElementById('game-container');
+        div.innerHTML = '<p style="color: red; font-size: 20px;">Error: Failed to initialize game. Check console for details.</p>';
+    }
+});
