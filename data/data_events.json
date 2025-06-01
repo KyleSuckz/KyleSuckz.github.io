@@ -1,0 +1,14 @@
+{
+    "events": [
+        {
+            "name": "Police Raid",
+            "description": "The police are cracking down on bootlegging operations.",
+            "effect": "Increased risk of arrest for 7 days"
+        },
+        {
+            "name": "St. Valentine’s Day Massacre",
+            "description": "A gang war erupts in the city.",
+            "effect": "Opportunities to seize territories"
+        }
+    ]
+}
