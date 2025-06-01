@@ -1,6 +1,6 @@
 // Ensure Firebase is loaded before initializing
 if (typeof firebase === 'undefined') {
-  console.error('Firebase not loaded. Ensure Firebase scripts are included in index.html');
+  console.error('Firebase not loaded. Ensure Firebase scripts are included in index2.html');
 } else {
   // Firebase configuration (replace with your actual config)
   const firebaseConfig = {
