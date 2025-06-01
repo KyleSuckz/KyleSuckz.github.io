@@ -1,6 +1,3 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
-import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
-
 // Firebase configuration (replace with your actual config)
 const firebaseConfig = {
   apiKey: "your-api-key",
@@ -13,8 +10,8 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
 class BootScene extends Phaser.Scene {
   constructor() {
@@ -23,10 +20,10 @@ class BootScene extends Phaser.Scene {
 
   preload() {
     console.log('BootScene: Starting preload');
-    // Load assets
-    this.load.image('city', 'assets/city.png'); // Adjust path if different
-    this.load.image('player', 'assets/player.png'); // Adjust path if different
-    this.load.image('car', 'assets/car.png'); // Adjust path if different
+    // Load assets (adjust paths if different)
+    this.load.image('city', 'assets/city.png');
+    this.load.image('player', 'assets/player.png');
+    this.load.image('car', 'assets/car.png');
   }
 
   create() {
@@ -78,7 +75,7 @@ class GameScene extends Phaser.Scene {
     this.playerGroup = this.physics.add.group();
 
     // Clear Firebase players data (remove for multiplayer)
-    set(ref(db, 'players'), null).then(() => console.log('Firebase players cleared'));
+    db.ref('players').set(null).then(() => console.log('Firebase players cleared'));
 
     // Load players from Firebase
     this.loadPlayersFromFirebase();
@@ -105,7 +102,7 @@ class GameScene extends Phaser.Scene {
 
       // Only update if position changed
       if (newX !== player.lastX || newY !== player.lastY) {
-        this.updatePlayerPosition('player', player_7g9ysvc8d', newX);
+        this.updatePlayerPosition('player_7g9ysvc8d', newX, newY);
         player.lastX = newX;
         player.lastY = newY;
       }
@@ -114,7 +111,7 @@ class GameScene extends Phaser.Scene {
 
   addPlayer(id, x, y) {
     if (!this.players[id]) {
-      const player = this.add.sprite(x, y, 'player'); // Ensure 'player' asset exists
+      const player = this.add.sprite(x, y, 'player');
       this.playerGroup.add(player);
       this.players[id] = player;
       player.lastX = x;
@@ -129,18 +126,17 @@ class GameScene extends Phaser.Scene {
       player.setPosition(x, y);
       console.log(`GameScene: Updated player ${id} at (${x}, ${y})`);
       // Save to Firebase
-      set(ref(db, `players/${id}`), { x, y }).catch(error => {
+      db.ref(`players/${id}`).set({ x, y }).catch(error => {
         console.error('Firebase update error:', error);
       });
     }
   }
 
   loadPlayersFromFirebase() {
-    const playersRef = ref(db, 'players');
-    onValue(playersRef, (snapshot) => {
+    db.ref('players').on('value', (snapshot) => {
       const playersData = snapshot.val() || {};
       Object.entries(playersData).forEach(([id, data]) => {
-        if (!this.players[id] && id !== 'player_7g9ysvc8d') { // Avoid re-adding local player
+        if (!this.players[id] && id !== 'player_7g9ysvc8d') {
           this.addPlayer(id, data.x, data.y);
         }
       });
