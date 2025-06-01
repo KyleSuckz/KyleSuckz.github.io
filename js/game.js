@@ -3,13 +3,14 @@ class BootScene extends Phaser.Scene {
         super({ key: 'BootScene' });
     }
     preload() {
-        console.log('BootScene: Starting asset preload');
+        console.log('BootScene: Starting preload');
+        // Load assets only if they exist
         try {
             this.load.image('city', 'assets/images/city_background.png');
             this.load.spritesheet('player', 'assets/images/1920s_character.png', { frameWidth: 32, frameHeight: 48 });
             this.load.image('car', 'assets/images/ford_model_t.png');
         } catch (error) {
-            console.error('BootScene: Error loading assets:', error);
+            console.error('BootScene: Error setting up asset loading:', error);
         }
 
         this.load.on('filecomplete', (key) => {
@@ -19,15 +20,22 @@ class BootScene extends Phaser.Scene {
             console.error(`BootScene: Failed to load asset: ${file.key} at ${file.src}`);
         });
 
-        // Ensure scene transitions even if assets fail
+        // Force transition to MenuScene after preload
         this.load.on('complete', () => {
-            console.log('BootScene: Preload complete');
+            console.log('BootScene: Preload complete, starting MenuScene');
             this.scene.start('MenuScene');
         });
+
+        // Fallback: start MenuScene if preload stalls
+        setTimeout(() => {
+            if (this.scene.isActive('BootScene')) {
+                console.warn('BootScene: Preload timeout, forcing MenuScene');
+                this.scene.start('MenuScene');
+            }
+        }, 5000);
     }
     create() {
-        // Fallback if preload doesn't trigger
-        console.log('BootScene: Create called, forcing MenuScene start');
+        console.log('BootScene: Create called, starting MenuScene');
         this.scene.start('MenuScene');
     }
 }
@@ -38,15 +46,15 @@ class MenuScene extends Phaser.Scene {
     }
     create() {
         console.log('MenuScene: Creating');
-        if (!this.textures.exists('city')) {
-            this.add.text(100, 50, 'Error: Background image not loaded', { fontSize: '20px', color: '#f00' });
-        }
-        this.add.text(100, 100, '1920s Bootlegger Mafia', { fontSize: '32px', color: '#fff' });
-        this.add.text(100, 200, 'Click to Start', { fontSize: '24px', color: '#fff' }).setInteractive()
+        this.add.text(100, 50, '1920s Bootlegger Mafia', { fontSize: '32px', color: '#fff' });
+        this.add.text(100, 150, 'Click to Start', { fontSize: '24px', color: '#fff' }).setInteractive()
             .on('pointerdown', () => {
                 console.log('MenuScene: Starting GameScene');
                 this.scene.start('GameScene');
             });
+        if (!this.textures.exists('city')) {
+            this.add.text(100, 250, 'Warning: Background image not loaded', { fontSize: '20px', color: '#f00' });
+        }
     }
 }
 
@@ -56,33 +64,34 @@ class GameScene extends Phaser.Scene {
     }
     create() {
         console.log('GameScene: Creating');
-        // Add background or fallback
+        // Background
         if (this.textures.exists('city')) {
             this.add.image(400, 300, 'city');
         } else {
-            this.add.text(100, 50, 'Error: Background image not loaded', { fontSize: '20px', color: '#f00' });
+            this.add.text(100, 50, 'No Background', { fontSize: '20px', color: '#f00' });
+            this.add.rectangle(400, 300, 800, 600, 0x000000, 0.5); // Fallback background
         }
 
-        // Add car or fallback
+        // Car
         if (this.textures.exists('car')) {
             this.add.sprite(200, 200, 'car');
         } else {
             this.add.text(200, 200, 'Car', { fontSize: '16px', color: '#f00' });
         }
 
-        // Create player sprite
+        // Player
         this.player = this.textures.exists('player')
             ? this.add.sprite(100, 100, 'player')
             : this.add.text(100, 100, 'Player', { fontSize: '16px', color: '#f00' });
         this.player.id = 'player_' + Math.random().toString(36).substr(2, 9);
 
-        // Other players' sprites
+        // Other players
         this.otherPlayers = {};
 
-        // Set up keyboard input
+        // Keyboard input
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        // Initialize localStorage for players
+        // Initialize localStorage
         try {
             if (!localStorage.getItem('mafia_players')) {
                 localStorage.setItem('mafia_players', JSON.stringify({}));
@@ -91,20 +100,20 @@ class GameScene extends Phaser.Scene {
             console.error('GameScene: Error initializing localStorage:', error);
         }
 
-        // Update localStorage with this player
+        // Update localStorage
         this.updatePlayerStorage();
 
-        // Listen for storage changes
+        // Storage event listener
         window.addEventListener('storage', () => {
             console.log('GameScene: Storage event detected');
             this.updateOtherPlayers();
         });
 
-        // Initial update of other players
+        // Initial other players update
         this.updateOtherPlayers();
     }
     update() {
-        // Handle player movement
+        // Player movement
         const speed = 5;
         if (this.cursors.left.isDown) {
             this.player.x -= speed;
@@ -119,7 +128,7 @@ class GameScene extends Phaser.Scene {
             this.player.y += speed;
         }
 
-        // Keep player within bounds
+        // Bounds
         this.player.x = Phaser.Math.Clamp(this.player.x, 0, 800);
         this.player.y = Phaser.Math.Clamp(this.player.y, 0, 600);
 
@@ -144,7 +153,7 @@ class GameScene extends Phaser.Scene {
                     if (!this.otherPlayers[id]) {
                         this.otherPlayers[id] = this.textures.exists('player')
                             ? this.add.sprite(players[id].x, players[id].y, 'player')
-                            : this.add.text(players[id].x, players[id].y, 'P', { fontSize: 16, color: '#f00' });
+                            : this.add.text(players[id].x, players[id].y, 'P', { fontSize: '16px', color: '#f00' });
                         this.otherPlayers[id].id = id;
                         console.log(`GameScene: Added player ${id} at (${players[id].x}, ${players[id].y})`);
                     } else {
@@ -165,9 +174,9 @@ class GameScene extends Phaser.Scene {
     }
 }
 
-// Initialize Phaser game
+// Initialize Phaser
 window.addEventListener('load', function() {
-    console.log('Initializing Phaser game');
+    console.log('Window loaded, initializing Phaser');
     try {
         const config = {
             type: Phaser.AUTO,
@@ -180,8 +189,7 @@ window.addEventListener('load', function() {
         console.log('Phaser game initialized successfully');
     } catch (error) {
         console.error('Error initializing Phaser game:', error);
-        // Fallback: show error on canvas
         const div = document.getElementById('game-container');
-        div.innerHTML = '<p style="color: red; font-size: 20px;">Error: Failed to initialize game. Check console for details.</p>';
+        div.innerHTML = '<p style="color: red; font-size: 20px;">Error: Failed to initialize game. Check console.</p>';
     }
 });
