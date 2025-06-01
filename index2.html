@@ -51,18 +51,5 @@
 </head>
 <body>
     <div id="game-container"></div>
-    <script>
-        window.addEventListener('load', function() {
-            const config = {
-                type: Phaser.AUTO,
-                width: 800,
-                height: 600,
-                parent: 'game-container',
-                scene: [BootScene, MenuScene, GameScene]
-            };
-            const game = new Phaser.Game(config);
-            console.log("Phaser game initialized.");
-        });
-    </script>
 </body>
 </html>
