@@ -1,30 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Image animation on page load
     const mooLeft = document.getElementById('moo-left');
     const mooRight = document.getElementById('moo-right');
     const topFrame = document.getElementById('top-frame');
 
-    // Create persistent placeholders
-    const leftPlaceholder = document.createElement('div');
-    leftPlaceholder.style.width = '150px';
-    leftPlaceholder.style.height = '150px';
-    leftPlaceholder.style.visibility = 'hidden';
-    leftPlaceholder.dataset.imageId = 'moo-left';
-
-    const rightPlaceholder = document.createElement('div');
-    rightPlaceholder.style.width = '150px';
-    rightPlaceholder.style.height = '150px';
-    rightPlaceholder.style.visibility = 'hidden';
-    rightPlaceholder.dataset.imageId = 'moo-right';
-
-    // Insert placeholders and images in correct order
-    topFrame.innerHTML = ''; // Clear topFrame
-    topFrame.appendChild(leftPlaceholder);
-    topFrame.appendChild(rightPlaceholder);
-    topFrame.insertBefore(mooLeft, rightPlaceholder);
-    topFrame.insertBefore(mooRight, rightPlaceholder.nextSibling);
-
-    // Slide images to middle and back
+    // Slide images to middle and back on page load
     setTimeout(() => {
         const halfWindowWidth = window.innerWidth / 2;
         mooLeft.style.transform = `translateX(${halfWindowWidth - 150}px)`; // Move left image to center
@@ -66,9 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Start jumping
         const jumpInterval = setInterval(() => {
             if (Date.now() - startTime > 5000) {
-                // Restore image
-                const placeholder = isLeftImage ? leftPlaceholder : rightPlaceholder;
-                topFrame.insertBefore(img, placeholder);
+                // Restore image to topFrame
+                topFrame.appendChild(img);
                 img.style.position = originalStyles.position;
                 img.style.left = isLeftImage ? '0' : 'auto';
                 img.style.right = isLeftImage ? 'auto' : '0';

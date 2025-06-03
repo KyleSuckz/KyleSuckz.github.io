@@ -1,43 +1,24 @@
-/* Custom styles for KyleSuckz website */
-.bg-shiny-black {
-    background-color: #1a1a1a; /* Shiny black background */
-}
-
-.text-silver-chrome {
-    color: #c0c0c0; /* Silver chrome text */
-}
-
-.border-silver-chrome {
-    border-color: #c0c0c0; /* Silver chrome border */
-}
-
-#top-frame, #left-frame, #right-frame, #bottom-frame {
-    background-color: #1a1a1a;
-}
-
-.menu-link {
-    color: #c0c0c0;
-    text-decoration: none;
-}
-
-.menu-link:hover {
-    text-decoration: underline;
-}
-
-img {
-    transition: all 0.5s ease;
+#top-frame {
+    position: relative;
+    height: 150px; /* Match image height */
 }
 
 #moo-left {
-    position: relative;
+    position: absolute;
     left: 0;
-    z-index: 100; /* Higher z-index for clickability */
-    pointer-events: auto; /* Ensure clickable */
+    top: 0;
+    width: 150px;
+    height: 150px;
+    z-index: 100;
+    pointer-events: auto;
 }
 
 #moo-right {
-    position: relative;
+    position: absolute;
     right: 0;
-    z-index: 100; /* Higher z-index for clickability */
-    pointer-events: auto; /* Ensure clickable */
+    top: 0;
+    width: 150px;
+    height: 150px;
+    z-index: 100;
+    pointer-events: auto;
 }
