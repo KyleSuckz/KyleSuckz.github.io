@@ -5,8 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Slide images to middle and back
     setTimeout(() => {
-        mooLeft.style.transform = 'translateX(calc(50vw - 150px))';
-        mooRight.style.transform = 'translateX(calc(-50vw + 150px))';
+        const halfWindowWidth = window.innerWidth / 2;
+        mooLeft.style.transform = `translateX(${halfWindowWidth - 150}px)`; // Move left image to center
+        mooRight.style.transform = `translateX(-${halfWindowWidth - 150}px)`; // Move right image to center
         setTimeout(() => {
             mooLeft.style.transform = 'translateX(0)';
             mooRight.style.transform = 'translateX(0)';
@@ -17,9 +18,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function jumpAround(img) {
         const startTime = Date.now();
         const originalPosition = img.style.transform || 'translateX(0)';
+        const originalLeft = img.style.left || '0';
+        const originalRight = img.style.right || '0';
         const jumpInterval = setInterval(() => {
             if (Date.now() - startTime > 5000) {
                 img.style.transform = originalPosition;
+                img.style.position = 'relative';
+                img.style.left = originalLeft;
+                img.style.right = originalRight;
+                img.style.top = '0';
                 clearInterval(jumpInterval);
                 return;
             }
@@ -30,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
             img.style.position = 'absolute';
             img.style.left = `${randomX}px`;
             img.style.top = `${randomY}px`;
+            img.style.right = 'auto';
         }, 200);
     }
 
