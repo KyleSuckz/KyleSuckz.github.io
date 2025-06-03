@@ -18,7 +18,7 @@ body {
     height: 150px;
     z-index: 100;
     pointer-events: auto;
-    transition: transform 0.5s ease; /* Smooth slide animation */
+    transition: transform 1s ease; /* Doubled duration for slide animation */
 }
 
 #moo-right {
@@ -29,7 +29,7 @@ body {
     height: 150px;
     z-index: 100;
     pointer-events: auto;
-    transition: transform 0.5s ease; /* Smooth slide animation */
+    transition: transform 1s ease; /* Doubled duration for slide animation */
 }
 
 #left-frame {
