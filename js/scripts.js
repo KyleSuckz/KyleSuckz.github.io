@@ -24,7 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
             left: img.style.left,
             right: img.style.right,
             top: img.style.top,
-            transform: img.style.transform || 'translateX(0)'
+            transform: img.style.transform || 'translateX(0)',
+            zIndex: img.style.zIndex || '10'
         };
 
         // Create a placeholder to maintain flexbox layout
@@ -41,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Move image to body for full window jumping
         document.body.appendChild(img);
         img.style.position = 'fixed';
-        img.style.zIndex = '1000'; // Ensure image is on top during jumping
+        img.style.zIndex = '1000'; // Ensure jumping image is on top
 
         // Set initial random position immediately
         const maxX = window.innerWidth - 150; // Image width
@@ -62,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 img.style.right = isLeftImage ? 'auto' : '0';
                 img.style.top = '0';
                 img.style.transform = originalStyles.transform;
-                img.style.zIndex = ''; // Reset z-index
+                img.style.zIndex = originalStyles.zIndex; // Restore z-index
                 clearInterval(jumpInterval);
                 return;
             }

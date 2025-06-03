@@ -31,9 +31,11 @@ img {
 #moo-left {
     position: relative;
     left: 0;
+    z-index: 10; /* Ensure clickable in default state */
 }
 
 #moo-right {
     position: relative;
     right: 0;
+    z-index: 10; /* Ensure clickable in default state */
 }
