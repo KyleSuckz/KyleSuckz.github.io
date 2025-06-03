@@ -47,33 +47,34 @@
   <style>
     .slide-container {
       position: relative;
-      height: 150px; /* Matches forced image height */
+      height: 150px;
       display: flex;
       justify-content: center;
       align-items: center;
     }
     .slide-image {
-      width: 150px; /* Force image width to 150px */
-      height: 150px; /* Force image height to 150px */
+      width: 150px;
+      height: 150px;
       position: absolute;
       top: 0;
+      transform: scale(0.5);
       transition: all 1s ease;
     }
     .left {
       left: 0;
-      transform: translateX(-100%);
+      transform: translateX(-100%) scale(0.5);
     }
     .right {
       right: 0;
-      transform: translateX(100%);
+      transform: translateX(100%) scale(0.5);
     }
     .left.active {
-      left: calc(50% - 150px); /* Move to center, adjusted for image width */
-      transform: translateX(0);
+      left: calc(50% - 150px);
+      transform: translateX(0) scale(1);
     }
     .right.active {
-      right: calc(50% - 150px); /* Move to center, adjusted for image width */
-      transform: translateX(0);
+      right: calc(50% - 150px);
+      transform: translateX(0) scale(1);
     }
   </style>
 </head>
@@ -106,7 +107,8 @@
     function restartAnimation() {
       document.querySelectorAll('.slide-image').forEach(img => {
         img.classList.remove('active');
-        setTimeout(() => img.classList.add('active'), 50);
+        void img.offsetWidth;
+        img.classList.add('active');
       });
     }
     window.onload = startAnimation;
