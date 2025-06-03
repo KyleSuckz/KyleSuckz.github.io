@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Slide images to middle and back on page load
     setTimeout(() => {
         const halfWindowWidth = window.innerWidth / 2;
-        mooLeft.style.transform = `translateX(${halfWindowWidth - 150}px)`; // Move left image to center
-        mooRight.style.transform = `translateX(-${halfWindowWidth - 150}px)`; // Move right image to center
+        mooLeft.style.transform = `translateX(${halfWindowWidth - 150}px)`;
+        mooRight.style.transform = `translateX(-${halfWindowWidth - 150}px)`;
         setTimeout(() => {
             mooLeft.style.transform = 'translateX(0)';
             mooRight.style.transform = 'translateX(0)';
@@ -31,12 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Move image to body for jumping
         document.body.appendChild(img);
         img.style.position = 'fixed';
-        img.style.zIndex = '50'; // Lower than non-jumping image
-        img.style.pointerEvents = 'none'; // Prevent capturing clicks
+        img.style.zIndex = '50';
+        img.style.pointerEvents = 'none';
 
         // Set initial random position
-        const maxX = window.innerWidth - 150; // Image width
-        const maxY = window.innerHeight - 150; // Image height
+        const maxX = window.innerWidth - 150;
+        const maxY = window.innerHeight - 150;
         img.style.left = `${Math.random() * maxX}px`;
         img.style.top = `${Math.random() * maxY}px`;
         img.style.right = 'auto';
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     mainContent.innerHTML = doc.querySelector('div').innerHTML;
                 })
                 .catch(error => {
-                    mainContent.innerHTML = '<p>Error loading page.</p>';
+                    mainContent.innerHTML = '<p>Error</p>';
                     console.error('Error:', error);
                 });
         });
