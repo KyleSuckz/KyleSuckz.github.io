@@ -47,31 +47,33 @@
   <style>
     .slide-container {
       position: relative;
-      height: 300px; /* Matches forced image height */
+      height: 150px; /* Matches forced image height */
       display: flex;
       justify-content: center;
       align-items: center;
     }
     .slide-image {
-      width: 300px; /* Force image width to 300px */
-      height: 300px; /* Force image height to 300px */
+      width: 150px; /* Force image width to 150px */
+      height: 150px; /* Force image height to 150px */
       position: absolute;
       top: 0;
-      transition: transform 1s ease;
+      transition: all 1s ease;
     }
     .left {
-      left: 50%;
+      left: 0;
       transform: translateX(-100%);
     }
     .right {
-      left: 50%;
-      transform: translateX(0);
+      right: 0;
+      transform: translateX(100%);
     }
     .left.active {
-      transform: translateX(-50%);
+      left: calc(50% - 150px); /* Move to center, adjusted for image width */
+      transform: translateX(0);
     }
     .right.active {
-      transform: translateX(-50%);
+      right: calc(50% - 150px); /* Move to center, adjusted for image width */
+      transform: translateX(0);
     }
   </style>
 </head>
