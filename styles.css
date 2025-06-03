@@ -1,6 +1,8 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
+  background-color: black;
+  color: silver;
 }
 
 .container {
@@ -10,8 +12,8 @@ body {
 }
 
 .header, .footer {
-  background-color: #333;
-  color: white;
+  background-color: black;
+  color: silver;
   text-align: center;
   padding: 1rem;
 }
@@ -23,7 +25,8 @@ body {
 }
 
 .sidebar {
-  background-color: #f4f4f4;
+  background-color: black;
+  color: silver;
   padding: 1rem;
   width: 200px;
   min-width: 150px;
@@ -40,11 +43,11 @@ body {
 
 .left-sidebar ul li a {
   text-decoration: none;
-  color: #333;
+  color: silver;
 }
 
 .left-sidebar ul li a:hover {
-  color: #007bff;
+  color: #b0b0b0; /* Lighter silver for hover effect */
 }
 
 .content {
@@ -52,11 +55,4 @@ body {
   border: none;
   width: 100%;
   height: 100%;
-}
-
-.footer {
-  background-color: #333;
-  color: white;
-  text-align: center;
-  padding: 1rem;
 }
