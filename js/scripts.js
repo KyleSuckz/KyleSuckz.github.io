@@ -17,16 +17,31 @@ document.addEventListener('DOMContentLoaded', () => {
     // Jump animation on click
     function jumpAround(img) {
         const startTime = Date.now();
-        const originalPosition = img.style.transform || 'translateX(0)';
-        const originalLeft = img.style.left || '0';
-        const originalRight = img.style.right || '0';
+        const originalParent = img.parentElement;
+        const originalStyles = {
+            position: img.style.position,
+            left: img.style.left,
+            right: img.style.right,
+            top: img.style.top,
+            transform: img.style.transform || 'translateX(0)'
+        };
+
+        // Move image to body to allow full window movement
+        document.body.appendChild(img);
+        img.style.position = 'absolute';
+        img.style.left = '0';
+        img.style.top = '0';
+        img.style.right = 'auto';
+
         const jumpInterval = setInterval(() => {
             if (Date.now() - startTime > 5000) {
-                img.style.transform = originalPosition;
-                img.style.position = 'relative';
-                img.style.left = originalLeft;
-                img.style.right = originalRight;
-                img.style.top = '0';
+                // Restore image to original position
+                originalParent.appendChild(img);
+                img.style.position = originalStyles.position;
+                img.style.left = originalStyles.left;
+                img.style.right = originalStyles.right;
+                img.style.top = originalStyles.top;
+                img.style.transform = originalStyles.transform;
                 clearInterval(jumpInterval);
                 return;
             }
@@ -34,10 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const maxY = window.innerHeight - 150; // Image height
             const randomX = Math.random() * maxX;
             const randomY = Math.random() * maxY;
-            img.style.position = 'absolute';
             img.style.left = `${randomX}px`;
             img.style.top = `${randomY}px`;
-            img.style.right = 'auto';
         }, 200);
     }
 
