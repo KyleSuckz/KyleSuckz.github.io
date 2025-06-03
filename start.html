@@ -44,10 +44,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Website</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    .slide-container {
+      position: relative;
+      height: 512px; /* Matches image height */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .slide-image {
+      width: 512px;
+      height: 512px;
+      position: absolute;
+      top: 0;
+      transition: transform 1s ease;
+    }
+    .left {
+      left: 50%;
+      transform: translateX(-100%);
+    }
+    .right {
+      left: 50%;
+      transform: translateX(0);
+    }
+    .left.active {
+      transform: translateX(-50%);
+    }
+    .right.active {
+      transform: translateX(-50%);
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <header id="header-content" class="header"></header>
+    <header class="header">
+      <div class="slide-container">
+        <img src="moo_left.png" class="slide-image left" onclick="restartAnimation()">
+        <img src="moo_right.png" class="slide-image right" onclick="restartAnimation()">
+      </div>
+    </header>
     <div class="main">
       <nav class="sidebar left-sidebar">
         <ul>
@@ -63,16 +98,16 @@
   </div>
   <script src="script.js"></script>
   <script>
-    // Load header content dynamically
-    fetch('topslide-content.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('header-content').innerHTML = data;
-      })
-      .catch(error => {
-        console.error('Error loading header content:', error);
-        document.getElementById('header-content').innerHTML = '<h1>Top Slide Header</h1><p>Error loading content.</p>';
+    function startAnimation() {
+      document.querySelectorAll('.slide-image').forEach(img => img.classList.add('active'));
+    }
+    function restartAnimation() {
+      document.querySelectorAll('.slide-image').forEach(img => {
+        img.classList.remove('active');
+        setTimeout(() => img.classList.add('active'), 50);
       });
+    }
+    window.onload = startAnimation;
   </script>
 </body>
 </html>
