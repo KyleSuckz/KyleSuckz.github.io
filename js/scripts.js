@@ -31,28 +31,32 @@ document.addEventListener('DOMContentLoaded', () => {
             pointerEvents: img.style.pointerEvents || 'auto'
         };
 
-        // Remove existing placeholder for this image, if any
+        // Remove existing placeholder for this image
         if (placeholders.has(imageId)) {
             placeholders.get(imageId).remove();
             placeholders.delete(imageId);
         }
 
-        // Create a new placeholder
+        // Create new placeholder
         const placeholder = document.createElement('div');
         placeholder.style.width = '150px';
         placeholder.style.height = '150px';
         placeholder.style.visibility = 'hidden';
         placeholder.dataset.imageId = imageId;
         placeholders.set(imageId, placeholder);
+        topFrame.appendChild(placeholder); // Append to maintain order
 
-        // Insert placeholder
-        if (isLeftImage) {
-            topFrame.insertBefore(placeholder, topFrame.firstChild); // Always first for moo-left
-        } else {
-            topFrame.appendChild(placeholder); // Always last for moo-right
+        // Reorder children to maintain left-right positioning
+        const children = Array.from(topFrame.children);
+        const leftPlaceholder = placeholders.get('moo-left');
+        const rightPlaceholder = placeholders.get('moo-right');
+        const leftNode = mooLeft.parentNode === topFrame ? mooLeft : leftPlaceholder;
+        const rightNode = mooRight.parentNode === topFrame ? mooRight : rightPlaceholder;
+        if (leftNode && rightNode && leftNode.nextSibling !== rightNode) {
+            topFrame.insertBefore(leftNode, rightNode);
         }
 
-        // Move image to body for full window jumping
+        // Move image to body for jumping
         document.body.appendChild(img);
         img.style.position = 'fixed';
         img.style.zIndex = '50'; // Lower than non-jumping image
@@ -69,20 +73,24 @@ document.addEventListener('DOMContentLoaded', () => {
         // Start jumping
         const jumpInterval = setInterval(() => {
             if (Date.now() - startTime > 5000) {
-                // Restore image to original position
+                // Restore image
                 const currentPlaceholder = placeholders.get(imageId);
+                topFrame.appendChild(img); // Safe append
                 if (currentPlaceholder && currentPlaceholder.parentNode === topFrame) {
-                    topFrame.insertBefore(img, currentPlaceholder);
                     currentPlaceholder.remove();
-                } else {
-                    // Fallback: insert based on image position
-                    if (isLeftImage) {
-                        topFrame.insertBefore(img, topFrame.firstChild);
-                    } else {
-                        topFrame.appendChild(img);
-                    }
                 }
                 placeholders.delete(imageId);
+
+                // Reorder to ensure left-right positioning
+                const children = Array.from(topFrame.children);
+                const leftNode = mooLeft.parentNode === topFrame ? mooLeft : placeholders.get('moo-left');
+                const rightNode = mooRight.parentNode === topFrame ? mooRight : placeholders.get('moo-right');
+                if (leftNode && rightNode && leftNode.nextSibling !== rightNode) {
+                    topFrame.insertBefore(leftNode, rightNode);
+                } else if (!rightNode && leftNode) {
+                    topFrame.appendChild(img);
+                }
+
                 img.style.position = originalStyles.position;
                 img.style.left = isLeftImage ? '0' : 'auto';
                 img.style.right = isLeftImage ? 'auto' : '0';
