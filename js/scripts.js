@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         placeholder.style.height = '150px';
         placeholder.style.visibility = 'hidden';
         if (isLeftImage) {
-            topFrame.insertBefore(placeholder, mooRight);
+            topFrame.insertBefore(placeholder, mooRight || topFrame.lastChild);
         } else {
             topFrame.appendChild(placeholder);
         }
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Move image to body for full window jumping
         document.body.appendChild(img);
         img.style.position = 'fixed';
-        img.style.zIndex = '50'; // Lower than non-jumping image to avoid blocking clicks
+        img.style.zIndex = '50'; // Lower than non-jumping image
         img.style.pointerEvents = 'none'; // Prevent jumping image from capturing clicks
 
         // Set initial random position immediately
@@ -58,8 +58,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const jumpInterval = setInterval(() => {
             if (Date.now() - startTime > 5000) {
                 // Restore image to original position
-                topFrame.insertBefore(img, placeholder);
-                placeholder.remove();
+                if (placeholder.parentNode === topFrame) {
+                    topFrame.insertBefore(img, placeholder);
+                    placeholder.remove();
+                } else {
+                    // Fallback if placeholder is not in topFrame
+                    if (isLeftImage) {
+                        topFrame.insertBefore(img, mooRight || topFrame.lastChild);
+                    } else {
+                        topFrame.appendChild(img);
+                    }
+                }
                 img.style.position = originalStyles.position;
                 img.style.left = isLeftImage ? '0' : 'auto';
                 img.style.right = isLeftImage ? 'auto' : '0';
