@@ -31,11 +31,13 @@ img {
 #moo-left {
     position: relative;
     left: 0;
-    z-index: 10; /* Ensure clickable in default state */
+    z-index: 100; /* Higher z-index for clickability */
+    pointer-events: auto; /* Ensure clickable */
 }
 
 #moo-right {
     position: relative;
     right: 0;
-    z-index: 10; /* Ensure clickable in default state */
+    z-index: 100; /* Higher z-index for clickability */
+    pointer-events: auto; /* Ensure clickable */
 }
