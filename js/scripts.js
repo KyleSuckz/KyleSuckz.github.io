@@ -44,16 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
         placeholder.style.visibility = 'hidden';
         placeholder.dataset.imageId = imageId;
         placeholders.set(imageId, placeholder);
-        topFrame.appendChild(placeholder); // Append to maintain order
 
-        // Reorder children to maintain left-right positioning
-        const children = Array.from(topFrame.children);
-        const leftPlaceholder = placeholders.get('moo-left');
-        const rightPlaceholder = placeholders.get('moo-right');
-        const leftNode = mooLeft.parentNode === topFrame ? mooLeft : leftPlaceholder;
-        const rightNode = mooRight.parentNode === topFrame ? mooRight : rightPlaceholder;
-        if (leftNode && rightNode && leftNode.nextSibling !== rightNode) {
-            topFrame.insertBefore(leftNode, rightNode);
+        // Insert placeholder in the correct position
+        if (isLeftImage) {
+            topFrame.insertBefore(placeholder, mooRight || topFrame.lastChild);
+        } else {
+            topFrame.appendChild(placeholder);
         }
 
         // Move image to body for jumping
@@ -75,22 +71,18 @@ document.addEventListener('DOMContentLoaded', () => {
             if (Date.now() - startTime > 5000) {
                 // Restore image
                 const currentPlaceholder = placeholders.get(imageId);
-                topFrame.appendChild(img); // Safe append
                 if (currentPlaceholder && currentPlaceholder.parentNode === topFrame) {
+                    topFrame.insertBefore(img, currentPlaceholder);
                     currentPlaceholder.remove();
+                } else {
+                    // Fallback: insert in correct position
+                    if (isLeftImage) {
+                        topFrame.insertBefore(img, mooRight || topFrame.lastChild);
+                    } else {
+                        topFrame.appendChild(img);
+                    }
                 }
                 placeholders.delete(imageId);
-
-                // Reorder to ensure left-right positioning
-                const children = Array.from(topFrame.children);
-                const leftNode = mooLeft.parentNode === topFrame ? mooLeft : placeholders.get('moo-left');
-                const rightNode = mooRight.parentNode === topFrame ? mooRight : placeholders.get('moo-right');
-                if (leftNode && rightNode && leftNode.nextSibling !== rightNode) {
-                    topFrame.insertBefore(leftNode, rightNode);
-                } else if (!rightNode && leftNode) {
-                    topFrame.appendChild(img);
-                }
-
                 img.style.position = originalStyles.position;
                 img.style.left = isLeftImage ? '0' : 'auto';
                 img.style.right = isLeftImage ? 'auto' : '0';
