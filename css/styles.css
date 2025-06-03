@@ -1,6 +1,13 @@
+/* Restore Tailwind classes and positioning */
+body {
+    background-color: #1a1a1a; /* shiny-black */
+    color: #c0c0c0; /* silver-chrome */
+}
+
 #top-frame {
     position: relative;
-    height: 150px; /* Match image height */
+    height: 150px;
+    border-bottom: 2px solid #c0c0c0;
 }
 
 #moo-left {
@@ -21,4 +28,21 @@
     height: 150px;
     z-index: 100;
     pointer-events: auto;
+}
+
+#left-frame {
+    border-right: 2px solid #c0c0c0;
+}
+
+#main-content {
+    border-left: 2px solid #c0c0c0;
+    border-right: 2px solid #c0c0c0;
+}
+
+#right-frame {
+    border-left: 2px solid #c0c0c0;
+}
+
+#bottom-frame {
+    border-top: 2px solid #c0c0c0;
 }

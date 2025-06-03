@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     mainContent.innerHTML = doc.querySelector('div').innerHTML;
                 })
                 .catch(error => {
-                    mainContent.innerHTML = '<p>Error</p>';
+                    mainContent.innerHTML = '<p>Error loading page.</p>';
                     console.error('Error:', error);
                 });
         });
