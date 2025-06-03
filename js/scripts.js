@@ -3,7 +3,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const mooLeft = document.getElementById('moo-left');
     const mooRight = document.getElementById('moo-right');
     const topFrame = document.getElementById('top-frame');
-    const placeholders = new Map(); // Track placeholders per image
+
+    // Create persistent placeholders
+    const leftPlaceholder = document.createElement('div');
+    leftPlaceholder.style.width = '150px';
+    leftPlaceholder.style.height = '150px';
+    leftPlaceholder.style.visibility = 'hidden';
+    leftPlaceholder.dataset.imageId = 'moo-left';
+
+    const rightPlaceholder = document.createElement('div');
+    rightPlaceholder.style.width = '150px';
+    rightPlaceholder.style.height = '150px';
+    rightPlaceholder.style.visibility = 'hidden';
+    rightPlaceholder.dataset.imageId = 'moo-right';
+
+    // Insert placeholders and images in correct order
+    topFrame.innerHTML = ''; // Clear topFrame
+    topFrame.appendChild(leftPlaceholder);
+    topFrame.appendChild(rightPlaceholder);
+    topFrame.insertBefore(mooLeft, rightPlaceholder);
+    topFrame.insertBefore(mooRight, rightPlaceholder.nextSibling);
 
     // Slide images to middle and back
     setTimeout(() => {
@@ -20,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function jumpAround(img) {
         const startTime = Date.now();
         const isLeftImage = img.id === 'moo-left';
-        const imageId = img.id;
         const originalStyles = {
             position: img.style.position,
             left: img.style.left,
@@ -30,30 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
             zIndex: img.style.zIndex || '100',
             pointerEvents: img.style.pointerEvents || 'auto'
         };
-
-        // Remove existing placeholder for this image
-        if (placeholders.has(imageId)) {
-            placeholders.get(imageId).remove();
-            placeholders.delete(imageId);
-        }
-
-        // Create new placeholder
-        const placeholder = document.createElement('div');
-        placeholder.style.width = '150px';
-        placeholder.style.height = '150px';
-        placeholder.style.visibility = 'hidden';
-        placeholder.dataset.imageId = imageId;
-        placeholders.set(imageId, placeholder);
-
-        // Append placeholder to topFrame
-        topFrame.appendChild(placeholder);
-
-        // Ensure correct order: moo-left placeholder before moo-right placeholder
-        const leftPlaceholder = placeholders.get('moo-left');
-        const rightPlaceholder = placeholders.get('moo-right');
-        if (leftPlaceholder && rightPlaceholder && leftPlaceholder.nextSibling !== rightPlaceholder) {
-            topFrame.insertBefore(leftPlaceholder, rightPlaceholder);
-        }
 
         // Move image to body for jumping
         document.body.appendChild(img);
@@ -73,20 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const jumpInterval = setInterval(() => {
             if (Date.now() - startTime > 5000) {
                 // Restore image
-                const currentPlaceholder = placeholders.get(imageId);
-                if (currentPlaceholder && currentPlaceholder.parentNode === topFrame) {
-                    topFrame.insertBefore(img, currentPlaceholder);
-                    currentPlaceholder.remove();
-                } else {
-                    // Fallback: append and reorder
-                    topFrame.appendChild(img);
-                    const leftPlaceholder = placeholders.get('moo-left');
-                    const rightPlaceholder = placeholders.get('moo-right');
-                    if (leftPlaceholder && rightPlaceholder && leftPlaceholder.nextSibling !== rightPlaceholder) {
-                        topFrame.insertBefore(leftPlaceholder, rightPlaceholder);
-                    }
-                }
-                placeholders.delete(imageId);
+                const placeholder = isLeftImage ? leftPlaceholder : rightPlaceholder;
+                topFrame.insertBefore(img, placeholder);
                 img.style.position = originalStyles.position;
                 img.style.left = isLeftImage ? '0' : 'auto';
                 img.style.right = isLeftImage ? 'auto' : '0';
