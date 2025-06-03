@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const mooLeft = document.getElementById('moo-left');
     const mooRight = document.getElementById('moo-right');
     const topFrame = document.getElementById('top-frame');
-    let activeJumpInterval = null; // Track the active animation interval
 
     // Slide images to middle and back
     setTimeout(() => {
@@ -18,24 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Jump animation on click
     function jumpAround(img) {
-        // Stop any active animation
-        if (activeJumpInterval) {
-            clearInterval(activeJumpInterval);
-            const otherImage = img.id === 'moo-left' ? mooRight : mooLeft;
-            const isOtherLeftImage = otherImage.id === 'moo-left';
-            // Restore the other image to its original position
-            const otherPlaceholder = otherImage.nextElementSibling && otherImage.nextElementSibling.tagName === 'DIV' && otherImage.nextElementSibling.style.visibility === 'hidden' ? otherImage.nextElementSibling : null;
-            if (otherPlaceholder) {
-                topFrame.insertBefore(otherImage, otherPlaceholder);
-                otherPlaceholder.remove();
-                otherImage.style.position = 'relative';
-                otherImage.style.left = isOtherLeftImage ? '0' : 'auto';
-                otherImage.style.right = isOtherLeftImage ? 'auto' : '0';
-                otherImage.style.top = '0';
-                otherImage.style.transform = 'translateX(0)';
-            }
-        }
-
         const startTime = Date.now();
         const isLeftImage = img.id === 'moo-left';
         const originalStyles = {
@@ -60,8 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Move image to body for full window jumping
         document.body.appendChild(img);
         img.style.position = 'fixed';
+        img.style.zIndex = '1000'; // Ensure image is on top during jumping
 
-        // Set initial random position
+        // Set initial random position immediately
         const maxX = window.innerWidth - 150; // Image width
         const maxY = window.innerHeight - 150; // Image height
         img.style.left = `${Math.random() * maxX}px`;
@@ -70,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         img.style.transform = 'none';
 
         // Start jumping
-        activeJumpInterval = setInterval(() => {
+        const jumpInterval = setInterval(() => {
             if (Date.now() - startTime > 5000) {
                 // Restore image to original position
                 topFrame.insertBefore(img, placeholder);
@@ -80,7 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 img.style.right = isLeftImage ? 'auto' : '0';
                 img.style.top = '0';
                 img.style.transform = originalStyles.transform;
-                activeJumpInterval = null; // Clear active interval
+                img.style.zIndex = ''; // Reset z-index
+                clearInterval(jumpInterval);
                 return;
             }
             const randomX = Math.random() * maxX;
