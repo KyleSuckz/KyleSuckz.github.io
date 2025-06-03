@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Jump animation on click
     function jumpAround(img) {
         const startTime = Date.now();
-        const originalParent = img.parentElement;
+        const isLeftImage = img.id === 'moo-left';
         const originalStyles = {
             position: img.style.position,
             left: img.style.left,
@@ -26,21 +26,20 @@ document.addEventListener('DOMContentLoaded', () => {
             transform: img.style.transform || 'translateX(0)'
         };
 
-        // Move image to body to allow full window movement
-        document.body.appendChild(img);
-        img.style.position = 'absolute';
+        // Set up for jumping across entire window
+        img.style.position = 'fixed';
         img.style.left = '0';
         img.style.top = '0';
         img.style.right = 'auto';
+        img.style.transform = 'none';
 
         const jumpInterval = setInterval(() => {
             if (Date.now() - startTime > 5000) {
                 // Restore image to original position
-                originalParent.appendChild(img);
                 img.style.position = originalStyles.position;
-                img.style.left = originalStyles.left;
-                img.style.right = originalStyles.right;
-                img.style.top = originalStyles.top;
+                img.style.left = isLeftImage ? '0' : 'auto';
+                img.style.right = isLeftImage ? 'auto' : '0';
+                img.style.top = '0';
                 img.style.transform = originalStyles.transform;
                 clearInterval(jumpInterval);
                 return;
