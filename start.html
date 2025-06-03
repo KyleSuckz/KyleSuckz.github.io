@@ -47,7 +47,7 @@
 </head>
 <body>
   <div class="container">
-    <header class="header">Header</header>
+    <iframe id="header-frame" src="TopSlide.html" class="header" frameborder="0"></iframe>
     <div class="main">
       <nav class="sidebar left-sidebar">
         <ul>
@@ -62,5 +62,15 @@
     <footer class="footer">Footer</footer>
   </div>
   <script src="script.js"></script>
+  <script>
+    // Adjust header iframe height dynamically
+    window.addEventListener('load', () => {
+      const headerFrame = document.getElementById('header-frame');
+      headerFrame.addEventListener('load', () => {
+        const contentHeight = headerFrame.contentWindow.document.body.scrollHeight;
+        headerFrame.style.height = `${contentHeight}px`;
+      });
+    });
+  </script>
 </body>
 </html>
