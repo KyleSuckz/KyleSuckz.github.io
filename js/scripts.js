@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Image animation on page load
     const mooLeft = document.getElementById('moo-left');
     const mooRight = document.getElementById('moo-right');
+    const topFrame = document.getElementById('top-frame');
 
     // Slide images to middle and back
     setTimeout(() => {
@@ -26,7 +27,19 @@ document.addEventListener('DOMContentLoaded', () => {
             transform: img.style.transform || 'translateX(0)'
         };
 
-        // Set up for jumping across entire window
+        // Create a placeholder to maintain flexbox layout
+        const placeholder = document.createElement('div');
+        placeholder.style.width = '150px';
+        placeholder.style.height = '150px';
+        placeholder.style.visibility = 'hidden'; // Invisible to avoid visual disruption
+        if (isLeftImage) {
+            topFrame.insertBefore(placeholder, mooRight);
+        } else {
+            topFrame.appendChild(placeholder);
+        }
+
+        // Move image to body for full window jumping
+        document.body.appendChild(img);
         img.style.position = 'fixed';
         img.style.left = '0';
         img.style.top = '0';
@@ -36,6 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const jumpInterval = setInterval(() => {
             if (Date.now() - startTime > 5000) {
                 // Restore image to original position
+                topFrame.insertBefore(img, placeholder);
+                placeholder.remove();
                 img.style.position = originalStyles.position;
                 img.style.left = isLeftImage ? '0' : 'auto';
                 img.style.right = isLeftImage ? 'auto' : '0';
