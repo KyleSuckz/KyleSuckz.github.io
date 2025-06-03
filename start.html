@@ -45,12 +45,22 @@
   <title>My Website</title>
   <link rel="stylesheet" href="styles.css">
   <style>
+    body {
+      margin: 0; /* Ensure no body margin causes offset */
+      overflow-x: hidden; /* Prevent horizontal scrollbar */
+    }
     .slide-container {
       position: relative;
+      width: 100vw; /* Match viewport width */
       height: 150px; /* Matches forced image height */
       display: flex;
       justify-content: center;
       align-items: center;
+      margin: 0;
+    }
+    .header {
+      margin: 0; /* Remove any header margin */
+      padding: 1rem 0; /* Padding only top/bottom */
     }
     .slide-image {
       width: 150px; /* Force image width to 150px */
@@ -67,18 +77,19 @@
       animation: slideRight 3s ease forwards;
     }
     @keyframes slideLeft {
-      0% { transform: translateX(-100%); }
-      50% { transform: translateX(calc(50vw - 150px)); }
-      100% { transform: translateX(-100%); }
+      0% { transform: translateX(-100%); } /* Start off-screen left */
+      50% { left: calc(50% - 150px); transform: translateX(0); } /* Right edge at center */
+      100% { left: 0; transform: translateX(0); } /* Flush with left edge */
     }
     @keyframes slideRight {
-      0% { transform: translateX(100%); }
-      50% { transform: translateX(calc(-50vw + 150px)); }
-      100% { transform: translateX(100%); }
+      0% { transform: translateX(100%); } /* Start off-screen right */
+      50% { right: calc(50% - 150px); transform: translateX(0); } /* Left edge at center */
+      100% { right: 0; transform: translateX(0); } /* Flush with right edge */
     }
     .jumping {
       animation: none !important;
       transition: all 0.3s ease;
+      position: fixed; /* Allow jumping across the entire page */
     }
   </style>
 </head>
@@ -107,9 +118,8 @@
   <script>
     function jumpAnimation(img) {
       img.classList.add('jumping');
-      const container = document.querySelector('.slide-container');
-      const maxWidth = container.offsetWidth - 150; // Container width minus image width
-      const maxHeight = container.offsetHeight - 150; // Container height minus image height
+      const maxWidth = window.innerWidth - 150; // Viewport width minus image width
+      const maxHeight = window.innerHeight - 150; // Viewport height minus image height
       let jumps = 0;
       const maxJumps = 16; // Approx 5 seconds at 0.3s per jump
 
@@ -124,18 +134,23 @@
           setTimeout(jump, 300);
         } else {
           // Return to original position
-          img.classList.remove('jumping');
+          img.style.transition = 'all 0.3s ease'; // Ensure smooth return
           if (img.classList.contains('left')) {
             img.style.left = '0';
             img.style.right = 'auto';
             img.style.top = '0';
-            img.style.transform = 'translateX(-100%)';
+            img.style.transform = 'translateX(0)';
           } else {
             img.style.right = '0';
             img.style.left = 'auto';
             img.style.top = '0';
-            img.style.transform = 'translateX(100%)';
+            img.style.transform = 'translateX(0)';
           }
+          // Remove jumping class and reset transition after return
+          setTimeout(() => {
+            img.classList.remove('jumping');
+            img.style.transition = '';
+          }, 300);
         }
       }
       jump();
