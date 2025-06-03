@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mooLeft = document.getElementById('moo-left');
     const mooRight = document.getElementById('moo-right');
     const topFrame = document.getElementById('top-frame');
+    let isJumping = false; // Flag to prevent multiple simultaneous animations
 
     // Slide images to middle and back
     setTimeout(() => {
@@ -17,6 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Jump animation on click
     function jumpAround(img) {
+        if (isJumping) return; // Prevent new animation if one is in progress
+        isJumping = true;
+
         const startTime = Date.now();
         const isLeftImage = img.id === 'moo-left';
         const originalStyles = {
@@ -41,10 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Move image to body for full window jumping
         document.body.appendChild(img);
         img.style.position = 'fixed';
-        img.style.left = '0';
         img.style.top = '0';
-        img.style.right = 'auto';
         img.style.transform = 'none';
+        img.style.left = isLeftImage ? '0' : 'auto';
+        img.style.right = isLeftImage ? 'auto' : '0';
 
         const jumpInterval = setInterval(() => {
             if (Date.now() - startTime > 5000) {
@@ -56,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 img.style.right = isLeftImage ? 'auto' : '0';
                 img.style.top = '0';
                 img.style.transform = originalStyles.transform;
+                isJumping = false; // Allow new animations
                 clearInterval(jumpInterval);
                 return;
             }
@@ -65,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const randomY = Math.random() * maxY;
             img.style.left = `${randomX}px`;
             img.style.top = `${randomY}px`;
+            img.style.right = 'auto';
         }, 200);
     }
 
