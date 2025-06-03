@@ -47,34 +47,38 @@
   <style>
     .slide-container {
       position: relative;
-      height: 150px;
+      height: 150px; /* Matches forced image height */
       display: flex;
       justify-content: center;
       align-items: center;
     }
     .slide-image {
-      width: 150px;
-      height: 150px;
+      width: 150px; /* Force image width to 150px */
+      height: 150px; /* Force image height to 150px */
       position: absolute;
       top: 0;
-      transform: scale(0.5);
-      transition: all 1s ease;
     }
     .left {
       left: 0;
-      transform: translateX(-100%) scale(0.5);
+      animation: slideLeft 3s ease forwards;
     }
     .right {
       right: 0;
-      transform: translateX(100%) scale(0.5);
+      animation: slideRight 3s ease forwards;
     }
-    .left.active {
-      left: calc(50% - 150px);
-      transform: translateX(0) scale(1);
+    @keyframes slideLeft {
+      0% { transform: translateX(-100%); }
+      50% { transform: translateX(calc(50vw - 150px)); }
+      100% { transform: translateX(-100%); }
     }
-    .right.active {
-      right: calc(50% - 150px);
-      transform: translateX(0) scale(1);
+    @keyframes slideRight {
+      0% { transform: translateX(100%); }
+      50% { transform: translateX(calc(-50vw + 150px)); }
+      100% { transform: translateX(100%); }
+    }
+    .jumping {
+      animation: none !important;
+      transition: all 0.3s ease;
     }
   </style>
 </head>
@@ -82,8 +86,8 @@
   <div class="container">
     <header class="header">
       <div class="slide-container">
-        <img src="images/moo_left.png" class="slide-image left" onclick="restartAnimation()">
-        <img src="images/moo_right.png" class="slide-image right" onclick="restartAnimation()">
+        <img src="images/moo_left.png" class="slide-image left" onclick="jumpAnimation(this)">
+        <img src="images/moo_right.png" class="slide-image right" onclick="jumpAnimation(this)">
       </div>
     </header>
     <div class="main">
@@ -101,17 +105,41 @@
   </div>
   <script src="script.js"></script>
   <script>
-    function startAnimation() {
-      document.querySelectorAll('.slide-image').forEach(img => img.classList.add('active'));
+    function jumpAnimation(img) {
+      img.classList.add('jumping');
+      const container = document.querySelector('.slide-container');
+      const maxWidth = container.offsetWidth - 150; // Container width minus image width
+      const maxHeight = container.offsetHeight - 150; // Container height minus image height
+      let jumps = 0;
+      const maxJumps = 16; // Approx 5 seconds at 0.3s per jump
+
+      function jump() {
+        if (jumps < maxJumps) {
+          const randomX = Math.random() * maxWidth;
+          const randomY = Math.random() * maxHeight;
+          img.style.left = `${randomX}px`;
+          img.style.right = 'auto';
+          img.style.top = `${randomY}px`;
+          jumps++;
+          setTimeout(jump, 300);
+        } else {
+          // Return to original position
+          img.classList.remove('jumping');
+          if (img.classList.contains('left')) {
+            img.style.left = '0';
+            img.style.right = 'auto';
+            img.style.top = '0';
+            img.style.transform = 'translateX(-100%)';
+          } else {
+            img.style.right = '0';
+            img.style.left = 'auto';
+            img.style.top = '0';
+            img.style.transform = 'translateX(100%)';
+          }
+        }
+      }
+      jump();
     }
-    function restartAnimation() {
-      document.querySelectorAll('.slide-image').forEach(img => {
-        img.classList.remove('active');
-        void img.offsetWidth;
-        img.classList.add('active');
-      });
-    }
-    window.onload = startAnimation;
   </script>
 </body>
 </html>
