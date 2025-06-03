@@ -45,11 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
         placeholder.dataset.imageId = imageId;
         placeholders.set(imageId, placeholder);
 
-        // Insert placeholder in the correct position
-        if (isLeftImage) {
-            topFrame.insertBefore(placeholder, mooRight || topFrame.lastChild);
-        } else {
-            topFrame.appendChild(placeholder);
+        // Append placeholder to topFrame
+        topFrame.appendChild(placeholder);
+
+        // Ensure correct order: moo-left placeholder before moo-right placeholder
+        const leftPlaceholder = placeholders.get('moo-left');
+        const rightPlaceholder = placeholders.get('moo-right');
+        if (leftPlaceholder && rightPlaceholder && leftPlaceholder.nextSibling !== rightPlaceholder) {
+            topFrame.insertBefore(leftPlaceholder, rightPlaceholder);
         }
 
         // Move image to body for jumping
@@ -75,11 +78,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     topFrame.insertBefore(img, currentPlaceholder);
                     currentPlaceholder.remove();
                 } else {
-                    // Fallback: insert in correct position
-                    if (isLeftImage) {
-                        topFrame.insertBefore(img, mooRight || topFrame.lastChild);
-                    } else {
-                        topFrame.appendChild(img);
+                    // Fallback: append and reorder
+                    topFrame.appendChild(img);
+                    const leftPlaceholder = placeholders.get('moo-left');
+                    const rightPlaceholder = placeholders.get('moo-right');
+                    if (leftPlaceholder && rightPlaceholder && leftPlaceholder.nextSibling !== rightPlaceholder) {
+                        topFrame.insertBefore(leftPlaceholder, rightPlaceholder);
                     }
                 }
                 placeholders.delete(imageId);
