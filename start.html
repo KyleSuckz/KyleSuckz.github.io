@@ -42,14 +42,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Texas Hold'em Poker - KyleSuckz</title>
+    <title>KyleSuckz</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+    <script src="js/scripts.js" defer></script>
 </head>
 <body class="bg-shiny-black text-silver-chrome">
-    <div class="p-4">
-        <h1>Texas Hold'em Poker</h1>
-        <p>This is the Texas Hold'em Poker game page. Content for the poker game will be displayed here.</p>
+    <div class="flex flex-col h-screen">
+        <!-- Top Frame -->
+        <div id="top-frame" class="h-40 border-b-2 border-silver-chrome flex justify-between items-center px-4">
+            <img id="moo-left" src="images/moo_left.png" alt="Moo Left" class="w-[150px] h-[150px]">
+            <img id="moo-right" src="images/moo_right.png" alt="Moo Right" class="w-[150px] h-[150px]">
+        </div>
+        <!-- Main Content Area -->
+        <div class="flex flex-1 overflow-hidden">
+            <!-- Left Frame (Menu) -->
+            <div id="left-frame" class="w-48 border-r-2 border-silver-chrome p-4">
+                <ul class="space-y-4">
+                    <li><a href="#" class="menu-link" data-page="Keno.html">Keno</a></li>
+                    <li><a href="#" class="menu-link" data-page="Poker.html">Texas Hold'em Poker</a></li>
+                </ul>
+            </div>
+            <!-- Center Content -->
+            <div id="main-content" class="flex-1 p-4 overflow-auto border-l-2 border-r-2 border-silver-chrome">
+                <h1>Welcome to KyleSuckz</h1>
+                <p>This is the starting page. Click the menu items on the left to load different games.</p>
+            </div>
+            <!-- Right Frame -->
+            <div id="right-frame" class="w-48 border-l-2 border-silver-chrome"></div>
+        </div>
+        <!-- Bottom Frame -->
+        <div id="bottom-frame" class="h-20 border-t-2 border-silver-chrome"></div>
     </div>
 </body>
 </html>
