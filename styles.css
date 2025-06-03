@@ -17,6 +17,29 @@ body {
   text-align: center;
   padding: 1rem;
   width: 100%;
+  position: relative;
+}
+
+.slide-container {
+  position: relative;
+  width: 100%;
+  height: 150px;
+  overflow: hidden;
+}
+
+.slide-image {
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  top: 0;
+  cursor: pointer;
+}
+
+.slide-image.left { left: 0; }
+.slide-image.right { right: 0; }
+.slide-image.jumping {
+  transition: all 0.3s ease;
+  position: absolute;
 }
 
 .main {
@@ -53,9 +76,15 @@ body {
 
 .content {
   flex: 1;
-  border: none;
+  position: relative;
   width: 100%;
   height: 100%;
+}
+
+#content-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 
 .footer {
