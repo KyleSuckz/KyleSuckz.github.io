@@ -37,42 +37,5 @@
         }
         return gk_fileData[filename] || "";
         }
-        </script><!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Website</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <div class="container">
-    <header id="header-content" class="header"></header>
-    <div class="main">
-      <nav class="sidebar left-sidebar">
-        <ul>
-          <li><a href="#" onclick="loadPage('home.html')">Home</a></li>
-          <li><a href="#" onclick="loadPage('about.html')">About</a></li>
-          <li><a href="#" onclick="loadPage('contact.html')">Contact</a></li>
-        </ul>
-      </nav>
-      <iframe id="content-frame" src="home.html" class="content"></iframe>
-      <aside class="sidebar right-sidebar">Right Sidebar</aside>
-    </div>
-    <footer class="footer">Footer</footer>
-  </div>
-  <script src="script.js"></script>
-  <script>
-    // Load header content dynamically
-    fetch('topslide-content.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('header-content').innerHTML = data;
-      })
-      .catch(error => {
-        console.error('Error loading header content:', error);
-        document.getElementById('header-content').innerHTML = '<h1>Top Slide Header</h1><p>Error loading content.</p>';
-      });
-  </script>
-</body>
-</html>
+        </script><h1>Top Slide Header</h1>
+<p>This is the dynamic header content. You can add or modify content here, and the height will adjust automatically.</p>
