@@ -65,8 +65,10 @@
             position: relative;
             box-sizing: content-box;
             display: inline-block;
+            height: auto;
             min-height: 0;
             overflow: visible;
+            align-self: flex-start;
         }
         #outer-border {
             position: absolute;
@@ -355,6 +357,7 @@
             savedSets: [],
             isBettingEnabled: true,
             enterInterval: null,
+            isHoldingBet: false, // Track if user is holding the Bet button
             stats: {
                 gamesPlayed: 0,
                 totalBet: 0,
@@ -568,6 +571,10 @@
                 ELEMENTS.outerBorder.classList.remove('blink-outer-border');
                 toggleBetting(true);
                 if (!isTouchDevice()) ELEMENTS.betInput.focus();
+                // Restart betting if user is still holding the Bet button
+                if (STATE.isHoldingBet && !STATE.enterInterval) {
+                    STATE.enterInterval = setInterval(playGame, 100);
+                }
             }, CONSTANTS.BLINK_DURATION);
         };
 
@@ -718,6 +725,7 @@
         // Touch events for mobile
         ELEMENTS.betButton.addEventListener('touchstart', e => {
             e.preventDefault();
+            STATE.isHoldingBet = true;
             if (!STATE.enterInterval) {
                 playGame();
                 STATE.enterInterval = setInterval(playGame, 100);
@@ -725,6 +733,7 @@
         });
         ELEMENTS.betButton.addEventListener('touchend', e => {
             e.preventDefault();
+            STATE.isHoldingBet = false;
             if (STATE.enterInterval) {
                 clearInterval(STATE.enterInterval);
                 STATE.enterInterval = null;
