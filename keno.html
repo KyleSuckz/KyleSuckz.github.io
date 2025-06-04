@@ -56,18 +56,19 @@
             padding: 0;
             position: relative;
             box-sizing: content-box;
+            display: inline-block;
+            min-height: 0;
         }
         #outer-border {
             position: absolute;
             top: -20px;
             left: -20px;
             width: 448px;
-            height: 0; /* Dynamically set by JS */
+            height: calc(100% + 40px);
             border: 10px solid #000;
             pointer-events: none;
             z-index: 1;
             box-sizing: border-box;
-            transition: height 0.3s ease;
         }
         .blink-outer-border {
             animation: blink-outer-sync 0.5s infinite steps(1);
@@ -585,7 +586,6 @@
             STATE.isStatsVisible = !STATE.isStatsVisible;
             ELEMENTS.statsBox.classList.toggle('hidden');
             ELEMENTS.toggleStats.textContent = STATE.isStatsVisible ? 'Hide Stats' : 'Show Stats';
-            updateOuterBorderHeight();
         };
 
         const toggleOptions = () => {
@@ -595,7 +595,6 @@
             ELEMENTS.savedSets.classList.toggle('hidden', !STATE.isOptionsVisible || !STATE.isSavedSetsVisible);
             ELEMENTS.statsBox.classList.toggle('hidden', !STATE.isStatsVisible);
             ELEMENTS.optionsButton.textContent = STATE.isOptionsVisible ? 'Hide Options' : 'Show Options';
-            updateOuterBorderHeight();
         };
 
         const showPayouts = () => {
@@ -622,6 +621,7 @@
             alert(`Odds of Winning:\n\n${odds}`);
         };
 
+        // Main Game Logic
         const playGame = () => {
             if (STATE.selectedNumbers.size !== CONSTANTS.SELECT_LIMIT) {
                 alert(`You must select exactly ${CONSTANTS.SELECT_LIMIT} numbers before playing!`);
@@ -677,12 +677,6 @@
             updateStats();
         };
 
-        const updateOuterBorderHeight = () => {
-            const bodyHeight = document.body.scrollHeight;
-            const statsBoxHeight = STATE.isStatsVisible ? ELEMENTS.statsBox.offsetHeight : 0;
-            ELEMENTS.outerBorder.style.height = `${bodyHeight + statsBoxHeight + 40}px`;
-        };
-
         // Event Listeners
         ELEMENTS.betButton.addEventListener('click', playGame);
         ELEMENTS.saveButton.addEventListener('click', saveSet);
@@ -712,7 +706,6 @@
             initGrid();
             updateCash();
             updateStats();
-            updateOuterBorderHeight();
             if (!STATE.isOptionsVisible) {
                 ELEMENTS.controls.classList.add('hidden');
                 ELEMENTS.controlsContainer.classList.add('hidden');
@@ -721,8 +714,6 @@
             if (!STATE.isSavedSetsVisible) ELEMENTS.savedSets.classList.add('hidden');
             if (!STATE.isStatsVisible) ELEMENTS.statsBox.classList.add('hidden');
         });
-
-        window.addEventListener('resize', updateOuterBorderHeight);
     </script>
 </body>
 </html>
