@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Slide images to middle and back on page load
     function slideImages() {
-        const totalWidth = window.innerWidth <= 600 ? 200 : 300; // Adjust for mobile (100px images)
+        const totalWidth = window.innerWidth <= 600 ? 200 : 300;
         const halfWindowWidth = (window.innerWidth - totalWidth) / 2;
         setTimeout(() => {
             mooLeft.style.transform = `translateX(${halfWindowWidth}px)`;
@@ -15,48 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 mooRight.style.transform = 'translateX(0)';
             }, 1000);
         }, 500);
-    }
-
-    // Jump animation on click with slower movement
-    function jumpAround(img) {
-        const topFrame = document.getElementById('top-frame');
-        const startTime = Date.now();
-        const isLeftImage = img.id === 'moo-left';
-        const originalStyles = {
-            position: img.style.position,
-            left: img.style.left,
-            right: img.style.right,
-            top: img.style.top,
-            transform: img.style.transform || 'translateX(0)',
-            zIndex: img.style.zIndex || '100',
-            pointerEvents: img.style.pointerEvents || 'auto'
-        };
-
-        document.body.appendChild(img);
-        img.style.position = 'fixed';
-        img.style.zIndex = '999';
-        img.style.pointerEvents = 'none';
-
-        const maxX = window.innerWidth - (window.innerWidth <= 600 ? 100 : 150);
-        const maxY = window.innerHeight - (window.innerWidth <= 600 ? 100 : 150);
-
-        function animate() {
-            if (Date.now() - startTime > 5000) {
-                topFrame.appendChild(img);
-                Object.assign(img.style, originalStyles);
-                return;
-            }
-            const elapsed = Date.now() - startTime;
-            if (elapsed % 300 < 10) { // Update every 300ms
-                const randomX = Math.random() * maxX;
-                const randomY = Math.random() * maxY;
-                img.style.left = `${randomX}px`;
-                img.style.top = `${randomY}px`;
-            }
-            requestAnimationFrame(animate);
-        }
-
-        requestAnimationFrame(animate);
     }
 
     // Load page in iframe
@@ -75,8 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize
     slideImages();
-    mooLeft.addEventListener('click', () => jumpAround(mooLeft));
-    mooRight.addEventListener('click', () => jumpAround(mooRight));
     const menuLinks = document.querySelectorAll('.menu-link');
     menuLinks.forEach(link => {
         link.addEventListener('click', (e) => {
@@ -86,6 +42,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Update slide animation on window resize
     window.addEventListener('resize', slideImages);
 });
