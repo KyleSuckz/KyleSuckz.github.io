@@ -65,36 +65,21 @@ document.addEventListener('DOMContentLoaded', () => {
     mooLeft.addEventListener('click', () => jumpAround(mooLeft));
     mooRight.addEventListener('click', () => jumpAround(mooRight));
 
-    // Menu link handling
+    // Menu link handling with iframe
     const menuLinks = document.querySelectorAll('.menu-link');
     menuLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const page = link.getAttribute('data-page');
-            fetch(page)
-                .then(response => {
-                    if (!response.ok) throw new Error('Page not found');
-                    return response.text();
-                })
-                .then(data => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(data, 'text/html');
-                    // Reset main-content styles to avoid interference
-                    mainContent.style.padding = '0';
-                    mainContent.style.margin = '0';
-                    mainContent.style.border = '1px solid silver';
-                    mainContent.style.position = 'fixed';
-                    mainContent.style.left = '150px';
-                    mainContent.style.right = '150px';
-                    mainContent.style.top = '150px';
-                    mainContent.style.bottom = '100px';
-                    mainContent.style.overflowY = 'auto';
-                    mainContent.innerHTML = doc.body.innerHTML;
-                })
-                .catch(error => {
-                    mainContent.innerHTML = '<p>Failed to load game, please try again.</p>';
-                    console.error('Error:', error);
-                });
+            // Clear existing content
+            mainContent.innerHTML = '';
+            // Create and load iframe
+            const iframe = document.createElement('iframe');
+            iframe.src = page;
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none'; // Remove iframe border
+            mainContent.appendChild(iframe);
         });
     });
 });
