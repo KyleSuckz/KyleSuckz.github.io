@@ -1,23 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
     const mooLeft = document.getElementById('moo-left');
     const mooRight = document.getElementById('moo-right');
-    const topFrame = document.getElementById('top-frame');
     const mainContent = document.getElementById('main-content');
 
     // Slide images to middle and back on page load
-    const totalWidth = 300; // 150px each
-    const halfWindowWidth = (window.innerWidth - totalWidth) / 2;
-    setTimeout(() => {
-        mooLeft.style.transform = `translateX(${halfWindowWidth}px)`;
-        mooRight.style.transform = `translateX(-${halfWindowWidth}px)`;
+    function slideImages() {
+        const totalWidth = 300; // 150px each
+        const halfWindowWidth = (window.innerWidth - totalWidth) / 2;
         setTimeout(() => {
-            mooLeft.style.transform = 'translateX(0)';
-            mooRight.style.transform = 'translateX(0)';
-        }, 1000);
-    }, 500);
+            mooLeft.style.transform = `translateX(${halfWindowWidth}px)`;
+            mooRight.style.transform = `translateX(-${halfWindowWidth}px)`;
+            setTimeout(() => {
+                mooLeft.style.transform = 'translateX(0)';
+                mooRight.style.transform = 'translateX(0)';
+            }, 1000);
+        }, 500);
+    }
 
-    // Jump animation on click
+    // Jump animation on click using requestAnimationFrame
     function jumpAround(img) {
+        const topFrame = document.getElementById('top-frame');
         const startTime = Date.now();
         const isLeftImage = img.id === 'moo-left';
         const originalStyles = {
@@ -37,12 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const maxX = window.innerWidth - 150;
         const maxY = window.innerHeight - 150;
-        img.style.left = `${Math.random() * maxX}px`;
-        img.style.top = `${Math.random() * maxY}px`;
-        img.style.right = 'auto';
-        img.style.transform = 'none';
 
-        const jumpInterval = setInterval(() => {
+        function animate() {
             if (Date.now() - startTime > 5000) {
                 topFrame.appendChild(img);
                 img.style.position = originalStyles.position;
@@ -52,34 +50,44 @@ document.addEventListener('DOMContentLoaded', () => {
                 img.style.transform = originalStyles.transform;
                 img.style.zIndex = originalStyles.zIndex;
                 img.style.pointerEvents = originalStyles.pointerEvents;
-                clearInterval(jumpInterval);
                 return;
             }
             const randomX = Math.random() * maxX;
             const randomY = Math.random() * maxY;
             img.style.left = `${randomX}px`;
             img.style.top = `${randomY}px`;
-        }, 200);
+            requestAnimationFrame(animate);
+        }
+
+        requestAnimationFrame(animate);
     }
 
-    mooLeft.addEventListener('click', () => jumpAround(mooLeft));
+    // Load page in iframe
+    function loadPageInIframe(page) {
+        mainContent.innerHTML = '';
+        const iframe = document.createElement('iframe');
+        iframe.src = page;
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = 'none';
+        iframe.onerror = () => {
+            mainContent.innerHTML = '<p>Failed to load game, please try again.</p>';
+        };
+        mainContent.appendChild(iframe);
+    }
+
+    // Initialize
+    slideImages();
+    mooLeft.addEventListener('click', () => jump hypotAround(mooLeft));
     mooRight.addEventListener('click', () => jumpAround(mooRight));
 
-    // Menu link handling with iframe
+    // Menuellate link handling
     const menuLinks = document.querySelectorAll('.menu-link');
     menuLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const page = link.getAttribute('data-page');
-            // Clear existing content
-            mainContent.innerHTML = '';
-            // Create and load iframe
-            const iframe = document.createElement('iframe');
-            iframe.src = page;
-            iframe.style.width = '100%';
-            iframe.style.height = '100%';
-            iframe.style.border = 'none'; // Remove iframe border
-            mainContent.appendChild(iframe);
+            loadPageInIframe(page);
         });
     });
 });
