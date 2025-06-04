@@ -4,12 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Keno</title>
+    <!-- Add your Keno-specific CSS here if needed -->
 </head>
 <body>
     <div id="game-content">
-        <h2>Keno</h2>
-        <p>This is the Keno game page. Content for the Keno game will be displayed here.</p>
+        <h2>Select 10 numbers and place your bet.</h2>
+        <p>Cash: $100,000,000</p>
+        <form>
+            <label>Bet Amount: $</label>
+            <input type="number" id="bet-amount" min="0">
+            <button type="button" id="place-bet">Bet</button>
+        </form>
+        <div id="options">
+            <button type="button" id="show-options">Show Options</button>
+        </div>
+        <div id="number-controls">
+            <button type="button" id="save-numbers">Save Numbers</button>
+            <button type="button" id="reset">Reset</button>
+            <button type="button" id="random-numbers">Random Numbers</button>
+        </div>
+        <div id="stats">
+            <button type="button" id="show-stats">Show Stats</button>
+            <button type="button" id="hide-saved-sets">Hide Saved Sets</button>
+            <button type="button" id="payouts">Payouts</button>
+            <button type="button" id="odds">Odds</button>
+        </div>
+        <form>
+            <label>Add Cash: $</label>
+            <input type="number" id="add-cash" min="0">
+            <button type="button" id="add-cash-button">Add Cash</button>
+        </form>
     </div>
-    <!-- Add your standalone keno script here if needed -->
+    <!-- Add your Keno-specific script here, e.g., <script src="js/keno.js"></script> -->
 </body>
 </html>

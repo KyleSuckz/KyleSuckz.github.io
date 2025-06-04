@@ -4,12 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Texas Hold'em Poker</title>
+    <!-- Add your Poker-specific CSS here if needed -->
 </head>
 <body>
     <div id="game-content">
-        <h2>Texas Hold'em Poker</h2>
-        <p>This is the Texas Hold'em Poker game page. Content for the poker game will be displayed here.</p>
+        <div id="game-controls">
+            <button type="button" id="start-game">Start Game</button>
+            <button type="button" id="continue-playing">Continue Playing</button>
+        </div>
+        <div id="table">
+            <div id="pot">
+                <p>Total Pot: 0</p>
+                <p>Current Bet: 0</p>
+                <p>To Call: 0</p>
+            </div>
+            <div id="players">
+                <div class="player">
+                    <h3>You</h3>
+                    <p>Chips: 1000</p>
+                    <p>High Card -</p>
+                    <p>Wins: 0 | Folds: 0</p>
+                    <button type="button" class="deal">D</button>
+                </div>
+                <div class="player">
+                    <h3>Player 1</h3>
+                    <p>Chips: 1000</p>
+                    <p>High Card -</p>
+                    <p>Wins: 0 | Folds: 0</p>
+                    <button type="button" class="deal">D</button>
+                </div>
+                <div class="player">
+                    <h3>Player 2</h3>
+                    <p>Chips: 1000</p>
+                    <p>High Card -</p>
+                    <p>Wins: 0 | Folds: 0</p>
+                    <button type="button" class="deal">D</button>
+                </div>
+                <div class="player">
+                    <h3>Player 3</h3>
+                    <p>Chips: 1000</p>
+                    <p>High Card -</p>
+                    <p>Wins: 0 | Folds: 0</p>
+                    <button type="button" class="deal">D</button>
+                </div>
+            </div>
+        </div>
+        <div id="action-buttons">
+            <button type="button" id="fold">Fold</button>
+            <button type="button" id="check">Check</button>
+            <button type="button" id="call">Call</button>
+            <button type="button" id="raise">Raise</button>
+            <button type="button" id="new-hand">New Hand</button>
+            <button type="button" id="reset-game">Reset Game</button>
+            <button type="button" id="pause">Pause</button>
+        </div>
+        <div id="log">
+            <button type="button" id="hide-log">Hide Log</button>
+        </div>
     </div>
-    <!-- Add your standalone poker script here if needed -->
+    <!-- Add your Poker-specific script here, e.g., <script src="js/poker.js"></script> -->
 </body>
 </html>

@@ -37,7 +37,6 @@ body {
     width: 150px;
     border-right: 2px solid silver;
     overflow-y: auto;
-    height: calc(100vh - 200px); /* Adjusts to viewport minus top and bottom frames */
 }
 
 #main-content {
@@ -54,7 +53,6 @@ body {
     top: 150px;
     width: 150px;
     border-left: 2px solid silver;
-    height: calc(100vh - 200px);
 }
 
 #bottom-frame {
@@ -63,11 +61,11 @@ body {
     left: 150px;
     right: 150px;
     height: 50px;
-    border-top: 2px solid silver;
+    border: 2px solid silver; /* Added full border for visibility */
 }
 
 /* Responsive design */
-@media (max-width: 768px) {
+@media (max-width: 600px) {
     #left-frame, #right-frame {
         display: none;
     }
