@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             // Slow down movement by limiting updates to every 200ms
             const elapsed = Date.now() - startTime;
-            if (elapsed % 200 < 10) { // Update every 200ms
+            if (elapsed % 400 < 10) { // Update every 400ms
                 const randomX = Math.random() * maxX;
                 const randomY = Math.random() * maxY;
                 img.style.left = `${randomX}px`;
