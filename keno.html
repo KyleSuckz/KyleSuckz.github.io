@@ -45,19 +45,28 @@
     <meta http-equiv="Cache-Control" content="max-age=86400">
     <title>Keno</title>
     <style>
+        html {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            width: 100%;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: auto;
+        }
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #000;
             color: #fff;
             width: 408px;
-            margin: 10px auto 0 auto;
             border: 10px solid #808080;
-            padding: 0;
             position: relative;
             box-sizing: content-box;
             display: inline-block;
             min-height: 0;
+            overflow: visible;
         }
         #outer-border {
             position: absolute;
@@ -134,6 +143,8 @@
             border: none;
             border-radius: 3px;
             transition: background-color 0.2s;
+            -webkit-user-select: none;
+            user-select: none;
         }
         button:hover:not(:disabled) { background-color: #666; }
         button:disabled { background-color: #ccc; cursor: not-allowed; }
@@ -238,7 +249,6 @@
         @media (max-width: 400px) {
             body {
                 width: 308px;
-                margin: 5px auto 0 auto;
                 border-width: 5px;
             }
             #outer-border {
@@ -392,6 +402,9 @@
             if (rawValue) inputElement.value = formatNumberWithCommas(rawValue);
         };
 
+        // Detect if device is touch-enabled (for mobile vs desktop behavior)
+        const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
         // Grid Management
         const initGrid = () => {
             const fragment = document.createDocumentFragment();
@@ -534,7 +547,7 @@
             const allNumbers = Array.from({ length: CONSTANTS.MAX_NUMBERS }, (_, i) => i + 1);
             getRandomSample(allNumbers, CONSTANTS.SELECT_LIMIT).forEach(num => STATE.selectedNumbers.add(num));
             updateGrid();
-            ELEMENTS.betInput.focus();
+            if (!isTouchDevice()) ELEMENTS.betInput.focus();
             if (STATE.enterInterval) clearInterval(STATE.enterInterval);
             STATE.enterInterval = null;
         };
@@ -554,7 +567,7 @@
                 ELEMENTS.instructions.classList.remove('blink-text');
                 ELEMENTS.outerBorder.classList.remove('blink-outer-border');
                 toggleBetting(true);
-                ELEMENTS.betInput.focus();
+                if (!isTouchDevice()) ELEMENTS.betInput.focus();
             }, CONSTANTS.BLINK_DURATION);
         };
 
@@ -671,7 +684,7 @@
                 blinkResults(hits, winnings, goldenHits, goldenBonus);
             } else {
                 ELEMENTS.instructions.textContent = `You matched ${hitCount} numbers and won ${formatCurrency(winnings)}`;
-                ELEMENTS.betInput.focus();
+                if (!isTouchDevice()) ELEMENTS.betInput.focus();
             }
             updateCash();
             updateStats();
@@ -683,11 +696,16 @@
         ELEMENTS.resetButton.addEventListener('click', resetGame);
         ELEMENTS.randomButton.addEventListener('click', selectRandomNumbers);
         ELEMENTS.betInput.addEventListener('input', () => formatInput(ELEMENTS.betInput));
+        
+        // Keyboard events for desktop
         ELEMENTS.betInput.addEventListener('keydown', e => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                if (!e.repeat) playGame();
-                else if (!STATE.enterInterval) STATE.enterInterval = setInterval(playGame, 100);
+                if (!e.repeat) {
+                    playGame();
+                } else if (!STATE.enterInterval) {
+                    STATE.enterInterval = setInterval(playGame, 100);
+                }
             }
         });
         ELEMENTS.betInput.addEventListener('keyup', e => {
@@ -696,6 +714,33 @@
                 STATE.enterInterval = null;
             }
         });
+
+        // Touch events for mobile
+        ELEMENTS.betButton.addEventListener('touchstart', e => {
+            e.preventDefault();
+            if (!STATE.enterInterval) {
+                playGame();
+                STATE.enterInterval = setInterval(playGame, 100);
+            }
+        });
+        ELEMENTS.betButton.addEventListener('touchend', e => {
+            e.preventDefault();
+            if (STATE.enterInterval) {
+                clearInterval(STATE.enterInterval);
+                STATE.enterInterval = null;
+            }
+        });
+
+        // Handle input focus for mobile
+        if (isTouchDevice()) {
+            ELEMENTS.betInput.addEventListener('touchstart', e => {
+                ELEMENTS.betInput.readOnly = false;
+            });
+            ELEMENTS.betInput.addEventListener('blur', () => {
+                ELEMENTS.betInput.readOnly = true;
+            });
+        }
+
         ELEMENTS.toggleSavedSets.addEventListener('click', toggleSavedSets);
         ELEMENTS.toggleStats.addEventListener('click', toggleStats);
         ELEMENTS.payoutsButton.addEventListener('click', showPayouts);
@@ -713,6 +758,7 @@
             }
             if (!STATE.isSavedSetsVisible) ELEMENTS.savedSets.classList.add('hidden');
             if (!STATE.isStatsVisible) ELEMENTS.statsBox.classList.add('hidden');
+            if (!isTouchDevice()) ELEMENTS.betInput.focus();
         });
     </script>
 </body>
