@@ -80,6 +80,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(data, 'text/html');
                     const content = doc.getElementById('game-content') || doc.body;
+                    // Reset main-content styles to avoid interference
+                    mainContent.style.border = '2px solid silver';
+                    mainContent.style.padding = '20px';
+                    mainContent.style.margin = '0';
                     mainContent.innerHTML = content.innerHTML;
                 })
                 .catch(error => {
