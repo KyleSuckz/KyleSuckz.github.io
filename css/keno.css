@@ -1,0 +1,37 @@
+body {
+    background-color: black;
+    color: silver;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#game-container {
+    text-align: center;
+}
+
+#cash-display, #bet-section, #options-btns, #number-btns, #stats-btns {
+    margin: 10px 0;
+}
+
+button {
+    background-color: #333;
+    color: silver;
+    border: 1px solid silver;
+    padding: 5px 10px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+input {
+    padding: 5px;
+    margin-left: 5px;
+}
