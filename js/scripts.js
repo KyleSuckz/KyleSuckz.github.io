@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 500);
     }
 
-    // Jump animation on click using requestAnimationFrame
+    // Jump animation on click with slower movement
     function jumpAround(img) {
         const topFrame = document.getElementById('top-frame');
         const startTime = Date.now();
@@ -46,10 +46,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 Object.assign(img.style, originalStyles);
                 return;
             }
-            const randomX = Math.random() * maxX;
-            const randomY = Math.random() * maxY;
-            img.style.left = `${randomX}px`;
-            img.style.top = `${randomY}px`;
+            // Slow down movement by limiting updates to every 200ms
+            const elapsed = Date.now() - startTime;
+            if (elapsed % 200 < 10) { // Update every 200ms
+                const randomX = Math.random() * maxX;
+                const randomY = Math.random() * maxY;
+                img.style.left = `${randomX}px`;
+                img.style.top = `${randomY}px`;
+            }
             requestAnimationFrame(animate);
         }
 
