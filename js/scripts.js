@@ -43,13 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function animate() {
             if (Date.now() - startTime > 5000) {
                 topFrame.appendChild(img);
-                img.style.position = originalStyles.position;
-                img.style.left = isLeftImage ? '0' : 'auto';
-                img.style.right = isLeftImage ? 'auto' : '0';
-                img.style.top = '0';
-                img.style.transform = originalStyles.transform;
-                img.style.zIndex = originalStyles.zIndex;
-                img.style.pointerEvents = originalStyles.pointerEvents;
+                Object.assign(img.style, originalStyles);
                 return;
             }
             const randomX = Math.random() * maxX;
@@ -78,10 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize
     slideImages();
-    mooLeft.addEventListener('click', () => jump hypotAround(mooLeft));
+    mooLeft.addEventListener('click', () => jumpAround(mooLeft));
     mooRight.addEventListener('click', () => jumpAround(mooRight));
-
-    // Menuellate link handling
     const menuLinks = document.querySelectorAll('.menu-link');
     menuLinks.forEach(link => {
         link.addEventListener('click', (e) => {
