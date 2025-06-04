@@ -1,7 +1,6 @@
-/* General styles */
 body {
-    background-color: #1a1a1a;
-    color: #c0c0c0;
+    background-color: black;
+    color: silver;
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
@@ -10,7 +9,7 @@ body {
 #top-frame {
     position: relative;
     height: 150px;
-    border-bottom: 2px solid #c0c0c0;
+    border-bottom: 2px solid silver;
 }
 
 #moo-left, #moo-right {
@@ -20,7 +19,7 @@ body {
     height: 150px;
     z-index: 100;
     pointer-events: auto;
-    transition: transform 0.5s ease; /* Reduced to 0.5s for snappier animation */
+    transition: transform 1s ease;
 }
 
 #moo-left {
@@ -32,36 +31,39 @@ body {
 }
 
 #left-frame {
-    position: fixed;
+    position: absolute;
     left: 0;
     top: 150px;
-    bottom: 0;
     width: 150px;
-    border-right: 2px solid #c0c0c0;
+    border-right: 2px solid silver;
     overflow-y: auto;
+    height: calc(100vh - 200px); /* Adjusts to viewport minus top and bottom frames */
 }
 
 #main-content {
     margin-left: 150px;
     margin-right: 150px;
     padding: 20px;
-    border-left: 2px solid #c0c0c0;
-    border-right: 2px solid #c0c0c0;
-    min-height: calc(100vh - 150px);
+    border-left: 2px solid silver;
+    border-right: 2px solid silver;
 }
 
 #right-frame {
-    position: fixed;
+    position: absolute;
     right: 0;
     top: 150px;
-    bottom: 0;
     width: 150px;
-    border-left: 2px solid #c0c0c0;
+    border-left: 2px solid silver;
+    height: calc(100vh - 200px);
 }
 
 #bottom-frame {
+    position: absolute;
+    bottom: 0;
+    left: 150px;
+    right: 150px;
     height: 50px;
-    border-top: 2px solid #c0c0c0;
+    border-top: 2px solid silver;
 }
 
 /* Responsive design */
@@ -73,5 +75,9 @@ body {
         margin: 0;
         border-left: none;
         border-right: none;
+    }
+    #bottom-frame {
+        left: 0;
+        right: 0;
     }
 }

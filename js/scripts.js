@@ -5,15 +5,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainContent = document.getElementById('main-content');
 
     // Slide images to middle and back on page load
-    const halfWindowWidth = window.innerWidth / 2 - 75; // Center adjustment
+    const totalWidth = 300; // 150px each
+    const halfWindowWidth = (window.innerWidth - totalWidth) / 2;
     setTimeout(() => {
         mooLeft.style.transform = `translateX(${halfWindowWidth}px)`;
         mooRight.style.transform = `translateX(-${halfWindowWidth}px)`;
         setTimeout(() => {
             mooLeft.style.transform = 'translateX(0)';
             mooRight.style.transform = 'translateX(0)';
-        }, 500); // Adjusted based on new transition duration
-    }, 250); // Adjusted for snappier start
+        }, 1000);
+    }, 500);
 
     // Jump animation on click
     function jumpAround(img) {
@@ -31,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.body.appendChild(img);
         img.style.position = 'fixed';
-        img.style.zIndex = '999'; // Higher z-index during jump
+        img.style.zIndex = '999';
         img.style.pointerEvents = 'none';
 
         const maxX = window.innerWidth - 150;
@@ -78,12 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(data => {
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(data, 'text/html');
-                    const content = doc.getElementById('game-content');
-                    if (content) {
-                        mainContent.innerHTML = content.innerHTML;
-                    } else {
-                        mainContent.innerHTML = '<p>Game content not found.</p>';
-                    }
+                    const content = doc.getElementById('game-content') || doc.body;
+                    mainContent.innerHTML = content.innerHTML;
                 })
                 .catch(error => {
                     mainContent.innerHTML = '<p>Failed to load game, please try again.</p>';
