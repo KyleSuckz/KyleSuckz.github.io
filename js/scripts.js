@@ -2,17 +2,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const mooLeft = document.getElementById('moo-left');
     const mooRight = document.getElementById('moo-right');
     const topFrame = document.getElementById('top-frame');
+    const mainContent = document.getElementById('main-content');
 
     // Slide images to middle and back on page load
+    const halfWindowWidth = window.innerWidth / 2 - 75; // Center adjustment
     setTimeout(() => {
-        const halfWindowWidth = window.innerWidth / 2;
-        mooLeft.style.transform = `translateX(${halfWindowWidth - 150}px)`;
-        mooRight.style.transform = `translateX(-${halfWindowWidth - 150}px)`;
+        mooLeft.style.transform = `translateX(${halfWindowWidth}px)`;
+        mooRight.style.transform = `translateX(-${halfWindowWidth}px)`;
         setTimeout(() => {
             mooLeft.style.transform = 'translateX(0)';
             mooRight.style.transform = 'translateX(0)';
-        }, 1000);
-    }, 500);
+        }, 500); // Adjusted based on new transition duration
+    }, 250); // Adjusted for snappier start
 
     // Jump animation on click
     function jumpAround(img) {
@@ -28,13 +29,11 @@ document.addEventListener('DOMContentLoaded', () => {
             pointerEvents: img.style.pointerEvents || 'auto'
         };
 
-        // Move image to body for jumping
         document.body.appendChild(img);
         img.style.position = 'fixed';
-        img.style.zIndex = '50';
+        img.style.zIndex = '999'; // Higher z-index during jump
         img.style.pointerEvents = 'none';
 
-        // Set initial random position
         const maxX = window.innerWidth - 150;
         const maxY = window.innerHeight - 150;
         img.style.left = `${Math.random() * maxX}px`;
@@ -42,10 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
         img.style.right = 'auto';
         img.style.transform = 'none';
 
-        // Start jumping
         const jumpInterval = setInterval(() => {
             if (Date.now() - startTime > 5000) {
-                // Restore image to topFrame
                 topFrame.appendChild(img);
                 img.style.position = originalStyles.position;
                 img.style.left = isLeftImage ? '0' : 'auto';
@@ -69,21 +66,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Menu link handling
     const menuLinks = document.querySelectorAll('.menu-link');
-    const mainContent = document.getElementById('main-content');
-
     menuLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const page = link.getAttribute('data-page');
             fetch(page)
-                .then(response => response.text())
+                .then(response => {
+                    if (!response.ok) throw new Error('Page not found');
+                    return response.text();
+                })
                 .then(data => {
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(data, 'text/html');
-                    mainContent.innerHTML = doc.querySelector('div').innerHTML;
+                    const content = doc.getElementById('game-content');
+                    if (content) {
+                        mainContent.innerHTML = content.innerHTML;
+                    } else {
+                        mainContent.innerHTML = '<p>Game content not found.</p>';
+                    }
                 })
                 .catch(error => {
-                    mainContent.innerHTML = '<p>Error loading page.</p>';
+                    mainContent.innerHTML = '<p>Failed to load game, please try again.</p>';
                     console.error('Error:', error);
                 });
         });

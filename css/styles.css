@@ -1,7 +1,10 @@
-/* Restore Tailwind classes and positioning */
+/* General styles */
 body {
-    background-color: #1a1a1a; /* shiny-black */
-    color: #c0c0c0; /* silver-chrome */
+    background-color: #1a1a1a;
+    color: #c0c0c0;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
 }
 
 #top-frame {
@@ -10,41 +13,65 @@ body {
     border-bottom: 2px solid #c0c0c0;
 }
 
-#moo-left {
+#moo-left, #moo-right {
     position: absolute;
-    left: 0;
     top: 0;
     width: 150px;
     height: 150px;
     z-index: 100;
     pointer-events: auto;
-    transition: transform 1s ease; /* Doubled duration for slide animation */
+    transition: transform 0.5s ease; /* Reduced to 0.5s for snappier animation */
+}
+
+#moo-left {
+    left: 0;
 }
 
 #moo-right {
-    position: absolute;
     right: 0;
-    top: 0;
-    width: 150px;
-    height: 150px;
-    z-index: 100;
-    pointer-events: auto;
-    transition: transform 1s ease; /* Doubled duration for slide animation */
 }
 
 #left-frame {
+    position: fixed;
+    left: 0;
+    top: 150px;
+    bottom: 0;
+    width: 150px;
     border-right: 2px solid #c0c0c0;
+    overflow-y: auto;
 }
 
 #main-content {
+    margin-left: 150px;
+    margin-right: 150px;
+    padding: 20px;
     border-left: 2px solid #c0c0c0;
     border-right: 2px solid #c0c0c0;
+    min-height: calc(100vh - 150px);
 }
 
 #right-frame {
+    position: fixed;
+    right: 0;
+    top: 150px;
+    bottom: 0;
+    width: 150px;
     border-left: 2px solid #c0c0c0;
 }
 
 #bottom-frame {
+    height: 50px;
     border-top: 2px solid #c0c0c0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    #left-frame, #right-frame {
+        display: none;
+    }
+    #main-content {
+        margin: 0;
+        border-left: none;
+        border-right: none;
+    }
 }
