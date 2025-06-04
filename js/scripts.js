@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Slide images to middle and back on page load
     function slideImages() {
-        const totalWidth = 300; // 150px each
+        const totalWidth = window.innerWidth <= 600 ? 200 : 300; // Adjust for mobile (100px images)
         const halfWindowWidth = (window.innerWidth - totalWidth) / 2;
         setTimeout(() => {
             mooLeft.style.transform = `translateX(${halfWindowWidth}px)`;
@@ -37,8 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
         img.style.zIndex = '999';
         img.style.pointerEvents = 'none';
 
-        const maxX = window.innerWidth - 150;
-        const maxY = window.innerHeight - 150;
+        const maxX = window.innerWidth - (window.innerWidth <= 600 ? 100 : 150);
+        const maxY = window.innerHeight - (window.innerWidth <= 600 ? 100 : 150);
 
         function animate() {
             if (Date.now() - startTime > 5000) {
@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 Object.assign(img.style, originalStyles);
                 return;
             }
-            // Slow down movement by limiting updates to every 200ms
             const elapsed = Date.now() - startTime;
             if (elapsed % 300 < 10) { // Update every 300ms
                 const randomX = Math.random() * maxX;
@@ -86,4 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loadPageInIframe(page);
         });
     });
+
+    // Update slide animation on window resize
+    window.addEventListener('resize', slideImages);
 });

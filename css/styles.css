@@ -40,11 +40,15 @@ body {
     right: 0;
 }
 
+#mobile-nav {
+    display: none; /* Hidden by default, shown on mobile */
+}
+
 #left-frame {
     position: fixed;
     left: 0;
     top: 150px;
-    bottom: 0; /* Adjusted to extend to bottom */
+    bottom: 0;
     width: 150px;
     border: 1px solid silver;
     overflow-y: auto;
@@ -53,19 +57,70 @@ body {
 #main-content {
     position: fixed;
     left: 150px;
-    right: 150px;
+    right: 0; /* Adjusted since #right-frame is removed */
     top: 150px;
-    bottom: 0; /* Adjusted to extend to bottom */
+    bottom: 0;
     border: 1px solid silver;
     overflow-y: auto;
 }
 
-#right-frame {
-    position: fixed;
-    right: 0;
-    top: 150px;
-    bottom: 0; /* Adjusted to extend to bottom */
-    width: 150px;
-    border: 1px solid silver;
-    overflow-y: auto;
+/* Mobile and Tablet Responsiveness */
+@media (max-width: 600px) {
+    #top-frame {
+        height: 100px; /* Reduce height on mobile */
+    }
+
+    #moo-left, #moo-right {
+        width: 100px;
+        height: 100px;
+    }
+
+    #left-frame {
+        display: none; /* Hide side frame on mobile */
+    }
+
+    #mobile-nav {
+        display: block;
+        position: fixed;
+        top: 100px; /* Below #top-frame */
+        left: 0;
+        width: 100vw;
+        background-color: black;
+        border-bottom: 1px solid silver;
+        z-index: 50;
+    }
+
+    #mobile-nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+    }
+
+    #mobile-nav li {
+        margin: 10px;
+    }
+
+    #mobile-nav a {
+        color: silver;
+        text-decoration: none;
+    }
+
+    #main-content {
+        left: 0; /* Full width on mobile */
+        right: 0;
+        top: 140px; /* Below #top-frame and #mobile-nav */
+    }
+}
+
+/* Tablets (e.g., iPad portrait) */
+@media (min-width: 601px) and (max-width: 768px) {
+    #left-frame {
+        width: 120px; /* Slightly narrower for tablets */
+    }
+
+    #main-content {
+        left: 120px;
+    }
 }
