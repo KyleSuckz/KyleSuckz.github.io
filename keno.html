@@ -42,33 +42,628 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keno Game</title>
-    <link rel="stylesheet" href="css/keno.css">
+    <meta http-equiv="Cache-Control" content="max-age=86400">
+    <title>Keno</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #000;
+            color: #fff;
+            width: 408px;
+            margin: 10px auto 0 auto;
+            border: 10px solid #808080;
+            padding: 0;
+            position: relative;
+            box-sizing: content-box;
+        }
+        #outer-border {
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            width: 448px;
+            height: calc(100% + 40px);
+            border: 10px solid #000;
+            pointer-events: none;
+            z-index: 1;
+            box-sizing: border-box;
+        }
+        .blink-outer-border {
+            animation: blink-outer-sync 0.5s infinite steps(1);
+        }
+        @keyframes blink-outer-sync {
+            0%, 100% { border-color: #008000; }
+            50% { border-color: #000; }
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 40.8px);
+            gap: 0;
+            margin: 0;
+            width: 408px;
+        }
+        .number {
+            width: 38.8px;
+            height: 38.8px;
+            border: 1px solid #fff;
+            line-height: 38.8px;
+            cursor: pointer;
+            background-color: #808080;
+            transition: background-color 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .selected, .missed-selected { background-color: #f00; color: #fff; }
+        .drawn { background-color: #00f; color: #fff; }
+        .hit { background-color: #008000; color: #fff; }
+        .golden { background-color: #ffd700; color: #fff; font-weight: bold; }
+        .blink-numbers {
+            position: relative;
+        }
+        .blink-numbers::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: blink-numbers-sync 0.5s infinite steps(1);
+            z-index: 0;
+        }
+        @keyframes blink-numbers-sync {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+        #instructions.blink-text {
+            animation: blink-text-sync 0.5s infinite steps(1);
+        }
+        @keyframes blink-text-sync {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        button {
+            padding: 5px 10px;
+            margin: 2px;
+            font-size: 12px;
+            cursor: pointer;
+            background-color: #808080;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            transition: background-color 0.2s;
+        }
+        button:hover:not(:disabled) { background-color: #666; }
+        button:disabled { background-color: #ccc; cursor: not-allowed; }
+        #bet-container {
+            margin: 5px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+        }
+        #bet-input {
+            padding: 5px;
+            font-size: 12px;
+            width: 120px;
+            background-color: #fff;
+            color: #000;
+            text-align: right;
+        }
+        #cash { font-size: 14px; margin: 5px 0; }
+        #controls { display: flex; justify-content: center; gap: 5px; margin: 5px 0; }
+        #saved-sets { 
+            margin: 5px 0; 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 10px; 
+        }
+        .saved-set { 
+            display: flex; 
+            align-items: center; 
+            gap: 5px; 
+            border: 1px solid #333; 
+            padding: 2px;
+        }
+        .saved-numbers-grid { 
+            display: grid; 
+            grid-template-columns: repeat(5, 20px); 
+            gap: 2px; 
+        }
+        .saved-number { 
+            width: 20px; 
+            height: 20px; 
+            background-color: #f00; 
+            color: #fff; 
+            font-size: 12px; 
+            line-height: 20px; 
+            text-align: center; 
+        }
+        .delete-button { 
+            padding: 2px 5px; 
+            font-size: 10px; 
+            background-color: #900; 
+        }
+        .delete-button:hover { background-color: #b00; }
+        #instructions { 
+            background-color: #008000; 
+            padding: 5px; 
+            margin: 5px 0; 
+            font-size: 16px; 
+        }
+        #spacer-below-grid, #spacer-above-cash, #spacer-below-cash { 
+            height: 20px; 
+            background-color: #000; 
+        }
+        #spacer-above-cash, #spacer-below-cash { height: 10px; }
+        #stats-box {
+            background-color: #333;
+            padding: 10px;
+            margin: 0;
+            border: 1px solid #808080;
+            font-size: 14px;
+            text-align: left;
+            width: 388px;
+        }
+        #stats-box p { margin: 5px 0; }
+        #reset-bets-button {
+            padding: 2px 5px;
+            font-size: 12px;
+            background-color: #900;
+            margin-left: 5px;
+        }
+        #reset-bets-button:hover { background-color: #b00; }
+        .toggle-button { 
+            background-color: #444; 
+            padding: 5px 10px; 
+            margin: 2px;
+        }
+        .toggle-button:hover:not(:disabled) { background-color: #555; }
+        .controls-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            margin: 5px 0;
+        }
+        #options-container {
+            margin: 5px 0;
+        }
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body>
-    <div id="game-container">
-        <h2>Select 10 numbers and place your bet.</h2>
-        <div id="cash-display">Cash: $100,000,000</div>
-        <div id="bet-section">
-            <label for="bet-amount">Bet Amount: $</label>
-            <input type="number" id="bet-amount" min="0" value="0">
-            <button id="bet-btn">Bet</button>
-        </div>
-        <div id="options-btns">
-            <button id="show-options">Show Options</button>
-        </div>
-        <div id="number-btns">
-            <button id="save-numbers">Save Numbers</button>
-            <button id="reset-btn">Reset</button>
-            <button id="random-numbers">Random Numbers</button>
-        </div>
-        <div id="stats-btns">
-            <button id="show-stats">Show Stats</button>
-            <button id="hide-saved-sets">Hide Saved Sets</button>
-            <button id="payouts">Payouts</button>
-            <button id="odds">Odds</button>
-        </div>
+    <div id="outer-border"></div>
+    <div id="grid" class="grid"></div>
+    <div id="spacer-below-grid"></div>
+    <p id="instructions" role="status">Select 10 numbers and place your bet.</p>
+    <div id="spacer-above-cash"></div>
+    <div id="cash">Cash: $100,000,000</div>
+    <div id="spacer-below-cash"></div>
+    <div id="bet-container">
+        <label for="bet-input">Bet Amount: $</label>
+        <input type="text" id="bet-input" value="10,000">
+        <button id="bet-button" aria-label="Place your bet">Bet</button>
     </div>
-    <script src="js/keno.js"></script>
+    <div id="options-container">
+        <button id="options-button" class="toggle-button" aria-label="Toggle game options visibility">Show Options</button>
+    </div>
+    <div id="controls">
+        <button id="save-numbers" aria-label="Save selected numbers">Save Numbers</button>
+        <button id="reset" aria-label="Reset number selection">Reset</button>
+        <button id="random-numbers" aria-label="Generate random numbers">Random Numbers</button>
+    </div>
+    <div class="controls-container">
+        <button id="toggle-stats" class="toggle-button" aria-label="Toggle statistics visibility">Show Stats</button>
+        <button id="toggle-saved-sets" class="toggle-button" aria-label="Toggle saved sets visibility">Hide Saved Sets</button>
+        <button id="payouts-button" aria-label="View payout table">Payouts</button>
+        <button id="odds-button" aria-label="View odds of winning">Odds</button>
+    </div>
+    <div id="saved-sets"></div>
+    <div id="stats-box" class="hidden"></div>
+
+    <script>
+        // Constants and Element References
+        const ELEMENTS = {
+            grid: document.getElementById('grid'),
+            outerBorder: document.getElementById('outer-border'),
+            instructions: document.getElementById('instructions'),
+            betInput: document.getElementById('bet-input'),
+            betButton: document.getElementById('bet-button'),
+            cashDisplay: document.getElementById('cash'),
+            saveButton: document.getElementById('save-numbers'),
+            resetButton: document.getElementById('reset'),
+            randomButton: document.getElementById('random-numbers'),
+            savedSets: document.getElementById('saved-sets'),
+            statsBox: document.getElementById('stats-box'),
+            toggleSavedSets: document.getElementById('toggle-saved-sets'),
+            toggleStats: document.getElementById('toggle-stats'),
+            payoutsButton: document.getElementById('payouts-button'),
+            oddsButton: document.getElementById('odds-button'),
+            optionsButton: document.getElementById('options-button'),
+            controls: document.getElementById('controls'),
+            controlsContainer: document.querySelector('.controls-container')
+        };
+
+        const STATE = {
+            selectedNumbers: new Set(),
+            drawnNumbers: new Set(),
+            goldenNumbers: new Set(),
+            hasPlayed: false,
+            cash: 100000000,
+            savedSets: [],
+            isBettingEnabled: true,
+            enterInterval: null,
+            stats: {
+                gamesPlayed: 0,
+                totalBet: 0,
+                totalWon: 0,
+                totalHits: 0,
+                hitCounts: { 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0 },
+                highestWin: 0,
+                highestLoss: 0,
+                betsSinceReset: 0,
+                goldenHits: 0,
+                goldenMatchHits: 0
+            },
+            isSavedSetsVisible: true,
+            isStatsVisible: false,
+            isOptionsVisible: false
+        };
+
+        const CONSTANTS = {
+            MAX_NUMBERS: 80,
+            SELECT_LIMIT: 10,
+            DRAW_COUNT: 20,
+            MAX_SAVED_SETS: 10,
+            PAYOUT_TABLE: { 5: 5, 6: 24, 7: 142, 8: 1000, 9: 4500, 10: 10000 },
+            DEFAULT_INSTRUCTIONS: "Select 10 numbers and place your bet.",
+            BLINK_DURATION: 3000
+        };
+
+        // Utility Functions
+        const commaRegex = /\B(?=(\d{3})+(?!\d))/g;
+        const formatNumberWithCommas = num => num.toString().replace(commaRegex, ",");
+        const parseNumberWithCommas = str => parseFloat(str.replace(/,/g, "")) || 0;
+        const formatCurrency = num => `$${formatNumberWithCommas(num)}`;
+
+        const getRandomSample = (arr, size) => {
+            const result = [...arr];
+            for (let i = result.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [result[i], result[j]] = [result[j], result[i]];
+            }
+            return result.slice(0, size);
+        };
+
+        const formatInput = inputElement => {
+            const rawValue = inputElement.value.replace(/,/g, '');
+            if (rawValue) inputElement.value = formatNumberWithCommas(rawValue);
+        };
+
+        // Grid Management
+        const initGrid = () => {
+            const fragment = document.createDocumentFragment();
+            for (let i = 1; i <= CONSTANTS.MAX_NUMBERS; i++) {
+                const num = document.createElement('div');
+                num.className = 'number';
+                num.textContent = i;
+                num.addEventListener('click', () => toggleNumberSelection(i));
+                fragment.appendChild(num);
+            }
+            ELEMENTS.grid.innerHTML = '';
+            ELEMENTS.grid.appendChild(fragment);
+            updateGrid();
+        };
+
+        const toggleNumberSelection = num => {
+            if (STATE.selectedNumbers.has(num)) {
+                STATE.selectedNumbers.delete(num);
+            } else if (STATE.selectedNumbers.size < CONSTANTS.SELECT_LIMIT) {
+                STATE.selectedNumbers.add(num);
+            }
+            updateGrid();
+        };
+
+        const updateGrid = () => {
+            const numbers = Array.from(ELEMENTS.grid.children);
+            for (let i = 0; i < numbers.length; i++) {
+                const num = i + 1;
+                const classes = ['number'];
+                if (STATE.goldenNumbers.has(num)) {
+                    classes.push('golden');
+                }
+                if (STATE.drawnNumbers.has(num)) {
+                    classes.push(STATE.selectedNumbers.has(num) ? 'hit' : 'drawn');
+                } else if (STATE.selectedNumbers.has(num)) {
+                    classes.push('missed-selected');
+                }
+                numbers[i].className = classes.join(' ');
+            }
+        };
+
+        const drawNumbers = () => {
+            STATE.drawnNumbers.clear();
+            STATE.goldenNumbers.clear();
+            const allNumbers = Array.from({ length: CONSTANTS.MAX_NUMBERS }, (_, i) => i + 1);
+            const drawn = getRandomSample(allNumbers, CONSTANTS.DRAW_COUNT);
+            drawn.forEach(num => STATE.drawnNumbers.add(num));
+            if (Math.random() < 0.01) {
+                const goldenNum = drawn[Math.floor(Math.random() * CONSTANTS.DRAW_COUNT)];
+                STATE.goldenNumbers.add(goldenNum);
+            }
+        };
+
+        // Game Logic
+        const calculateWinnings = (hits, bet) => CONSTANTS.PAYOUT_TABLE[hits] * bet || 0;
+
+        const updateCash = () => ELEMENTS.cashDisplay.textContent = `Cash: ${formatCurrency(STATE.cash)}`;
+
+        const updateStats = () => {
+            const avgHits = STATE.stats.gamesPlayed ? (STATE.stats.totalHits / STATE.stats.gamesPlayed).toFixed(2) : 0;
+            const netProfit = STATE.stats.totalWon - STATE.stats.totalBet;
+            ELEMENTS.statsBox.innerHTML = `
+                <p>Games Played: ${STATE.stats.gamesPlayed}</p>
+                <p>Total Bet: ${formatCurrency(STATE.stats.totalBet)}</p>
+                <p>Total Won: ${formatCurrency(STATE.stats.totalWon)}</p>
+                <p>Net Profit: ${formatCurrency(netProfit)}</p>
+                <p>Average Hits per Game: ${avgHits}</p>
+                <p>5 Number Hits: ${STATE.stats.hitCounts[5]}</p>
+                <p>6 Number Hits: ${STATE.stats.hitCounts[6]}</p>
+                <p>7 Number Hits: ${STATE.stats.hitCounts[7]}</p>
+                <p>8 Number Hits: ${STATE.stats.hitCounts[8]}</p>
+                <p>9 Number Hits: ${STATE.stats.hitCounts[9]}</p>
+                <p>10 Number Hits: ${STATE.stats.hitCounts[10]}</p>
+                <p>Highest Winning Bet: ${formatCurrency(STATE.stats.highestWin)}</p>
+                <p>Highest Lost Bet: ${formatCurrency(STATE.stats.highestLoss)}</p>
+                <p>Bets Since Reset: ${STATE.stats.betsSinceReset} <button id="reset-bets-button">Reset</button></p>
+                <p>Golden Numbers Drawn: ${STATE.stats.goldenHits}</p>
+                <p>Golden Number Matches: ${STATE.stats.goldenMatchHits}</p>
+            `;
+            document.getElementById('reset-bets-button').addEventListener('click', resetBetsSinceReset);
+        };
+
+        const resetBetsSinceReset = () => {
+            STATE.stats.betsSinceReset = 0;
+            updateStats();
+        };
+
+        const saveSet = () => {
+            if (STATE.selectedNumbers.size !== CONSTANTS.SELECT_LIMIT) {
+                alert(`You must select exactly ${CONSTANTS.SELECT_LIMIT} numbers to save!`);
+                return;
+            }
+            if (STATE.savedSets.length >= CONSTANTS.MAX_SAVED_SETS) {
+                alert(`Maximum of ${CONSTANTS.MAX_SAVED_SETS} saved sets reached!`);
+                return;
+            }
+            STATE.savedSets.push([...STATE.selectedNumbers]);
+            updateSavedSets();
+        };
+
+        const updateSavedSets = () => {
+            ELEMENTS.savedSets.innerHTML = '';
+            const fragment = document.createDocumentFragment();
+            STATE.savedSets.forEach((set, index) => {
+                const setDiv = document.createElement('div');
+                setDiv.className = 'saved-set';
+
+                const numbersGrid = document.createElement('div');
+                numbersGrid.className = 'saved-numbers-grid';
+                set.forEach(num => {
+                    const numDiv = document.createElement('div');
+                    numDiv.className = 'saved-number';
+                    numDiv.textContent = num;
+                    numbersGrid.appendChild(numDiv);
+                });
+
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'delete-button';
+                deleteButton.textContent = 'Delete';
+                deleteButton.addEventListener('click', e => {
+                    e.stopPropagation();
+                    STATE.savedSets.splice(index, 1);
+                    updateSavedSets();
+                });
+
+                setDiv.appendChild(numbersGrid);
+                setDiv.appendChild(deleteButton);
+                setDiv.addEventListener('click', () => {
+                    STATE.selectedNumbers = new Set(set);
+                    updateGrid();
+                });
+
+                fragment.appendChild(setDiv);
+            });
+            ELEMENTS.savedSets.appendChild(fragment);
+        };
+
+        const selectRandomNumbers = () => {
+            STATE.selectedNumbers.clear();
+            const allNumbers = Array.from({ length: CONSTANTS.MAX_NUMBERS }, (_, i) => i + 1);
+            getRandomSample(allNumbers, CONSTANTS.SELECT_LIMIT).forEach(num => STATE.selectedNumbers.add(num));
+            updateGrid();
+            ELEMENTS.betInput.focus();
+            if (STATE.enterInterval) clearInterval(STATE.enterInterval);
+            STATE.enterInterval = null;
+        };
+
+        const blinkResults = (hits, winnings, goldenHits, goldenBonus) => {
+            toggleBetting(false);
+            const hitElements = Array.from(ELEMENTS.grid.children)
+                .filter(el => hits.has(parseInt(el.textContent)));
+            hitElements.forEach(el => el.classList.add('blink-numbers'));
+            ELEMENTS.instructions.classList.add('blink-text');
+            if (hits.size + goldenBonus >= 7) ELEMENTS.outerBorder.classList.add('blink-outer-border');
+            const goldenText = goldenBonus > 0 ? ` (including ${goldenBonus} golden bonus from ${goldenHits.join(', ')})` : '';
+            ELEMENTS.instructions.textContent = `You matched ${hits.size + goldenBonus} numbers${goldenText} and won ${formatCurrency(winnings)}`;
+
+            setTimeout(() => {
+                hitElements.forEach(el => el.classList.remove('blink-numbers'));
+                ELEMENTS.instructions.classList.remove('blink-text');
+                ELEMENTS.outerBorder.classList.remove('blink-outer-border');
+                toggleBetting(true);
+                ELEMENTS.betInput.focus();
+            }, CONSTANTS.BLINK_DURATION);
+        };
+
+        const toggleBetting = enabled => {
+            ELEMENTS.betButton.disabled = ELEMENTS.betInput.disabled = !enabled;
+            if (!enabled && STATE.enterInterval) {
+                clearInterval(STATE.enterInterval);
+                STATE.enterInterval = null;
+            }
+        };
+
+        const resetGame = () => {
+            STATE.selectedNumbers.clear();
+            STATE.drawnNumbers.clear();
+            STATE.goldenNumbers.clear();
+            STATE.hasPlayed = false;
+            ELEMENTS.betInput.value = formatNumberWithCommas("10000");
+            ELEMENTS.instructions.textContent = CONSTANTS.DEFAULT_INSTRUCTIONS;
+            updateGrid();
+        };
+
+        const toggleSavedSets = () => {
+            STATE.isSavedSetsVisible = !STATE.isSavedSetsVisible;
+            ELEMENTS.savedSets.classList.toggle('hidden');
+            ELEMENTS.toggleSavedSets.textContent = STATE.isSavedSetsVisible ? 'Hide Saved Sets' : 'Show Saved Sets';
+        };
+
+        const toggleStats = () => {
+            STATE.isStatsVisible = !STATE.isStatsVisible;
+            ELEMENTS.statsBox.classList.toggle('hidden');
+            ELEMENTS.toggleStats.textContent = STATE.isStatsVisible ? 'Hide Stats' : 'Show Stats';
+        };
+
+        const toggleOptions = () => {
+            STATE.isOptionsVisible = !STATE.isOptionsVisible;
+            ELEMENTS.controls.classList.toggle('hidden');
+            ELEMENTS.controlsContainer.classList.toggle('hidden');
+            ELEMENTS.savedSets.classList.toggle('hidden', !STATE.isOptionsVisible || !STATE.isSavedSetsVisible);
+            ELEMENTS.statsBox.classList.toggle('hidden', !STATE.isStatsVisible);
+            ELEMENTS.optionsButton.textContent = STATE.isOptionsVisible ? 'Hide Options' : 'Show Options';
+        };
+
+        const showPayouts = () => {
+            const payouts = Object.entries(CONSTANTS.PAYOUT_TABLE)
+                .map(([hits, multiplier]) => `${hits} matching numbers pays ${multiplier} x amount of bet`)
+                .join('\n');
+            alert(`Payout Table:\n\n${payouts}`);
+        };
+
+        const calculateOdds = k => {
+            const n = CONSTANTS.MAX_NUMBERS;
+            const m = CONSTANTS.DRAW_COUNT;
+            const t = CONSTANTS.SELECT_LIMIT;
+            const factorial = n => n <= 1 ? 1 : n * factorial(n - 1);
+            const binomial = (n, k) => factorial(n) / (factorial(k) * factorial(n - k));
+            const hits = binomial(t, k) * binomial(n - t, m - k) / binomial(n, m);
+            return Math.round(1 / hits);
+        };
+
+        const showOdds = () => {
+            const odds = [5, 6, 7, 8, 9, 10]
+                .map(k => `Odds of hitting ${k} numbers are 1 out of ${calculateOdds(k)}`)
+                .join('\n');
+            alert(`Odds of Winning:\n\n${odds}`);
+        };
+
+        // Main Game Logic
+        const playGame = () => {
+            if (STATE.selectedNumbers.size !== CONSTANTS.SELECT_LIMIT) {
+                alert(`You must select exactly ${CONSTANTS.SELECT_LIMIT} numbers before playing!`);
+                clearInterval(STATE.enterInterval);
+                STATE.enterInterval = null;
+                return;
+            }
+
+            const bet = parseNumberWithCommas(ELEMENTS.betInput.value);
+            if (bet <= 0 || bet > STATE.cash) {
+                alert("Please enter a valid bet amount within your cash!");
+                clearInterval(STATE.enterInterval);
+                STATE.enterInterval = null;
+                return;
+            }
+
+            STATE.cash -= bet;
+            STATE.stats.totalBet += bet;
+            STATE.stats.betsSinceReset++;
+            drawNumbers();
+            const hits = new Set([...STATE.selectedNumbers].filter(num => STATE.drawnNumbers.has(num)));
+            let hitCount = hits.size;
+            let goldenBonus = 0;
+
+            const goldenHits = [...STATE.selectedNumbers].filter(num => STATE.goldenNumbers.has(num));
+            if (STATE.goldenNumbers.size > 0) STATE.stats.goldenHits++;
+            if (goldenHits.length > 0 && hitCount < CONSTANTS.SELECT_LIMIT) {
+                goldenBonus = 1;
+                hitCount = Math.min(hitCount + goldenBonus, CONSTANTS.SELECT_LIMIT);
+                STATE.stats.goldenMatchHits++;
+            }
+
+            const winnings = calculateWinnings(hitCount, bet);
+            STATE.cash += winnings;
+            STATE.stats.totalWon += winnings;
+            STATE.stats.gamesPlayed++;
+            STATE.stats.totalHits += hitCount;
+
+            if (hitCount >= 5 && hitCount <= 10) STATE.stats.hitCounts[hitCount]++;
+            STATE.stats.highestWin = winnings > 0 ? Math.max(STATE.stats.highestWin, winnings) : STATE.stats.highestWin;
+            STATE.stats.highestLoss = winnings === 0 ? Math.max(STATE.stats.highestLoss, bet) : STATE.stats.highestLoss;
+
+            updateGrid();
+            STATE.hasPlayed = true;
+
+            if (hitCount >= 5 || goldenBonus > 0) {
+                blinkResults(hits, winnings, goldenHits, goldenBonus);
+            } else {
+                ELEMENTS.instructions.textContent = `You matched ${hitCount} numbers and won ${formatCurrency(winnings)}`;
+                ELEMENTS.betInput.focus();
+            }
+            updateCash();
+            updateStats();
+        };
+
+        // Event Listeners
+        ELEMENTS.betButton.addEventListener('click', playGame);
+        ELEMENTS.saveButton.addEventListener('click', saveSet);
+        ELEMENTS.resetButton.addEventListener('click', resetGame);
+        ELEMENTS.randomButton.addEventListener('click', selectRandomNumbers);
+        ELEMENTS.betInput.addEventListener('input', () => formatInput(ELEMENTS.betInput));
+        ELEMENTS.betInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (!e.repeat) playGame();
+                else if (!STATE.enterInterval) STATE.enterInterval = setInterval(playGame, 100);
+            }
+        });
+        ELEMENTS.betInput.addEventListener('keyup', e => {
+            if (e.key === 'Enter' && STATE.enterInterval) {
+                clearInterval(STATE.enterInterval);
+                STATE.enterInterval = null;
+            }
+        });
+        ELEMENTS.toggleSavedSets.addEventListener('click', toggleSavedSets);
+        ELEMENTS.toggleStats.addEventListener('click', toggleStats);
+        ELEMENTS.payoutsButton.addEventListener('click', showPayouts);
+        ELEMENTS.oddsButton.addEventListener('click', showOdds);
+        ELEMENTS.optionsButton.addEventListener('click', toggleOptions);
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initGrid();
+            updateCash();
+            updateStats();
+            if (!STATE.isOptionsVisible) {
+                ELEMENTS.controls.classList.add('hidden');
+                ELEMENTS.controlsContainer.classList.add('hidden');
+                ELEMENTS.savedSets.classList.add('hidden');
+            }
+            if (!STATE.isSavedSetsVisible) ELEMENTS.savedSets.classList.add('hidden');
+            if (!STATE.isStatsVisible) ELEMENTS.statsBox.classList.add('hidden');
+        });
+    </script>
 </body>
 </html>
