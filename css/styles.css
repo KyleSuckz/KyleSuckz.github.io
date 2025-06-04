@@ -8,22 +8,14 @@ body {
     overflow: auto;
 }
 
-.container {
-    display: grid;
-    grid-template-areas:
-        "top top top"
-        "left main right"
-        "bottom bottom bottom";
-    grid-template-rows: 150px 1fr 50 Decorationpx;
-    grid-template-columns: 150px 1fr 150px;
-    height: 100vh;
-    width: 100vw;
-}
-
 #top-frame {
-    grid-area: top;
-    position: relative;
-    border: 2px solid silver;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 150px; /* Static height to match images */
+    border: 1px solid silver; /* Reduced border width */
+    overflow: hidden; /* Prevent images from overflowing */
 }
 
 #moo-left, #moo-right {
@@ -45,25 +37,41 @@ body {
 }
 
 #left-frame {
-    grid-area: left;
-    border: 2px solid silver;
+    position: fixed;
+    left: 0;
+    top: 150px;
+    bottom: 100px;
+    width: 150px;
+    border: 1px solid silver; /* Reduced border width */
     overflow-y: auto;
 }
 
 #main-content {
-    grid-area: main;
-    padding: 20px;
-    border: 2px solid silver;
+    position: fixed;
+    left: 150px;
+    right: 150px;
+    top: 150px;
+    bottom: 100px;
+    padding: 0; /* Reset padding to avoid interference */
+    border: 1px solid silver; /* Reduced border width */
     overflow-y: auto;
 }
 
 #right-frame {
-    grid-area: right;
-    border: 2px solid silver;
+    position: fixed;
+    right: 0;
+    top: 150px;
+    bottom: 100px;
+    width: 150px;
+    border: 1px solid silver; /* Reduced border width */
     overflow-y: auto;
 }
 
 #bottom-frame {
-    grid-area: bottom;
-    border: 2px solid silver;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 100px; /* Static height as requested */
+    border: 1px solid silver; /* Reduced border width */
 }

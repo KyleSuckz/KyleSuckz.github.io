@@ -79,12 +79,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(data => {
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(data, 'text/html');
-                    const content = doc.getElementById('game-content') || doc.body;
                     // Reset main-content styles to avoid interference
-                    mainContent.style.border = '2px solid silver';
-                    mainContent.style.padding = '20px';
+                    mainContent.style.padding = '0';
                     mainContent.style.margin = '0';
-                    mainContent.innerHTML = content.innerHTML;
+                    mainContent.style.border = '1px solid silver';
+                    mainContent.style.position = 'fixed';
+                    mainContent.style.left = '150px';
+                    mainContent.style.right = '150px';
+                    mainContent.style.top = '150px';
+                    mainContent.style.bottom = '100px';
+                    mainContent.style.overflowY = 'auto';
+                    mainContent.innerHTML = doc.body.innerHTML;
                 })
                 .catch(error => {
                     mainContent.innerHTML = '<p>Failed to load game, please try again.</p>';
