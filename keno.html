@@ -50,7 +50,7 @@
             padding: 0;
             width: 100%;
             background-color: #000;
-            overflow: hidden; /* Prevent scrollbar unless needed */
+            overflow: hidden;
         }
         body {
             font-family: Arial, sans-serif;
@@ -60,7 +60,7 @@
             border: 10px solid #808080;
             position: relative;
             box-sizing: content-box;
-            margin: 10px auto 0; /* Remove bottom margin */
+            margin: 10px auto 0;
             height: auto;
             min-height: auto;
             overflow: visible;
@@ -145,7 +145,7 @@
             touch-action: manipulation;
         }
         #bet-button {
-            padding: 5px 15px; /* Increase touch target */
+            padding: 5px 15px;
         }
         button:hover:not(:disabled) { background-color: #666; }
         button:disabled { background-color: #ccc; cursor: not-allowed; }
@@ -205,6 +205,8 @@
             padding: 5px; 
             margin: 5px 0; 
             font-size: 16px; 
+            position: relative; /* Ensure z-index works */
+            z-index: 2; /* Place above outer-border */
         }
         #spacer-below-grid, #spacer-above-cash, #spacer-below-cash { 
             height: 20px; 
@@ -276,7 +278,7 @@
                 padding: 3px 8px;
             }
             #bet-button {
-                padding: 3px 12px; /* Adjusted for mobile */
+                padding: 3px 12px;
             }
             .saved-number {
                 width: 15px;
@@ -360,7 +362,7 @@
             isBettingEnabled: true,
             enterInterval: null,
             isHoldingBet: false,
-            isHoldingEnter: false, // Track Enter key hold
+            isHoldingEnter: false,
             stats: {
                 gamesPlayed: 0,
                 totalBet: 0,
@@ -413,7 +415,6 @@
 
         // Update outer border height to match content
         const updateOuterBorderHeight = () => {
-            // Find the last visible element
             const elements = [
                 ELEMENTS.statsBox,
                 ELEMENTS.savedSets,
@@ -436,14 +437,14 @@
             }
             if (!lastVisible) return;
 
-            const bodyRect = document.body.getBoundingClientRect();
-            const lastRect = lastVisible.getBoundingClientRect();
-            const contentHeight = lastRect.bottom - bodyRect.top + 20; // Add padding
-            ELEMENTS.outerBorder.style.height = `${contentHeight + 40}px`;
+            // Calculate height from top of body to bottom of last visible element
+            const contentHeight = lastVisible.offsetTop + lastVisible.offsetHeight + 10; // Add small padding
+            ELEMENTS.outerBorder.style.height = `${contentHeight + 20}px`; // Account for top: -20px
 
-            // Update html overflow based on content height
+            // Update scrollbar
             const viewportHeight = window.innerHeight;
-            document.documentElement.style.overflow = contentHeight + 20 > viewportHeight ? 'auto' : 'hidden';
+            const totalHeight = contentHeight + 20 + 10; // Include body margin-top
+            document.documentElement.style.overflow = totalHeight > viewportHeight ? 'auto' : 'hidden';
         };
 
         // Grid Management
@@ -686,7 +687,6 @@
 
         // Main Game Logic
         const playGame = () => {
-            // Stop betting if not holding (for mobile or PC)
             if (!STATE.isHoldingBet && !STATE.isHoldingEnter && STATE.enterInterval) {
                 clearInterval(STATE.enterInterval);
                 STATE.enterInterval = null;
@@ -781,7 +781,7 @@
         ELEMENTS.betButton.addEventListener('touchstart', e => {
             e.preventDefault();
             e.stopPropagation();
-            ELEMENTS.betInput.blur(); // Prevent input focus
+            ELEMENTS.betInput.blur();
             STATE.isHoldingBet = true;
             if (!STATE.enterInterval) {
                 playGame();
