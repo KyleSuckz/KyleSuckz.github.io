@@ -51,7 +51,7 @@
             width: 100%;
             height: auto;
             min-height: 100vh;
-            background-color: #000;
+            background-color: #ff0000; /* Temporary red for debugging */
             overflow: auto;
         }
         body {
@@ -60,7 +60,7 @@
             color: #fff;
             width: 408px;
             border: 10px solid #808080;
-            border-bottom: 10px solid #000; /* Restored bottom border */
+            border-bottom: 10px solid #000; /* Bottom border */
             position: relative;
             box-sizing: content-box;
             margin: 10px auto 0;
@@ -259,7 +259,7 @@
             body {
                 width: 308px;
                 border-width: 5px;
-                border-bottom: 5px solid #000; /* Adjusted for mobile */
+                border-bottom: 5px solid #000;
             }
             #outer-border {
                 width: 328px;
@@ -421,21 +421,19 @@
         // Detect if device is touch-enabled (for mobile vs desktop behavior)
         const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-        // Update body height to match content up to options container, expanding with visible options
+        // Update body height to match content up to options container, including border
         const updateBodyHeight = () => {
             const optionsRect = ELEMENTS.optionsContainer.getBoundingClientRect();
             const bodyRect = document.body.getBoundingClientRect();
-            const baseHeight = optionsRect.bottom - bodyRect.top + 10; // Include bottom margin/padding
-
+            const baseHeight = optionsRect.bottom - bodyRect.top + 10; // Base height up to options container
             let extraHeight = 0;
             if (!ELEMENTS.controls.classList.contains('hidden')) extraHeight += ELEMENTS.controls.getBoundingClientRect().height;
             if (!ELEMENTS.controlsContainer.classList.contains('hidden')) extraHeight += ELEMENTS.controlsContainer.getBoundingClientRect().height;
             if (!ELEMENTS.savedSets.classList.contains('hidden')) extraHeight += ELEMENTS.savedSets.getBoundingClientRect().height;
             if (!ELEMENTS.statsBox.classList.contains('hidden')) extraHeight += ELEMENTS.statsBox.getBoundingClientRect().height;
-
-            const totalHeight = baseHeight + extraHeight;
+            const totalHeight = baseHeight + extraHeight + 10; // Add border thickness
             document.body.style.height = `${totalHeight}px`;
-            ELEMENTS.outerBorder.style.height = `${totalHeight + 20}px`; // Match outer border height
+            ELEMENTS.outerBorder.style.height = `${totalHeight}px`; // Match body height without extra offset
         };
 
         // Grid Management
