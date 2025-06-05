@@ -48,12 +48,8 @@
         html {
             margin: 0;
             padding: 0;
-            min-height: 100vh;
             width: 100%;
             background-color: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             overflow: auto;
         }
         body {
@@ -64,11 +60,10 @@
             border: 10px solid #808080;
             position: relative;
             box-sizing: content-box;
-            display: inline-block;
+            margin: 10px auto;
             height: auto;
             min-height: 0;
             overflow: visible;
-            align-self: flex-start;
         }
         #outer-border {
             position: absolute;
@@ -147,6 +142,7 @@
             transition: background-color 0.2s;
             -webkit-user-select: none;
             user-select: none;
+            touch-action: manipulation; /* Prevent scrolling on touch */
         }
         button:hover:not(:disabled) { background-color: #666; }
         button:disabled { background-color: #ccc; cursor: not-allowed; }
@@ -357,7 +353,7 @@
             savedSets: [],
             isBettingEnabled: true,
             enterInterval: null,
-            isHoldingBet: false, // Track if user is holding the Bet button
+            isHoldingBet: false,
             stats: {
                 gamesPlayed: 0,
                 totalBet: 0,
@@ -571,7 +567,6 @@
                 ELEMENTS.outerBorder.classList.remove('blink-outer-border');
                 toggleBetting(true);
                 if (!isTouchDevice()) ELEMENTS.betInput.focus();
-                // Restart betting if user is still holding the Bet button
                 if (STATE.isHoldingBet && !STATE.enterInterval) {
                     STATE.enterInterval = setInterval(playGame, 100);
                 }
@@ -725,6 +720,7 @@
         // Touch events for mobile
         ELEMENTS.betButton.addEventListener('touchstart', e => {
             e.preventDefault();
+            e.stopPropagation(); // Prevent focusing the input
             STATE.isHoldingBet = true;
             if (!STATE.enterInterval) {
                 playGame();
@@ -733,6 +729,16 @@
         });
         ELEMENTS.betButton.addEventListener('touchend', e => {
             e.preventDefault();
+            e.stopPropagation();
+            STATE.isHoldingBet = false;
+            if (STATE.enterInterval) {
+                clearInterval(STATE.enterInterval);
+                STATE.enterInterval = null;
+            }
+        });
+        ELEMENTS.betButton.addEventListener('touchcancel', e => {
+            e.preventDefault();
+            e.stopPropagation();
             STATE.isHoldingBet = false;
             if (STATE.enterInterval) {
                 clearInterval(STATE.enterInterval);
