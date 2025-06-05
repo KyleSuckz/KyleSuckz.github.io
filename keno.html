@@ -62,15 +62,15 @@
             box-sizing: content-box;
             margin: 10px auto;
             height: auto;
-            min-height: 0;
+            min-height: auto;
             overflow: visible;
+            display: block;
         }
         #outer-border {
             position: absolute;
             top: -20px;
             left: -20px;
             width: 448px;
-            height: calc(100% + 40px);
             border: 10px solid #000;
             pointer-events: none;
             z-index: 1;
@@ -142,7 +142,7 @@
             transition: background-color 0.2s;
             -webkit-user-select: none;
             user-select: none;
-            touch-action: manipulation; /* Prevent scrolling on touch */
+            touch-action: manipulation;
         }
         button:hover:not(:disabled) { background-color: #666; }
         button:disabled { background-color: #ccc; cursor: not-allowed; }
@@ -151,7 +151,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 5px;
+            gap: 10px; /* Increased gap to reduce accidental taps */
         }
         #bet-input {
             padding: 5px;
@@ -404,6 +404,12 @@
         // Detect if device is touch-enabled (for mobile vs desktop behavior)
         const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
+        // Update outer border height to match body content
+        const updateOuterBorderHeight = () => {
+            const bodyHeight = document.body.offsetHeight;
+            ELEMENTS.outerBorder.style.height = `${bodyHeight + 40}px`;
+        };
+
         // Grid Management
         const initGrid = () => {
             const fragment = document.createDocumentFragment();
@@ -484,6 +490,7 @@
                 <p>Golden Number Matches: ${STATE.stats.goldenMatchHits}</p>
             `;
             document.getElementById('reset-bets-button').addEventListener('click', resetBetsSinceReset);
+            updateOuterBorderHeight();
         };
 
         const resetBetsSinceReset = () => {
@@ -539,6 +546,7 @@
                 fragment.appendChild(setDiv);
             });
             ELEMENTS.savedSets.appendChild(fragment);
+            updateOuterBorderHeight();
         };
 
         const selectRandomNumbers = () => {
@@ -589,18 +597,21 @@
             ELEMENTS.betInput.value = formatNumberWithCommas("10000");
             ELEMENTS.instructions.textContent = CONSTANTS.DEFAULT_INSTRUCTIONS;
             updateGrid();
+            updateOuterBorderHeight();
         };
 
         const toggleSavedSets = () => {
             STATE.isSavedSetsVisible = !STATE.isSavedSetsVisible;
             ELEMENTS.savedSets.classList.toggle('hidden');
             ELEMENTS.toggleSavedSets.textContent = STATE.isSavedSetsVisible ? 'Hide Saved Sets' : 'Show Saved Sets';
+            updateOuterBorderHeight();
         };
 
         const toggleStats = () => {
             STATE.isStatsVisible = !STATE.isStatsVisible;
             ELEMENTS.statsBox.classList.toggle('hidden');
             ELEMENTS.toggleStats.textContent = STATE.isStatsVisible ? 'Hide Stats' : 'Show Stats';
+            updateOuterBorderHeight();
         };
 
         const toggleOptions = () => {
@@ -610,6 +621,7 @@
             ELEMENTS.savedSets.classList.toggle('hidden', !STATE.isOptionsVisible || !STATE.isSavedSetsVisible);
             ELEMENTS.statsBox.classList.toggle('hidden', !STATE.isStatsVisible);
             ELEMENTS.optionsButton.textContent = STATE.isOptionsVisible ? 'Hide Options' : 'Show Options';
+            updateOuterBorderHeight();
         };
 
         const showPayouts = () => {
@@ -638,6 +650,13 @@
 
         // Main Game Logic
         const playGame = () => {
+            // Stop betting if not holding the button
+            if (!STATE.isHoldingBet && STATE.enterInterval) {
+                clearInterval(STATE.enterInterval);
+                STATE.enterInterval = null;
+                return;
+            }
+
             if (STATE.selectedNumbers.size !== CONSTANTS.SELECT_LIMIT) {
                 alert(`You must select exactly ${CONSTANTS.SELECT_LIMIT} numbers before playing!`);
                 clearInterval(STATE.enterInterval);
@@ -720,7 +739,7 @@
         // Touch events for mobile
         ELEMENTS.betButton.addEventListener('touchstart', e => {
             e.preventDefault();
-            e.stopPropagation(); // Prevent focusing the input
+            e.stopPropagation();
             STATE.isHoldingBet = true;
             if (!STATE.enterInterval) {
                 playGame();
@@ -743,6 +762,24 @@
             if (STATE.enterInterval) {
                 clearInterval(STATE.enterInterval);
                 STATE.enterInterval = null;
+            }
+        });
+        ELEMENTS.betButton.addEventListener('touchmove', e => {
+            e.preventDefault();
+            e.stopPropagation();
+            const touch = e.touches[0];
+            const buttonRect = ELEMENTS.betButton.getBoundingClientRect();
+            if (
+                touch.clientX < buttonRect.left ||
+                touch.clientX > buttonRect.right ||
+                touch.clientY < buttonRect.top ||
+                touch.clientY > buttonRect.bottom
+            ) {
+                STATE.isHoldingBet = false;
+                if (STATE.enterInterval) {
+                    clearInterval(STATE.enterInterval);
+                    STATE.enterInterval = null;
+                }
             }
         });
 
@@ -774,6 +811,15 @@
             if (!STATE.isSavedSetsVisible) ELEMENTS.savedSets.classList.add('hidden');
             if (!STATE.isStatsVisible) ELEMENTS.statsBox.classList.add('hidden');
             if (!isTouchDevice()) ELEMENTS.betInput.focus();
+
+            // Initial border height
+            updateOuterBorderHeight();
+
+            // Observe body size changes
+            const resizeObserver = new ResizeObserver(() => {
+                updateOuterBorderHeight();
+            });
+            resizeObserver.observe(document.body);
         });
     </script>
 </body>
