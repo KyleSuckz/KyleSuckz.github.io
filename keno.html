@@ -49,8 +49,10 @@
             margin: 0;
             padding: 0;
             width: 100%;
+            height: auto;
+            min-height: 100vh;
             background-color: #000;
-            overflow: hidden;
+            overflow: auto; /* Let browser handle overflow naturally */
         }
         body {
             font-family: Arial, sans-serif;
@@ -62,7 +64,7 @@
             box-sizing: content-box;
             margin: 10px auto 0;
             height: auto;
-            min-height: auto;
+            min-height: 0; /* Prevent body from stretching */
             overflow: visible;
             display: block;
         }
@@ -205,12 +207,12 @@
             padding: 5px; 
             margin: 5px 0; 
             font-size: 16px; 
-            position: relative; /* Ensure z-index works */
-            z-index: 2; /* Place above outer-border */
+            position: relative;
+            z-index: 2;
         }
         #spacer-below-grid, #spacer-above-cash, #spacer-below-cash { 
             height: 20px; 
-            background-color: #000; 
+            background-color: transparent; /* Remove black background */
         }
         #spacer-above-cash, #spacer-below-cash { height: 10px; }
         #stats-box {
@@ -437,14 +439,12 @@
             }
             if (!lastVisible) return;
 
-            // Calculate height from top of body to bottom of last visible element
-            const contentHeight = lastVisible.offsetTop + lastVisible.offsetHeight + 10; // Add small padding
-            ELEMENTS.outerBorder.style.height = `${contentHeight + 20}px`; // Account for top: -20px
-
-            // Update scrollbar
-            const viewportHeight = window.innerHeight;
-            const totalHeight = contentHeight + 20 + 10; // Include body margin-top
-            document.documentElement.style.overflow = totalHeight > viewportHeight ? 'auto' : 'hidden';
+            // Calculate content height
+            const contentHeight = lastVisible.offsetTop + lastVisible.offsetHeight + 10; // Padding below
+            // Set body height to match content
+            document.body.style.height = `${contentHeight}px`;
+            // Set outer border height, accounting for top: -20px
+            ELEMENTS.outerBorder.style.height = `${contentHeight + 20}px`;
         };
 
         // Grid Management
