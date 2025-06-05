@@ -421,11 +421,11 @@
         // Detect if device is touch-enabled (for mobile vs desktop behavior)
         const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-        // Update body height to match content up to options container, including border
+        // Update body height to match content up to options container, adjusting border positions
         const updateBodyHeight = () => {
             const optionsRect = ELEMENTS.optionsContainer.getBoundingClientRect();
             const bodyRect = document.body.getBoundingClientRect();
-            const baseHeight = optionsRect.bottom - bodyRect.top + 10; // Base height up to options container
+            const baseHeight = optionsRect.bottom - bodyRect.top + 8; // Adjusted padding (moved up 2px)
             let extraHeight = 0;
             if (!ELEMENTS.controls.classList.contains('hidden')) extraHeight += ELEMENTS.controls.getBoundingClientRect().height;
             if (!ELEMENTS.controlsContainer.classList.contains('hidden')) extraHeight += ELEMENTS.controlsContainer.getBoundingClientRect().height;
@@ -433,7 +433,7 @@
             if (!ELEMENTS.statsBox.classList.contains('hidden')) extraHeight += ELEMENTS.statsBox.getBoundingClientRect().height;
             const totalHeight = baseHeight + extraHeight + 10; // Add border thickness
             document.body.style.height = `${totalHeight}px`;
-            ELEMENTS.outerBorder.style.height = `${totalHeight}px`; // Match body height without extra offset
+            ELEMENTS.outerBorder.style.height = `${totalHeight + 33}px`; // Extend outer border (down 3px)
         };
 
         // Grid Management
