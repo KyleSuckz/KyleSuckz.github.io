@@ -51,7 +51,7 @@
             width: 100%;
             height: auto;
             min-height: 100vh;
-            background-color: #000;
+            background-color: #ff0000; /* Temporary red to debug black lines */
             overflow: auto;
         }
         body {
@@ -454,11 +454,11 @@
             const lastStyle = getComputedStyle(lastVisible);
             const lastMarginBottom = parseFloat(lastStyle.marginBottom) || 0;
 
-            // Add extra padding to account for margins and ensure bottom border visibility
-            const totalHeight = lastRect.bottom - bodyRect.top + lastMarginBottom + 30;
+            // Add extra padding to account for border thickness and ensure bottom border visibility
+            const totalHeight = lastRect.bottom - bodyRect.top + lastMarginBottom + 40; // Increased padding
 
             document.body.style.height = `${totalHeight}px`;
-            ELEMENTS.outerBorder.style.height = `${totalHeight + 20}px`;
+            ELEMENTS.outerBorder.style.height = `${totalHeight + 30}px`; // Adjusted for border thickness
         };
 
         // Grid Management
