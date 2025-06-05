@@ -51,7 +51,7 @@
             width: 100%;
             height: auto;
             min-height: 100vh;
-            background-color: #ff0000; /* Temporary red to debug black lines */
+            background-color: #000;
             overflow: auto;
         }
         body {
@@ -60,7 +60,7 @@
             color: #fff;
             width: 408px;
             border: 10px solid #808080;
-            border-bottom: none;
+            border-bottom: 10px solid #000; /* Restored bottom border */
             position: relative;
             box-sizing: content-box;
             margin: 10px auto 0;
@@ -68,7 +68,7 @@
             min-height: 0;
             overflow: visible;
             display: block;
-            background-color: #333; /* Temporary for debugging */
+            background-color: #333;
         }
         #outer-border {
             position: absolute;
@@ -259,7 +259,7 @@
             body {
                 width: 308px;
                 border-width: 5px;
-                border-bottom: none;
+                border-bottom: 5px solid #000; /* Adjusted for mobile */
             }
             #outer-border {
                 width: 328px;
@@ -356,7 +356,8 @@
             oddsButton: document.getElementById('odds-button'),
             optionsButton: document.getElementById('options-button'),
             controls: document.getElementById('controls'),
-            controlsContainer: document.querySelector('.controls-container')
+            controlsContainer: document.querySelector('.controls-container'),
+            optionsContainer: document.getElementById('options-container')
         };
 
         const STATE = {
@@ -420,45 +421,21 @@
         // Detect if device is touch-enabled (for mobile vs desktop behavior)
         const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-        // Update outer border height to match content
-        const updateOuterBorderHeight = () => {
-            const elements = [
-                ELEMENTS.grid,
-                ELEMENTS.spacerBelowGrid,
-                ELEMENTS.instructions.parentElement,
-                ELEMENTS.spacerAboveCash,
-                ELEMENTS.cashDisplay.parentElement,
-                ELEMENTS.spacerBelowCash,
-                ELEMENTS.betContainer,
-                ELEMENTS.optionsButton.parentElement,
-                ELEMENTS.controls,
-                ELEMENTS.controlsContainer,
-                ELEMENTS.savedSets,
-                ELEMENTS.statsBox
-            ];
-            let firstVisible = null;
-            let lastVisible = null;
-            for (const el of elements) {
-                if (el && !el.classList.contains('hidden') && getComputedStyle(el).display !== 'none') {
-                    if (!firstVisible) firstVisible = el;
-                    lastVisible = el;
-                }
-            }
-            if (!firstVisible || !lastVisible) return;
-
-            const firstRect = firstVisible.getBoundingClientRect();
-            const lastRect = lastVisible.getBoundingClientRect();
+        // Update body height to match content up to options container, expanding with visible options
+        const updateBodyHeight = () => {
+            const optionsRect = ELEMENTS.optionsContainer.getBoundingClientRect();
             const bodyRect = document.body.getBoundingClientRect();
+            const baseHeight = optionsRect.bottom - bodyRect.top + 10; // Include bottom margin/padding
 
-            // Calculate margin-bottom of the last visible element
-            const lastStyle = getComputedStyle(lastVisible);
-            const lastMarginBottom = parseFloat(lastStyle.marginBottom) || 0;
+            let extraHeight = 0;
+            if (!ELEMENTS.controls.classList.contains('hidden')) extraHeight += ELEMENTS.controls.getBoundingClientRect().height;
+            if (!ELEMENTS.controlsContainer.classList.contains('hidden')) extraHeight += ELEMENTS.controlsContainer.getBoundingClientRect().height;
+            if (!ELEMENTS.savedSets.classList.contains('hidden')) extraHeight += ELEMENTS.savedSets.getBoundingClientRect().height;
+            if (!ELEMENTS.statsBox.classList.contains('hidden')) extraHeight += ELEMENTS.statsBox.getBoundingClientRect().height;
 
-            // Add extra padding to account for border thickness and ensure bottom border visibility
-            const totalHeight = lastRect.bottom - bodyRect.top + lastMarginBottom + 40; // Increased padding
-
+            const totalHeight = baseHeight + extraHeight;
             document.body.style.height = `${totalHeight}px`;
-            ELEMENTS.outerBorder.style.height = `${totalHeight + 30}px`; // Adjusted for border thickness
+            ELEMENTS.outerBorder.style.height = `${totalHeight + 20}px`; // Match outer border height
         };
 
         // Grid Management
@@ -541,7 +518,7 @@
                 <p>Golden Number Matches: ${STATE.stats.goldenMatchHits}</p>
             `;
             document.getElementById('reset-bets-button').addEventListener('click', resetBetsSinceReset);
-            updateOuterBorderHeight();
+            updateBodyHeight();
         };
 
         const resetBetsSinceReset = () => {
@@ -597,7 +574,7 @@
                 fragment.appendChild(setDiv);
             });
             ELEMENTS.savedSets.appendChild(fragment);
-            updateOuterBorderHeight();
+            updateBodyHeight();
         };
 
         const selectRandomNumbers = () => {
@@ -648,21 +625,21 @@
             ELEMENTS.betInput.value = formatNumberWithCommas("10000");
             ELEMENTS.instructions.textContent = CONSTANTS.DEFAULT_INSTRUCTIONS;
             updateGrid();
-            updateOuterBorderHeight();
+            updateBodyHeight();
         };
 
         const toggleSavedSets = () => {
             STATE.isSavedSetsVisible = !STATE.isSavedSetsVisible;
             ELEMENTS.savedSets.classList.toggle('hidden');
             ELEMENTS.toggleSavedSets.textContent = STATE.isSavedSetsVisible ? 'Hide Saved Sets' : 'Show Saved Sets';
-            updateOuterBorderHeight();
+            updateBodyHeight();
         };
 
         const toggleStats = () => {
             STATE.isStatsVisible = !STATE.isStatsVisible;
             ELEMENTS.statsBox.classList.toggle('hidden');
             ELEMENTS.toggleStats.textContent = STATE.isStatsVisible ? 'Hide Stats' : 'Show Stats';
-            updateOuterBorderHeight();
+            updateBodyHeight();
         };
 
         const toggleOptions = () => {
@@ -672,7 +649,7 @@
             ELEMENTS.savedSets.classList.toggle('hidden', !STATE.isOptionsVisible || !STATE.isSavedSetsVisible);
             ELEMENTS.statsBox.classList.toggle('hidden', !STATE.isStatsVisible);
             ELEMENTS.optionsButton.textContent = STATE.isOptionsVisible ? 'Hide Options' : 'Show Options';
-            updateOuterBorderHeight();
+            updateBodyHeight();
         };
 
         const showPayouts = () => {
@@ -871,12 +848,12 @@
             if (!STATE.isStatsVisible) ELEMENTS.statsBox.classList.add('hidden');
             if (!isTouchDevice()) ELEMENTS.betInput.focus();
 
-            // Initial border height
-            updateOuterBorderHeight();
+            // Initial body height
+            updateBodyHeight();
 
             // Observe body size changes
             const resizeObserver = new ResizeObserver(() => {
-                updateOuterBorderHeight();
+                updateBodyHeight();
             });
             resizeObserver.observe(document.body);
         });
