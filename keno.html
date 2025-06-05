@@ -208,8 +208,8 @@
             margin: 5px 0; 
             font-size: 16px; 
             position: relative;
-            z-index: 3; /* Increased to ensure no overlap */
-            width: 100%; /* Full width to cover potential gaps */
+            z-index: 3;
+            width: 100%;
             box-sizing: border-box;
         }
         #spacer-below-grid, #spacer-above-cash, #spacer-below-cash { 
@@ -419,7 +419,6 @@
 
         // Update outer border height to match content
         const updateOuterBorderHeight = () => {
-            // Find the first and last visible elements to calculate full height
             const elements = [
                 ELEMENTS.grid,
                 ELEMENTS.spacerBelowGrid,
@@ -444,13 +443,12 @@
             }
             if (!firstVisible || !lastVisible) return;
 
-            // Calculate total height from top of first to bottom of last
             const firstRect = firstVisible.getBoundingClientRect();
             const lastRect = lastVisible.getBoundingClientRect();
             const bodyRect = document.body.getBoundingClientRect();
-            const totalHeight = lastRect.bottom - bodyRect.top + 10; // Add padding below
+            // Increase padding to account for margins and borders
+            const totalHeight = lastRect.bottom - bodyRect.top + 20; // Increased padding
 
-            // Set body and outer border height
             document.body.style.height = `${totalHeight}px`;
             ELEMENTS.outerBorder.style.height = `${totalHeight + 20}px`; // Account for top: -20px
         };
