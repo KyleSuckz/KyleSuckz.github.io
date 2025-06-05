@@ -68,7 +68,7 @@
             min-height: 0;
             overflow: visible;
             display: block;
-            background-color: #333; /* Temporary to debug background */
+            background-color: #333; /* Temporary for debugging */
         }
         #outer-border {
             position: absolute;
@@ -449,7 +449,13 @@
             const firstRect = firstVisible.getBoundingClientRect();
             const lastRect = lastVisible.getBoundingClientRect();
             const bodyRect = document.body.getBoundingClientRect();
-            const totalHeight = lastRect.bottom - bodyRect.top + 20; // Increased padding to ensure bottom border
+
+            // Calculate margin-bottom of the last visible element
+            const lastStyle = getComputedStyle(lastVisible);
+            const lastMarginBottom = parseFloat(lastStyle.marginBottom) || 0;
+
+            // Add extra padding to account for margins and ensure bottom border visibility
+            const totalHeight = lastRect.bottom - bodyRect.top + lastMarginBottom + 30;
 
             document.body.style.height = `${totalHeight}px`;
             ELEMENTS.outerBorder.style.height = `${totalHeight + 20}px`;
