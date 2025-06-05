@@ -60,6 +60,7 @@
             color: #fff;
             width: 408px;
             border: 10px solid #808080;
+            border-bottom: none; /* Remove bottom border to prevent overlap */
             position: relative;
             box-sizing: content-box;
             margin: 10px auto 0;
@@ -257,6 +258,7 @@
             body {
                 width: 308px;
                 border-width: 5px;
+                border-bottom: none;
             }
             #outer-border {
                 width: 328px;
@@ -446,11 +448,10 @@
             const firstRect = firstVisible.getBoundingClientRect();
             const lastRect = lastVisible.getBoundingClientRect();
             const bodyRect = document.body.getBoundingClientRect();
-            // Increase padding to account for margins and borders
-            const totalHeight = lastRect.bottom - bodyRect.top + 20; // Increased padding
+            const totalHeight = lastRect.bottom - bodyRect.top + 10; // Reverted padding to 10
 
             document.body.style.height = `${totalHeight}px`;
-            ELEMENTS.outerBorder.style.height = `${totalHeight + 20}px`; // Account for top: -20px
+            ELEMENTS.outerBorder.style.height = `${totalHeight + 20}px`;
         };
 
         // Grid Management
