@@ -60,7 +60,7 @@
             color: #fff;
             width: 408px;
             border: 10px solid #808080;
-            border-bottom: none; /* Remove bottom border to prevent overlap */
+            border-bottom: none;
             position: relative;
             box-sizing: content-box;
             margin: 10px auto 0;
@@ -68,6 +68,7 @@
             min-height: 0;
             overflow: visible;
             display: block;
+            background-color: #333; /* Temporary to debug background */
         }
         #outer-border {
             position: absolute;
@@ -448,7 +449,7 @@
             const firstRect = firstVisible.getBoundingClientRect();
             const lastRect = lastVisible.getBoundingClientRect();
             const bodyRect = document.body.getBoundingClientRect();
-            const totalHeight = lastRect.bottom - bodyRect.top + 10; // Reverted padding to 10
+            const totalHeight = lastRect.bottom - bodyRect.top + 20; // Increased padding to ensure bottom border
 
             document.body.style.height = `${totalHeight}px`;
             ELEMENTS.outerBorder.style.height = `${totalHeight + 20}px`;
