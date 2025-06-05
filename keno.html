@@ -52,7 +52,7 @@
             height: auto;
             min-height: 100vh;
             background-color: #000;
-            overflow: auto; /* Let browser handle overflow naturally */
+            overflow: auto;
         }
         body {
             font-family: Arial, sans-serif;
@@ -64,7 +64,7 @@
             box-sizing: content-box;
             margin: 10px auto 0;
             height: auto;
-            min-height: 0; /* Prevent body from stretching */
+            min-height: 0;
             overflow: visible;
             display: block;
         }
@@ -208,11 +208,13 @@
             margin: 5px 0; 
             font-size: 16px; 
             position: relative;
-            z-index: 2;
+            z-index: 3; /* Increased to ensure no overlap */
+            width: 100%; /* Full width to cover potential gaps */
+            box-sizing: border-box;
         }
         #spacer-below-grid, #spacer-above-cash, #spacer-below-cash { 
             height: 20px; 
-            background-color: transparent; /* Remove black background */
+            background-color: transparent;
         }
         #spacer-above-cash, #spacer-below-cash { height: 10px; }
         #stats-box {
@@ -417,34 +419,40 @@
 
         // Update outer border height to match content
         const updateOuterBorderHeight = () => {
+            // Find the first and last visible elements to calculate full height
             const elements = [
-                ELEMENTS.statsBox,
-                ELEMENTS.savedSets,
-                ELEMENTS.controlsContainer,
-                ELEMENTS.controls,
-                ELEMENTS.optionsButton.parentElement,
-                ELEMENTS.betContainer,
-                ELEMENTS.spacerBelowCash,
-                ELEMENTS.cashDisplay.parentElement,
-                ELEMENTS.spacerAboveCash,
-                ELEMENTS.instructions.parentElement,
+                ELEMENTS.grid,
                 ELEMENTS.spacerBelowGrid,
-                ELEMENTS.grid
+                ELEMENTS.instructions.parentElement,
+                ELEMENTS.spacerAboveCash,
+                ELEMENTS.cashDisplay.parentElement,
+                ELEMENTS.spacerBelowCash,
+                ELEMENTS.betContainer,
+                ELEMENTS.optionsButton.parentElement,
+                ELEMENTS.controls,
+                ELEMENTS.controlsContainer,
+                ELEMENTS.savedSets,
+                ELEMENTS.statsBox
             ];
+            let firstVisible = null;
             let lastVisible = null;
             for (const el of elements) {
                 if (el && !el.classList.contains('hidden') && getComputedStyle(el).display !== 'none') {
+                    if (!firstVisible) firstVisible = el;
                     lastVisible = el;
                 }
             }
-            if (!lastVisible) return;
+            if (!firstVisible || !lastVisible) return;
 
-            // Calculate content height
-            const contentHeight = lastVisible.offsetTop + lastVisible.offsetHeight + 10; // Padding below
-            // Set body height to match content
-            document.body.style.height = `${contentHeight}px`;
-            // Set outer border height, accounting for top: -20px
-            ELEMENTS.outerBorder.style.height = `${contentHeight + 20}px`;
+            // Calculate total height from top of first to bottom of last
+            const firstRect = firstVisible.getBoundingClientRect();
+            const lastRect = lastVisible.getBoundingClientRect();
+            const bodyRect = document.body.getBoundingClientRect();
+            const totalHeight = lastRect.bottom - bodyRect.top + 10; // Add padding below
+
+            // Set body and outer border height
+            document.body.style.height = `${totalHeight}px`;
+            ELEMENTS.outerBorder.style.height = `${totalHeight + 20}px`; // Account for top: -20px
         };
 
         // Grid Management
