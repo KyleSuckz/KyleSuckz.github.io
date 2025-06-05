@@ -59,8 +59,7 @@
             text-align: center;
             color: #fff;
             width: 408px;
-            border: 10px solid #808080;
-            border-bottom: 10px solid #000; /* Bottom border */
+            border: 10px solid #808080; /* Unified color for all sides */
             position: relative;
             box-sizing: content-box;
             margin: 10px auto 0;
@@ -69,6 +68,7 @@
             overflow: visible;
             display: block;
             background-color: #333;
+            padding-bottom: 0; /* No extra padding */
         }
         #outer-border {
             position: absolute;
@@ -77,7 +77,7 @@
             width: 448px;
             border: 10px solid #000;
             pointer-events: none;
-            z-index: 1;
+            z-index: 1; /* Place above body */
             box-sizing: border-box;
         }
         .blink-outer-border {
@@ -162,7 +162,7 @@
         }
         #bet-input {
             padding: 5px;
-            font-size: 12px;
+            font-size: 10px;
             width: 120px;
             background-color: #fff;
             color: #000;
@@ -215,10 +215,9 @@
             box-sizing: border-box;
         }
         #spacer-below-grid, #spacer-above-cash, #spacer-below-cash { 
-            height: 20px; 
+            height: 5px; /* Reduced to minimize space */
             background-color: transparent;
         }
-        #spacer-above-cash, #spacer-below-cash { height: 10px; }
         #stats-box {
             background-color: #333;
             padding: 10px;
@@ -250,7 +249,7 @@
             margin: 5px 0;
         }
         #options-container {
-            margin: 5px 0;
+            margin: 5px 0 0 0; /* Remove bottom margin */
         }
         .hidden { display: none !important; }
 
@@ -259,7 +258,6 @@
             body {
                 width: 308px;
                 border-width: 5px;
-                border-bottom: 5px solid #000;
             }
             #outer-border {
                 width: 328px;
@@ -421,19 +419,32 @@
         // Detect if device is touch-enabled (for mobile vs desktop behavior)
         const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-        // Update body height to match content up to options container, adjusting border positions
+        // Update body height to keep inner border position and adjust outer border
         const updateBodyHeight = () => {
-            const optionsRect = ELEMENTS.optionsContainer.getBoundingClientRect();
             const bodyRect = document.body.getBoundingClientRect();
-            const baseHeight = optionsRect.bottom - bodyRect.top + 8; // Adjusted padding (moved up 2px)
-            let extraHeight = 0;
-            if (!ELEMENTS.controls.classList.contains('hidden')) extraHeight += ELEMENTS.controls.getBoundingClientRect().height;
-            if (!ELEMENTS.controlsContainer.classList.contains('hidden')) extraHeight += ELEMENTS.controlsContainer.getBoundingClientRect().height;
-            if (!ELEMENTS.savedSets.classList.contains('hidden')) extraHeight += ELEMENTS.savedSets.getBoundingClientRect().height;
-            if (!ELEMENTS.statsBox.classList.contains('hidden')) extraHeight += ELEMENTS.statsBox.getBoundingClientRect().height;
-            const totalHeight = baseHeight + extraHeight + 10; // Add border thickness
-            document.body.style.height = `${totalHeight}px`;
-            ELEMENTS.outerBorder.style.height = `${totalHeight + 33}px`; // Extend outer border (down 3px)
+            let baseBottom = ELEMENTS.optionsButton.getBoundingClientRect().bottom; // Default to "Show Options" button bottom
+
+            // Always check for visible stats box, regardless of options visibility
+            if (STATE.isStatsVisible && !ELEMENTS.statsBox.classList.contains('hidden')) {
+                const statsBoxRect = ELEMENTS.statsBox.getBoundingClientRect();
+                baseBottom = Math.max(baseBottom, statsBoxRect.bottom);
+            }
+
+            // Check other elements only if options are visible
+            if (STATE.isOptionsVisible) {
+                const controlsRect = ELEMENTS.controls.getBoundingClientRect();
+                const controlsContainerRect = ELEMENTS.controlsContainer.getBoundingClientRect();
+                let lowestBottom = Math.max(controlsRect.bottom, controlsContainerRect.bottom);
+                if (STATE.isSavedSetsVisible && !ELEMENTS.savedSets.classList.contains('hidden')) {
+                    const savedSetsRect = ELEMENTS.savedSets.getBoundingClientRect();
+                    lowestBottom = Math.max(lowestBottom, savedSetsRect.bottom);
+                }
+                baseBottom = Math.max(baseBottom, lowestBottom);
+            }
+
+            const baseHeight = baseBottom - bodyRect.top; // Inner border position
+            document.body.style.height = `${baseHeight}px`;
+            ELEMENTS.outerBorder.style.height = `${baseHeight + 20 + 20}px`; // Outer border position
         };
 
         // Grid Management
