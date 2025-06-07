@@ -45,39 +45,28 @@
     <meta http-equiv="Cache-Control" content="max-age=86400">
     <title>Keno</title>
     <style>
-        html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: auto;
-            min-height: 100vh;
-            background-color: #000; /* Already set to black */
-            overflow: auto;
-        }
         body {
             font-family: Arial, sans-serif;
             text-align: center;
+            background-color: #000;
             color: #fff;
             width: 408px;
-            border: 10px solid #808080; /* Unified color for all sides */
+            margin: 10px auto 0 auto;
+            border: 10px solid #808080;
+            padding: 0;
             position: relative;
             box-sizing: content-box;
-            margin: 10px auto 0;
-            height: auto;
-            min-height: 0;
-            overflow: visible;
-            display: block;
-            background-color: #000; /* Changed from #333 to black */
-            padding-bottom: 0; /* No extra padding */
+            min-height: 100%; /* Allow body to grow with content */
         }
         #outer-border {
             position: absolute;
             top: -20px;
             left: -20px;
             width: 448px;
+            height: auto; /* Changed from calc(100% + 40px) to dynamic */
             border: 10px solid #000;
             pointer-events: none;
-            z-index: 1; /* Place above body */
+            z-index: 1;
             box-sizing: border-box;
         }
         .blink-outer-border {
@@ -214,10 +203,8 @@
             width: 100%;
             box-sizing: border-box;
         }
-        #spacer-below-grid, #spacer-above-cash, #spacer-below-cash { 
-            height: 5px; /* Reduced to minimize space */
-            background-color: transparent;
-        }
+        #spacer-below-grid { height: 5px; background-color: transparent; }
+        #spacer-above-cash, #spacer-below-cash { height: 5px; background-color: transparent; }
         #stats-box {
             background-color: #333;
             padding: 10px;
@@ -225,7 +212,8 @@
             border: 1px solid #808080;
             font-size: 14px;
             text-align: left;
-            width: 388px;
+            width: 100%;
+            box-sizing: border-box;
         }
         #stats-box p { margin: 5px 0; }
         #reset-bets-button {
@@ -249,7 +237,7 @@
             margin: 5px 0;
         }
         #options-container {
-            margin: 5px 0 0 0; /* Remove bottom margin */
+            margin: 5px 0;
         }
         .hidden { display: none !important; }
 
@@ -298,7 +286,7 @@
                 font-size: 12px;
             }
             #stats-box {
-                width: 288px;
+                width: 100%;
                 font-size: 12px;
             }
         }
@@ -355,7 +343,8 @@
             optionsButton: document.getElementById('options-button'),
             controls: document.getElementById('controls'),
             controlsContainer: document.querySelector('.controls-container'),
-            optionsContainer: document.getElementById('options-container')
+            optionsContainer: document.getElementById('options-container'),
+            body: document.body
         };
 
         const STATE = {
@@ -419,32 +408,10 @@
         // Detect if device is touch-enabled (for mobile vs desktop behavior)
         const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-        // Update body height to keep inner border position and adjust outer border
-        const updateBodyHeight = () => {
-            const bodyRect = document.body.getBoundingClientRect();
-            let baseBottom = ELEMENTS.optionsButton.getBoundingClientRect().bottom; // Default to "Show Options" button bottom
-
-            // Always check for visible stats box, regardless of options visibility
-            if (STATE.isStatsVisible && !ELEMENTS.statsBox.classList.contains('hidden')) {
-                const statsBoxRect = ELEMENTS.statsBox.getBoundingClientRect();
-                baseBottom = Math.max(baseBottom, statsBoxRect.bottom);
-            }
-
-            // Check other elements only if options are visible
-            if (STATE.isOptionsVisible) {
-                const controlsRect = ELEMENTS.controls.getBoundingClientRect();
-                const controlsContainerRect = ELEMENTS.controlsContainer.getBoundingClientRect();
-                let lowestBottom = Math.max(controlsRect.bottom, controlsContainerRect.bottom);
-                if (STATE.isSavedSetsVisible && !ELEMENTS.savedSets.classList.contains('hidden')) {
-                    const savedSetsRect = ELEMENTS.savedSets.getBoundingClientRect();
-                    lowestBottom = Math.max(lowestBottom, savedSetsRect.bottom);
-                }
-                baseBottom = Math.max(baseBottom, lowestBottom);
-            }
-
-            const baseHeight = baseBottom - bodyRect.top; // Inner border position
-            document.body.style.height = `${baseHeight}px`;
-            ELEMENTS.outerBorder.style.height = `${baseHeight + 20 + 20}px`; // Outer border position
+        // Update outer border height based on content
+        const updateOuterBorderHeight = () => {
+            const bodyHeight = ELEMENTS.body.scrollHeight;
+            ELEMENTS.outerBorder.style.height = `${bodyHeight + 40}px`; // 20px top + 20px bottom offset
         };
 
         // Grid Management
@@ -460,6 +427,7 @@
             ELEMENTS.grid.innerHTML = '';
             ELEMENTS.grid.appendChild(fragment);
             updateGrid();
+            updateOuterBorderHeight();
         };
 
         const toggleNumberSelection = num => {
@@ -469,6 +437,7 @@
                 STATE.selectedNumbers.add(num);
             }
             updateGrid();
+            updateOuterBorderHeight();
         };
 
         const updateGrid = () => {
@@ -527,7 +496,7 @@
                 <p>Golden Number Matches: ${STATE.stats.goldenMatchHits}</p>
             `;
             document.getElementById('reset-bets-button').addEventListener('click', resetBetsSinceReset);
-            updateBodyHeight();
+            updateOuterBorderHeight();
         };
 
         const resetBetsSinceReset = () => {
@@ -546,6 +515,7 @@
             }
             STATE.savedSets.push([...STATE.selectedNumbers]);
             updateSavedSets();
+            updateOuterBorderHeight();
         };
 
         const updateSavedSets = () => {
@@ -583,7 +553,7 @@
                 fragment.appendChild(setDiv);
             });
             ELEMENTS.savedSets.appendChild(fragment);
-            updateBodyHeight();
+            updateOuterBorderHeight();
         };
 
         const selectRandomNumbers = () => {
@@ -594,6 +564,7 @@
             if (!isTouchDevice()) ELEMENTS.betInput.focus();
             if (STATE.enterInterval) clearInterval(STATE.enterInterval);
             STATE.enterInterval = null;
+            updateOuterBorderHeight();
         };
 
         const blinkResults = (hits, winnings, goldenHits, goldenBonus) => {
@@ -615,6 +586,7 @@
                 if (STATE.isHoldingBet && !STATE.enterInterval) {
                     STATE.enterInterval = setInterval(playGame, 100);
                 }
+                updateOuterBorderHeight();
             }, CONSTANTS.BLINK_DURATION);
         };
 
@@ -634,21 +606,21 @@
             ELEMENTS.betInput.value = formatNumberWithCommas("10000");
             ELEMENTS.instructions.textContent = CONSTANTS.DEFAULT_INSTRUCTIONS;
             updateGrid();
-            updateBodyHeight();
+            updateOuterBorderHeight();
         };
 
         const toggleSavedSets = () => {
             STATE.isSavedSetsVisible = !STATE.isSavedSetsVisible;
             ELEMENTS.savedSets.classList.toggle('hidden');
             ELEMENTS.toggleSavedSets.textContent = STATE.isSavedSetsVisible ? 'Hide Saved Sets' : 'Show Saved Sets';
-            updateBodyHeight();
+            updateOuterBorderHeight();
         };
 
         const toggleStats = () => {
             STATE.isStatsVisible = !STATE.isStatsVisible;
             ELEMENTS.statsBox.classList.toggle('hidden');
             ELEMENTS.toggleStats.textContent = STATE.isStatsVisible ? 'Hide Stats' : 'Show Stats';
-            updateBodyHeight();
+            updateOuterBorderHeight();
         };
 
         const toggleOptions = () => {
@@ -658,7 +630,7 @@
             ELEMENTS.savedSets.classList.toggle('hidden', !STATE.isOptionsVisible || !STATE.isSavedSetsVisible);
             ELEMENTS.statsBox.classList.toggle('hidden', !STATE.isStatsVisible);
             ELEMENTS.optionsButton.textContent = STATE.isOptionsVisible ? 'Hide Options' : 'Show Options';
-            updateBodyHeight();
+            updateOuterBorderHeight();
         };
 
         const showPayouts = () => {
@@ -856,16 +828,11 @@
             if (!STATE.isSavedSetsVisible) ELEMENTS.savedSets.classList.add('hidden');
             if (!STATE.isStatsVisible) ELEMENTS.statsBox.classList.add('hidden');
             if (!isTouchDevice()) ELEMENTS.betInput.focus();
-
-            // Initial body height
-            updateBodyHeight();
-
-            // Observe body size changes
-            const resizeObserver = new ResizeObserver(() => {
-                updateBodyHeight();
-            });
-            resizeObserver.observe(document.body);
+            updateOuterBorderHeight(); // Initial height adjustment
         });
+
+        // Update height on window resize
+        window.addEventListener('resize', updateOuterBorderHeight);
     </script>
 </body>
 </html>
