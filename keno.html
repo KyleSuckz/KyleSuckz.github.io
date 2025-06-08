@@ -48,33 +48,19 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #000;
+            background-color: #ff0000; /* Red background for body */
             color: #fff;
             width: 408px;
-            margin: 10px auto 0 auto;
-            border: 10px solid #808080;
+            margin: 0 auto;
             padding: 0;
             position: relative;
             box-sizing: content-box;
-            min-height: 100%; /* Allow body to grow with content */
+            height: auto;
         }
-        #outer-border {
-            position: absolute;
-            top: -20px;
-            left: -20px;
-            width: 448px;
-            height: auto; /* Changed from calc(100% + 40px) to dynamic */
-            border: 10px solid #000;
-            pointer-events: none;
-            z-index: 1;
-            box-sizing: border-box;
-        }
-        .blink-outer-border {
-            animation: blink-outer-sync 0.5s infinite steps(1);
-        }
-        @keyframes blink-outer-sync {
-            0%, 100% { border-color: #008000; }
-            50% { border-color: #000; }
+        #keno-wrapper {
+            position: relative;
+            background-color: #ff3333; /* Lighter red for wrapper */
+            border: 10px solid #808080; /* Single 10px grey border */
         }
         .grid {
             display: grid;
@@ -203,8 +189,8 @@
             width: 100%;
             box-sizing: border-box;
         }
-        #spacer-below-grid { height: 5px; background-color: transparent; }
-        #spacer-above-cash, #spacer-below-cash { height: 5px; background-color: transparent; }
+        #spacer-below-grid { height: 5px; background-color: #ff3333; }
+        #spacer-above-cash, #spacer-below-cash { height: 5px; background-color: #ff3333; }
         #stats-box {
             background-color: #333;
             padding: 10px;
@@ -245,13 +231,10 @@
         @media (max-width: 400px) {
             body {
                 width: 308px;
-                border-width: 5px;
             }
-            #outer-border {
-                width: 328px;
-                top: -10px;
-                left: -10px;
-                border-width: 5px;
+            #keno-wrapper {
+                background-color: #ff6666; /* Lighter red for mobile wrapper */
+                border-width: 5px; /* Adjusted border for mobile */
             }
             .grid {
                 width: 308px;
@@ -293,40 +276,40 @@
     </style>
 </head>
 <body>
-    <div id="outer-border"></div>
-    <div id="grid" class="grid"></div>
-    <div id="spacer-below-grid"></div>
-    <p id="instructions" role="status">Select 10 numbers and place your bet.</p>
-    <div id="spacer-above-cash"></div>
-    <div id="cash">Cash: $100,000,000</div>
-    <div id="spacer-below-cash"></div>
-    <div id="bet-container">
-        <label for="bet-input">Bet Amount: $</label>
-        <input type="text" id="bet-input" value="10,000">
-        <button id="bet-button" aria-label="Place your bet">Bet</button>
+    <div id="keno-wrapper">
+        <div id="grid" class="grid"></div>
+        <div id="spacer-below-grid"></div>
+        <p id="instructions" role="status">Select 10 numbers and place your bet.</p>
+        <div id="spacer-above-cash"></div>
+        <div id="cash">Cash: $100,000,000</div>
+        <div id="spacer-below-cash"></div>
+        <div id="bet-container">
+            <label for="bet-input">Bet Amount: $</label>
+            <input type="text" id="bet-input" value="10,000">
+            <button id="bet-button" aria-label="Place your bet">Bet</button>
+        </div>
+        <div id="options-container">
+            <button id="options-button" class="toggle-button" aria-label="Toggle game options visibility">Show Options</button>
+        </div>
+        <div id="controls">
+            <button id="save-numbers" aria-label="Save selected numbers">Save Numbers</button>
+            <button id="reset" aria-label="Reset number selection">Reset</button>
+            <button id="random-numbers" aria-label="Generate random numbers">Random Numbers</button>
+        </div>
+        <div class="controls-container">
+            <button id="toggle-stats" class="toggle-button" aria-label="Toggle statistics visibility">Show Stats</button>
+            <button id="toggle-saved-sets" class="toggle-button" aria-label="Toggle saved sets visibility">Hide Saved Sets</button>
+            <button id="payouts-button" aria-label="View payout table">Payouts</button>
+            <button id="odds-button" aria-label="View odds of winning">Odds</button>
+        </div>
+        <div id="saved-sets"></div>
+        <div id="stats-box" class="hidden"></div>
     </div>
-    <div id="options-container">
-        <button id="options-button" class="toggle-button" aria-label="Toggle game options visibility">Show Options</button>
-    </div>
-    <div id="controls">
-        <button id="save-numbers" aria-label="Save selected numbers">Save Numbers</button>
-        <button id="reset" aria-label="Reset number selection">Reset</button>
-        <button id="random-numbers" aria-label="Generate random numbers">Random Numbers</button>
-    </div>
-    <div class="controls-container">
-        <button id="toggle-stats" class="toggle-button" aria-label="Toggle statistics visibility">Show Stats</button>
-        <button id="toggle-saved-sets" class="toggle-button" aria-label="Toggle saved sets visibility">Hide Saved Sets</button>
-        <button id="payouts-button" aria-label="View payout table">Payouts</button>
-        <button id="odds-button" aria-label="View odds of winning">Odds</button>
-    </div>
-    <div id="saved-sets"></div>
-    <div id="stats-box" class="hidden"></div>
 
     <script>
         // Constants and Element References
         const ELEMENTS = {
             grid: document.getElementById('grid'),
-            outerBorder: document.getElementById('outer-border'),
             instructions: document.getElementById('instructions'),
             betInput: document.getElementById('bet-input'),
             betButton: document.getElementById('bet-button'),
@@ -343,8 +326,7 @@
             optionsButton: document.getElementById('options-button'),
             controls: document.getElementById('controls'),
             controlsContainer: document.querySelector('.controls-container'),
-            optionsContainer: document.getElementById('options-container'),
-            body: document.body
+            optionsContainer: document.getElementById('options-container')
         };
 
         const STATE = {
@@ -408,12 +390,6 @@
         // Detect if device is touch-enabled (for mobile vs desktop behavior)
         const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-        // Update outer border height based on content
-        const updateOuterBorderHeight = () => {
-            const bodyHeight = ELEMENTS.body.scrollHeight;
-            ELEMENTS.outerBorder.style.height = `${bodyHeight + 40}px`; // 20px top + 20px bottom offset
-        };
-
         // Grid Management
         const initGrid = () => {
             const fragment = document.createDocumentFragment();
@@ -427,7 +403,6 @@
             ELEMENTS.grid.innerHTML = '';
             ELEMENTS.grid.appendChild(fragment);
             updateGrid();
-            updateOuterBorderHeight();
         };
 
         const toggleNumberSelection = num => {
@@ -437,7 +412,6 @@
                 STATE.selectedNumbers.add(num);
             }
             updateGrid();
-            updateOuterBorderHeight();
         };
 
         const updateGrid = () => {
@@ -496,7 +470,6 @@
                 <p>Golden Number Matches: ${STATE.stats.goldenMatchHits}</p>
             `;
             document.getElementById('reset-bets-button').addEventListener('click', resetBetsSinceReset);
-            updateOuterBorderHeight();
         };
 
         const resetBetsSinceReset = () => {
@@ -515,7 +488,6 @@
             }
             STATE.savedSets.push([...STATE.selectedNumbers]);
             updateSavedSets();
-            updateOuterBorderHeight();
         };
 
         const updateSavedSets = () => {
@@ -553,7 +525,6 @@
                 fragment.appendChild(setDiv);
             });
             ELEMENTS.savedSets.appendChild(fragment);
-            updateOuterBorderHeight();
         };
 
         const selectRandomNumbers = () => {
@@ -564,7 +535,6 @@
             if (!isTouchDevice()) ELEMENTS.betInput.focus();
             if (STATE.enterInterval) clearInterval(STATE.enterInterval);
             STATE.enterInterval = null;
-            updateOuterBorderHeight();
         };
 
         const blinkResults = (hits, winnings, goldenHits, goldenBonus) => {
@@ -573,20 +543,17 @@
                 .filter(el => hits.has(parseInt(el.textContent)));
             hitElements.forEach(el => el.classList.add('blink-numbers'));
             ELEMENTS.instructions.classList.add('blink-text');
-            if (hits.size + goldenBonus >= 7) ELEMENTS.outerBorder.classList.add('blink-outer-border');
             const goldenText = goldenBonus > 0 ? ` (including ${goldenBonus} golden bonus from ${goldenHits.join(', ')})` : '';
             ELEMENTS.instructions.textContent = `You matched ${hits.size + goldenBonus} numbers${goldenText} and won ${formatCurrency(winnings)}`;
 
             setTimeout(() => {
                 hitElements.forEach(el => el.classList.remove('blink-numbers'));
                 ELEMENTS.instructions.classList.remove('blink-text');
-                ELEMENTS.outerBorder.classList.remove('blink-outer-border');
                 toggleBetting(true);
                 if (!isTouchDevice()) ELEMENTS.betInput.focus();
                 if (STATE.isHoldingBet && !STATE.enterInterval) {
                     STATE.enterInterval = setInterval(playGame, 100);
                 }
-                updateOuterBorderHeight();
             }, CONSTANTS.BLINK_DURATION);
         };
 
@@ -606,21 +573,18 @@
             ELEMENTS.betInput.value = formatNumberWithCommas("10000");
             ELEMENTS.instructions.textContent = CONSTANTS.DEFAULT_INSTRUCTIONS;
             updateGrid();
-            updateOuterBorderHeight();
         };
 
         const toggleSavedSets = () => {
             STATE.isSavedSetsVisible = !STATE.isSavedSetsVisible;
             ELEMENTS.savedSets.classList.toggle('hidden');
             ELEMENTS.toggleSavedSets.textContent = STATE.isSavedSetsVisible ? 'Hide Saved Sets' : 'Show Saved Sets';
-            updateOuterBorderHeight();
         };
 
         const toggleStats = () => {
             STATE.isStatsVisible = !STATE.isStatsVisible;
             ELEMENTS.statsBox.classList.toggle('hidden');
             ELEMENTS.toggleStats.textContent = STATE.isStatsVisible ? 'Hide Stats' : 'Show Stats';
-            updateOuterBorderHeight();
         };
 
         const toggleOptions = () => {
@@ -630,7 +594,6 @@
             ELEMENTS.savedSets.classList.toggle('hidden', !STATE.isOptionsVisible || !STATE.isSavedSetsVisible);
             ELEMENTS.statsBox.classList.toggle('hidden', !STATE.isStatsVisible);
             ELEMENTS.optionsButton.textContent = STATE.isOptionsVisible ? 'Hide Options' : 'Show Options';
-            updateOuterBorderHeight();
         };
 
         const showPayouts = () => {
@@ -828,11 +791,7 @@
             if (!STATE.isSavedSetsVisible) ELEMENTS.savedSets.classList.add('hidden');
             if (!STATE.isStatsVisible) ELEMENTS.statsBox.classList.add('hidden');
             if (!isTouchDevice()) ELEMENTS.betInput.focus();
-            updateOuterBorderHeight(); // Initial height adjustment
         });
-
-        // Update height on window resize
-        window.addEventListener('resize', updateOuterBorderHeight);
     </script>
 </body>
 </html>
