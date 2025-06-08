@@ -42,7 +42,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="max-age=86400">
     <title>Keno</title>
     <style>
         body {
@@ -58,25 +57,7 @@
             display: inline-block;
             background-color: #ff3333;
             padding: 0;
-            position: relative;
             box-sizing: border-box;
-        }
-        #keno-wrapper::after {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-            border: 10px solid #000;
-            z-index: 0;
-        }
-        #keno-wrapper.blink-border::after {
-            animation: blink-green 0.5s infinite steps(1);
-        }
-        @keyframes blink-green {
-            0%, 100% { border-color: #000; }
-            50% { border-color: #008000; }
         }
         .grid {
             display: grid;
@@ -125,8 +106,7 @@
             instructions: document.getElementById('instructions'),
             betInput: document.getElementById('bet-input'),
             betButton: document.getElementById('bet-button'),
-            optionsButton: document.getElementById('options-button'),
-            kenoWrapper: document.getElementById('keno-wrapper')
+            optionsButton: document.getElementById('options-button')
         };
 
         const STATE = {
@@ -192,14 +172,10 @@
             if (hits >= 5) winnings = bet * (hits === 5 ? 5 : hits === 6 ? 24 : hits === 7 ? 142 : hits === 8 ? 1000 : hits === 9 ? 4500 : 10000);
             STATE.cash += winnings;
             ELEMENTS.instructions.textContent = `Hits: ${hits}, Won: $${winnings}, Cash: $${STATE.cash}`;
-            if (hits >= 5) {
-                ELEMENTS.kenoWrapper.classList.add('blink-border');
-                setTimeout(() => ELEMENTS.kenoWrapper.classList.remove('blink-border'), hits >= 9 ? 10000 : hits >= 7 ? 5000 : 2000);
-            }
         };
 
         const toggleOptions = () => {
-            alert('Options toggled!'); // Placeholder for now
+            alert('Options toggled!');
         };
 
         ELEMENTS.betButton.addEventListener('click', playGame);
