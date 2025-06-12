@@ -41,6 +41,7 @@
             gap: 0;
             margin: 0;
             width: 408px;
+            background-color: #000;
         }
         .number {
             width: 38.8px;
@@ -95,12 +96,14 @@
         }
         button:hover:not(:disabled) { background-color: #666; }
         button:disabled { background-color: #ccc; cursor: not-allowed; }
-        #bet-container, #add-cash-container {
-            margin: 5px 0;
+        #bet-container, #add-cash-container, #options-container, #controls, .controls-container {
+            margin: 0;
+            padding: 5px 0;
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 5px;
+            background-color: #000;
         }
         #bet-input, #add-cash-input {
             padding: 5px;
@@ -110,56 +113,33 @@
             color: #000;
             text-align: right;
         }
-        #cash { font-size: 14px; margin: 5px 0; }
-        #controls { display: flex; justify-content: center; gap: 5px; margin: 5px 0; }
-        #saved-sets { 
-            margin: 5px 0; 
-            display: flex; 
-            flex-wrap: wrap; 
-            justify-content: center; 
-            gap: 10px; 
+        #cash {
+            font-size: 14px;
+            margin: 0;
+            padding: 5px 0;
+            background-color: #000;
         }
-        .saved-set { 
-            display: flex; 
-            align-items: center; 
-            gap: 5px; 
-            border: 1px solid #333; 
-            padding: 2px; 
-            cursor: pointer;
-        }
-        .saved-numbers-grid { 
-            display: grid; 
-            grid-template-columns: repeat(5, 20px); 
-            gap: 2px; 
-        }
-        .saved-number { 
-            width: 20px; 
-            height: 20px; 
-            background-color: #f00; 
-            color: #fff; 
-            font-size: 12px; 
-            line-height: 20px; 
-            text-align: center; 
-        }
-        .delete-button { 
-            padding: 2px 5px; 
-            font-size: 10px; 
-            background-color: #900; 
-        }
-        .delete-button:hover:not(:disabled) { background-color: #b00; }
-        #instructions { 
-            background-color: #008000; 
-            padding: 5px; 
-            margin: 5px 0; 
+        #instructions {
+            background-color: #008000;
+            padding: 5px;
+            margin: 0;
             font-size: 16px;
-            min-height: 40px; /* Adjusted to accommodate two lines */
+            min-height: 40px;
             word-wrap: break-word;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        #spacer-below-grid { height: 20px; background-color: #000; }
-        #spacer-above-cash, #spacer-below-cash { height: 10px; background-color: #000; }
+        #spacer-below-grid, #spacer-above-cash, #spacer-below-cash {
+            height: 0;
+            background-color: #000;
+            margin: 0;
+        }
+        .content-wrapper {
+            background-color: #000;
+            width: 408px;
+            margin: 0 auto;
+        }
         #stats-box {
             background-color: #333;
             padding: 10px;
@@ -177,59 +157,82 @@
             margin-left: 5px;
         }
         #reset-bets-button:hover:not(:disabled) { background-color: #b00; }
-        .toggle-button { 
-            background-color: #444; 
-            padding: 5px 10px; 
-            margin: 2px;
-        }
-        .toggle-button:hover:not(:disabled) { background-color: #555; }
-        .controls-container {
+        #saved-sets {
+            margin: 0;
+            padding: 5px 0;
+            background-color: #000;
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
+            gap: 10px;
+        }
+        .saved-set {
+            display: flex;
             align-items: center;
             gap: 5px;
-            margin: 5px 0;
+            border: 1px solid #333;
+            padding: 2px;
+            cursor: pointer;
         }
-        #options-container {
-            margin: 5px 0;
+        .saved-numbers-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 20px);
+            gap: 2px;
         }
+        .saved-number {
+            width: 20px;
+            height: 20px;
+            background-color: #f00;
+            color: #fff;
+            font-size: 12px;
+            line-height: 20px;
+            text-align: center;
+        }
+        .delete-button {
+            padding: 2px 5px;
+            font-size: 10px;
+            background-color: #900;
+        }
+        .delete-button:hover:not(:disabled) { background-color: #b00; }
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
     <div id="outer-border"></div>
-    <div id="grid" class="grid"></div>
-    <div id="spacer-below-grid"></div>
-    <p id="instructions">Select 10 numbers and place your bet.</p>
-    <div id="spacer-above-cash"></div>
-    <div id="cash">Cash: $100,000,000</div>
-    <div id="spacer-below-cash"></div>
-    <div id="bet-container">
-        <label for="bet-input">Bet Amount: $</label>
-        <input type="text" id="bet-input" value="10,000">
-        <button id="bet-button">Bet</button>
+    <div class="content-wrapper">
+        <div id="grid" class="grid"></div>
+        <div id="spacer-below-grid"></div>
+        <p id="instructions">Select 10 numbers and place your bet.</p>
+        <div id="spacer-above-cash"></div>
+        <div id="cash">Cash: $100,000,000</div>
+        <div id="spacer-below-cash"></div>
+        <div id="bet-container">
+            <label for="bet-input">Bet Amount: $</label>
+            <input type="text" id="bet-input" value="10,000">
+            <button id="bet-button">Bet</button>
+        </div>
+        <div id="options-container">
+            <button id="options-button">Show Options</button>
+        </div>
+        <div id="controls">
+            <button id="toggle-stats">Show Stats</button> <!-- Swapped with Save Numbers -->
+            <button id="reset">Reset</button>
+            <button id="random-numbers">Random Numbers</button>
+        </div>
+        <div class="controls-container">
+            <button id="save-numbers">Save Numbers</button> <!-- Swapped with Show Stats -->
+            <button id="toggle-saved-sets">Hide Saved Sets</button>
+            <button id="payouts-button">Payouts</button>
+            <button id="odds-button">Odds</button>
+        </div>
+        <div id="add-cash-container">
+            <label for="add-cash-input">Add Cash: $</label>
+            <input type="text" id="add-cash-input" placeholder="Enter amount">
+            <button id="add-cash-button">Add Cash</button>
+        </div>
+        <div id="saved-sets"></div>
+        <div id="stats-box" class="hidden"></div>
     </div>
-    <div id="options-container">
-        <button id="options-button" class="toggle-button">Show Options</button>
-    </div>
-    <div id="controls">
-        <button id="save-numbers">Save Numbers</button>
-        <button id="reset">Reset</button>
-        <button id="random-numbers">Random Numbers</button>
-    </div>
-    <div class="controls-container">
-        <button id="toggle-stats" class="toggle-button">Show Stats</button>
-        <button id="toggle-saved-sets" class="toggle-button">Hide Saved Sets</button>
-        <button id="payouts-button">Payouts</button>
-        <button id="odds-button">Odds</button>
-    </div>
-    <div id="add-cash-container">
-        <label for="add-cash-input">Add Cash: $</label>
-        <input type="text" id="add-cash-input" placeholder="Enter amount">
-        <button id="add-cash-button">Add Cash</button>
-    </div>
-    <div id="saved-sets"></div>
-    <div id="stats-box" class="hidden"></div>
 
     <script>
         const ELEMENTS = {
@@ -486,7 +489,7 @@
             ELEMENTS.instructions.textContent = `You matched ${hits.size + goldenBonus} numbers${goldenText} and won ${formatCurrency(winnings)}`;
 
             const hitCount = hits.size + goldenBonus;
-            const duration = CONSTANTS.BLINK_DURATION[hitCount] || 3000; // Default to 3000ms if not specified
+            const duration = CONSTANTS.BLINK_DURATION[hitCount] || 3000;
             setTimeout(() => {
                 hitElements.forEach(el => el.classList.remove('blink-numbers'));
                 ELEMENTS.instructions.classList.remove('blink-text');
