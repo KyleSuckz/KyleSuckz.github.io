@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Keno</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #000;
+            background-color: #ff0000;
             color: #fff;
             width: 408px;
             margin: 10px auto 0 auto;
@@ -150,7 +151,12 @@
             background-color: #008000; 
             padding: 5px; 
             margin: 5px 0; 
-            font-size: 16px; 
+            font-size: 16px;
+            min-height: 40px; /* Adjusted to accommodate two lines */
+            word-wrap: break-word;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         #spacer-below-grid { height: 20px; background-color: #000; }
         #spacer-above-cash, #spacer-below-cash { height: 10px; background-color: #000; }
@@ -192,11 +198,11 @@
 </head>
 <body>
     <div id="outer-border"></div>
-    <div id="grid" class="grid"><div class="number">1</div><div class="number drawn">2</div><div class="number drawn">3</div><div class="number">4</div><div class="number drawn">5</div><div class="number hit">6</div><div class="number">7</div><div class="number">8</div><div class="number drawn">9</div><div class="number">10</div><div class="number">11</div><div class="number missed-selected">12</div><div class="number">13</div><div class="number">14</div><div class="number">15</div><div class="number">16</div><div class="number">17</div><div class="number">18</div><div class="number">19</div><div class="number">20</div><div class="number">21</div><div class="number drawn">22</div><div class="number">23</div><div class="number">24</div><div class="number">25</div><div class="number">26</div><div class="number">27</div><div class="number">28</div><div class="number">29</div><div class="number drawn">30</div><div class="number">31</div><div class="number hit">32</div><div class="number">33</div><div class="number">34</div><div class="number drawn">35</div><div class="number drawn">36</div><div class="number drawn">37</div><div class="number">38</div><div class="number drawn">39</div><div class="number">40</div><div class="number">41</div><div class="number">42</div><div class="number drawn">43</div><div class="number">44</div><div class="number missed-selected">45</div><div class="number hit">46</div><div class="number">47</div><div class="number">48</div><div class="number">49</div><div class="number">50</div><div class="number">51</div><div class="number">52</div><div class="number missed-selected">53</div><div class="number">54</div><div class="number">55</div><div class="number">56</div><div class="number">57</div><div class="number">58</div><div class="number drawn">59</div><div class="number drawn">60</div><div class="number">61</div><div class="number">62</div><div class="number drawn">63</div><div class="number missed-selected">64</div><div class="number">65</div><div class="number">66</div><div class="number">67</div><div class="number hit">68</div><div class="number">69</div><div class="number">70</div><div class="number">71</div><div class="number">72</div><div class="number">73</div><div class="number hit">74</div><div class="number">75</div><div class="number missed-selected">76</div><div class="number">77</div><div class="number">78</div><div class="number">79</div><div class="number drawn">80</div></div>
+    <div id="grid" class="grid"></div>
     <div id="spacer-below-grid"></div>
-    <p id="instructions" class="">You matched 5 numbers and won $50,000</p>
+    <p id="instructions">Select 10 numbers and place your bet.</p>
     <div id="spacer-above-cash"></div>
-    <div id="cash">Cash: $99,790,000</div>
+    <div id="cash">Cash: $100,000,000</div>
     <div id="spacer-below-cash"></div>
     <div id="bet-container">
         <label for="bet-input">Bet Amount: $</label>
@@ -204,9 +210,9 @@
         <button id="bet-button">Bet</button>
     </div>
     <div id="options-container">
-        <button id="options-button" class="toggle-button">Hide Options</button>
+        <button id="options-button" class="toggle-button">Show Options</button>
     </div>
-    <div id="controls" class="">
+    <div id="controls">
         <button id="save-numbers">Save Numbers</button>
         <button id="reset">Reset</button>
         <button id="random-numbers">Random Numbers</button>
@@ -217,30 +223,13 @@
         <button id="payouts-button">Payouts</button>
         <button id="odds-button">Odds</button>
     </div>
-    <div id="add-cash-container" class="">
+    <div id="add-cash-container">
         <label for="add-cash-input">Add Cash: $</label>
         <input type="text" id="add-cash-input" placeholder="Enter amount">
         <button id="add-cash-button">Add Cash</button>
     </div>
-    <div id="saved-sets" class=""></div>
-    <div id="stats-box" class="hidden">
-                <p>Games Played: 36</p>
-                <p>Total Bet: $360,000</p>
-                <p>Total Won: $150,000</p>
-                <p>Net Profit: $-210,000</p>
-                <p>Average Hits per Game: 2.61</p>
-                <p>5 Number Hits: 3</p>
-                <p>6 Number Hits: 0</p>
-                <p>7 Number Hits: 0</p>
-                <p>8 Number Hits: 0</p>
-                <p>9 Number Hits: 0</p>
-                <p>10 Number Hits: 0</p>
-                <p>Highest Winning Bet: $50,000</p>
-                <p>Highest Lost Bet: $10,000</p>
-                <p>Bets Since Reset: 36 <button id="reset-bets-button">Reset</button></p>
-                <p>Golden Numbers Drawn: 0</p>
-                <p>Golden Number Matches: 0</p>
-            </div>
+    <div id="saved-sets"></div>
+    <div id="stats-box" class="hidden"></div>
 
     <script>
         const ELEMENTS = {
@@ -300,7 +289,14 @@
             MAX_SAVED_SETS: 10,
             PAYOUT_TABLE: { 5: 5, 6: 24, 7: 142, 8: 1000, 9: 4500, 10: 10000 },
             DEFAULT_INSTRUCTIONS: "Select 10 numbers and place your bet.",
-            BLINK_DURATION: 3000
+            BLINK_DURATION: {
+                5: 2000,
+                6: 2000,
+                7: 3000,
+                8: 5000,
+                9: 7000,
+                10: 7000
+            }
         };
 
         const formatNumberWithCommas = num => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -489,13 +485,15 @@
             const goldenText = goldenBonus > 0 ? ` (including ${goldenBonus} golden bonus from ${goldenHits.join(', ')})` : '';
             ELEMENTS.instructions.textContent = `You matched ${hits.size + goldenBonus} numbers${goldenText} and won ${formatCurrency(winnings)}`;
 
+            const hitCount = hits.size + goldenBonus;
+            const duration = CONSTANTS.BLINK_DURATION[hitCount] || 3000; // Default to 3000ms if not specified
             setTimeout(() => {
                 hitElements.forEach(el => el.classList.remove('blink-numbers'));
                 ELEMENTS.instructions.classList.remove('blink-text');
                 ELEMENTS.outerBorder.classList.remove('blink-outer-border');
                 toggleBetting(true);
                 ELEMENTS.betInput.focus();
-            }, CONSTANTS.BLINK_DURATION);
+            }, duration);
         };
 
         const toggleBetting = enabled => {
@@ -667,5 +665,5 @@
             if (!STATE.isStatsVisible) ELEMENTS.statsBox.classList.add('hidden');
         });
     </script>
-
-</body></html>
+</body>
+</html>
