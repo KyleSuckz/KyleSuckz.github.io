@@ -60,6 +60,15 @@
             margin-bottom: 1vw;
             z-index: 5;
         }
+        .primary-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5vw;
+            margin-top: 1vw;
+            margin-bottom: 1vw;
+            width: 100%;
+        }
         #start-game, #continue-playing {
             padding: 1vw 2vw;
             font-size: clamp(14px, 1.8vw, 18px);
@@ -70,17 +79,15 @@
             cursor: pointer;
             text-transform: uppercase;
             font-weight: bold;
-            transition: background 0.3s;
-            z-index: 10;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            transition: background 0.3s, transform 0.3s;
+            width: 80%;
+            max-width: 200px;
         }
         #start-game:hover, #continue-playing:hover {
             background: linear-gradient(45deg, #b8860b, #d4af37);
+            transform: scale(1.05);
         }
-        #start-game.hidden, #continue-playing.hidden {
+        #start-game[hidden], #continue-playing[hidden] {
             display: none;
         }
         #game-status {
@@ -308,13 +315,16 @@
         .card.back { background: linear-gradient(45deg, #d4af37, #b8860b); color: transparent; }
         .controls {
             display: flex;
-            justify-content: center;
-            gap: 1vw;
+            flex-direction: row;
             flex-wrap: wrap;
-            margin-top: 2vw;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5vw;
+            margin-top: 1vw;
+            width: 100%;
         }
         button {
-            padding: 1vw 2vw;
+            padding: 0.75vw 1.5vw;
             font-size: clamp(12px, 1.4vw, 14px);
             background: linear-gradient(45deg, #d4af37, #b8860b);
             color: #fff;
@@ -324,6 +334,7 @@
             transition: transform 0.3s, background 0.3s;
             text-transform: uppercase;
             font-weight: 600;
+            min-width: clamp(80px, 10vw, 100px);
         }
         button:hover:not(:disabled) {
             background: linear-gradient(45deg, #b8860b, #d4af37);
@@ -334,13 +345,14 @@
             cursor: not-allowed;
         }
         #raise-amount {
-            padding: 1vw;
+            padding: 0.75vw;
             font-size: clamp(12px, 1.4vw, 14px);
             border-radius: 6px;
             border: 2px solid #d4af37;
             background: #0a1515;
             color: #fff;
-            width: clamp(50px, 8vw, 80px);
+            width: clamp(60px, 8vw, 80px);
+            text-align: center;
         }
         #raise-amount.invalid {
             border: 4px solid #e63946;
@@ -378,6 +390,15 @@
         .log-entry {
             margin-bottom: 0.5vw;
             font-size: clamp(10px, 1.2vw, 12px);
+        }
+        .log-entry.separator {
+            color: #d4af37;
+            font-weight: bold;
+            text-align: center;
+            margin: 1vw 0;
+            border-top: 1px solid #d4af37;
+            border-bottom: 1px solid #d4af37;
+            padding: 0.5vw 0;
         }
         #log-toggle {
             position: absolute;
@@ -439,6 +460,25 @@
                 top: 5%;
                 left: -3vw;
             }
+            .controls, .primary-controls {
+                gap: 0.5vw;
+            }
+            button {
+                padding: 0.5vw 1vw;
+                font-size: clamp(10px, 1.2vw, 12px);
+                min-width: clamp(60px, 8vw, 80px);
+            }
+            #raise-amount {
+                padding: 0.5vw;
+                font-size: clamp(10px, 1.2vw, 12px);
+                width: clamp(50px, 6vw, 60px);
+            }
+            #start-game, #continue-playing {
+                width: 80%;
+                max-width: 200px;
+                padding: 2vw 4vw;
+                font-size: clamp(14px, 2vw, 16px);
+            }
         }
         @media (max-width: 480px) {
             .poker-table {
@@ -463,12 +503,20 @@
                 height: 11.2vw;
                 max-height: 112px;
             }
-            .controls {
-                flex-direction: column;
-                align-items: center;
+            .controls, .primary-controls {
                 gap: 0.5vw;
             }
-            button, #raise-amount {
+            button {
+                padding: 0.5vw 1vw;
+                font-size: clamp(10px, 1.2vw, 12px);
+                min-width: clamp(50px, 7vw, 70px);
+            }
+            #raise-amount {
+                padding: 0.5vw;
+                font-size: clamp(10px, 1.2vw, 12px);
+                width: clamp(50px, 6vw, 60px);
+            }
+            #start-game, #continue-playing {
                 width: 80%;
                 max-width: 200px;
                 padding: 2vw 4vw;
@@ -501,8 +549,6 @@
         <div class="table-wrapper">
             <div class="poker-table">
                 <div class="community-area">
-                    <button id="start-game" aria-label="Start a new Texas Hold'em game">Start Game</button>
-                    <button id="continue-playing" class="hidden" aria-label="Continue to the next hand">Continue Playing</button>
                     <div id="game-status" aria-live="polite"></div>
                     <div id="winning-hand" aria-live="polite"></div>
                     <div class="community-cards" id="community-cards"></div>
@@ -556,6 +602,10 @@
                 </div>
             </div>
         </div>
+        <div class="primary-controls">
+            <button id="start-game" aria-label="Start a new Texas Hold'em game">Start Game</button>
+            <button id="continue-playing" hidden aria-label="Continue to the next hand">Continue Playing</button>
+        </div>
         <div class="controls">
             <button id="fold" onclick="game.fold()" aria-label="Fold your hand" disabled>Fold</button>
             <button id="check" onclick="game.check()" aria-label="Check (pass without betting)" disabled>Check</button>
@@ -563,7 +613,7 @@
             <input type="number" id="raise-amount" min="50" step="50" value="100" aria-label="Amount to raise" oninput="game.validateRaiseAmount()" disabled>
             <button id="raise" onclick="game.raise()" aria-label="Raise the bet" disabled>Raise</button>
             <button id="new-game" onclick="game.newGame()" aria-label="Start a new hand" disabled>New Hand</button>
-            <button id="reset-game" onclick="game.resetGame()" aria-label="Reset the game to initial state" disabled>Reset Game</button>
+            <button id="reset-game" onclick="game.resetGame()" aria-label="Reset the game to initial state">Reset Game</button>
         </div>
         <div class="log-container">
             <div class="action-log" id="action-log">
@@ -777,7 +827,7 @@
                 const activePlayers = this.state.players.filter(p => p.chips > 0);
                 if (activePlayers.length <= 1) {
                     const winner = activePlayers[0];
-                    const message = winner ? `${this.getPlayerName(winner.id)} won the game!` : 'Game ended with no winner.';
+                    const message = winner ? `${this.getPlayerName(winner.id)} won the game with ${winner.chips} chips!` : 'Game ended with no winner.';
                     render.logAction(message);
                     render.disableControls();
                     return true;
@@ -792,12 +842,19 @@
                     const winner = this.state.playersInRound[0] || 'none';
                     if (winner !== 'none') {
                         const winnerName = this.getPlayerName(winner);
-                        render.logAction(`${winnerName} won ${this.state.pot} by default`);
-                        this.setChips(winner, this.getChips(winner) + this.state.pot);
+                        const totalPot = this.state.pot;
+                        this.setChips(winner, this.getChips(winner) + totalPot);
                         this.getPlayer(winner).wins++;
+                        render.logAction(`${winnerName} won ${totalPot} chips by default (all others folded).`);
                         this.state.pot = 0;
                     } else {
-                        render.logAction('All players folded. Pot resets.');
+                        render.logAction('All players folded. Pot redistributed.');
+                        this.state.players.forEach(p => {
+                            if (p.betThisRound > 0) {
+                                this.setChips(p.id, this.getChips(p.id) + p.betThisRound);
+                                this.state.pot -= p.betThisRound;
+                            }
+                        });
                         this.state.pot = 0;
                     }
                     render.updateGameDisplay();
@@ -854,54 +911,56 @@
                     ...acc,
                     [p.id]: allCards[p.id].length ? this.evaluateHand(allCards[p.id]) : { score: -1, high: -1, tiebreakers: [] }
                 }), {});
-                const bets = this.state.players.map(p => ({
-                    id: p.id,
-                    bet: p.betThisRound,
-                    inRound: this.state.playersInRound.includes(p.id)
-                }));
-                const sortedBets = [...new Set(bets.filter(b => b.inRound && b.bet > 0).map(b => b.bet))].sort((a, b) => a - b);
-                const sidePots = sortedBets.map(bet => {
-                    const eligible = bets.filter(b => b.bet >= bet && b.inRound).map(b => b.id);
-                    const amount = eligible.reduce((sum, id) => {
-                        const playerBet = this.getPlayer(id).betThisRound;
-                        return sum + Math.min(bet, playerBet);
-                    }, 0);
-                    return { amount, eligible };
-                });
 
-                let message = '';
-                sidePots.forEach(pot => {
-                    if (pot.amount === 0) return;
-                    const eligibleHands = pot.eligible.map(id => ({ id, ...hands[id] }));
-                    const maxScore = Math.max(...eligibleHands.map(h => h.score));
-                    let winners = eligibleHands.filter(h => h.score === maxScore);
-                    const maxHigh = Math.max(...winners.map(w => w.high));
-                    winners = winners.filter(w => w.high === maxHigh);
-                    if (winners.length > 1) {
-                        winners = winners.reduce((acc, curr) => {
-                            if (!acc.length) return [curr];
-                            const prevTiebreakers = acc[0].tiebreakers;
-                            const currTiebreakers = curr.tiebreakers;
-                            for (let i = 0; i < Math.min(prevTiebreakers.length, currTiebreakers.length); i++) {
-                                if (currTiebreakers[i] > prevTiebreakers[i]) return [curr];
-                                if (currTiebreakers[i] < prevTiebreakers[i]) return acc;
-                            }
-                            return [...acc, curr];
-                        }, []);
-                    }
-                    const finalWinners = winners.map(w => w.id);
-                    const potShare = Math.floor(pot.amount / finalWinners.length);
-
-                    finalWinners.forEach(winner => {
-                        const hand = hands[winner];
-                        const winnerName = this.getPlayerName(winner);
-                        message += `${winnerName} won ${potShare} with ${HAND_NAMES[hand.score]} ${RANKS[hand.high]}\n`;
-                        this.setChips(winner, this.getChips(winner) + potShare);
-                        this.getPlayer(winner).wins++;
+                const totalPot = this.state.pot;
+                const eligiblePlayers = this.state.playersInRound;
+                if (eligiblePlayers.length === 0) {
+                    render.logAction('All players folded. Pot redistributed.');
+                    this.state.players.forEach(p => {
+                        if (p.betThisRound > 0) {
+                            this.setChips(p.id, this.getChips(p.id) + p.betThisRound);
+                            this.state.pot -= p.betThisRound;
+                        }
                     });
+                    this.state.pot = 0;
+                    render.updateGameDisplay();
+                    return;
+                }
+
+                const eligibleHands = eligiblePlayers.map(id => ({ id, ...hands[id] }));
+                const maxScore = Math.max(...eligibleHands.map(h => h.score));
+                let winners = eligibleHands.filter(h => h.score === maxScore);
+                const maxHigh = Math.max(...winners.map(w => w.high));
+                winners = winners.filter(w => w.high === maxHigh);
+
+                if (winners.length > 1) {
+                    winners = winners.reduce((acc, curr) => {
+                        if (!acc.length) return [curr];
+                        const prevTiebreakers = acc[0].tiebreakers;
+                        const currTiebreakers = curr.tiebreakers;
+                        for (let i = 0; i < Math.min(prevTiebreakers.length, currTiebreakers.length); i++) {
+                            if (currTiebreakers[i] > prevTiebreakers[i]) return [curr];
+                            if (currTiebreakers[i] < prevTiebreakers[i]) return acc;
+                        }
+                        return [...acc, curr];
+                    }, []);
+                }
+
+                const finalWinners = winners.map(w => w.id);
+                const potShare = Math.floor(totalPot / finalWinners.length);
+
+                const winnerNames = finalWinners.map(id => this.getPlayerName(id)).join(' and ');
+                const handDescription = `${HAND_NAMES[winners[0].score]} ${RANKS[winners[0].high]}`;
+                const message = finalWinners.length > 1 
+                    ? `${winnerNames} split ${totalPot} chips with ${handDescription}`
+                    : `${winnerNames} won ${totalPot} chips with ${handDescription}`;
+
+                finalWinners.forEach(winner => {
+                    this.setChips(winner, this.getChips(winner) + potShare);
+                    this.getPlayer(winner).wins++;
                 });
 
-                render.logAction(message.trim());
+                render.logAction(message);
                 this.state.pot = 0;
                 this.state.currentTurn = 'none';
                 render.updateGameDisplay();
@@ -990,9 +1049,10 @@
             },
 
             enableControls() {
-                this.DOM.newGameButton.disabled = false;
+                this.DOM.startButton.disabled = false;
+                this.DOM.newGameButton.disabled = true;
                 this.DOM.resetGameButton.disabled = false;
-                this.DOM.raiseAmount.disabled = false;
+                this.DOM.raiseAmount.disabled = true;
                 this.validateRaiseAmount();
             },
 
@@ -1020,7 +1080,7 @@
                     }), {});
                     const hands = gameLogic.state.players.reduce((acc, p) => ({
                         ...acc,
-                        [p.id]: allCards[p.id].length >= 2 ? gameLogic.evaluateHand(allCards[p.id]) : { score: 0, high: Math.max(...p.cards.map(c => gameLogic.rankValues[c.rank])), tiebreakers: [] }
+                        [p.id]: allCards[p.id].length >= 2 ? gameLogic.evaluateHand(allCards[p.id]) : { score: 0, high: -1, tiebreakers: [] }
                     }), {});
 
                     players.forEach((player, i) => {
@@ -1028,10 +1088,10 @@
                         const actionButtons = player.div.querySelector('.action-buttons');
                         player.div.innerHTML = actionButtons ? actionButtons.outerHTML : '';
                         player.cards.forEach(card => player.div.appendChild(this.renderCard(card, player.hidden)));
-                        player.handDiv.textContent = `${HAND_NAMES[hands[playerId].score]} ${RANKS[hands[playerId].high]}`;
+                        player.handDiv.textContent = hands[playerId].high >= 0 ? `${HAND_NAMES[hands[playerId].score]} ${RANKS[hands[playerId].high]}` : 'High Card -';
                         player.div.classList.toggle('your-turn', gameLogic.state.currentTurn === playerId && gameLogic.state.phase !== 'showdown');
                         updates.push(() => {
-                            player.handDiv.setAttribute('aria-label', `${gameLogic.getPlayerName(playerId)} best hand: ${HAND_NAMES[hands[playerId].score]} ${RANKS[hands[playerId].high]}`);
+                            player.handDiv.setAttribute('aria-label', `${gameLogic.getPlayerName(playerId)} best hand: ${hands[playerId].high >= 0 ? `${HAND_NAMES[hands[playerId].score]} ${RANKS[hands[playerId].high]}` : 'High Card'}`);
                         });
                     });
 
@@ -1056,6 +1116,9 @@
                     this.DOM.dealerButtons.forEach((btn, i) => {
                         btn.style.display = ALL_PLAYERS[i] === gameLogic.state.dealer ? 'block' : 'none';
                     });
+                    this.DOM.blindChips.forEach((chip, i) => {
+                        chip.style.display = 'none';
+                    });
 
                     // Game info
                     const toCall = gameLogic.state.currentBet - (gameLogic.getPlayer(gameLogic.state.currentTurn)?.betThisRound || 0);
@@ -1063,11 +1126,11 @@
                         this.DOM.pot.textContent = `Total Pot: ${gameLogic.state.pot}`;
                         this.DOM.betInfo.textContent = `Current Bet: ${gameLogic.state.currentBet}`;
                         this.DOM.callInfo.textContent = `To Call: ${toCall}`;
-                        this.DOM.gameStatus.textContent = `Phase: ${gameLogic.state.phase.charAt(0).toUpperCase() + gameLogic.state.phase.slice(1)}, Turn: ${gameLogic.getPlayerName(gameLogic.state.currentTurn)}`;
+                        this.DOM.gameStatus.textContent = gameLogic.state.isFirstGame ? 'Ready to start' : `Phase: ${gameLogic.state.phase.charAt(0).toUpperCase() + gameLogic.state.phase.slice(1)}, Turn: ${gameLogic.getPlayerName(gameLogic.state.currentTurn)}`;
                         this.DOM.pot.setAttribute('aria-label', `Total pot size: ${gameLogic.state.pot}`);
                         this.DOM.betInfo.setAttribute('aria-label', `Current bet amount: ${gameLogic.state.currentBet}`);
                         this.DOM.callInfo.setAttribute('aria-label', `Amount to call: ${toCall}`);
-                        this.DOM.gameStatus.setAttribute('aria-label', `Current phase: ${gameLogic.state.phase}, Current turn: ${gameLogic.getPlayerName(gameLogic.state.currentTurn)}`);
+                        this.DOM.gameStatus.setAttribute('aria-label', gameLogic.state.isFirstGame ? 'Ready to start' : `Current phase: ${gameLogic.state.phase}, Current turn: ${gameLogic.getPlayerName(gameLogic.state.currentTurn)}`);
                     });
 
                     // Action prompt and continue button
@@ -1076,20 +1139,30 @@
                         this.DOM.winningHand.textContent = toCall > 0 ? `Your turn: Call ${toCall} or Raise` : 'Your turn: Check or Raise';
                         this.DOM.winningHand.classList.add('action-waiting');
                         this.DOM.winningHand.classList.remove('game-result');
-                        this.DOM.continueButton.classList.add('hidden');
+                        this.DOM.continueButton.hidden = true;
+                        this.DOM.startButton.hidden = true;
                     } else if (gameLogic.state.phase === 'showdown' || gameLogic.state.playersInRound.length <= 1) {
                         this.hideActionButtons();
                         this.disableControls();
-                        this.DOM.continueButton.classList.remove('hidden');
+                        this.DOM.continueButton.hidden = false;
+                        this.DOM.startButton.hidden = true;
                         this.DOM.winningHand.classList.remove('action-waiting');
                         this.DOM.winningHand.classList.add('game-result');
+                    } else if (gameLogic.state.isFirstGame) {
+                        this.hideActionButtons();
+                        this.enableControls();
+                        this.DOM.continueButton.hidden = true;
+                        this.DOM.startButton.hidden = false;
+                        this.DOM.winningHand.textContent = '';
+                        this.DOM.winningHand.classList.remove('action-waiting', 'game-result');
                     } else {
                         this.hideActionButtons();
-                        this.DOM.continueButton.classList.add('hidden');
+                        this.DOM.continueButton.hidden = true;
+                        this.DOM.startButton.hidden = true;
                         this.DOM.winningHand.classList.remove('action-waiting');
-                        if (this.DOM.winningHand.textContent.includes('All players folded')) {
+                        if (this.DOM.winningHand.textContent.includes('All players folded') || this.DOM.winningHand.textContent.includes('won') || this.DOM.winningHand.textContent.includes('split')) {
                             this.DOM.winningHand.classList.add('game-result');
-                            this.DOM.continueButton.classList.remove('hidden');
+                            this.DOM.continueButton.hidden = false;
                             this.disableControls();
                         }
                     }
@@ -1113,9 +1186,10 @@
                         this.DOM.checkButton.disabled = gameLogic.state.phase === 'showdown' || gameLogic.state.currentTurn !== 'player' || toCall > 0 || gameLogic.state.playersInRound.length <= 1;
                         this.DOM.callButton.disabled = gameLogic.state.phase === 'showdown' || gameLogic.state.currentTurn !== 'player' || toCall <= 0 || gameLogic.getChips('player') < toCall || gameLogic.state.playersInRound.length <= 1;
                         this.DOM.raiseButton.disabled = gameLogic.state.phase === 'showdown' || gameLogic.state.currentTurn !== 'player' || gameLogic.getChips('player') < toCall + parseInt(this.DOM.raiseAmount.value) || gameLogic.state.playersInRound.length <= 1;
-                        this.DOM.raiseAmount.disabled = false;
-                        this.DOM.newGameButton.disabled = false;
+                        this.DOM.raiseAmount.disabled = gameLogic.state.phase === 'showdown' || gameLogic.state.currentTurn !== 'player' || gameLogic.state.playersInRound.length <= 1;
+                        this.DOM.newGameButton.disabled = gameLogic.state.isFirstGame || gameLogic.state.phase !== 'showdown';
                         this.DOM.resetGameButton.disabled = false;
+                        this.DOM.startButton.disabled = !gameLogic.state.isFirstGame;
                     });
 
                     // Apply batched updates
@@ -1142,6 +1216,9 @@
             },
 
             logAction(action) {
+                if (!action || action.trim() === '') {
+                    action = 'Action not specified.';
+                }
                 const timestamp = new Date().toLocaleTimeString();
                 gameLogic.state.actionLog.unshift(`[${timestamp}] ${action}`);
                 if (gameLogic.state.actionLog.length > 50) gameLogic.state.actionLog.pop();
@@ -1154,6 +1231,9 @@
                 gameLogic.state.actionLog.forEach(log => {
                     const entry = document.createElement('div');
                     entry.className = 'log-entry';
+                    if (log.includes('--- New Game Started ---') || log.includes('--- Game Reset ---')) {
+                        entry.classList.add('separator');
+                    }
                     entry.textContent = log;
                     this.DOM.actionText.appendChild(entry);
                 });
@@ -1166,7 +1246,7 @@
                 this.DOM.raiseButton.disabled = true;
                 this.DOM.raiseAmount.disabled = true;
                 this.DOM.newGameButton.disabled = true;
-                this.DOM.resetGameButton.disabled = true;
+                this.DOM.startButton.disabled = true;
             }
         };
 
@@ -1227,9 +1307,10 @@
         // Game controller
         const game = {
             startGame() {
+                render.logAction('--- New Game Started ---');
                 gameLogic.state.isFirstGame = false;
-                render.DOM.startButton.classList.add('hidden');
-                render.DOM.continueButton.classList.add('hidden');
+                render.DOM.startButton.hidden = true;
+                render.DOM.continueButton.hidden = true;
                 gameLogic.state.deck = [...DECK];
                 gameLogic.state.communityCards = [];
                 gameLogic.state.pot = 0;
@@ -1238,7 +1319,6 @@
                 gameLogic.state.playersInRound = ALL_PLAYERS.filter(p => gameLogic.getChips(p) > 0);
                 gameLogic.state.foldedPlayers = [];
                 gameLogic.state.currentTurn = 'none';
-                gameLogic.state.actionLog = [];
                 gameLogic.state.players.forEach(p => {
                     p.cards = [];
                     p.betThisRound = 0;
@@ -1309,8 +1389,10 @@
             },
 
             newGame() {
+                if (gameLogic.state.isFirstGame) return;
                 const currentDealerIndex = ALL_PLAYERS.indexOf(gameLogic.state.dealer);
                 gameLogic.state.dealer = ALL_PLAYERS[(currentDealerIndex + 1) % 4];
+                render.logAction('--- New Game Started ---');
                 Object.assign(gameLogic.state, {
                     deck: [...DECK],
                     communityCards: [],
@@ -1321,26 +1403,21 @@
                     foldedPlayers: [],
                     currentTurn: 'none',
                     smallBlindPlayer: null,
-                    bigBlindPlayer: null,
-                    actionLog: []
+                    bigBlindPlayer: null
                 });
                 gameLogic.state.players.forEach(p => {
                     p.cards = [];
                     p.betThisRound = 0;
                 });
-                render.DOM.continueButton.classList.add('hidden');
+                render.DOM.continueButton.hidden = true;
                 render.updateGameDisplay();
-                render.DOM.actionText.textContent = '';
                 render.DOM.winningHand.textContent = '';
                 render.enableControls();
-                if (!gameLogic.state.isFirstGame) {
-                    this.startGame();
-                } else {
-                    render.DOM.startButton.classList.remove('hidden');
-                }
+                this.startGame();
             },
 
             resetGame() {
+                gameLogic.state.actionLog = ['--- Game Reset ---'];
                 Object.assign(gameLogic.state, {
                     deck: [...DECK],
                     communityCards: [],
@@ -1353,7 +1430,6 @@
                     dealer: 'player3',
                     smallBlindPlayer: null,
                     bigBlindPlayer: null,
-                    actionLog: [],
                     isFirstGame: true
                 });
                 gameLogic.state.players.forEach(p => {
@@ -1364,12 +1440,14 @@
                     p.folds = 0;
                 });
                 gameLogic.handCache.clear();
-                render.DOM.continueButton.classList.add('hidden');
-                render.updateGameDisplay();
-                render.DOM.actionText.textContent = '';
+                render.DOM.continueButton.hidden = true;
+                render.DOM.startButton.hidden = false;
+                render.DOM.actionText.innerHTML = '';
                 render.DOM.winningHand.textContent = '';
-                render.DOM.startButton.classList.remove('hidden');
+                render.hideActionButtons();
                 render.enableControls();
+                render.renderActionLog();
+                render.updateGameDisplay();
             },
 
             toggleLog() {
@@ -1394,9 +1472,9 @@
 
         // Keyboard controls
         document.addEventListener('keydown', (e) => {
-            if (e.key === 's' && !render.DOM.startButton.disabled && !render.DOM.startButton.classList.contains('hidden')) {
+            if (e.key === 's' && !render.DOM.startButton.disabled && !render.DOM.startButton.hidden) {
                 game.startGame();
-            } else if (e.key === 'c' && !render.DOM.continueButton.disabled && !render.DOM.continueButton.classList.contains('hidden')) {
+            } else if (e.key === 'c' && !render.DOM.continueButton.disabled && !render.DOM.continueButton.hidden) {
                 game.newGame();
             } else if (gameLogic.state.currentTurn !== 'player' || gameLogic.state.phase === 'showdown' || gameLogic.state.playersInRound.length <= 1) {
                 return;
