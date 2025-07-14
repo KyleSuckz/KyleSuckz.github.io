@@ -3,16 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Texas Hold'em Poker</title>
+    <title>Texas Hold'em Pro</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
     <div id="game-container">
         <div id="ui">
+            <div id="table-info">
+                <div id="pot">Pot: <span id="pot-amount">0</span></div>
+                <div id="game-status">Click 'Start Game' to begin!</div>
+            </div>
             <div id="player-info">
-                <h2>Player Chips: <span id="player-chips">1000</span></h2>
-                <h3>Pot: <span id="pot">0</span></h3>
+                <div class="player-box" id="player-0">
+                    <span class="player-name">Player</span>
+                    <span class="player-chips">1000</span>
+                </div>
+                <div class="player-box" id="player-1">
+                    <span class="player-name">AI 1</span>
+                    <span class="player-chips">1000</span>
+                </div>
+                <div class="player-box" id="player-2">
+                    <span class="player-name">AI 2</span>
+                    <span class="player-chips">1000</span>
+                </div>
+                <div class="player-box" id="player-3">
+                    <span class="player-name">AI 3</span>
+                    <span class="player-chips">1000</span>
+                </div>
             </div>
             <div id="actions">
                 <button id="fold">Fold</button>
@@ -20,7 +39,6 @@
                 <button id="raise">Raise</button>
                 <input type="number" id="raise-amount" min="10" value="10">
             </div>
-            <div id="game-status">Click 'Start Game' to begin!</div>
         </div>
     </div>
     <script src="game.js"></script>
