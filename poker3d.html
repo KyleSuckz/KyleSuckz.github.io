@@ -25,7 +25,7 @@
             overflow: hidden;
         }
         canvas { width: 90vw; max-width: 1000px; height: 54vw; max-height: 600px; }
-        .game-container { width: 90vw; max-width: 1000px; }
+        .game-container { width: 90vw; max-width: 1000px; position: relative; }
         .primary-controls {
             display: flex;
             flex-direction: column;
@@ -138,12 +138,12 @@
         <div class="primary-controls">
             <div id="winning-hand">Ready to start</div>
             <button id="start-game">Start Game</button>
-            <button id="continue-game">Continue</button>
+            <button id="continue-game" hidden>Continue</button>
             <div class="action-buttons">
-                <button id="fold">Fold</button>
-                <button id="check-call">Check/Call</button>
-                <button id="raise">Raise</button>
-                <input id="raise-amount" type="number" min="0" step="25">
+                <button id="fold" disabled>Fold</button>
+                <button id="check-call" disabled>Check/Call</button>
+                <button id="raise" disabled>Raise</button>
+                <input id="raise-amount" type="number" min="0" step="25" disabled>
             </div>
             <button id="reset-game">Reset Game</button>
         </div>
@@ -325,8 +325,10 @@
                 const center = new THREE.Vector3(0, 0, 0.3).project(camera);
                 const centerX = (center.x * 0.5 + 0.5) * window.innerWidth;
                 const centerY = (-center.y * 0.5 + 0.5) * window.innerHeight;
-                this.DOM.gameStatus.style.cssText += `left: ${centerX}px; top: ${centerY - 20}px;`;
-                this.DOM.pot.style.cssText += `left: ${centerX}px; top: ${centerY + 20}px;`;
+                this.DOM.gameStatus.style.cssText += `left: ${centerX}px; top: ${centerY - 20}px; text-align: center;`;
+                this.DOM.pot.style.cssText += `left: ${centerX}px; top: ${centerY + 20}px; text-align: center;`;
+                this.DOM.currentBet.style.cssText += `left: ${centerX}px; top: ${centerY + 40}px; text-align: center;`;
+                this.DOM.callInfo.style.cssText += `left: ${centerX}px; top: ${centerY + 60}px; text-align: center;`;
             },
 
             updateStatsPanel() {
@@ -1230,4 +1232,28 @@
             document.addEventListener('keydown', e => {
                 if (e.key.toLowerCase() === 's') render.DOM.startButton.click();
                 if (e.key.toLowerCase() === 'c') render.DOM.continueButton.click();
-                if (e.key.toLowerCase() === 'f')
+                if (e.key.toLowerCase() === 'f') render.DOM.foldButton.click();
+                if (e.key.toLowerCase() === 'k') render.DOM.checkCallButton.click();
+                if (e.key.toLowerCase() === 'r') render.DOM.raiseButton.click();
+                if (e.key.toLowerCase() === 'q') render.DOM.resetGameButton.click();
+            });
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(Math.min(window.innerWidth * 0.9, 1000), Math.min(window.innerHeight * 0.54, 600));
+                render.updateGameDisplay();
+            });
+            render.updateGameDisplay();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            render.updateGameDisplay();
+            renderer.render(scene, camera);
+        }
+
+        init();
+        animate();
+    </script>
+</body>
+</html>
