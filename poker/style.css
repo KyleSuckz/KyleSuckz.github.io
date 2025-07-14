@@ -1,7 +1,7 @@
 body {
     margin: 0;
     overflow: hidden;
-    background: linear-gradient(to bottom, #1a3c1a, #0a1c0a); /* Casino green gradient */
+    background: linear-gradient(to bottom, #1b2a44, #0b1622); /* Casino blue gradient */
     font-family: 'Roboto', sans-serif;
 }
 
@@ -22,37 +22,39 @@ body {
 
 #table-info {
     position: absolute;
-    top: 50%;
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
     color: #ffd700;
-    background: rgba(0, 0, 0, 0.85);
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
     pointer-events: auto;
+    font-family: 'Oswald', sans-serif;
 }
 
 #pot {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 #game-status {
-    font-size: 20px;
+    font-size: 24px;
 }
 
 #game-status button {
-    padding: 12px 24px;
-    font-size: 18px;
+    padding: 12px 30px;
+    font-size: 20px;
     background: #d4af37;
     color: #000;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     pointer-events: auto;
+    transition: background 0.2s;
 }
 
 #game-status button:hover {
@@ -67,59 +69,91 @@ body {
 
 .player-box {
     position: absolute;
-    background: rgba(0, 0, 0, 0.9);
-    padding: 10px;
-    border-radius: 8px;
+    background: linear-gradient(to bottom, #2e2e2e, #1a1a1a);
+    padding: 15px;
+    border-radius: 10px;
     color: #fff;
     text-align: center;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+    width: 150px;
 }
 
 .player-box .player-name {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
+    font-family: 'Oswald', sans-serif;
 }
 
 .player-box .player-chips {
-    font-size: 16px;
+    font-size: 18px;
+    margin: 5px 0;
 }
 
-#player-0 { bottom: 20px; left: 50%; transform: translateX(-50%); }
-#player-1 { top: 20px; left: 50%; transform: translateX(-50%); }
-#player-2 { left: 20px; top: 50%; transform: translateY(-50%); }
-#player-3 { right: 20px; top: 50%; transform: translateY(-50%); }
+.player-box .player-action {
+    font-size: 16px;
+    color: #ffd700;
+}
+
+#player-0 { bottom: 30px; left: 50%; transform: translateX(-50%); }
+#player-1 { top: 30px; left: 50%; transform: translateX(-50%); }
+#player-2 { left: 30px; top: 50%; transform: translateY(-50%); }
+#player-3 { right: 30px; top: 50%; transform: translateY(-50%); }
 
 #actions {
     position: absolute;
-    bottom: 20px;
+    bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.85);
-    padding: 15px;
-    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    border-radius: 12px;
     pointer-events: auto;
 }
 
 #actions button {
-    padding: 12px 24px;
-    margin: 5px;
-    font-size: 18px;
-    background: #4CAF50;
+    padding: 15px 30px;
+    margin: 8px;
+    font-size: 20px;
+    background: #e91e63;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     transition: background 0.2s;
+    font-family: 'Oswald', sans-serif;
 }
 
 #actions button:hover {
-    background: #45a049;
+    background: #c2185b;
 }
 
 #raise-amount {
-    width: 80px;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 6px;
+    width: 100px;
+    padding: 12px;
+    font-size: 18px;
+    border-radius: 8px;
     margin-left: 10px;
+}
+
+#stats-panel {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background: rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    border-radius: 12px;
+    color: #fff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+    pointer-events: auto;
+}
+
+#stats-panel h3 {
+    font-size: 22px;
+    margin-bottom: 10px;
+    font-family: 'Oswald', sans-serif;
+}
+
+#stats-panel p {
+    font-size: 18px;
+    margin: 5px 0;
 }

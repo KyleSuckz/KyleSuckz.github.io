@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Texas Hold'em Pro</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Elite Texas Hold'em</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto:wght@400&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
@@ -19,18 +19,22 @@
                 <div class="player-box" id="player-0">
                     <span class="player-name">Player</span>
                     <span class="player-chips">1000</span>
+                    <span class="player-action"></span>
                 </div>
                 <div class="player-box" id="player-1">
                     <span class="player-name">AI 1</span>
                     <span class="player-chips">1000</span>
+                    <span class="player-action"></span>
                 </div>
                 <div class="player-box" id="player-2">
                     <span class="player-name">AI 2</span>
                     <span class="player-chips">1000</span>
+                    <span class="player-action"></span>
                 </div>
                 <div class="player-box" id="player-3">
                     <span class="player-name">AI 3</span>
                     <span class="player-chips">1000</span>
+                    <span class="player-action"></span>
                 </div>
             </div>
             <div id="actions">
@@ -39,8 +43,13 @@
                 <button id="raise">Raise</button>
                 <input type="number" id="raise-amount" min="10" value="10">
             </div>
+            <div id="stats-panel">
+                <h3>Player Stats</h3>
+                <p>Hands Played: <span id="hands-played">0</span></p>
+                <p>Win Rate: <span id="win-rate">0%</span></p>
+            </div>
         </div>
     </div>
-    <script src="game.js"></script>
+    <script src="assets/game.js"></script>
 </body>
 </html>
