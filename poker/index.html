@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Texas Hold'em Poker</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+</head>
+<body>
+    <div id="game-container">
+        <div id="ui">
+            <div id="player-info">
+                <h2>Player Chips: <span id="player-chips">1000</span></h2>
+                <h3>Pot: <span id="pot">0</span></h3>
+            </div>
+            <div id="actions">
+                <button id="fold">Fold</button>
+                <button id="call">Call</button>
+                <button id="raise">Raise</button>
+                <input type="number" id="raise-amount" min="10" value="10">
+            </div>
+            <div id="game-status"></div>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
