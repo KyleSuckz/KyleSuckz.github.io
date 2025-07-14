@@ -117,7 +117,12 @@ body.vegas-theme {
     border-radius: 50%;
     margin-bottom: 20px;
     border: 3px solid #ffd700;
+    background: linear-gradient(to bottom, #4682b4, #2f4f4f); /* Blue for player */
 }
+
+#player-1 .player-avatar { background: linear-gradient(to bottom, #b22222, #8b0000); } /* Red for AI 1 */
+#player-2 .player-avatar { background: linear-gradient(to bottom, #228b22, #006400); } /* Green for AI 2 */
+#player-3 .player-avatar { background: linear-gradient(to bottom, #4b0082, #2f004b); } /* Purple for AI 3 */
 
 .vegas-theme .player-box .player-avatar {
     border-color: #b8860b;
