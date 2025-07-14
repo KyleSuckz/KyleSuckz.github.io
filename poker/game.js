@@ -33,14 +33,15 @@ const deck = [];
 suits.forEach(suit => values.forEach(value => deck.push({ suit, value })));
 let communityCards = [];
 let players = [
-    { name: 'Player', chips: 1000, hand: [], active: true, mesh: [] },
-    { name: 'AI 1', chips: 1000, hand: [], active: true, mesh: [] },
-    { name: 'AI 2', chips: 1000, hand: [], active: true, mesh: [] },
-    { name: 'AI 3', chips: 1000, hand: [], active: true, mesh: [] }
+    { name: 'Player', chips: 1000, hand: [], active: true, mesh: [], currentBet: 0 },
+    { name: 'AI 1', chips: 1000, hand: [], active: true, mesh: [], currentBet: 0 },
+    { name: 'AI 2', chips: 1000, hand: [], active: true, mesh: [], currentBet: 0 },
+    { name: 'AI 3', chips: 1000, hand: [], active: true, mesh: [], currentBet: 0 }
 ];
 let pot = 0;
 let currentBet = 0;
 let gamePhase = 'pre-game';
+let dealerIndex = 0; // Initialize dealerIndex
 let gameStarted = false;
 
 // Card meshes
@@ -225,7 +226,7 @@ document.getElementById('fold').addEventListener('click', () => {
 });
 
 document.getElementById('call').addEventListener('click', () => {
-    const bet = currentBet - (player.currentBet || 0);
+    const bet = currentBet - (players[0].currentBet || 0);
     if (players[0].chips >= bet) {
         players[0].chips -= bet;
         pot += bet;
