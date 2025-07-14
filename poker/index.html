@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vegas Elite Texas Hold'em</title>
+    <title>Vegas Pro Texas Hold'em</title>
     <link rel="stylesheet" href="assets/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
@@ -52,12 +52,14 @@
                 <p>Hands Played: <span id="hands-played">0</span></p>
                 <p>Win Rate: <span id="win-rate">0%</span></p>
                 <p>VPIP: <span id="vpip">0%</span></p>
+                <p>Aggression: <span id="aggression">0</span></p>
+            </div>
+            <div id="theme-selector">
+                <button id="theme-dark">Dark Theme</button>
+                <button id="theme-light">Light Theme</button>
             </div>
         </div>
     </div>
-    <audio id="deal-sound" src="assets/sounds/card_deal.mp3"></audio>
-    <audio id="chip-sound" src="assets/sounds/chip_stack.mp3"></audio>
-    <audio id="win-sound" src="assets/sounds/win.mp3"></audio>
     <script src="assets/game.js"></script>
 </body>
 </html>

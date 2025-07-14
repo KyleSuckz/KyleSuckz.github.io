@@ -1,8 +1,13 @@
 body {
     margin: 0;
     overflow: hidden;
-    background: linear-gradient(to bottom, #1b263b, #0d1b2a); /* Vegas-style dark blue */
+    background: linear-gradient(to bottom, #1c2526, #0a0f12); /* Vegas dark gradient */
     font-family: 'Roboto', sans-serif;
+    transition: background 0.5s;
+}
+
+body.light-theme {
+    background: linear-gradient(to bottom, #f5f6f5, #d3d4d3); /* Light theme */
 }
 
 #game-container {
@@ -22,43 +27,44 @@ body {
 
 #table-info {
     position: absolute;
-    top: 35%;
+    top: 32%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
     color: #ffd700;
     background: rgba(0, 0, 0, 0.95);
-    padding: 25px;
+    padding: 30px;
     border-radius: 15px;
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
     pointer-events: auto;
-    font-family: 'Anton', sans-serif;
+    font-family: 'Bebas Neue', sans-serif;
 }
 
 #pot {
-    font-size: 32px;
+    font-size: 36px;
     font-weight: bold;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 #game-status {
-    font-size: 28px;
+    font-size: 30px;
 }
 
 #game-status button {
-    padding: 15px 35px;
-    font-size: 22px;
+    padding: 15px 40px;
+    font-size: 24px;
     background: linear-gradient(to bottom, #d4af37, #b8860b);
     color: #000;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
     pointer-events: auto;
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 #game-status button:hover {
-    transform: scale(1.05);
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
 }
 
 #player-info {
@@ -69,103 +75,143 @@ body {
 
 .player-box {
     position: absolute;
-    background: linear-gradient(to bottom, #2e2e2e, #1a1a1a);
-    padding: 20px;
-    border-radius: 12px;
+    background: linear-gradient(to bottom, #333333, #1a1a1a);
+    padding: 25px;
+    border-radius: 15px;
     color: #fff;
     text-align: center;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-    width: 180px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
+    width: 200px;
     transition: transform 0.2s;
 }
 
+.light-theme .player-box {
+    background: linear-gradient(to bottom, #e0e0e0, #b0b0b0);
+    color: #000;
+}
+
 .player-box:hover {
-    transform: scale(1.05);
+    transform: scale(1.1);
 }
 
 .player-box .player-avatar {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    border: 2px solid #ffd700;
 }
 
 .player-box .player-name {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: bold;
-    font-family: 'Anton', sans-serif;
+    font-family: 'Bebas Neue', sans-serif;
 }
 
 .player-box .player-chips {
-    font-size: 20px;
-    margin: 8px 0;
+    font-size: 22px;
+    margin: 10px 0;
 }
 
 .player-box .player-action {
-    font-size: 18px;
+    font-size: 20px;
     color: #ffd700;
 }
 
-#player-0 { bottom: 40px; left: 50%; transform: translateX(-50%); }
-#player-1 { top: 40px; left: 50%; transform: translateX(-50%); }
-#player-2 { left: 40px; top: 50%; transform: translateY(-50%); }
-#player-3 { right: 40px; top: 50%; transform: translateY(-50%); }
+#player-0 { bottom: 50px; left: 50%; transform: translateX(-50%); }
+#player-1 { top: 50px; left: 50%; transform: translateX(-50%); }
+#player-2 { left: 50px; top: 50%; transform: translateY(-50%); }
+#player-3 { right: 50px; top: 50%; transform: translateY(-50%); }
 
 #actions {
     position: absolute;
-    bottom: 40px;
+    bottom: 50px;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(0, 0, 0, 0.95);
-    padding: 25px;
+    padding: 30px;
     border-radius: 15px;
     pointer-events: auto;
 }
 
+.light-theme #actions {
+    background: rgba(255, 255, 255, 0.95);
+}
+
 #actions button {
-    padding: 15px 35px;
-    margin: 10px;
-    font-size: 22px;
+    padding: 18px 40px;
+    margin: 12px;
+    font-size: 24px;
     background: linear-gradient(to bottom, #e91e63, #c2185b);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-family: 'Bebas Neue', sans-serif;
+}
+
+#actions button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(233, 30, 99, 0.5);
+}
+
+#raise-amount {
+    width: 140px;
+    padding: 18px;
+    font-size: 22px;
+    border-radius: 12px;
+    margin-left: 20px;
+}
+
+#stats-panel {
+    position: absolute;
+    top: 50px;
+    right: 50px;
+    background: rgba(0, 0, 0, 0.95);
+    padding: 30px;
+    border-radius: 15px;
+    color: #fff;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
+    pointer-events: auto;
+}
+
+.light-theme #stats-panel {
+    background: rgba(255, 255, 255, 0.95);
+    color: #000;
+}
+
+#stats-panel h3 {
+    font-size: 26px;
+    margin-bottom: 20px;
+    font-family: 'Bebas Neue', sans-serif;
+}
+
+#stats-panel p {
+    font-size: 22px;
+    margin: 10px 0;
+}
+
+#theme-selector {
+    position: absolute;
+    bottom: 50px;
+    right: 50px;
+    pointer-events: auto;
+}
+
+#theme-selector button {
+    padding: 12px 25px;
+    margin: 5px;
+    font-size: 18px;
+    background: linear-gradient(to bottom, #4682b4, #2f4f4f);
     color: white;
     border: none;
     border-radius: 10px;
     cursor: pointer;
     transition: transform 0.2s;
-    font-family: 'Anton', sans-serif;
+    font-family: 'Bebas Neue', sans-serif;
 }
 
-#actions button:hover {
+#theme-selector button:hover {
     transform: scale(1.05);
-}
-
-#raise-amount {
-    width: 120px;
-    padding: 15px;
-    font-size: 20px;
-    border-radius: 10px;
-    margin-left: 15px;
-}
-
-#stats-panel {
-    position: absolute;
-    top: 40px;
-    right: 40px;
-    background: rgba(0, 0, 0, 0.95);
-    padding: 25px;
-    border-radius: 15px;
-    color: #fff;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-    pointer-events: auto;
-}
-
-#stats-panel h3 {
-    font-size: 24px;
-    margin-bottom: 15px;
-    font-family: 'Anton', sans-serif;
-}
-
-#stats-panel p {
-    font-size: 20px;
-    margin: 8px 0;
 }
