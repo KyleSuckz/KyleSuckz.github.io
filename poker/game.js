@@ -110,10 +110,10 @@ function evaluateHand(hand, community) {
     cardValues.forEach(v => counts[v] = (counts[v] || 0) + 1);
     const pairs = Object.values(counts).filter(c => c === 2).length;
     const three = Object.values(counts).filter(c => c === 3).length;
-    if (three) return { rank: 3 | value: Object.keys(counts).find(k => counts[k] === 3) }; // Three of a kind
-    if (pairs === 2) return { rank: 2 | value: Object.keys(counts).find(k => counts[k] === 2) }; // Two pair
-    if (pairs === 1) return { rank: 1 | value: Object.keys(counts).find(k => counts[k] === 2) }; // Pair
-    return { rank: 0 | value: cardValues[0] }; // High card
+    if (three) return { rank: 3, value: Object.keys(counts).find(k => counts[k] === 3) }; // Three of a kind
+    if (pairs === 2) return { rank: 2, value: Object.keys(counts).find(k => counts[k] === 2) }; // Two pair
+    if (pairs === 1) return { rank: 1, value: Object.keys(counts).find(k => counts[k] === 2) }; // Pair
+    return { rank: 0, value: cardValues[0] }; // High card
 }
 
 function aiDecision(player) {
