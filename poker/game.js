@@ -4,25 +4,26 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.getElementById('game-container').appendChild(renderer.domElement);
 
-// Set static top-down camera
-camera.position.set(0, 8, 0); // Directly above table
-camera.lookAt(0, 0, 0); // Look at table center
+// Static top-down camera
+camera.position.set(0, 10, 0); // Higher for better visibility
+camera.lookAt(0, 0, 0);
 
-const light = new THREE.DirectionalLight(0xffffff, 0.8);
-light.position.set(0, 10, 10);
+// Lighting for realistic effect
+const light = new THREE.DirectionalLight(0xffffff, 0.9);
+light.position.set(5, 10, 5);
 scene.add(light);
-scene.add(new THREE.AmbientLight(0x404040));
+scene.add(new THREE.AmbientLight(0x404040, 0.5));
 
-// Load table texture with optimization
+// Table setup
 const textureLoader = new THREE.TextureLoader();
 const tableTexture = textureLoader.load('table_texture.jpg', undefined, undefined, (err) => {
     console.error('Error loading table texture:', err);
 });
-tableTexture.minFilter = THREE.LinearFilter; // Optimize texture rendering
-const tableGeometry = new THREE.PlaneGeometry(6, 3); // Oval-like table
+tableTexture.minFilter = THREE.LinearFilter;
+const tableGeometry = new THREE.PlaneGeometry(10, 5); // Larger oval table
 const tableMaterial = new THREE.MeshPhongMaterial({ map: tableTexture });
 const table = new THREE.Mesh(tableGeometry, tableMaterial);
-table.rotation.x = -Math.PI / 2; // Lay flat
+table.rotation.x = -Math.PI / 2;
 table.position.y = 0;
 scene.add(table);
 
@@ -41,25 +42,26 @@ let players = [
 let pot = 0;
 let currentBet = 0;
 let gamePhase = 'pre-game';
-let dealerIndex = 0; // Initialize dealerIndex
-let gameStarted = false;
+let dealerIndex = 0;
+let smallBlind = 5;
+let bigBlind = 10;
 
 // Card meshes
 const cardMeshes = [];
 const cardBackTexture = textureLoader.load('cards/card_back.png', undefined, undefined, (err) => {
     console.error('Error loading card back texture:', err);
 });
-cardBackTexture.minFilter = THREE.LinearFilter; // Optimize texture rendering
+cardBackTexture.minFilter = THREE.LinearFilter;
 function createCardMesh(card, x, y, z, isFaceUp = true) {
     const texture = isFaceUp ? textureLoader.load(`cards/${formatCardValue(card.value)}_of_${card.suit}.png`, undefined, undefined, (err) => {
         console.error(`Error loading card texture ${card.value}_of_${card.suit}:`, err);
     }) : cardBackTexture;
-    texture.minFilter = THREE.LinearFilter; // Optimize texture rendering
-    const geometry = new THREE.PlaneGeometry(0.5, 0.7);
+    texture.minFilter = THREE.LinearFilter;
+    const geometry = new THREE.PlaneGeometry(0.8, 1.2); // Larger cards
     const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
-    mesh.rotation.x = -Math.PI / 2; // Lay flat on table
+    mesh.rotation.x = -Math.PI / 2;
     scene.add(mesh);
     cardMeshes.push(mesh);
     return mesh;
@@ -89,26 +91,26 @@ function dealCards() {
     players.forEach((player, index) => {
         player.hand = [deck.pop(), deck.pop()];
         player.mesh = [];
-        if (index === 0) { // Player
-            player.mesh.push(createCardMesh(player.hand[0], -0.6, 0.01, 2.5, true));
-            player.mesh.push(createCardMesh(player.hand[1], -0.1, 0.01, 2.5, true));
-        } else { // AI players
-            const angle = (index * Math.PI / 2) + Math.PI / 2; // Position around table
-            const x = 2.5 * Math.cos(angle);
-            const z = 2.5 * Math.sin(angle);
-            player.mesh.push(createCardMesh(player.hand[0], x - 0.3, 0.01, z, false));
-            player.mesh.push(createCardMesh(player.hand[1], x + 0.2, 0.01, z, false));
+        if (index === 0) { // Player at bottom
+            player.mesh.push(createCardMesh(player.hand[0], -1, 0.01, 3.5, true));
+            player.mesh.push(createCardMesh(player.hand[1], -0.2, 0.01, 3.5, true));
+        } else { // AI players around table
+            const angle = (index * Math.PI / 2) + Math.PI / 2;
+            const x = 4 * Math.cos(angle);
+            const z = 4 * Math.sin(angle);
+            player.mesh.push(createCardMesh(player.hand[0], x - 0.5, 0.01, z, false));
+            player.mesh.push(createCardMesh(player.hand[1], x + 0.3, 0.01, z, false));
         }
     });
 }
 
 function dealCommunityCards(phase) {
     const positions = [
-        { x: -1, y: 0.01, z: 0 }, // Flop 1
-        { x: -0.5, y: 0.01, z: 0 }, // Flop 2
+        { x: -1.6, y: 0.01, z: 0 }, // Flop 1
+        { x: -0.8, y: 0.01, z: 0 }, // Flop 2
         { x: 0, y: 0.01, z: 0 }, // Flop 3
-        { x: 0.5, y: 0.01, z: 0 }, // Turn
-        { x: 1, y: 0.01, z: 0 } // River
+        { x: 0.8, y: 0.01, z: 0 }, // Turn
+        { x: 1.6, y: 0.01, z: 0 } // River
     ];
     if (phase === 'flop') {
         for (let i = 0; i < 3; i++) {
@@ -129,8 +131,34 @@ function evaluateHand(hand, community) {
     const suits = allCards.map(card => card.suit);
     const counts = {};
     cardValues.forEach(v => counts[v] = (counts[v] || 0) + 1);
+    const suitCounts = {};
+    suits.forEach(s => suitCounts[s] = (suitCounts[s] || 0) + 1);
+    
+    // Check for flush
+    const flush = Object.values(suitCounts).some(count => count >= 5);
+    // Simplified straight check
+    const valueIndices = cardValues.map(v => values.indexOf(v)).sort((a, b) => a - b);
+    let straight = false;
+    for (let i = 0; i <= valueIndices.length - 5; i++) {
+        if (valueIndices[i + 4] - valueIndices[i] === 4) {
+            straight = true;
+            break;
+        }
+    }
+    // Ace-low straight (A,2,3,4,5)
+    if (valueIndices.includes(12) && valueIndices.includes(0) && valueIndices.includes(1) && valueIndices.includes(2) && valueIndices.includes(3)) {
+        straight = true;
+    }
+
     const pairs = Object.values(counts).filter(c => c === 2).length;
-    const three = Object.values(counts).filter(c => c === 3).length;
+    const three = Object.values(counts).some(c => c === 3);
+    const four = Object.values(counts).some(c => c === 4);
+    
+    if (flush && straight) return { rank: 8, value: cardValues[0] }; // Straight flush
+    if (four) return { rank: 7, value: Object.keys(counts).find(k => counts[k] === 4) }; // Four of a kind
+    if (three && pairs >= 1) return { rank: 6, value: Object.keys(counts).find(k => counts[k] === 3) }; // Full house
+    if (flush) return { rank: 5, value: cardValues[0] }; // Flush
+    if (straight) return { rank: 4, value: cardValues[0] }; // Straight
     if (three) return { rank: 3, value: Object.keys(counts).find(k => counts[k] === 3) }; // Three of a kind
     if (pairs === 2) return { rank: 2, value: Object.keys(counts).find(k => counts[k] === 2) }; // Two pair
     if (pairs === 1) return { rank: 1, value: Object.keys(counts).find(k => counts[k] === 2) }; // Pair
@@ -140,21 +168,48 @@ function evaluateHand(hand, community) {
 function aiDecision(player) {
     const handStrength = evaluateHand(player.hand, communityCards).rank;
     const bet = currentBet - (player.currentBet || 0);
-    if (handStrength >= 2 || Math.random() > 0.5) {
-        if (Math.random() > 0.3 && player.chips >= bet + 10) {
-            const raise = bet + 10;
+    const potOdds = bet / (pot + bet);
+    const aggression = handStrength / 8; // Scale aggression based on hand strength
+    
+    if (handStrength >= 4 || (handStrength >= 2 && Math.random() < aggression) || (potOdds < 0.2 && Math.random() < 0.7)) {
+        if (Math.random() < aggression * 0.4 && player.chips >= bet + bigBlind) {
+            const raise = bet + bigBlind * 2;
             player.chips -= raise;
-            currentBet = raise;
+            player.currentBet += raise;
+            currentBet = player.currentBet;
             pot += raise;
             return `AI ${player.name} raises to ${currentBet}`;
         } else if (player.chips >= bet) {
             player.chips -= bet;
+            player.currentBet += bet;
             pot += bet;
             return `AI ${player.name} calls ${bet}`;
         }
     }
     player.active = false;
     return `AI ${player.name} folds`;
+}
+
+function postBlinds() {
+    const smallBlindPlayer = players[(dealerIndex + 1) % 4];
+    const bigBlindPlayer = players[(dealerIndex + 2) % 4];
+    if (smallBlindPlayer.chips >= smallBlind) {
+        smallBlindPlayer.chips -= smallBlind;
+        smallBlindPlayer.currentBet = smallBlind;
+        pot += smallBlind;
+    } else {
+        smallBlindPlayer.active = false;
+    }
+    if (bigBlindPlayer.chips >= bigBlind) {
+        bigBlindPlayer.chips -= bigBlind;
+        bigBlindPlayer.currentBet = bigBlind;
+        pot += bigBlind;
+        currentBet = bigBlind;
+    } else {
+        bigBlindPlayer.active = false;
+    }
+    document.getElementById('pot').textContent = pot;
+    document.getElementById('player-chips').textContent = players[0].chips;
 }
 
 function nextPhase() {
@@ -177,6 +232,8 @@ function nextPhase() {
         const winner = hands[0].player;
         winner.chips += pot;
         document.getElementById('game-status').textContent = `${winner.name} wins ${pot} chips!`;
+        document.getElementById('player-chips').textContent = players[0].chips;
+        document.getElementById('pot').textContent = 0;
         pot = 0;
         gamePhase = 'pre-game';
         document.getElementById('actions').style.display = 'none';
@@ -189,12 +246,30 @@ function nextPhase() {
 }
 
 function runAITurns() {
-    let index = (dealerIndex + 1) % 4;
+    let index = (dealerIndex + 3) % 4; // Start after big blind
     const processNextAI = () => {
-        if (index === 0 || gamePhase === 'showdown' || gamePhase === 'pre-game') return;
+        if (index === 0 || gamePhase === 'showdown' || gamePhase === 'pre-game') {
+            if (players.filter(p => p.active).length <= 1 && gamePhase !== 'pre-game') {
+                const winner = players.find(p => p.active);
+                if (winner) {
+                    winner.chips += pot;
+                    document.getElementById('game-status').textContent = `${winner.name} wins ${pot} chips!`;
+                    document.getElementById('player-chips').textContent = players[0].chips;
+                    document.getElementById('pot').textContent = 0;
+                    pot = 0;
+                    gamePhase = 'pre-game';
+                    document.getElementById('actions').style.display = 'none';
+                    document.getElementById('game-status').innerHTML = 'Game Over. <button id="start-game">Start New Game</button>';
+                    document.getElementById('start-game').addEventListener('click', startGame);
+                }
+            }
+            return;
+        }
         if (players[index].active) {
             const action = aiDecision(players[index]);
             document.getElementById('game-status').textContent = action;
+            document.getElementById('pot').textContent = pot;
+            document.getElementById('player-chips').textContent = players[0].chips;
         }
         index = (index + 1) % 4;
         if (index !== 0) {
@@ -205,12 +280,20 @@ function runAITurns() {
 }
 
 function startGame() {
-    gameStarted = true;
-    dealerIndex = (dealerIndex + 1) % 4;
-    players.forEach(p => { p.active = true; p.currentBet = 0; });
-    gamePhase = 'pre-flop';
+    // Reset game state
+    players.forEach(p => { p.active = true; p.currentBet = 0; p.hand = []; p.mesh = []; });
+    communityCards = [];
+    cardMeshes.forEach(mesh => scene.remove(mesh));
+    cardMeshes.length = 0;
     pot = 0;
+    currentBet = 0;
+    gamePhase = 'pre-flop';
+    dealerIndex = (dealerIndex + 1) % 4;
+    
+    // Post blinds and deal cards
+    postBlinds();
     dealCards();
+    
     document.getElementById('game-status').textContent = 'New Round: Pre-flop';
     document.getElementById('pot').textContent = pot;
     document.getElementById('player-chips').textContent = players[0].chips;
@@ -229,8 +312,8 @@ document.getElementById('call').addEventListener('click', () => {
     const bet = currentBet - (players[0].currentBet || 0);
     if (players[0].chips >= bet) {
         players[0].chips -= bet;
+        players[0].currentBet += bet;
         pot += bet;
-        players[0].currentBet = currentBet;
         document.getElementById('player-chips').textContent = players[0].chips;
         document.getElementById('pot').textContent = pot;
         document.getElementById('game-status').textContent = 'Player calls';
@@ -243,17 +326,17 @@ document.getElementById('call').addEventListener('click', () => {
 document.getElementById('raise').addEventListener('click', () => {
     const raiseAmount = parseInt(document.getElementById('raise-amount').value);
     const bet = currentBet - (players[0].currentBet || 0) + raiseAmount;
-    if (players[0].chips >= bet) {
+    if (players[0].chips >= bet && raiseAmount >= bigBlind) {
         players[0].chips -= bet;
+        players[0].currentBet += bet;
+        currentBet = players[0].currentBet;
         pot += bet;
-        currentBet = bet;
-        players[0].currentBet = currentBet;
         document.getElementById('player-chips').textContent = players[0].chips;
         document.getElementById('pot').textContent = pot;
         document.getElementById('game-status').textContent = `Player raises to ${currentBet}`;
         runAITurns();
     } else {
-        document.getElementById('game-status').textContent = 'Not enough chips!';
+        document.getElementById('game-status').textContent = 'Invalid raise amount or not enough chips!';
     }
 });
 
