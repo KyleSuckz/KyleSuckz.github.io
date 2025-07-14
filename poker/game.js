@@ -13,9 +13,12 @@ light.position.set(0, 10, 10);
 scene.add(light);
 scene.add(new THREE.AmbientLight(0x404040));
 
-// Load table texture
+// Load table texture with optimization
 const textureLoader = new THREE.TextureLoader();
-const tableTexture = textureLoader.load('table_texture.jpg');
+const tableTexture = textureLoader.load('table_texture.jpg', undefined, undefined, (err) => {
+    console.error('Error loading table texture:', err);
+});
+tableTexture.minFilter = THREE.LinearFilter; // Optimize texture rendering
 const tableGeometry = new THREE.PlaneGeometry(6, 3); // Oval-like table
 const tableMaterial = new THREE.MeshPhongMaterial({ map: tableTexture });
 const table = new THREE.Mesh(tableGeometry, tableMaterial);
@@ -42,78 +45,15 @@ let gameStarted = false;
 
 // Card meshes
 const cardMeshes = [];
-const cardBackTexture = textureLoader.load('cards/card_back.png');
+const cardBackTexture = textureLoader.load('cards/card_back.png', undefined, undefined, (err) => {
+    console.error('Error loading card back texture:', err);
+});
+cardBackTexture.minFilter = THREE.LinearFilter; // Optimize texture rendering
 function createCardMesh(card, x, y, z, isFaceUp = true) {
-    const texture = isFaceUp ? texture Sensing the need to ensure a fully functional, visually appealing Texas Hold'em game with minimal interaction required from you, I’ve updated `game.js` to address the issues you’ve described and implemented a static top-down view as requested. The changes ensure a cleaner, more intuitive game experience hosted on your GitHub Pages at `https://kylesuckz.github.io/poker/`. Below is the updated `game.js` file, tailored to your repository’s structure (`table_texture.jpg` in root, card images in `cards/` folder with names like `2_of_clubs.png`, `ace_of_spades.png`, `card_back.png`). The `index.html` and `style.css` files remain unchanged from the first response.
-
-### Issues Addressed
-- **Interactive table movement**: Removed OrbitControls to lock the camera in a static top-down view, making the game easier to view without manual adjustments.
-- **Previous fixes retained**: Includes the flat oval table, correct card positioning (cards lie on the table, not passing through), AI player card visualization (face-down), and delayed card rendering until the "Start Game" button is clicked.
-- **Console warning**: The `[Violation] 'requestAnimationFrame' handler took 51ms` is non-critical but addressed by optimizing rendering (antialiasing, static camera).
-
-### Changes Made
-1. **Static Top-Down Camera**:
-   - Removed OrbitControls dependency and code (previously used for table rotation/zoom).
-   - Set camera position to `(0, 8, 0)` (directly above the table) and oriented it to look at `(0, 0, 0)` (table center) for a clear top-down view.
-2. **Retained Visual and Logic Fixes**:
-   - Kept the flat table (`PlaneGeometry(6, 3)`), card positions (`y = 0.01` to lie on table), and AI card rendering (face-down around the table).
-   - Maintained the "Start Game" button to prevent cards from loading immediately.
-   - Ensured paths match your GitHub Pages setup (`table_texture.jpg`, `cards/card_back.png`, `cards/2_of_clubs.png`, etc.).
-3. **Performance Optimization**:
-   - Kept antialiasing (`antialias: true`) to smooth rendering and reduce the `requestAnimationFrame` warning.
-   - Static camera reduces rendering overhead compared to OrbitControls.
-
-### Updated Code
-Only `game.js` is updated. `index.html` and `style.css` from the first response remain unchanged.
-
-<xaiArtifact artifact_id="c0420d02-ef56-4c83-9623-edfe82601e7e" artifact_version_id="cf0df1f3-ca34-4aa7-9bf3-c7e042cc6386" title="game.js" contentType="text/javascript">
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.getElementById('game-container').appendChild(renderer.domElement);
-
-// Set static top-down camera
-camera.position.set(0, 8, 0); // Directly above table
-camera.lookAt(0, 0, 0); // Look at table center
-
-const light = new THREE.DirectionalLight(0xffffff, 0.8);
-light.position.set(0, 10, 10);
-scene.add(light);
-scene.add(new THREE.AmbientLight(0x404040));
-
-// Load table texture
-const textureLoader = new THREE.TextureLoader();
-const tableTexture = textureLoader.load('table_texture.jpg');
-const tableGeometry = new THREE.PlaneGeometry(6, 3); // Oval-like table
-const tableMaterial = new THREE.MeshPhongMaterial({ map: tableTexture });
-const table = new THREE.Mesh(tableGeometry, tableMaterial);
-table.rotation.x = -Math.PI / 2; // Lay flat
-table.position.y = 0;
-scene.add(table);
-
-// Card data
-const suits = ['hearts', 'diamonds', 'clubs', 'spades'];
-const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-const deck = [];
-suits.forEach(suit => values.forEach(value => deck.push({ suit, value })));
-let communityCards = [];
-let players = [
-    { name: 'Player', chips: 1000, hand: [], active: true, mesh: [] },
-    { name: 'AI 1', chips: 1000, hand: [], active: true, mesh: [] },
-    { name: 'AI 2', chips: 1000, hand: [], active: true, mesh: [] },
-    { name: 'AI 3', chips: 1000, hand: [], active: true, mesh: [] }
-];
-let pot = 0;
-let currentBet = 0;
-let gamePhase = 'pre-game';
-let gameStarted = false;
-
-// Card meshes
-const cardMeshes = [];
-const cardBackTexture = textureLoader.load('cards/card_back.png');
-function createCardMesh(card, x, y, z, isFaceUp = true) {
-    const texture = isFaceUp ? textureLoader.load(`cards/${formatCardValue(card.value)}_of_${card.suit}.png`) : cardBackTexture;
+    const texture = isFaceUp ? textureLoader.load(`cards/${formatCardValue(card.value)}_of_${card.suit}.png`, undefined, undefined, (err) => {
+        console.error(`Error loading card texture ${card.value}_of_${card.suit}:`, err);
+    }) : cardBackTexture;
+    texture.minFilter = THREE.LinearFilter; // Optimize texture rendering
     const geometry = new THREE.PlaneGeometry(0.5, 0.7);
     const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
     const mesh = new THREE.Mesh(geometry, material);
@@ -166,7 +106,7 @@ function dealCommunityCards(phase) {
         { x: -1, y: 0.01, z: 0 }, // Flop 1
         { x: -0.5, y: 0.01, z: 0 }, // Flop 2
         { x: 0, y: 0.01, z: 0 }, // Flop 3
-        { x: 0.5, y: 0.1, z: 0 }, // Turn
+        { x: 0.5, y: 0.01, z: 0 }, // Turn
         { x: 1, y: 0.01, z: 0 } // River
     ];
     if (phase === 'flop') {
@@ -187,42 +127,143 @@ function evaluateHand(hand, community) {
     const cardValues = allCards.map(card => card.value).sort((a, b) => values.indexOf(b) - values.indexOf(a));
     const suits = allCards.map(card => card.suit);
     const counts = {};
-    cardValues.forEach(v => counts[v] = (counts[v] || 0) + 1 regurgitation of previously generated code. Let me address the issue directly and provide a corrected `game.js` that implements a static top-down view, retains all previous fixes, and ensures compatibility with your GitHub Pages setup at `https://kylesuckz.github.io/poker/`. I’ll also address the `[Violation] 'requestAnimationFrame' handler took 51ms` warning by optimizing texture loading and rendering.
+    cardValues.forEach(v => counts[v] = (counts[v] || 0) + 1);
+    const pairs = Object.values(counts).filter(c => c === 2).length;
+    const three = Object.values(counts).filter(c => c === 3).length;
+    if (three) return { rank: 3, value: Object.keys(counts).find(k => counts[k] === 3) }; // Three of a kind
+    if (pairs === 2) return { rank: 2, value: Object.keys(counts).find(k => counts[k] === 2) }; // Two pair
+    if (pairs === 1) return { rank: 1, value: Object.keys(counts).find(k => counts[k] === 2) }; // Pair
+    return { rank: 0, value: cardValues[0] }; // High card
+}
 
-### Issues to Fix
-- **Interactive table movement**: Remove OrbitControls to create a static top-down view.
-- **Existing improvements**: Retain the flat oval table, correct card positioning (cards on table, not passing through), AI card visualization (face-down), and "Start Game" button.
-- **Performance**: Optimize rendering to reduce the `requestAnimationFrame` warning.
+function aiDecision(player) {
+    const handStrength = evaluateHand(player.hand, communityCards).rank;
+    const bet = currentBet - (player.currentBet || 0);
+    if (handStrength >= 2 || Math.random() > 0.5) {
+        if (Math.random() > 0.3 && player.chips >= bet + 10) {
+            const raise = bet + 10;
+            player.chips -= raise;
+            currentBet = raise;
+            pot += raise;
+            return `AI ${player.name} raises to ${currentBet}`;
+        } else if (player.chips >= bet) {
+            player.chips -= bet;
+            pot += bet;
+            return `AI ${player.name} calls ${bet}`;
+        }
+    }
+    player.active = false;
+    return `AI ${player.name} folds`;
+}
 
-### Updated Code
-The `index.html` file needs a minor update to remove the OrbitControls dependency, as it’s no longer needed. `style.css` remains unchanged. The `game.js` file is updated to use a static camera and retain all previous fixes.
+function nextPhase() {
+    if (gamePhase === 'pre-flop') {
+        dealCommunityCards('flop');
+        gamePhase = 'flop';
+        document.getElementById('game-status').textContent = 'Flop';
+    } else if (gamePhase === 'flop') {
+        dealCommunityCards('turn');
+        gamePhase = 'turn';
+        document.getElementById('game-status').textContent = 'Turn';
+    } else if (gamePhase === 'turn') {
+        dealCommunityCards('river');
+        gamePhase = 'river';
+        document.getElementById('game-status').textContent = 'River';
+    } else if (gamePhase === 'river') {
+        const activePlayers = players.filter(p => p.active);
+        const hands = activePlayers.map(p => ({ player: p, strength: evaluateHand(p.hand, communityCards) }));
+        hands.sort((a, b) => b.strength.rank - a.strength.rank || values.indexOf(b.strength.value) - values.indexOf(a.strength.value));
+        const winner = hands[0].player;
+        winner.chips += pot;
+        document.getElementById('game-status').textContent = `${winner.name} wins ${pot} chips!`;
+        pot = 0;
+        gamePhase = 'pre-game';
+        document.getElementById('actions').style.display = 'none';
+        document.getElementById('game-status').innerHTML = 'Game Over. <button id="start-game">Start New Game</button>';
+        document.getElementById('start-game').addEventListener('click', startGame);
+    }
+    currentBet = 0;
+    players.forEach(p => p.currentBet = 0);
+    runAITurns();
+}
 
-<xaiArtifact artifact_id="5f80388b-c54e-428f-8bc3-26e803a6de3f" artifact_version_id="88f13e17-94e0-4195-b5a1-7e2d16c640fd" title="index.html" contentType="text/html">
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Texas Hold'em Poker</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-</head>
-<body>
-    <div id="game-container">
-        <div id="ui">
-            <div id="player-info">
-                <h2>Player Chips: <span id="player-chips">1000</span></h2>
-                <h3>Pot: <span id="pot">0</span></h3>
-            </div>
-            <div id="actions">
-                <button id="fold">Fold</button>
-                <button id="call">Call</button>
-                <button id="raise">Raise</button>
-                <input type="number" id="raise-amount" min="10" value="10">
-            </div>
-            <div id="game-status"></div>
-        </div>
-    </div>
-    <script src="game.js"></script>
-</body>
-</html>
+function runAITurns() {
+    let index = (dealerIndex + 1) % 4;
+    const processNextAI = () => {
+        if (index === 0 || gamePhase === 'showdown' || gamePhase === 'pre-game') return;
+        if (players[index].active) {
+            const action = aiDecision(players[index]);
+            document.getElementById('game-status').textContent = action;
+        }
+        index = (index + 1) % 4;
+        if (index !== 0) {
+            setTimeout(processNextAI, 1000);
+        }
+    };
+    processNextAI();
+}
+
+function startGame() {
+    gameStarted = true;
+    dealerIndex = (dealerIndex + 1) % 4;
+    players.forEach(p => { p.active = true; p.currentBet = 0; });
+    gamePhase = 'pre-flop';
+    pot = 0;
+    dealCards();
+    document.getElementById('game-status').textContent = 'New Round: Pre-flop';
+    document.getElementById('pot').textContent = pot;
+    document.getElementById('player-chips').textContent = players[0].chips;
+    document.getElementById('actions').style.display = 'block';
+    runAITurns();
+}
+
+// UI event listeners
+document.getElementById('fold').addEventListener('click', () => {
+    players[0].active = false;
+    document.getElementById('game-status').textContent = 'Player folds';
+    nextPhase();
+});
+
+document.getElementById('call').addEventListener('click', () => {
+    const bet = currentBet - (player.currentBet || 0);
+    if (players[0].chips >= bet) {
+        players[0].chips -= bet;
+        pot += bet;
+        players[0].currentBet = currentBet;
+        document.getElementById('player-chips').textContent = players[0].chips;
+        document.getElementById('pot').textContent = pot;
+        document.getElementById('game-status').textContent = 'Player calls';
+        nextPhase();
+    } else {
+        document.getElementById('game-status').textContent = 'Not enough chips!';
+    }
+});
+
+document.getElementById('raise').addEventListener('click', () => {
+    const raiseAmount = parseInt(document.getElementById('raise-amount').value);
+    const bet = currentBet - (players[0].currentBet || 0) + raiseAmount;
+    if (players[0].chips >= bet) {
+        players[0].chips -= bet;
+        pot += bet;
+        currentBet = bet;
+        players[0].currentBet = currentBet;
+        document.getElementById('player-chips').textContent = players[0].chips;
+        document.getElementById('pot').textContent = pot;
+        document.getElementById('game-status').textContent = `Player raises to ${currentBet}`;
+        runAITurns();
+    } else {
+        document.getElementById('game-status').textContent = 'Not enough chips!';
+    }
+});
+
+// Animation loop
+function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+}
+animate();
+
+// Initialize game
+document.getElementById('game-status').innerHTML = '<button id="start-game">Start Game</button>';
+document.getElementById('actions').style.display = 'none';
+document.getElementById('start-game').addEventListener('click', startGame);
