@@ -1,7 +1,7 @@
 body {
     margin: 0;
     overflow: hidden;
-    background: linear-gradient(to bottom, #1b2a44, #0b1622); /* Casino blue gradient */
+    background: linear-gradient(to bottom, #1b263b, #0d1b2a); /* Vegas-style dark blue */
     font-family: 'Roboto', sans-serif;
 }
 
@@ -22,43 +22,43 @@ body {
 
 #table-info {
     position: absolute;
-    top: 40%;
+    top: 35%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
     color: #ffd700;
-    background: rgba(0, 0, 0, 0.9);
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.95);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
     pointer-events: auto;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Anton', sans-serif;
 }
 
 #pot {
-    font-size: 28px;
+    font-size: 32px;
     font-weight: bold;
     margin-bottom: 15px;
 }
 
 #game-status {
-    font-size: 24px;
+    font-size: 28px;
 }
 
 #game-status button {
-    padding: 12px 30px;
-    font-size: 20px;
-    background: #d4af37;
+    padding: 15px 35px;
+    font-size: 22px;
+    background: linear-gradient(to bottom, #d4af37, #b8860b);
     color: #000;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     pointer-events: auto;
-    transition: background 0.2s;
+    transition: transform 0.2s;
 }
 
 #game-status button:hover {
-    background: #b8860b;
+    transform: scale(1.05);
 }
 
 #player-info {
@@ -70,90 +70,102 @@ body {
 .player-box {
     position: absolute;
     background: linear-gradient(to bottom, #2e2e2e, #1a1a1a);
-    padding: 15px;
-    border-radius: 10px;
+    padding: 20px;
+    border-radius: 12px;
     color: #fff;
     text-align: center;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
-    width: 150px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    width: 180px;
+    transition: transform 0.2s;
+}
+
+.player-box:hover {
+    transform: scale(1.05);
+}
+
+.player-box .player-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: 10px;
 }
 
 .player-box .player-name {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: bold;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Anton', sans-serif;
 }
 
 .player-box .player-chips {
-    font-size: 18px;
-    margin: 5px 0;
+    font-size: 20px;
+    margin: 8px 0;
 }
 
 .player-box .player-action {
-    font-size: 16px;
+    font-size: 18px;
     color: #ffd700;
 }
 
-#player-0 { bottom: 30px; left: 50%; transform: translateX(-50%); }
-#player-1 { top: 30px; left: 50%; transform: translateX(-50%); }
-#player-2 { left: 30px; top: 50%; transform: translateY(-50%); }
-#player-3 { right: 30px; top: 50%; transform: translateY(-50%); }
+#player-0 { bottom: 40px; left: 50%; transform: translateX(-50%); }
+#player-1 { top: 40px; left: 50%; transform: translateX(-50%); }
+#player-2 { left: 40px; top: 50%; transform: translateY(-50%); }
+#player-3 { right: 40px; top: 50%; transform: translateY(-50%); }
 
 #actions {
     position: absolute;
-    bottom: 30px;
+    bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.9);
-    padding: 20px;
-    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.95);
+    padding: 25px;
+    border-radius: 15px;
     pointer-events: auto;
 }
 
 #actions button {
-    padding: 15px 30px;
-    margin: 8px;
-    font-size: 20px;
-    background: #e91e63;
+    padding: 15px 35px;
+    margin: 10px;
+    font-size: 22px;
+    background: linear-gradient(to bottom, #e91e63, #c2185b);
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: background 0.2s;
-    font-family: 'Oswald', sans-serif;
+    transition: transform 0.2s;
+    font-family: 'Anton', sans-serif;
 }
 
 #actions button:hover {
-    background: #c2185b;
+    transform: scale(1.05);
 }
 
 #raise-amount {
-    width: 100px;
-    padding: 12px;
-    font-size: 18px;
-    border-radius: 8px;
-    margin-left: 10px;
+    width: 120px;
+    padding: 15px;
+    font-size: 20px;
+    border-radius: 10px;
+    margin-left: 15px;
 }
 
 #stats-panel {
     position: absolute;
-    top: 30px;
-    right: 30px;
-    background: rgba(0, 0, 0, 0.9);
-    padding: 20px;
-    border-radius: 12px;
+    top: 40px;
+    right: 40px;
+    background: rgba(0, 0, 0, 0.95);
+    padding: 25px;
+    border-radius: 15px;
     color: #fff;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
     pointer-events: auto;
 }
 
 #stats-panel h3 {
-    font-size: 22px;
-    margin-bottom: 10px;
-    font-family: 'Oswald', sans-serif;
+    font-size: 24px;
+    margin-bottom: 15px;
+    font-family: 'Anton', sans-serif;
 }
 
 #stats-panel p {
-    font-size: 18px;
-    margin: 5px 0;
+    font-size: 20px;
+    margin: 8px 0;
 }

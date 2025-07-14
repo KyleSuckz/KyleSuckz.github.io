@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elite Texas Hold'em</title>
+    <title>Vegas Elite Texas Hold'em</title>
     <link rel="stylesheet" href="assets/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
@@ -17,21 +17,25 @@
             </div>
             <div id="player-info">
                 <div class="player-box" id="player-0">
+                    <img class="player-avatar" src="assets/avatars/player.png" alt="Player Avatar">
                     <span class="player-name">Player</span>
                     <span class="player-chips">1000</span>
                     <span class="player-action"></span>
                 </div>
                 <div class="player-box" id="player-1">
+                    <img class="player-avatar" src="assets/avatars/ai1.png" alt="AI 1 Avatar">
                     <span class="player-name">AI 1</span>
                     <span class="player-chips">1000</span>
                     <span class="player-action"></span>
                 </div>
                 <div class="player-box" id="player-2">
+                    <img class="player-avatar" src="assets/avatars/ai2.png" alt="AI 2 Avatar">
                     <span class="player-name">AI 2</span>
                     <span class="player-chips">1000</span>
                     <span class="player-action"></span>
                 </div>
                 <div class="player-box" id="player-3">
+                    <img class="player-avatar" src="assets/avatars/ai3.png" alt="AI 3 Avatar">
                     <span class="player-name">AI 3</span>
                     <span class="player-chips">1000</span>
                     <span class="player-action"></span>
@@ -47,9 +51,13 @@
                 <h3>Player Stats</h3>
                 <p>Hands Played: <span id="hands-played">0</span></p>
                 <p>Win Rate: <span id="win-rate">0%</span></p>
+                <p>VPIP: <span id="vpip">0%</span></p>
             </div>
         </div>
     </div>
+    <audio id="deal-sound" src="assets/sounds/card_deal.mp3"></audio>
+    <audio id="chip-sound" src="assets/sounds/chip_stack.mp3"></audio>
+    <audio id="win-sound" src="assets/sounds/win.mp3"></audio>
     <script src="assets/game.js"></script>
 </body>
 </html>
