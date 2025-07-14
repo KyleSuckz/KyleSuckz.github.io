@@ -6,23 +6,23 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 document.getElementById('game-container').appendChild(renderer.domElement);
 
-// Static top-down camera with slight angle
-camera.position.set(0, 15, 2);
+// Camera with slight tilt for depth
+camera.position.set(0, 16, 3);
 camera.lookAt(0, 0, 0);
 
 // Advanced lighting
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
-directionalLight.position.set(5, 12, 5);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1.8);
+directionalLight.position.set(6, 14, 6);
 directionalLight.castShadow = true;
-directionalLight.shadow.mapSize.width = 2048;
-directionalLight.shadow.mapSize.height = 2048;
+directionalLight.shadow.mapSize.width = 4096;
+directionalLight.shadow.mapSize.height = 4096;
 scene.add(directionalLight);
-const ambientLight = new THREE.AmbientLight(0x404040, 0.8);
+const ambientLight = new THREE.AmbientLight(0x404040, 0.9);
 scene.add(ambientLight);
-const spotLight = new THREE.SpotLight(0xffffff, 0.5);
-spotLight.position.set(0, 10, 0);
-spotLight.angle = Math.PI / 6;
-spotLight.penumbra = 0.2;
+const spotLight = new THREE.SpotLight(0xffffff, 0.7);
+spotLight.position.set(0, 12, 0);
+spotLight.angle = Math.PI / 5;
+spotLight.penumbra = 0.3;
 spotLight.castShadow = true;
 scene.add(spotLight);
 
@@ -33,26 +33,34 @@ const tableTexture = textureLoader.load('assets/table_felt.jpg', undefined, unde
 });
 tableTexture.minFilter = THREE.LinearFilter;
 tableTexture.magFilter = THREE.LinearFilter;
-const tableGeometry = new THREE.PlaneGeometry(16, 8); // Large Vegas table
-const tableMaterial = new THREE.MeshPhongMaterial({ map: tableTexture, shininess: 30 });
+const tableGeometry = new THREE.PlaneGeometry(18, 9); // Large Vegas table
+const tableMaterial = new THREE.MeshPhongMaterial({ map: tableTexture, shininess: 50 });
 const table = new THREE.Mesh(tableGeometry, tableMaterial);
 table.rotation.x = -Math.PI / 2;
 table.receiveShadow = true;
 scene.add(table);
 
+// Table edge for realism
+const edgeGeometry = new THREE.TorusGeometry(9, 0.5, 16, 100);
+const edgeMaterial = new THREE.MeshPhongMaterial({ color: 0x8b4513, shininess: 100 });
+const tableEdge = new THREE.Mesh(edgeGeometry, edgeMaterial);
+tableEdge.rotation.x = -Math.PI / 2;
+tableEdge.position.y = 0.01;
+scene.add(tableEdge);
+
 // Chip visuals
-const chipGeometry = new THREE.CylinderGeometry(0.15, 0.15, 0.04, 32);
+const chipGeometry = new THREE.CylinderGeometry(0.18, 0.18, 0.05, 32);
 const chipMaterials = [
-    new THREE.MeshPhongMaterial({ color: 0xff0000, shininess: 50 }), // Red
-    new THREE.MeshPhongMaterial({ color: 0x0000ff, shininess: 50 }), // Blue
-    new THREE.MeshPhongMaterial({ color: 0x00ff00, shininess: 50 }), // Green
-    new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 50 })  // White
+    new THREE.MeshPhongMaterial({ color: 0xff0000, shininess: 80 }), // Red
+    new THREE.MeshPhongMaterial({ color: 0x0000ff, shininess: 80 }), // Blue
+    new THREE.MeshPhongMaterial({ color: 0x00ff00, shininess: 80 }), // Green
+    new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 80 })  // White
 ];
 const chipStack = new THREE.Group();
 scene.add(chipStack);
 
 // Dealer button with glow
-const dealerGeometry = new THREE.CircleGeometry(0.3, 32);
+const dealerGeometry = new THREE.CircleGeometry(0.35, 32);
 const dealerMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
 const dealerButton = new THREE.Mesh(dealerGeometry, dealerMaterial);
 dealerButton.rotation.x = -Math.PI / 2;
@@ -65,10 +73,10 @@ const deck = [];
 suits.forEach(suit => values.forEach(value => deck.push({ suit, value })));
 let communityCards = [];
 let players = [
-    { name: 'Player', chips: 1000, hand: [], active: true, mesh: [], currentBet: 0, position: 'bottom', handsPlayed: 0, handsWon: 0, vpipCount: 0 },
-    { name: 'AI 1', chips: 1000, hand: [], active: true, mesh: [], currentBet: 0, position: 'top', handsPlayed: 0, handsWon: 0, vpipCount: 0 },
-    { name: 'AI 2', chips: 1000, hand: [], active: true, mesh: [], currentBet: 0, position: 'left', handsPlayed: 0, handsWon: 0, vpipCount: 0 },
-    { name: 'AI 3', chips: 1000, hand: [], active: true, mesh: [], currentBet: 0, position: 'right', handsPlayed: 0, handsWon: 0, vpipCount: 0 }
+    { name: 'Player', chips: 1000, hand: [], active: true, mesh: [], currentBet: 0, position: 'bottom', handsPlayed: 0, handsWon: 0, vpipCount: 0, aggressionCount: 0 },
+    { name: 'AI 1', chips: 1000, hand: [], active: true, mesh: [], currentBet: 0, position: 'top', handsPlayed: 0, handsWon: 0, vpipCount: 0, aggressionCount: 0 },
+    { name: 'AI 2', chips: 1000, hand: [], active: true, mesh: [], currentBet: 0, position: 'left', handsPlayed: 0, handsWon: 0, vpipCount: 0, aggressionCount: 0 },
+    { name: 'AI 3', chips: 1000, hand: [], active: true, mesh: [], currentBet: 0, position: 'right', handsPlayed: 0, handsWon: 0, vpipCount: 0, aggressionCount: 0 }
 ];
 let pot = 0;
 let currentBet = 0;
@@ -88,17 +96,16 @@ function createCardMesh(card, x, y, z, isFaceUp = true) {
         console.error(`Error loading card texture ${card.value}_of_${card.suit}:`, err);
     }) : cardBackTexture;
     texture.minFilter = THREE.LinearFilter;
-    const geometry = new THREE.PlaneGeometry(1.5, 2.1); // Large, realistic cards
-    const material = new THREE.MeshPhongMaterial({ map: texture, side: THREE.DoubleSide, shininess: 50 });
+    const geometry = new THREE.PlaneGeometry(1.8, 2.52); // Large, realistic cards
+    const material = new THREE.MeshPhongMaterial({ map: texture, side: THREE.DoubleSide, shininess: 80 });
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(0, 5, 0);
+    mesh.position.set(0, 6, 0);
     mesh.rotation.x = -Math.PI / 2;
     mesh.castShadow = true;
     mesh.receiveShadow = true;
-    mesh.userData = { targetX: x, targetY: y, targetZ: z, startX: 0, startY: 5, startZ: 0, progress: 0, hover: false, flipped: !isFaceUp };
+    mesh.userData = { targetX: x, targetY: y, targetZ: z, startX: 0, startY: 6, startZ: 0, progress: 0, hover: false, flipped: !isFaceUp };
     cardMeshes.push(mesh);
     scene.add(mesh);
-    document.getElementById('deal-sound').play();
     return mesh;
 }
 
@@ -113,7 +120,7 @@ function formatCardValue(value) {
 function animateCardDealing() {
     cardMeshes.forEach(mesh => {
         if (mesh.userData.progress < 1) {
-            mesh.userData.progress += 0.02;
+            mesh.userData.progress += 0.015;
             const t = Math.sin(mesh.userData.progress * Math.PI / 2);
             mesh.position.x = mesh.userData.startX + (mesh.userData.targetX - mesh.userData.startX) * t;
             mesh.position.y = mesh.userData.startY + (mesh.userData.targetY - mesh.userData.startY) * t;
@@ -123,9 +130,11 @@ function animateCardDealing() {
             }
         }
         if (mesh.userData.hover && mesh.userData.progress >= 1) {
-            mesh.position.y = 0.1 + Math.sin(Date.now() * 0.002) * 0.05;
+            mesh.position.y = 0.15 + Math.sin(Date.now() * 0.002) * 0.06;
+            mesh.rotation.z = Math.sin(Date.now() * 0.001) * 0.05;
         } else {
             mesh.position.y = mesh.userData.targetY;
+            mesh.rotation.z = 0;
         }
     });
 }
@@ -145,26 +154,26 @@ function dealCards() {
     players.forEach((player, index) => {
         player.hand = [deck.pop(), deck.pop()];
         player.mesh = [];
-        if (index === 0) { // Player at bottom
-            player.mesh.push(createCardMesh(player.hand[0], -1.8, 0.01, 6, true));
-            player.mesh.push(createCardMesh(player.hand[1], -0.3, 0.01, 6, true));
-        } else { // AI players
+        if (index === 0) {
+            player.mesh.push(createCardMesh(player.hand[0], -2, 0.01, 7, true));
+            player.mesh.push(createCardMesh(player.hand[1], -0.2, 0.01, 7, true));
+        } else {
             const angle = (index * Math.PI / 2) + Math.PI / 2;
-            const x = 7 * Math.cos(angle);
-            const z = 7 * Math.sin(angle);
-            player.mesh.push(createCardMesh(player.hand[0], x - 0.8, 0.01, z, false));
-            player.mesh.push(createCardMesh(player.hand[1], x + 0.7, 0.01, z, false));
+            const x = 8 * Math.cos(angle);
+            const z = 8 * Math.sin(angle);
+            player.mesh.push(createCardMesh(player.hand[0], x - 0.9, 0.01, z, false));
+            player.mesh.push(createCardMesh(player.hand[1], x + 0.8, 0.01, z, false));
         }
     });
 }
 
 function dealCommunityCards(phase) {
     const positions = [
-        { x: -3, y: 0.01, z: 0 }, // Flop 1
-        { x: -1.5, y: 0.01, z: 0 }, // Flop 2
+        { x: -3.6, y: 0.01, z: 0 }, // Flop 1
+        { x: -1.8, y: 0.01, z: 0 }, // Flop 2
         { x: 0, y: 0.01, z: 0 }, // Flop 3
-        { x: 1.5, y: 0.01, z: 0 }, // Turn
-        { x: 3, y: 0.01, z: 0 } // River
+        { x: 1.8, y: 0.01, z: 0 }, // Turn
+        { x: 3.6, y: 0.01, z: 0 } // River
     ];
     if (phase === 'flop') {
         for (let i = 0; i < 3; i++) {
@@ -181,26 +190,23 @@ function dealCommunityCards(phase) {
 
 function updateDealerButton() {
     const angle = (dealerIndex * Math.PI / 2) + Math.PI / 2;
-    const x = 6.5 * Math.cos(angle);
-    const z = 6.5 * Math.sin(angle);
+    const x = 7.5 * Math.cos(angle);
+    const z = 7.5 * Math.sin(angle);
     dealerButton.position.set(x, 0.02, z);
 }
 
 function updateChipStack() {
     chipStack.children.forEach(child => chipStack.remove(child));
-    const chipCount = Math.min(Math.floor(pot / 10), 40);
+    const chipCount = Math.min(Math.floor(pot / 10), 50);
     for (let i = 0; i < chipCount; i++) {
         const chip = new THREE.Mesh(chipGeometry, chipMaterials[i % 4]);
-        const angle = (i % 4) * Math.PI / 2 + Math.random() * 0.2;
-        const radius = 0.4 + (Math.floor(i / 4) * 0.2);
-        chip.position.set(radius * Math.cos(angle), 0.02 + (i * 0.04), radius * Math.sin(angle));
+        const angle = (i % 4) * Math.PI / 2 + Math.random() * 0.3;
+        const radius = 0.5 + (Math.floor(i / 4) * 0.25);
+        chip.position.set(radius * Math.cos(angle), 0.02 + (i * 0.05), radius * Math.sin(angle));
         chip.rotation.x = -Math.PI / 2;
-        chip.rotation.z = Math.random() * 0.1;
+        chip.rotation.z = Math.random() * 0.15;
         chip.castShadow = true;
         chipStack.add(chip);
-    }
-    if (chipCount > 0) {
-        document.getElementById('chip-sound').play();
     }
 }
 
@@ -260,26 +266,26 @@ function aiDecision(player, playerHistory) {
     const handStrength = evaluateHand(player.hand, communityCards).rank;
     const bet = currentBet - (player.currentBet || 0);
     const potOdds = bet / (pot + bet + 1);
-    const positionFactor = player.position === 'bottom' ? 0.6 : player.position === 'top' ? 1.4 : 1.0;
+    const positionFactor = player.position === 'bottom' ? 0.5 : player.position === 'top' ? 1.5 : 1.0;
     const aggression = (handStrength / 8) * positionFactor;
     const playerAggression = playerHistory.reduce((sum, action) => sum + (action === 'raise' ? 1 : action === 'call' ? 0.5 : 0), 0) / Math.max(1, playerHistory.length);
+    const bluffChance = gamePhase === 'pre-flop' ? 0.1 : gamePhase === 'river' ? 0.2 : 0.15;
 
-    if (handStrength >= 5 || (handStrength >= 3 && Math.random() < aggression * (1 - playerAggression * 0.4)) || (potOdds < 0.1 && Math.random() < 0.9)) {
-        if (Math.random() < aggression * 0.7 && player.chips >= bet + bigBlind * 2) {
-            const raise = bet + bigBlind * Math.floor(2 + Math.random() * 5);
+    if (handStrength >= 5 || (handStrength >= 3 && Math.random() < aggression * (1 - playerAggression * 0.3)) || (potOdds < 0.08 && Math.random() < 0.95) || (Math.random() < bluffChance && player.chips >= bet)) {
+        if (Math.random() < aggression * 0.8 && player.chips >= bet + bigBlind * 3) {
+            const raise = bet + bigBlind * Math.floor(3 + Math.random() * 6);
             player.chips -= raise;
             player.currentBet = currentBet + (raise - bet);
             currentBet = player.currentBet;
             pot += raise;
             player.vpipCount += 1;
-            document.getElementById('chip-sound').play();
+            player.aggressionCount += 1;
             return { action: `AI ${player.name} raises to ${currentBet}`, type: 'raise' };
         } else if (player.chips >= bet) {
             player.chips -= bet;
             player.currentBet = currentBet;
             pot += bet;
             player.vpipCount += 1;
-            document.getElementById('chip-sound').play();
             return { action: `AI ${player.name} calls ${bet}`, type: 'call' };
         }
     }
@@ -323,7 +329,7 @@ function revealAIHands() {
                     mesh.material = new THREE.MeshPhongMaterial({
                         map: textureLoader.load(`assets/cards/${formatCardValue(player.hand[i].value)}_of_${player.hand[i].suit}.png`),
                         side: THREE.DoubleSide,
-                        shininess: 50
+                        shininess: 80
                     });
                     mesh.material.needsUpdate = true;
                 }
@@ -359,11 +365,11 @@ function nextPhase() {
         document.getElementById('hands-played').textContent = totalHandsPlayed;
         document.getElementById('win-rate').textContent = `${Math.round((players[0].handsWon / Math.max(1, totalHandsPlayed)) * 100)}%`;
         document.getElementById('vpip').textContent = `${Math.round((players[0].vpipCount / Math.max(1, totalHandsPlayed)) * 100)}%`;
+        document.getElementById('aggression').textContent = players[0].aggressionCount.toFixed(2);
         players.forEach((p, i) => {
             document.getElementById(`player-${i}`).querySelector('.player-chips').textContent = p.chips;
             document.getElementById(`player-${i}`).querySelector('.player-action').textContent = '';
         });
-        document.getElementById('win-sound').play();
         pot = 0;
         gamePhase = 'pre-game';
         document.getElementById('actions').style.display = 'none';
@@ -391,11 +397,11 @@ function runAITurns() {
                     document.getElementById('hands-played').textContent = totalHandsPlayed;
                     document.getElementById('win-rate').textContent = `${Math.round((players[0].handsWon / Math.max(1, totalHandsPlayed)) * 100)}%`;
                     document.getElementById('vpip').textContent = `${Math.round((players[0].vpipCount / Math.max(1, totalHandsPlayed)) * 100)}%`;
+                    document.getElementById('aggression').textContent = players[0].aggressionCount.toFixed(2);
                     players.forEach((p, i) => {
                         document.getElementById(`player-${i}`).querySelector('.player-chips').textContent = p.chips;
                         document.getElementById(`player-${i}`).querySelector('.player-action').textContent = '';
                     });
-                    document.getElementById('win-sound').play();
                     pot = 0;
                     gamePhase = 'pre-game';
                     document.getElementById('actions').style.display = 'none';
@@ -415,7 +421,7 @@ function runAITurns() {
         }
         index = (index + 1) % 4;
         if (index !== 0) {
-            setTimeout(processNextAI, 1500);
+            setTimeout(processNextAI, 1800);
         }
     };
     processNextAI();
@@ -439,6 +445,7 @@ function startGame() {
     document.getElementById('hands-played').textContent = totalHandsPlayed;
     document.getElementById('win-rate').textContent = `${Math.round((players[0].handsWon / Math.max(1, totalHandsPlayed)) * 100)}%`;
     document.getElementById('vpip').textContent = `${Math.round((players[0].vpipCount / Math.max(1, totalHandsPlayed)) * 100)}%`;
+    document.getElementById('aggression').textContent = players[0].aggressionCount.toFixed(2);
     players.forEach((p, i) => {
         document.getElementById(`player-${i}`).querySelector('.player-chips').textContent = p.chips;
         document.getElementById(`player-${i}`).querySelector('.player-action').textContent = '';
@@ -465,6 +472,14 @@ function onMouseMove(event) {
 }
 window.addEventListener('mousemove', onMouseMove);
 
+// Theme switching
+document.getElementById('theme-dark').addEventListener('click', () => {
+    document.body.classList.remove('light-theme');
+});
+document.getElementById('theme-light').addEventListener('click', () => {
+    document.body.classList.add('light-theme');
+});
+
 // UI event listeners
 document.getElementById('fold').addEventListener('click', () => {
     players[0].active = false;
@@ -483,7 +498,6 @@ document.getElementById('call').addEventListener('click', () => {
         document.getElementById('pot-amount').textContent = pot;
         document.getElementById('game-status').textContent = 'Player calls';
         document.getElementById('player-0').querySelector('.player-action').textContent = 'Call';
-        document.getElementById('chip-sound').play();
         players.forEach((p, i) => document.getElementById(`player-${i}`).querySelector('.player-chips').textContent = p.chips);
         document.getElementById('vpip').textContent = `${Math.round((players[0].vpipCount / Math.max(1, totalHandsPlayed)) * 100)}%`;
         nextPhase();
@@ -500,13 +514,14 @@ document.getElementById('raise').addEventListener('click', () => {
         players[0].currentBet = currentBet + raiseAmount;
         currentBet = players[0].currentBet;
         players[0].vpipCount += 1;
+        players[0].aggressionCount += 1;
         pot += bet;
         document.getElementById('pot-amount').textContent = pot;
         document.getElementById('game-status').textContent = `Player raises to ${currentBet}`;
         document.getElementById('player-0').querySelector('.player-action').textContent = `Raise: ${currentBet}`;
-        document.getElementById('chip-sound').play();
         players.forEach((p, i) => document.getElementById(`player-${i}`).querySelector('.player-chips').textContent = p.chips);
         document.getElementById('vpip').textContent = `${Math.round((players[0].vpipCount / Math.max(1, totalHandsPlayed)) * 100)}%`;
+        document.getElementById('aggression').textContent = players[0].aggressionCount.toFixed(2);
         runAITurns();
     } else {
         document.getElementById('game-status').textContent = 'Invalid raise amount or not enough chips!';
