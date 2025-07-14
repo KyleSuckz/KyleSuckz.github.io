@@ -15,8 +15,8 @@ scene.add(new THREE.AmbientLight(0x404040));
 
 const textureLoader = new THREE.TextureLoader();
 
-// Load table texture
-const tableTexture = textureLoader.load('https://ambientcg.com/get/attachment/Fabric026/Fabric026_1K-JPG_Color.jpg');
+// Load table texture from root folder
+const tableTexture = textureLoader.load('table_texture.jpg');
 const tableGeometry = new THREE.CylinderGeometry(3, 3, 0.2, 32);
 const tableMaterial = new THREE.MeshPhongMaterial({ map: tableTexture });
 const table = new THREE.Mesh(tableGeometry, tableMaterial);
@@ -41,11 +41,14 @@ let dealerIndex = 0;
 
 // Card meshes
 const cardMeshes = [];
-const cardBackTexture = textureLoader.load('https://kenney.nl/assets/playing-cards-pack/cardBack_red.png');
+const cardBackTexture = textureLoader.load('cards/card_back.png');
 function createCardMesh(card, x, y, z) {
-    const suitPrefix = card.suit.charAt(0).toUpperCase() + card.suit.slice(1);
-    const valueFormatted = card.value === 'A' ? 'A' : card.value.padStart(2, '0');
-    const texture = textureLoader.load(`https://kenney.nl/assets/playing-cards-pack/card${suitPrefix}_${valueFormatted}.png`);
+    const valueFormatted = card.value === 'A' ? 'ace' : 
+                         card.value === 'K' ? 'king' : 
+                         card.value === 'Q' ? 'queen' : 
+                         card.value === 'J' ? 'jack' : 
+                         card.value.toLowerCase();
+    const texture = textureLoader.load(`cards/${valueFormatted}_of_${card.suit}.png`);
     const geometry = new THREE.PlaneGeometry(0.5, 0.7);
     const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
     const mesh = new THREE.Mesh(geometry, material);
@@ -107,10 +110,10 @@ function evaluateHand(hand, community) {
     cardValues.forEach(v => counts[v] = (counts[v] || 0) + 1);
     const pairs = Object.values(counts).filter(c => c === 2).length;
     const three = Object.values(counts).filter(c => c === 3).length;
-    if (three) return { rank: 3, value: Object.keys(counts).find(k => counts[k] === 3) }; // Three of a kind
-    if (pairs === 2) return { rank: 2, value: Object.keys(counts).find(k => counts[k] === 2) }; // Two pair
-    if (pairs === 1) return { rank: 1, value: Object.keys(counts).find(k => counts[k] === 2) }; // Pair
-    return { rank: 0, value: cardValues[0] }; // High card
+    if (three) return { rank: 3 | value: Object.keys(counts).find(k => counts[k] === 3) }; // Three of a kind
+    if (pairs === 2) return { rank: 2 | value: Object.keys(counts).find(k => counts[k] === 2) }; // Two pair
+    if (pairs === 1) return { rank: 1 | value: Object.keys(counts).find(k => counts[k] === 2) }; // Pair
+    return { rank: 0 | value: cardValues[0] }; // High card
 }
 
 function aiDecision(player) {
