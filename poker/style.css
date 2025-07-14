@@ -1,17 +1,17 @@
 body {
     margin: 0;
     overflow: hidden;
-    background: linear-gradient(to bottom, #1a1a2e, #0b0b14); /* Deep casino night */
+    background: linear-gradient(to bottom, #0b0b14, #050509); /* Deeper casino night */
     font-family: 'Roboto', sans-serif;
-    transition: background 0.5s;
+    transition: background 0.5s ease;
 }
 
 body.light-theme {
-    background: linear-gradient(to bottom, #ececec, #c9c9c9); /* Clean light */
+    background: linear-gradient(to bottom, #f5f5f5, #d9d9d9); /* Cleaner light */
 }
 
 body.vegas-theme {
-    background: linear-gradient(to bottom, #4a2e2e, #2e1b1b); /* Vegas red velvet */
+    background: linear-gradient(to bottom, #4a2e2e, #2e1b1b); /* Rich Vegas red */
 }
 
 #game-container {
@@ -31,15 +31,15 @@ body.vegas-theme {
 
 #table-info {
     position: absolute;
-    top: 30%;
+    top: 28%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
     color: #ffd700;
     background: rgba(0, 0, 0, 0.95);
-    padding: 35px;
-    border-radius: 20px;
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
+    padding: 40px;
+    border-radius: 25px;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
     pointer-events: auto;
     font-family: 'Oswald', sans-serif;
 }
@@ -54,30 +54,30 @@ body.vegas-theme {
 }
 
 #pot {
-    font-size: 40px;
+    font-size: 48px;
     font-weight: bold;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
 }
 
 #game-status {
-    font-size: 34px;
+    font-size: 36px;
 }
 
 #game-status button {
-    padding: 18px 50px;
-    font-size: 28px;
+    padding: 20px 60px;
+    font-size: 30px;
     background: linear-gradient(to bottom, #d4af37, #b8860b);
     color: #000;
     border: none;
-    border-radius: 15px;
+    border-radius: 20px;
     cursor: pointer;
     pointer-events: auto;
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
 #game-status button:hover {
-    transform: scale(1.15);
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+    transform: scale(1.2);
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.7);
 }
 
 #player-info {
@@ -89,17 +89,17 @@ body.vegas-theme {
 .player-box {
     position: absolute;
     background: linear-gradient(to bottom, #2a2a2a, #151515);
-    padding: 30px;
-    border-radius: 20px;
+    padding: 35px;
+    border-radius: 25px;
     color: #fff;
     text-align: center;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.9);
-    width: 220px;
-    transition: transform 0.3s;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
+    width: 240px;
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .light-theme .player-box {
-    background: linear-gradient(to bottom, #d9d9d9, #a8a8a8);
+    background: linear-gradient(to bottom, #e0e0e0, #b0b0b0);
     color: #000;
 }
 
@@ -107,40 +107,41 @@ body.vegas-theme {
     background: linear-gradient(to bottom, #5a3939, #3b2121);
 }
 
-.player-box:hover {
-    transform: scale(1.15);
+.player-box:hover, .player-box.active {
+    transform: scale(1.2);
+    box-shadow: 0 0 30px rgba(255, 30, 99, 0.7);
 }
 
 .player-box .player-avatar {
-    width: 70px;
-    height: 70px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
-    margin-bottom: 20px;
-    border: 3px solid #ffd700;
-    background: linear-gradient(to bottom, #4682b4, #2f4f4f); /* Blue for player */
+    margin-bottom: 25px;
+    border: 4px solid #ffd700;
+    background: linear-gradient(to bottom, #0288d1, #01579b); /* Blue for player */
 }
 
-#player-1 .player-avatar { background: linear-gradient(to bottom, #b22222, #8b0000); } /* Red for AI 1 */
-#player-2 .player-avatar { background: linear-gradient(to bottom, #228b22, #006400); } /* Green for AI 2 */
-#player-3 .player-avatar { background: linear-gradient(to bottom, #4b0082, #2f004b); } /* Purple for AI 3 */
+#player-1 .player-avatar { background: linear-gradient(to bottom, #d32f2f, #b71c1c); } /* Red for AI 1 */
+#player-2 .player-avatar { background: linear-gradient(to bottom, #388e3c, #1b5e20); } /* Green for AI 2 */
+#player-3 .player-avatar { background: linear-gradient(to bottom, #7b1fa2, #4a148c); } /* Purple for AI 3 */
 
 .vegas-theme .player-box .player-avatar {
     border-color: #b8860b;
 }
 
 .player-box .player-name {
-    font-size: 28px;
+    font-size: 32px;
     font-weight: bold;
     font-family: 'Oswald', sans-serif;
 }
 
 .player-box .player-chips {
-    font-size: 24px;
-    margin: 15px 0;
+    font-size: 28px;
+    margin: 20px 0;
 }
 
 .player-box .player-action {
-    font-size: 22px;
+    font-size: 24px;
     color: #ffd700;
 }
 
@@ -148,19 +149,19 @@ body.vegas-theme {
     color: #b8860b;
 }
 
-#player-0 { bottom: 60px; left: 50%; transform: translateX(-50%); }
-#player-1 { top: 60px; left: 50%; transform: translateX(-50%); }
-#player-2 { left: 60px; top: 50%; transform: translateY(-50%); }
-#player-3 { right: 60px; top: 50%; transform: translateY(-50%); }
+#player-0 { bottom: 40px; left: 50%; transform: translateX(-50%); }
+#player-1 { top: 40px; left: 50%; transform: translateX(-50%); }
+#player-2 { left: 40px; top: 50%; transform: translateY(-50%); }
+#player-3 { right: 40px; top: 50%; transform: translateY(-50%); }
 
 #actions {
     position: absolute;
-    bottom: 60px;
+    bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(0, 0, 0, 0.95);
-    padding: 35px;
-    border-radius: 20px;
+    padding: 40px;
+    border-radius: 25px;
     pointer-events: auto;
 }
 
@@ -173,38 +174,38 @@ body.vegas-theme {
 }
 
 #actions button {
-    padding: 20px 50px;
-    margin: 15px;
-    font-size: 28px;
+    padding: 25px 60px;
+    margin: 20px;
+    font-size: 30px;
     background: linear-gradient(to bottom, #e91e63, #c2185b);
     color: white;
     border: none;
-    border-radius: 15px;
+    border-radius: 20px;
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
     font-family: 'Oswald', sans-serif;
 }
 
 #actions button:hover {
-    transform: scale(1.15);
-    box-shadow: 0 0 20px rgba(233, 30, 99, 0.6);
+    transform: scale(1.2);
+    box-shadow: 0 0 25px rgba(233, 30, 99, 0.7);
 }
 
 #raise-amount {
-    width: 160px;
-    padding: 20px;
-    font-size: 24px;
-    border-radius: 15px;
-    margin-left: 25px;
+    width: 180px;
+    padding: 25px;
+    font-size: 28px;
+    border-radius: 20px;
+    margin-left: 30px;
 }
 
 #stats-panel, #odds-panel, #hand-history {
     position: absolute;
     background: rgba(0, 0, 0, 0.95);
-    padding: 35px;
-    border-radius: 20px;
+    padding: 40px;
+    border-radius: 25px;
     color: #fff;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.9);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
     pointer-events: auto;
 }
 
@@ -218,34 +219,34 @@ body.vegas-theme {
 }
 
 #stats-panel {
-    top: 60px;
-    right: 60px;
-    width: 250px;
+    top: 40px;
+    right: 40px;
+    width: 280px;
 }
 
 #odds-panel {
-    top: 300px;
-    right: 60px;
-    width: 250px;
+    top: 340px;
+    right: 40px;
+    width: 280px;
 }
 
 #hand-history {
-    bottom: 60px;
-    right: 60px;
-    width: 250px;
-    max-height: 300px;
+    bottom: 40px;
+    right: 40px;
+    width: 280px;
+    max-height: 360px;
     overflow-y: auto;
 }
 
 #stats-panel h3, #odds-panel h3, #hand-history h3 {
-    font-size: 28px;
-    margin-bottom: 20px;
+    font-size: 32px;
+    margin-bottom: 25px;
     font-family: 'Oswald', sans-serif;
 }
 
 #stats-panel p, #odds-panel p {
-    font-size: 24px;
-    margin: 15px 0;
+    font-size: 26px;
+    margin: 20px 0;
 }
 
 #hand-history ul {
@@ -254,35 +255,43 @@ body.vegas-theme {
 }
 
 #hand-history li {
-    font-size: 20px;
-    margin: 10px 0;
+    font-size: 22px;
+    margin: 12px 0;
     color: #ffd700;
 }
+
+#hand-history li.call { color: #4caf50; }
+#hand-history li.raise { color: #e91e63; }
+#hand-history li.fold { color: #757575; }
 
 .vegas-theme #hand-history li {
     color: #b8860b;
 }
 
+.vegas-theme #hand-history li.call { color: #388e3c; }
+.vegas-theme #hand-history li.raise { color: #d32f2f; }
+.vegas-theme #hand-history li.fold { color: #8d6e63; }
+
 #theme-selector {
     position: absolute;
-    top: 60px;
-    left: 60px;
+    top: 40px;
+    left: 40px;
     pointer-events: auto;
 }
 
 #theme-selector button {
-    padding: 15px 30px;
-    margin: 10px;
-    font-size: 20px;
-    background: linear-gradient(to bottom, #4682b4, #2f4f4f);
+    padding: 18px 35px;
+    margin: 12px;
+    font-size: 24px;
+    background: linear-gradient(to bottom, #0288d1, #01579b);
     color: white;
     border: none;
-    border-radius: 12px;
+    border-radius: 15px;
     cursor: pointer;
     transition: transform 0.3s;
     font-family: 'Oswald', sans-serif;
 }
 
 #theme-selector button:hover {
-    transform: scale(1.1);
+    transform: scale(1.15);
 }
