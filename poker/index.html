@@ -35,7 +35,7 @@
             height: 100%;
             background: 
                 linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.3)),
-                radial-gradient(circle at 50% 20%, #2a6041, #1e4d2b); /* Classic green felt */
+                radial-gradient(circle at 50% 20%, #2a6041, #1e4d2b); /* Classic green felt fallback */
             border: 20px solid transparent; /* Space for leather border */
             border-radius: 150px; /* Very rounded left/right, straight top/bottom */
             position: relative;
@@ -50,8 +50,10 @@
             width: 94%;
             height: 92%;
             background: 
-                linear-gradient(45deg, #1e4d2b, #2a6041), /* Smooth green felt */
-                radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.1), transparent); /* Spotlight effect */
+                url('assets/table_felt.jpg'), /* Texture from provided file */
+                #2a6041; /* Fallback color */
+            background-size: cover; /* Scale texture to fit */
+            background-position: center; /* Center texture */
             border: 5px solid #1a1a1a; /* Dark gray inlay */
             border-radius: 140px; /* Match table shape */
             position: absolute;
@@ -103,6 +105,7 @@
             .table-felt {
                 border: 3px solid #1a1a1a;
                 border-radius: 80px;
+                background-size: cover; /* Maintain texture scaling */
             }
 
             .table::before {
