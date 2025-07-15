@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Texas Hold'em Table</title>
     <style>
+        * {
+            box-sizing: border-box; /* Ensure padding/borders are included in width */
+        }
+
         body {
             margin: 0;
             height: 100vh;
@@ -13,19 +17,16 @@
             align-items: center;
             background: radial-gradient(circle at 50% 30%, #1a1a1a, #0a0a0a); /* Dark casino ambiance */
             font-family: 'Arial', sans-serif;
-            padding: 0 3vw; /* Buffer on left and right */
-            box-sizing: border-box;
-            overflow-x: hidden; /* Prevent horizontal overflow */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
 
         .table-container {
             width: 900px;
             height: 450px;
-            max-width: calc(90vw - 6vw); /* Ensure buffer space */
-            max-height: calc(45vh - 6vh); /* Proportional height with buffer */
-            aspect-ratio: 2 / 1; /* Maintain consistent proportions */
-            margin-left: auto; /* Center horizontally */
-            margin-right: auto;
+            max-width: calc(100vw - 10vw); /* 5vw buffer on each side */
+            max-height: calc(50vh - 10vh); /* Proportional height with buffer */
+            aspect-ratio: 2 / 1; /* Consistent proportions */
+            margin: 0 auto; /* Center horizontally */
             position: relative;
             perspective: 1000px; /* Subtle 3D effect */
         }
@@ -52,7 +53,7 @@
             background: 
                 linear-gradient(45deg, #1e4d2b, #2a6041), /* Smooth green felt */
                 radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.1), transparent); /* Spotlight effect */
-            border: 5px solid #1a1a1a; /* Dark gray inlay for contrast */
+            border: 5px solid #1a1a1a; /* Dark gray inlay */
             border-radius: 140px; /* Match table shape */
             position: absolute;
             top: 50%;
@@ -83,14 +84,10 @@
 
         /* Responsive adjustments for mobile */
         @media (max-width: 600px) {
-            body {
-                padding: 0 4vw; /* Adjusted buffer for mobile */
-            }
-
             .table-container {
-                max-width: calc(92vw - 8vw); /* Tighter buffer for visibility */
-                max-height: calc(46vw - 8vw); /* Maintain aspect ratio */
-                aspect-ratio: 2 / 1; /* Consistent proportions */
+                max-width: calc(100vw - 12vw); /* 6vw buffer per side */
+                max-height: calc(50vw - 12vw); /* Maintain aspect ratio */
+                aspect-ratio: 2 / 1;
             }
 
             .table {
@@ -119,9 +116,9 @@
         /* Landscape orientation adjustments */
         @media (max-width: 600px) and (orientation: landscape) {
             .table-container {
-                max-width: calc(80vw - 8vw); /* Reduce width in landscape */
-                max-height: calc(80vh - 8vh); /* Cap height to fit viewport */
-                aspect-ratio: 2 / 1; /* Maintain proportions */
+                max-width: calc(75vw - 10vw); /* Tighter buffer for landscape */
+                max-height: calc(75vh - 10vh); /* Cap height */
+                aspect-ratio: 2 / 1; /* Consistent proportions */
             }
 
             .table {
