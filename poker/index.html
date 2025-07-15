@@ -54,7 +54,7 @@
                 #2a6041; /* Fallback color */
             background-size: cover; /* Scale texture to fit */
             background-position: center; /* Center texture */
-            border: 5px solid transparent; /* Space for metallic inlay */
+            border: 5px solid #1a1a1a; /* Dark gray inlay */
             border-radius: 140px; /* Match table shape */
             position: absolute;
             top: 50%;
@@ -63,20 +63,6 @@
             box-shadow: 
                 inset 0 0 10px rgba(0, 0, 0, 0.7), /* Beveled felt edge */
                 0 0 20px rgba(255, 255, 255, 0.15); /* Soft glow */
-        }
-
-        .table-felt::before {
-            content: '';
-            position: absolute;
-            top: -5px;
-            left: -5px;
-            right: -5px;
-            bottom: -5px;
-            border: 5px solid transparent;
-            border-radius: 140px;
-            background: linear-gradient(45deg, #4a4a4a, #6a6a6a); /* Metallic silver inlay */
-            box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.3); /* Metallic shine */
-            z-index: -1;
         }
 
         .table::before {
@@ -117,19 +103,9 @@
             }
 
             .table-felt {
-                border: 3px solid transparent;
+                border: 3px solid #1a1a1a;
                 border-radius: 80px;
                 background-size: cover; /* Maintain texture scaling */
-            }
-
-            .table-felt::before {
-                top: -3px;
-                left: -3px;
-                right: -3px;
-                bottom: -3px;
-                border: 3px solid transparent;
-                border-radius: 80px;
-                box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.3);
             }
 
             .table::before {
@@ -147,15 +123,11 @@
                 border-radius: calc(150px * 2);
             }
 
-            .table-felt::before {
-                border-radius: calc(140px * 2);
-            }
-
             @media (max-width: 600px) {
                 .table, .table::before {
                     border-radius: calc(90px * 2);
                 }
-                .table-felt, .table-felt::before {
+                .table-felt {
                     border-radius: calc(80px * 2);
                 }
             }
