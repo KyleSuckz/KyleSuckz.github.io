@@ -26,7 +26,7 @@
             max-width: calc(100vw - 10vw); /* 5vw buffer on each side */
             max-height: calc(50vh - 10vh); /* Proportional height with buffer */
             aspect-ratio: 2 / 1; /* Consistent proportions */
-            margin: 0 auto; /* Center horizontally */
+            margin: 0 5vw; /* Equal buffers */
             position: relative;
             perspective: 1000px; /* Subtle 3D effect */
         }
@@ -88,6 +88,7 @@
                 max-width: calc(100vw - 12vw); /* 6vw buffer per side */
                 max-height: calc(50vw - 12vw); /* Maintain aspect ratio */
                 aspect-ratio: 2 / 1;
+                margin: 0 6vw; /* Equal buffers */
             }
 
             .table {
@@ -116,9 +117,12 @@
         /* Landscape orientation adjustments */
         @media (max-width: 600px) and (orientation: landscape) {
             .table-container {
-                max-width: calc(90vh * 2 - 10vw); /* Width tied to height for balance */
-                max-height: calc(90vh - 10vh); /* Cap height with buffer */
-                aspect-ratio: 2 / 1; /* Consistent proportions */
+                max-width: calc(80vh * 2); /* Width tied to height (2:1 ratio) */
+                max-height: 80vh; /* Cap height */
+                aspect-ratio: 2 / 1; /* Enforce proportions */
+                margin: 0 5vw; /* 5vw buffer per side */
+                width: 100%; /* Ensure responsiveness */
+                height: auto; /* Allow height to adjust */
             }
 
             .table {
