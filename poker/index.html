@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Texas Hold'em Table</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #1a1a1a; /* Darker background for contrast */
+            font-family: 'Arial', sans-serif;
+        }
+
+        .table-container {
+            width: 900px;
+            height: 450px;
+            position: relative;
+            max-width: 90vw; /* Responsive width */
+            max-height: 50vh; /* Responsive height */
+        }
+
+        .table {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #1e4d2b, #2a6041); /* Gradient for felt texture */
+            border: 12px solid #2c1e1e; /* Polished dark wood */
+            border-radius: 120px; /* Very rounded left/right, straight top/bottom */
+            position: relative;
+            box-shadow: 
+                0 15px 30px rgba(0, 0, 0, 0.6),
+                inset 0 0 10px rgba(255, 255, 255, 0.1); /* 3D effect */
+        }
+
+        .table-felt {
+            width: 96%;
+            height: 94%;
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuMjH3xWpnAAAAH0lEQVQYV2M4c+bMfwY0wAgYGBgYGBgYGBgYGBgY8AEA8XgOARcF4KIAAAAASUVORK5CYII=') repeat, #1e4d2b; /* Subtle felt texture */
+            border: 6px solid #b8860b; /* Richer gold trim */
+            border-radius: 110px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .player-seat {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            background: radial-gradient(circle, #3c2f2f, #2c1e1e); /* Cushioned effect */
+            border: 4px solid #b8860b; /* Gold accent */
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #f0f0f0; /* High contrast text */
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            box-shadow: 
+                0 5px 15px rgba(0, 0, 0, 0.4),
+                inset 0 0 5px rgba(255, 255, 255, 0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .player-seat:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), inset 0 0 8px rgba(255, 255, 255, 0.3);
+        }
+
+        .player-1 {
+            top: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .player-2 {
+            bottom: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .player-3 {
+            top: 50%;
+            left: -45px;
+            transform: translateY(-50%);
+        }
+
+        .player-4 {
+            top: 50%;
+            right: -45px;
+            transform: translateY(-50%);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .table-container {
+                width: 90vw;
+                height: 45vw;
+            }
+
+            .player-seat {
+                width: 60px;
+                height: 60px;
+                font-size: 12px;
+            }
+
+            .player-1, .player-2 {
+                top: -30px;
+                bottom: -30px;
+            }
+
+            .player-3, .player-4 {
+                left: -30px;
+                right: -30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="table-container">
+        <div class="table">
+            <div class="table-felt"></div>
+            <div class="player-seat player-1" role="region" aria-label="Player 1 seat">Dealer</div>
+            <div class="player-seat player-2" role="region" aria-label="Player 2 seat">Small Blind</div>
+            <div class="player-seat player-3" role="region" aria-label="Player 3 seat">Big Blind</div>
+            <div class="player-seat player-4" role="region" aria-label="Player 4 seat">Player 4</div>
+        </div>
+    </div>
+</body>
+</html>
