@@ -13,15 +13,17 @@
             align-items: center;
             background: radial-gradient(circle at 50% 30%, #1a1a1a, #0a0a0a); /* Dark casino ambiance */
             font-family: 'Arial', sans-serif;
-            overflow: hidden;
+            padding: 0 5vw; /* Buffer on left and right */
+            box-sizing: border-box;
+            overflow-x: hidden; /* Prevent horizontal overflow */
         }
 
         .table-container {
             width: 900px;
             height: 450px;
             position: relative;
-            max-width: 95vw; /* Responsive width */
-            max-height: 50vh; /* Responsive height */
+            max-width: 90vw; /* Reduced from 95vw for buffer */
+            max-height: 45vh; /* Adjusted for proportional height */
             perspective: 1000px; /* Subtle 3D effect */
         }
 
@@ -78,9 +80,13 @@
 
         /* Responsive adjustments */
         @media (max-width: 600px) {
+            body {
+                padding: 0 3vw; /* Smaller buffer for mobile */
+            }
+
             .table-container {
-                width: 90vw;
-                height: 45vw;
+                width: calc(90vw - 6vw); /* Ensure buffer on both sides */
+                height: calc(45vw - 3vw); /* Proportional height */
             }
 
             .table {
