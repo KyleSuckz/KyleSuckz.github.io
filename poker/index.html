@@ -41,6 +41,7 @@
             position: relative;
             box-shadow: 
                 0 20px 40px rgba(0, 0, 0, 0.8), /* Floating shadow */
+                0 0 35px rgba(255, 255, 255, 0.25), /* Ambient underglow */
                 inset 0 0 20px rgba(255, 255, 255, 0.2), /* Inner highlight */
                 inset 0 0 25px rgba(0, 0, 0, 0.6); /* Inner depth */
             transform: rotateX(3deg); /* Slight 3D tilt */
@@ -51,6 +52,7 @@
             height: 92%;
             background: 
                 url('assets/table_felt.jpg'), /* Green felt texture */
+                radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.15), transparent), /* Spotlight effect */
                 #2a6041; /* Fallback color */
             background-size: cover; /* Scale texture to fit */
             background-position: center; /* Center texture */
@@ -75,8 +77,15 @@
             border: 20px solid transparent;
             border-radius: 150px;
             background: 
+                repeating-linear-gradient(
+                    45deg,
+                    rgba(0, 0, 0, 0.5),
+                    rgba(0, 0, 0, 0.5) 2px,
+                    transparent 2px,
+                    transparent 6px
+                ), /* Stitching effect */
                 linear-gradient(45deg, #151515, #252525), /* Black leather padding */
-                linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05)); /* Glossy leather shine */
+                linear-gradient(90deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.05)); /* Enhanced glossy shine */
             box-shadow: 
                 inset 0 0 12px rgba(255, 255, 255, 0.25), /* Leather highlight */
                 0 0 15px rgba(0, 0, 0, 0.5); /* Outer shadow */
@@ -98,6 +107,7 @@
                 border-radius: 90px;
                 box-shadow: 
                     0 12px 25px rgba(0, 0, 0, 0.8),
+                    0 0 25px rgba(255, 255, 255, 0.25), /* Scaled underglow */
                     inset 0 0 12px rgba(255, 255, 255, 0.2),
                     inset 0 0 18px rgba(0, 0, 0, 0.6);
             }
@@ -111,6 +121,16 @@
             .table::before {
                 border: 12px solid transparent;
                 border-radius: 90px;
+                background: 
+                    repeating-linear-gradient(
+                        45deg,
+                        rgba(0, 0, 0, 0.5),
+                        rgba(0, 0, 0, 0.5) 2px,
+                        transparent 2px,
+                        transparent 6px
+                    ), /* Stitching effect */
+                    linear-gradient(45deg, #151515, #252525),
+                    linear-gradient(90deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.05));
                 box-shadow: 
                     inset 0 0 6px rgba(255, 255, 255, 0.2),
                     0 0 8px rgba(0, 0, 0, 0.5);
