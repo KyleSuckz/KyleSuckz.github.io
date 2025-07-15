@@ -117,12 +117,12 @@
         /* Landscape orientation adjustments */
         @media (max-width: 600px) and (orientation: landscape) {
             .table-container {
-                max-width: calc(80vh * 2); /* Width tied to height (2:1 ratio) */
+                width: calc(80vh * 2); /* Width exactly twice the height */
+                max-width: calc(100vw - 10vw); /* Respect 5vw buffers */
                 max-height: 80vh; /* Cap height */
-                aspect-ratio: 2 / 1; /* Enforce proportions */
-                margin: 0 5vw; /* 5vw buffer per side */
-                width: 100%; /* Ensure responsiveness */
                 height: auto; /* Allow height to adjust */
+                aspect-ratio: 2 / 1; /* Enforce 2:1 ratio */
+                margin: 0 5vw; /* 5vw buffer per side */
             }
 
             .table {
