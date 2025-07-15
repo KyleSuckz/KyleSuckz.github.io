@@ -83,11 +83,12 @@
             z-index: -1;
         }
 
-        /* Player Positions (Moved to Border) */
+        /* Player Positions (Tighter Padding) */
         .player {
             position: absolute;
-            width: 12%;
-            height: 18%;
+            width: auto;
+            height: auto;
+            padding: 5px 10px; /* Tight padding around text */
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid #4a4a4a;
             border-radius: 15px;
@@ -136,7 +137,7 @@
         }
 
         .player-human .card:nth-child(1) { /* Player 1 cards */
-            bottom: 5%; /* Moved closer to felt edge */
+            bottom: 5%;
             left: 45%;
         }
 
@@ -217,7 +218,7 @@
             font-size: 16px;
             font-weight: bold;
             z-index: 3;
-            bottom: 18%; /* Adjusted for Player 1’s new position */
+            bottom: 18%;
             left: 55%;
         }
 
@@ -255,8 +256,7 @@
             }
 
             .player {
-                width: 10%;
-                height: 14%;
+                padding: 4px 8px; /* Tighter padding for mobile */
                 font-size: 12px;
                 border-radius: 12px;
             }
