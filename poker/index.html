@@ -83,12 +83,12 @@
             z-index: -1;
         }
 
-        /* Player Positions (Tighter Padding) */
+        /* Player Positions */
         .player {
             position: absolute;
             width: auto;
             height: auto;
-            padding: 5px 10px; /* Tight padding around text */
+            padding: 5px 10px;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid #4a4a4a;
             border-radius: 15px;
@@ -101,31 +101,31 @@
             z-index: 1;
         }
 
-        .player-human { /* Player 1: Bottom, centered on border */
-            bottom: -20px; /* Align with 20px border */
+        .player-human { /* Player 1: Bottom */
+            bottom: -20px;
             left: 50%;
             transform: translateX(-50%);
         }
 
-        .player-ai1 { /* Player 2: Left, centered on border */
+        .player-ai1 { /* Player 2: Left */
             left: -20px;
             top: 50%;
             transform: translateY(-50%);
         }
 
-        .player-ai2 { /* Player 3: Top, centered on border */
+        .player-ai2 { /* Player 3: Top */
             top: -20px;
             left: 50%;
             transform: translateX(-50%);
         }
 
-        .player-ai3 { /* Player 4: Right, centered on border */
+        .player-ai3 { /* Player 4: Right */
             right: -20px;
             top: 50%;
             transform: translateY(-50%);
         }
 
-        /* Player Card Areas */
+        /* Player Card Areas (Corrected) */
         .card {
             position: absolute;
             width: 60px;
@@ -136,44 +136,44 @@
             z-index: 2;
         }
 
-        .player-human .card:nth-child(1) { /* Player 1 cards */
-            bottom: 5%;
-            left: 45%;
+        .card-player1:nth-child(1) { /* Player 1 cards (Human, bottom) */
+            bottom: 8%;
+            left: 46%;
         }
 
-        .player-human .card:nth-child(2) {
-            bottom: 5%;
-            left: 50%;
+        .card-player1:nth-child(2) {
+            bottom: 8%;
+            left: 52%;
         }
 
-        .player-ai1 .card:nth-child(1) { /* Player 2 cards */
-            left: 5%;
-            top: 45%;
+        .card-player2:nth-child(1) { /* Player 2 cards (AI 1, left) */
+            left: 8%;
+            top: 42%;
         }
 
-        .player-ai1 .card:nth-child(2) {
-            left: 5%;
-            top: 50%;
+        .card-player2:nth-child(2) {
+            left: 8%;
+            top: 48%;
         }
 
-        .player-ai2 .card:nth-child(1) { /* Player 3 cards */
-            top: 5%;
-            left: 45%;
+        .card-player3:nth-child(1) { /* Player 3 cards (AI 2, top) */
+            top: 8%;
+            left: 46%;
         }
 
-        .player-ai2 .card:nth-child(2) {
-            top: 5%;
-            left: 50%;
+        .card-player3:nth-child(2) {
+            top: 8%;
+            left: 52%;
         }
 
-        .player-ai3 .card:nth-child(1) { /* Player 4 cards */
-            right: 5%;
-            top: 45%;
+        .card-player4:nth-child(1) { /* Player 4 cards (AI 3, right) */
+            right: 8%;
+            top: 42%;
         }
 
-        .player-ai3 .card:nth-child(2) {
-            right: 5%;
-            top: 50%;
+        .card-player4:nth-child(2) {
+            right: 8%;
+            top: 48%;
         }
 
         /* Community Card Area */
@@ -256,13 +256,13 @@
             }
 
             .player {
-                padding: 4px 8px; /* Tighter padding for mobile */
+                padding: 4px 8px;
                 font-size: 12px;
                 border-radius: 12px;
             }
 
             .player-human {
-                bottom: -12px; /* Align with 12px border */
+                bottom: -12px;
             }
 
             .player-ai1 {
@@ -283,44 +283,44 @@
                 border-radius: 6px;
             }
 
-            .player-human .card:nth-child(1) {
-                bottom: 4%;
-                left: 44%;
+            .card-player1:nth-child(1) {
+                bottom: 6%;
+                left: 46.5%;
             }
 
-            .player-human .card:nth-child(2) {
-                bottom: 4%;
-                left: 52%;
+            .card-player1:nth-child(2) {
+                bottom: 6%;
+                left: 51.5%;
             }
 
-            .player-ai1 .card:nth-child(1) {
-                left: 4%;
-                top: 44%;
+            .card-player2:nth-child(1) {
+                left: 6%;
+                top: 42.5%;
             }
 
-            .player-ai1 .card:nth-child(2) {
-                left: 4%;
-                top: 52%;
+            .card-player2:nth-child(2) {
+                left: 6%;
+                top: 47.5%;
             }
 
-            .player-ai2 .card:nth-child(1) {
-                top: 4%;
-                left: 44%;
+            .card-player3:nth-child(1) {
+                top: 6%;
+                left: 46.5%;
             }
 
-            .player-ai2 .card:nth-child(2) {
-                top: 4%;
-                left: 52%;
+            .card-player3:nth-child(2) {
+                top: 6%;
+                left: 51.5%;
             }
 
-            .player-ai3 .card:nth-child(1) {
-                right: 4%;
-                top: 44%;
+            .card-player4:nth-child(1) {
+                right: 6%;
+                top: 42.5%;
             }
 
-            .player-ai3 .card:nth-child(2) {
-                right: 4%;
-                top: 52%;
+            .card-player4:nth-child(2) {
+                right: 6%;
+                top: 47.5%;
             }
 
             .community-cards {
@@ -373,22 +373,14 @@
                     <div class="community-card"></div>
                     <div class="community-card"></div>
                 </div>
-                <div class="player-human">
-                    <div class="card"></div>
-                    <div class="card"></div>
-                </div>
-                <div class="player-ai1">
-                    <div class="card"></div>
-                    <div class="card"></div>
-                </div>
-                <div class="player-ai2">
-                    <div class="card"></div>
-                    <div class="card"></div>
-                </div>
-                <div class="player-ai3">
-                    <div class="card"></div>
-                    <div class="card"></div>
-                </div>
+                <div class="card card-player1"></div>
+                <div class="card card-player1"></div>
+                <div class="card card-player2"></div>
+                <div class="card card-player2"></div>
+                <div class="card card-player3"></div>
+                <div class="card card-player3"></div>
+                <div class="card card-player4"></div>
+                <div class="card card-player4"></div>
                 <div class="dealer-button">D</div>
             </div>
             <div class="player player-human">You</div>
