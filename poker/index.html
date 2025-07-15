@@ -11,52 +11,51 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: radial-gradient(circle at 50% 30%, #1c2526, #0a0e0f); /* Deep casino ambiance */
+            background: radial-gradient(circle at 50% 30%, #1a1a1a, #0a0a0a); /* Dark casino ambiance */
             font-family: 'Arial', sans-serif;
             overflow: hidden;
         }
 
         .table-container {
-            width: 1000px;
-            height: 500px;
+            width: 900px;
+            height: 450px;
             position: relative;
             max-width: 95vw; /* Responsive width */
             max-height: 50vh; /* Responsive height */
-            perspective: 1200px; /* Enhanced 3D effect */
+            perspective: 1000px; /* Subtle 3D effect */
         }
 
         .table {
             width: 100%;
             height: 100%;
             background: 
-                linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(0, 0, 0, 0.4)),
-                radial-gradient(circle at 50% 20%, #346a46, #1b3d28); /* Rich felt gradient */
-            border: 20px solid transparent; /* Space for wood border */
-            border-radius: 170px; /* Very rounded left/right, straight top/bottom */
+                linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.3)),
+                radial-gradient(circle at 50% 20%, #2a6041, #1e4d2b); /* Classic green felt */
+            border: 20px solid transparent; /* Space for leather border */
+            border-radius: 150px; /* Very rounded left/right, straight top/bottom */
             position: relative;
             box-shadow: 
-                0 35px 70px rgba(0, 0, 0, 0.9), /* Deep floating shadow */
-                inset 0 0 30px rgba(255, 255, 255, 0.3), /* Inner highlight */
-                inset 0 0 35px rgba(0, 0, 0, 0.8); /* Inner depth */
-            animation: subtle-glow 4s ease-in-out infinite alternate;
-            transform: rotateX(5deg); /* Slight 3D tilt */
+                0 20px 40px rgba(0, 0, 0, 0.8), /* Floating shadow */
+                inset 0 0 20px rgba(255, 255, 255, 0.2), /* Inner highlight */
+                inset 0 0 25px rgba(0, 0, 0, 0.6); /* Inner depth */
+            transform: rotateX(3deg); /* Slight 3D tilt */
         }
 
         .table-felt {
             width: 94%;
             height: 92%;
             background: 
-                linear-gradient(45deg, #1b3d28, #2f6142), /* Deep, smooth felt */
+                linear-gradient(45deg, #1e4d2b, #2a6041), /* Smooth green felt */
                 radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.1), transparent); /* Spotlight effect */
-            border: 6px solid #b76e79; /* Rose gold inlay */
-            border-radius: 160px; /* Match table shape */
+            border: 5px solid #1a1a1a; /* Dark gray inlay for contrast */
+            border-radius: 140px; /* Match table shape */
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             box-shadow: 
-                inset 0 0 15px rgba(0, 0, 0, 0.8), /* Beveled felt edge */
-                0 0 30px rgba(255, 255, 255, 0.2); /* Soft outer glow */
+                inset 0 0 10px rgba(0, 0, 0, 0.7), /* Beveled felt edge */
+                0 0 20px rgba(255, 255, 255, 0.15); /* Soft glow */
         }
 
         .table::before {
@@ -67,41 +66,14 @@
             right: -20px;
             bottom: -20px;
             border: 20px solid transparent;
-            border-radius: 170px;
+            border-radius: 150px;
             background: 
-                linear-gradient(45deg, #261919, #3a2a2a), /* Polished ebony wood */
-                linear-gradient(90deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1)); /* Glossy sheen */
+                linear-gradient(45deg, #151515, #252525), /* Black leather padding */
+                linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05)); /* Glossy leather shine */
             box-shadow: 
-                inset 0 0 15px rgba(255, 255, 255, 0.3), /* Glossy highlight */
-                0 0 20px rgba(0, 0, 0, 0.6); /* Outer shadow */
+                inset 0 0 12px rgba(255, 255, 255, 0.25), /* Leather highlight */
+                0 0 15px rgba(0, 0, 0, 0.5); /* Outer shadow */
             z-index: -1;
-            animation: border-shimmer 6s ease-in-out infinite alternate;
-        }
-
-        /* Subtle glow animation for table */
-        @keyframes subtle-glow {
-            0% {
-                box-shadow: 
-                    0 35px 70px rgba(0, 0, 0, 0.9),
-                    inset 0 0 30px rgba(255, 255, 255, 0.3),
-                    inset 0 0 35px rgba(0, 0, 0, 0.8);
-            }
-            100% {
-                box-shadow: 
-                    0 40px 80px rgba(0, 0, 0, 1),
-                    inset 0 0 35px rgba(255, 255, 255, 0.35),
-                    inset 0 0 40px rgba(0, 0, 0, 0.9);
-            }
-        }
-
-        /* Shimmer effect for wood border */
-        @keyframes border-shimmer {
-            0% {
-                background-position: 0% 50%;
-            }
-            100% {
-                background-position: 200% 50%;
-            }
         }
 
         /* Responsive adjustments */
@@ -113,39 +85,39 @@
 
             .table {
                 border: 14px solid transparent;
-                border-radius: 120px;
+                border-radius: 110px;
                 box-shadow: 
-                    0 25px 50px rgba(0, 0, 0, 0.9),
-                    inset 0 0 20px rgba(255, 255, 255, 0.25),
-                    inset 0 0 25px rgba(0, 0, 0, 0.7);
+                    0 15px 30px rgba(0, 0, 0, 0.8),
+                    inset 0 0 15px rgba(255, 255, 255, 0.2),
+                    inset 0 0 20px rgba(0, 0, 0, 0.6);
             }
 
             .table-felt {
-                border: 4px solid #b76e79;
-                border-radius: 110px;
+                border: 4px solid #1a1a1a;
+                border-radius: 100px;
             }
 
             .table::before {
                 border: 14px solid transparent;
-                border-radius: 120px;
+                border-radius: 110px;
                 box-shadow: 
-                    inset 0 0 10px rgba(255, 255, 255, 0.25),
-                    0 0 15px rgba(0, 0, B0, 0.6);
+                    inset 0 0 8px rgba(255, 255, 255, 0.2),
+                    0 0 10px rgba(0, 0, 0, 0.5);
             }
         }
 
         /* High-DPI adjustments */
         @media (min-resolution: 2dppx) {
             .table, .table-felt, .table::before {
-                border-radius: calc(170px * 2); /* Sharper curves for retina */
+                border-radius: calc(150px * 2);
             }
 
             @media (max-width: 600px) {
                 .table, .table::before {
-                    border-radius: calc(120px * 2);
+                    border-radius: calc(110px * 2);
                 }
                 .table-felt {
-                    border-radius: calc(110px * 2);
+                    border-radius: calc(100px * 2);
                 }
             }
         }
