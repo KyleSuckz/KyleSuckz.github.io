@@ -256,10 +256,14 @@
                     logToggle: document.getElementById('log-toggle'),
                     resetGameButton: document.getElementById('reset-game'),
                     statsPanel: document.getElementById('stats-panel'),
-                    players: ALL_PLAYERS.map(id => ({ id, position: this[`${id}Cards`], handDiv: this[`${id}Hand`] })),
                     dealerButtons: ALL_PLAYERS.map(id => ({ id, mesh: new THREE.Mesh(new THREE.SphereGeometry(0.3), new THREE.MeshStandardMaterial({ color: 0xd4af37 })) })),
                     blindChips: ALL_PLAYERS.map(id => ({ id, mesh: new THREE.Mesh(chipGeometry, chipMaterial) }))
                 };
+                this.DOM.players = ALL_PLAYERS.map(id => ({
+                    id,
+                    position: this.DOM[`${id}Cards`],
+                    handDiv: this.DOM[`${id}Hand`]
+                }));
                 this.DOM.players.forEach(p => {
                     p.handDiv.style.cssText = 'position: absolute; color: #d4af37; font-size: clamp(12px, 1.5vw, 14px); display: none;';
                     document.body.appendChild(p.handDiv);
@@ -917,7 +921,7 @@
                     return;
                 }
 
-                if (this.state.currentTurn === 'none' || (this.allBetsEqual() && [...this.state.playersInRound].every(p => this.getPlayer(p).hasActed || this.state.allInPlayers.has(p) || this.state.foldedPlayers.has(p)))) {
+                if (this.state.currentTurn === 'none' || (this.allBetsEqual() && [...this.state.playersInRound].every(p => this.getPlayer(p).hasActed || this.state.allInPlayers.has(p) || this.state.foldedPlayers.has(p))) {
                     this.state.players.forEach(p => {
                         p.betThisRound = 0;
                         p.hasActed = false;
@@ -1240,20 +1244,15 @@
             window.addEventListener('resize', () => {
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
-                renderer.setSize(Math.min(window.innerWidth * 0.9, 1000), Math.min(window.innerHeight * 0.54, 600));
+                renderer.setSize(window.innerWidth * 0.9, window.innerWidth * 0.9 * 0.6);
+                render.updateCardPositions();
+                render.updateTextPositions();
                 render.updateGameDisplay();
             });
             render.updateGameDisplay();
         }
 
-        function animate() {
-            requestAnimationFrame(animate);
-            render.updateGameDisplay();
-            renderer.render(scene, camera);
-        }
-
         init();
-        animate();
     </script>
 </body>
 </html>
