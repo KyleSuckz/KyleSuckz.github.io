@@ -13,7 +13,7 @@
             align-items: center;
             background: radial-gradient(circle at 50% 30%, #1a1a1a, #0a0a0a); /* Dark casino ambiance */
             font-family: 'Arial', sans-serif;
-            padding: 0 5vw; /* Buffer on left and right */
+            padding: 0 3vw; /* Buffer on left and right */
             box-sizing: border-box;
             overflow-x: hidden; /* Prevent horizontal overflow */
         }
@@ -21,9 +21,12 @@
         .table-container {
             width: 900px;
             height: 450px;
+            max-width: calc(90vw - 6vw); /* Ensure buffer space */
+            max-height: calc(45vh - 6vh); /* Proportional height with buffer */
+            aspect-ratio: 2 / 1; /* Maintain consistent proportions */
+            margin-left: auto; /* Center horizontally */
+            margin-right: auto;
             position: relative;
-            max-width: 90vw; /* Reduced from 95vw for buffer */
-            max-height: 45vh; /* Adjusted for proportional height */
             perspective: 1000px; /* Subtle 3D effect */
         }
 
@@ -78,15 +81,16 @@
             z-index: -1;
         }
 
-        /* Responsive adjustments */
+        /* Responsive adjustments for mobile */
         @media (max-width: 600px) {
             body {
-                padding: 0 3vw; /* Smaller buffer for mobile */
+                padding: 0 4vw; /* Adjusted buffer for mobile */
             }
 
             .table-container {
-                width: calc(90vw - 6vw); /* Ensure buffer on both sides */
-                height: calc(45vw - 3vw); /* Proportional height */
+                max-width: calc(92vw - 8vw); /* Tighter buffer for visibility */
+                max-height: calc(46vw - 8vw); /* Maintain aspect ratio */
+                aspect-ratio: 2 / 1; /* Consistent proportions */
             }
 
             .table {
@@ -112,6 +116,30 @@
             }
         }
 
+        /* Landscape orientation adjustments */
+        @media (max-width: 600px) and (orientation: landscape) {
+            .table-container {
+                max-width: calc(80vw - 8vw); /* Reduce width in landscape */
+                max-height: calc(80vh - 8vh); /* Cap height to fit viewport */
+                aspect-ratio: 2 / 1; /* Maintain proportions */
+            }
+
+            .table {
+                border: 12px solid transparent;
+                border-radius: 90px;
+            }
+
+            .table-felt {
+                border: 3px solid #1a1a1a;
+                border-radius: 80px;
+            }
+
+            .table::before {
+                border: 12px solid transparent;
+                border-radius: 90px;
+            }
+        }
+
         /* High-DPI adjustments */
         @media (min-resolution: 2dppx) {
             .table, .table-felt, .table::before {
@@ -124,6 +152,15 @@
                 }
                 .table-felt {
                     border-radius: calc(100px * 2);
+                }
+            }
+
+            @media (max-width: 600px) and (orientation: landscape) {
+                .table, .table::before {
+                    border-radius: calc(90px * 2);
+                }
+                .table-felt {
+                    border-radius: calc(80px * 2);
                 }
             }
         }
