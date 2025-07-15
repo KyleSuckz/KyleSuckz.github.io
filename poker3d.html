@@ -313,7 +313,7 @@
                 });
                 this.DOM.blindChips.forEach(bc => {
                     const pos = this.DOM[`${bc.id}Cards`];
-                    bc.mesh.position.set(pos.x, pos.y + (bc.id === 'player' || bc.id === 'player2' ? 3 : 0), pos.z + 0.3);
+                    bc.mesh.position.set(pos.x, pos.y + (bc.id === 'player' || db.id === 'player2' ? 3 : 0), pos.z + 0.3);
                     const player = gameLogic.getPlayer(bc.id);
                     bc.mesh.visible = (bc.id === gameLogic.state.smallBlindPlayer && player.totalBet > 0) || (bc.id === gameLogic.state.bigBlindPlayer && player.totalBet > 0);
                     bc.mesh.material.color.set(bc.id === gameLogic.state.smallBlindPlayer ? 0xaaaaaa : 0xffd700);
@@ -1137,7 +1137,7 @@
                 render.lastWinnerText = '';
                 render.debouncedUpdateGameDisplay();
             }
-        };
+        }; // End of gameLogic object
 
         const ai = {
             evaluatePreflopHand(cards) {
