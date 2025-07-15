@@ -11,73 +11,97 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: radial-gradient(circle at center, #1a1a1a, #080808); /* Casino ambiance */
+            background: radial-gradient(circle at 50% 30%, #1c2526, #0a0e0f); /* Deep casino ambiance */
             font-family: 'Arial', sans-serif;
+            overflow: hidden;
         }
 
         .table-container {
-            width: 950px;
-            height: 475px;
+            width: 1000px;
+            height: 500px;
             position: relative;
             max-width: 95vw; /* Responsive width */
             max-height: 50vh; /* Responsive height */
+            perspective: 1200px; /* Enhanced 3D effect */
         }
 
         .table {
             width: 100%;
             height: 100%;
             background: 
-                linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.2)),
-                radial-gradient(circle at 50% 30%, #2e6b45, #1a3c27); /* Vibrant felt gradient */
-            border: 16px solid #2a1b1b; /* Rich mahogany */
-            border-radius: 150px; /* Very rounded left/right, straight top/bottom */
+                linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(0, 0, 0, 0.4)),
+                radial-gradient(circle at 50% 20%, #346a46, #1b3d28); /* Rich felt gradient */
+            border: 20px solid transparent; /* Space for wood border */
+            border-radius: 170px; /* Very rounded left/right, straight top/bottom */
             position: relative;
             box-shadow: 
-                0 25px 50px rgba(0, 0, 0, 0.8), /* Deep outer shadow */
-                inset 0 0 20px rgba(255, 255, 255, 0.2), /* Inner highlight */
-                inset 0 0 25px rgba(0, 0, 0, 0.6); /* Inner depth */
-            background-image: 
-                url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuMjH3xWpnAAAAV0lEQVQ4T2O4c+bMfwY0YGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGDAAf4MARfT4KIAAAAASUVORK5CYII=') repeat; /* High-res felt texture */
-            animation: subtle-glow 3s ease-in-out infinite alternate;
+                0 35px 70px rgba(0, 0, 0, 0.9), /* Deep floating shadow */
+                inset 0 0 30px rgba(255, 255, 255, 0.3), /* Inner highlight */
+                inset 0 0 35px rgba(0, 0, 0, 0.8); /* Inner depth */
+            animation: subtle-glow 4s ease-in-out infinite alternate;
+            transform: rotateX(5deg); /* Slight 3D tilt */
         }
 
         .table-felt {
             width: 94%;
             height: 92%;
             background: 
-                linear-gradient(45deg, #1a3c27, #2e6b45), /* Deep inner felt */
-                url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuMjH3xWpnAAAAV0lEQVQ4T2O4c+bMfwY0YGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGDAAf4MARfT4KIAAAAASUVORK5CYII=') repeat;
-            border: 5px solid #d4d4d4; /* Polished silver inlay */
-            border-radius: 140px; /* Match table shape */
+                linear-gradient(45deg, #1b3d28, #2f6142), /* Deep, smooth felt */
+                radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.1), transparent); /* Spotlight effect */
+            border: 6px solid #b76e79; /* Rose gold inlay */
+            border-radius: 160px; /* Match table shape */
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             box-shadow: 
-                inset 0 0 12px rgba(0, 0, 0, 0.7), /* Inner shadow */
-                0 0 25px rgba(255, 255, 255, 0.15); /* Soft glow */
+                inset 0 0 15px rgba(0, 0, 0, 0.8), /* Beveled felt edge */
+                0 0 30px rgba(255, 255, 255, 0.2); /* Soft outer glow */
         }
 
         .table::before {
             content: '';
             position: absolute;
-            top: -16px;
-            left: -16px;
-            right: -16px;
-            bottom: -16px;
-            border: 16px solid transparent;
-            border-radius: 150px;
-            background: linear-gradient(45deg, #2a1b1b, #3f2c2c); /* Glossy wood grain */
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            border: 20px solid transparent;
+            border-radius: 170px;
+            background: 
+                linear-gradient(45deg, #261919, #3a2a2a), /* Polished ebony wood */
+                linear-gradient(90deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1)); /* Glossy sheen */
             box-shadow: 
-                inset 0 0 12px rgba(255, 255, 255, 0.25), /* Glossy highlight */
-                0 0 15px rgba(0, 0, 0, 0.5); /* Outer shadow */
+                inset 0 0 15px rgba(255, 255, 255, 0.3), /* Glossy highlight */
+                0 0 20px rgba(0, 0, 0, 0.6); /* Outer shadow */
             z-index: -1;
+            animation: border-shimmer 6s ease-in-out infinite alternate;
         }
 
-        /* Subtle glow animation */
+        /* Subtle glow animation for table */
         @keyframes subtle-glow {
-            0% { box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.2), inset 0 0 25px rgba(0, 0, 0, 0.6); }
-            100% { box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), inset 0 0 25px rgba(255, 255, 255, 0.25), inset 0 0 30px rgba(0, 0, 0, 0.7); }
+            0% {
+                box-shadow: 
+                    0 35px 70px rgba(0, 0, 0, 0.9),
+                    inset 0 0 30px rgba(255, 255, 255, 0.3),
+                    inset 0 0 35px rgba(0, 0, 0, 0.8);
+            }
+            100% {
+                box-shadow: 
+                    0 40px 80px rgba(0, 0, 0, 1),
+                    inset 0 0 35px rgba(255, 255, 255, 0.35),
+                    inset 0 0 40px rgba(0, 0, 0, 0.9);
+            }
+        }
+
+        /* Shimmer effect for wood border */
+        @keyframes border-shimmer {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 200% 50%;
+            }
         }
 
         /* Responsive adjustments */
@@ -88,18 +112,41 @@
             }
 
             .table {
-                border: 12px solid #2a1b1b;
-                border-radius: 110px;
+                border: 14px solid transparent;
+                border-radius: 120px;
+                box-shadow: 
+                    0 25px 50px rgba(0, 0, 0, 0.9),
+                    inset 0 0 20px rgba(255, 255, 255, 0.25),
+                    inset 0 0 25px rgba(0, 0, 0, 0.7);
             }
 
             .table-felt {
-                border: 4px solid #d4d4d4;
-                border-radius: 100px;
+                border: 4px solid #b76e79;
+                border-radius: 110px;
             }
 
             .table::before {
-                border: 12px solid transparent;
-                border-radius: 110px;
+                border: 14px solid transparent;
+                border-radius: 120px;
+                box-shadow: 
+                    inset 0 0 10px rgba(255, 255, 255, 0.25),
+                    0 0 15px rgba(0, 0, B0, 0.6);
+            }
+        }
+
+        /* High-DPI adjustments */
+        @media (min-resolution: 2dppx) {
+            .table, .table-felt, .table::before {
+                border-radius: calc(170px * 2); /* Sharper curves for retina */
+            }
+
+            @media (max-width: 600px) {
+                .table, .table::before {
+                    border-radius: calc(120px * 2);
+                }
+                .table-felt {
+                    border-radius: calc(110px * 2);
+                }
             }
         }
     </style>
