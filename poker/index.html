@@ -22,8 +22,8 @@
 
         .table-container {
             width: calc(min(50vh, 50vw) * 2);
-            height: calc(min(50vh, 50vw) + 80px);
-            max-height: calc(min(70vh, 50vw) + 80px);
+            height: calc(min(50vh, 50vw) + 120px);
+            max-height: calc(min(70vh, 50vw) + 120px);
             aspect-ratio: 2 / 1;
             margin: 0 5vw;
             position: relative;
@@ -138,10 +138,11 @@
         .card {
             width: 56px;
             height: 86px;
-            background: #333;
+            background: #fff;
             border-radius: 8px;
             z-index: 2;
-            background-size: cover;
+            background-size: contain;
+            background-repeat: no-repeat;
             background-position: center;
         }
 
@@ -236,12 +237,13 @@
         .community-card {
             width: 56px;
             height: 86px;
-            background: #333;
+            background: #fff;
             border: none;
             border-radius: 8px;
             margin: 0 4px;
             z-index: 2;
-            background-size: cover;
+            background-size: contain;
+            background-repeat: no-repeat;
             background-position: center;
         }
 
@@ -328,8 +330,8 @@
         @media (max-width: 600px) {
             .table-container {
                 width: calc(min(50vh, 50vw) * 2);
-                height: calc(min(50vh, 50vw) + 80px);
-                max-height: calc(min(70vh, 50vw) + 80px);
+                height: calc(min(50vh, 50vw) + 120px);
+                max-height: calc(min(70vh, 50vw) + 120px);
                 aspect-ratio: 2 / 1;
                 margin: 0 5vw;
             }
@@ -385,15 +387,13 @@
 
             .card-pair {
                 width: calc(8% * 2 + 1.33%);
-                height: 24%;
+                height: calc(8% * 86 / 56);
             }
 
             .card {
                 width: 8%;
-                height: 24%;
+                height: calc(8% * 86 / 56);
                 border-radius: 2%;
-                min-width: 20px;
-                min-height: 28px;
             }
 
             .card-pair-player1 {
@@ -470,18 +470,16 @@
 
             .community-cards {
                 width: calc(8% * 5 + 1% * 4);
-                height: 24%;
+                height: calc(8% * 86 / 56);
                 border-radius: 5%;
             }
 
             .community-card {
                 width: 8%;
-                height: 24%;
+                height: calc(8% * 86 / 56);
                 border: none;
                 border-radius: 2%;
                 margin: 0 1%;
-                min-width: 20px;
-                min-height: 28px;
             }
 
             .community-card:nth-child(1) {
@@ -513,19 +511,19 @@
             }
 
             .dealer-button-player1 {
-                bottom: calc(2% + 24% + 2%);
+                bottom: calc(2% + (8% * 86 / 56) + 2%);
                 left: 50%;
                 transform: translateX(-50%);
             }
 
             .small-blind-player2 {
-                left: calc(2% + 8% + 2%);
+                left: calc(2% + (8% * 2 + 1.33%) + 2%);
                 top: 50%;
                 transform: translateY(-50%);
             }
 
             .big-blind-player3 {
-                top: calc(2% + 24% + 2%);
+                top: calc(2% + (8% * 86 / 56) + 2%);
                 left: 50%;
                 transform: translateX(-50%);
             }
