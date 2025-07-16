@@ -28,6 +28,7 @@
             margin: 0 5vw;
             position: relative;
             perspective: 1000px;
+            min-width: 300px; /* Prevent extreme narrowing */
         }
 
         .table {
@@ -127,8 +128,8 @@
 
         .card-pair {
             position: absolute;
-            width: 148px;
-            height: calc(72px * 726 / 500);
+            width: 164px;
+            height: calc(80px * 726 / 500);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -136,14 +137,16 @@
         }
 
         .card {
-            width: 72px;
-            height: calc(72px * 726 / 500);
+            width: 80px;
+            height: calc(80px * 726 / 500);
             background: transparent;
+            background-color: #fff; /* Fallback color */
             border-radius: 8px;
             z-index: 2;
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
+            aria-label: ""; /* Add specific card names if possible */
         }
 
         .card-pair-player1 {
@@ -156,16 +159,18 @@
         .card-pair-player1 .card.card-player1-1 {
             border: none;
             background-image: url('assets/cards/ace_of_spades.png');
+            aria-label: "Ace of Spades";
         }
 
         .card-pair-player1 .card.card-player1-2 {
             margin-left: 4px;
             border: none;
             background-image: url('assets/cards/king_of_hearts.png');
+            aria-label: "King of Hearts";
         }
 
         .card-pair-player2 {
-            left: 2%;
+            left: 1%; /* Adjusted for narrow screens */
             top: 50%;
             transform: translateY(-50%);
             border: none;
@@ -174,12 +179,14 @@
         .card-pair-player2 .card.card-player2-1 {
             border: none;
             background-image: url('assets/cards/card_back.png');
+            aria-label: "Card Back";
         }
 
         .card-pair-player2 .card.card-player2-2 {
             margin-left: 4px;
             border: none;
             background-image: url('assets/cards/card_back.png');
+            aria-label: "Card Back";
         }
 
         .card-pair-player3 {
@@ -192,16 +199,18 @@
         .card-pair-player3 .card.card-player3-1 {
             border: none;
             background-image: url('assets/cards/card_back.png');
+            aria-label: "Card Back";
         }
 
         .card-pair-player3 .card.card-player3-2 {
             margin-left: 4px;
             border: none;
             background-image: url('assets/cards/card_back.png');
+            aria-label: "Card Back";
         }
 
         .card-pair-player4 {
-            right: 2%;
+            right: 1%; /* Adjusted for narrow screens */
             top: 50%;
             transform: translateY(-50%);
             border: none;
@@ -210,24 +219,26 @@
         .card-pair-player4 .card.card-player4-1 {
             border: none;
             background-image: url('assets/cards/card_back.png');
+            aria-label: "Card Back";
         }
 
         .card-pair-player4 .card.card-player4-2 {
             margin-left: 4px;
             border: none;
             background-image: url('assets/cards/card_back.png');
+            aria-label: "Card Back";
         }
 
         .community-cards {
             position: absolute;
-            width: calc(72px * 5 + 4px * 4);
-            height: calc(72px * 726 / 500);
+            width: calc(80px * 5 + 4px * 4);
+            height: calc(80px * 726 / 500);
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             background: rgba(0, 0, 0, 0.2);
             border: 1px solid #1a1a1a;
-            border-radius: 24px;
+            border-radius: 28px; /* Scaled with size increase */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -235,9 +246,10 @@
         }
 
         .community-card {
-            width: 72px;
-            height: calc(72px * 726 / 500);
+            width: 80px;
+            height: calc(80px * 726 / 500);
             background: transparent;
+            background-color: #fff; /* Fallback color */
             border: none;
             border-radius: 8px;
             margin: 0 4px;
@@ -245,26 +257,32 @@
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
+            aria-label: ""; /* Add specific card names if possible */
         }
 
         .community-card:nth-child(1) {
             background-image: url('assets/cards/2_of_clubs.png');
+            aria-label: "Two of Clubs";
         }
 
         .community-card:nth-child(2) {
             background-image: url('assets/cards/queen_of_diamonds.png');
+            aria-label: "Queen of Diamonds";
         }
 
         .community-card:nth-child(3) {
             background-image: url('assets/cards/7_of_hearts.png');
+            aria-label: "Seven of Hearts";
         }
 
         .community-card:nth-child(4) {
             background-image: url('assets/cards/10_of_spades.png');
+            aria-label: "Ten of Spades";
         }
 
         .community-card:nth-child(5) {
             background-image: url('assets/cards/4_of_diamonds.png');
+            aria-label: "Four of Diamonds";
         }
 
         .dealer-button, .small-blind, .big-blind {
@@ -278,50 +296,50 @@
             justify-content: center;
             align-items: center;
             color: #000;
-            font-size: 14px;
+            font-size: 16px; /* Increased for readability */
             font-weight: bold;
             z-index: 3;
         }
 
         .dealer-button-player1 {
-            bottom: calc(2% + (72px * 726 / 500) + 5px);
+            bottom: calc(2% + (80px * 726 / 500) + 5px);
             left: 50%;
             transform: translateX(-50%);
         }
 
         .small-blind-player2 {
-            left: calc(2% + 148px + 5px);
+            left: calc(1% + 164px + 5px); /* Adjusted for new card size */
             top: 50%;
             transform: translateY(-50%);
         }
 
         .big-blind-player3 {
-            top: calc(2% + (72px * 726 / 500) + 5px);
+            top: calc(2% + (80px * 726 / 500) + 5px);
             left: 50%;
             transform: translateX(-50%);
         }
 
         @media (min-width: 601px) {
             .card-pair {
-                width: 148px;
-                height: calc(72px * 726 / 500);
+                width: 164px;
+                height: calc(80px * 726 / 500);
             }
 
             .card {
-                width: 72px;
-                height: calc(72px * 726 / 500);
+                width: 80px;
+                height: calc(80px * 726 / 500);
                 border-radius: 8px;
             }
 
             .community-cards {
-                width: calc(72px * 5 + 4px * 4);
-                height: calc(72px * 726 / 500);
-                border-radius: 24px;
+                width: calc(80px * 5 + 4px * 4);
+                height: calc(80px * 726 / 500);
+                border-radius: 28px;
             }
 
             .community-card {
-                width: 72px;
-                height: calc(72px * 726 / 500);
+                width: 80px;
+                height: calc(80px * 726 / 500);
                 border-radius: 8px;
                 margin: 0 4px;
             }
@@ -386,13 +404,13 @@
             }
 
             .card-pair {
-                width: calc(12% * 2 + 1.5%);
-                height: calc(12% * 726 / 500);
+                width: calc(14% * 2 + 1.5%);
+                height: calc(14% * 726 / 500);
             }
 
             .card {
-                width: 12%;
-                height: calc(12% * 726 / 500);
+                width: 14%;
+                height: calc(14% * 726 / 500);
                 border-radius: 2%;
             }
 
@@ -406,16 +424,18 @@
             .card-pair-player1 .card.card-player1-1 {
                 border: none;
                 background-image: url('assets/cards/ace_of_spades.png');
+                aria-label: "Ace of Spades";
             }
 
             .card-pair-player1 .card.card-player1-2 {
                 margin-left: 1.5%;
                 border: none;
                 background-image: url('assets/cards/king_of_hearts.png');
+                aria-label: "King of Hearts";
             }
 
             .card-pair-player2 {
-                left: 2%;
+                left: 1%;
                 top: 50%;
                 transform: translateY(-50%);
                 border: none;
@@ -424,12 +444,14 @@
             .card-pair-player2 .card.card-player2-1 {
                 border: none;
                 background-image: url('assets/cards/card_back.png');
+                aria-label: "Card Back";
             }
 
             .card-pair-player2 .card.card-player2-2 {
                 margin-left: 1.5%;
                 border: none;
                 background-image: url('assets/cards/card_back.png');
+                aria-label: "Card Back";
             }
 
             .card-pair-player3 {
@@ -442,16 +464,18 @@
             .card-pair-player3 .card.card-player3-1 {
                 border: none;
                 background-image: url('assets/cards/card_back.png');
+                aria-label: "Card Back";
             }
 
             .card-pair-player3 .card.card-player3-2 {
                 margin-left: 1.5%;
                 border: none;
                 background-image: url('assets/cards/card_back.png');
+                aria-label: "Card Back";
             }
 
             .card-pair-player4 {
-                right: 2%;
+                right: 1%;
                 top: 50%;
                 transform: translateY(-50%);
                 border: none;
@@ -460,23 +484,25 @@
             .card-pair-player4 .card.card-player4-1 {
                 border: none;
                 background-image: url('assets/cards/card_back.png');
+                aria-label: "Card Back";
             }
 
             .card-pair-player4 .card.card-player4-2 {
                 margin-left: 1.5%;
                 border: none;
                 background-image: url('assets/cards/card_back.png');
+                aria-label: "Card Back";
             }
 
             .community-cards {
-                width: calc(12% * 5 + 1% * 4);
-                height: calc(12% * 726 / 500);
-                border-radius: 6%;
+                width: calc(14% * 5 + 1% * 4);
+                height: calc(14% * 726 / 500);
+                border-radius: 7%; /* Scaled with size increase */
             }
 
             .community-card {
-                width: 12%;
-                height: calc(12% * 726 / 500);
+                width: 14%;
+                height: calc(14% * 726 / 500);
                 border: none;
                 border-radius: 2%;
                 margin: 0 1%;
@@ -484,46 +510,51 @@
 
             .community-card:nth-child(1) {
                 background-image: url('assets/cards/2_of_clubs.png');
+                aria-label: "Two of Clubs";
             }
 
             .community-card:nth-child(2) {
                 background-image: url('assets/cards/queen_of_diamonds.png');
+                aria-label: "Queen of Diamonds";
             }
 
             .community-card:nth-child(3) {
                 background-image: url('assets/cards/7_of_hearts.png');
+                aria-label: "Seven of Hearts";
             }
 
             .community-card:nth-child(4) {
                 background-image: url('assets/cards/10_of_spades.png');
+                aria-label: "Ten of Spades";
             }
 
             .community-card:nth-child(5) {
                 background-image: url('assets/cards/4_of_diamonds.png');
+                aria-label: "Four of Diamonds";
             }
 
             .dealer-button, .small-blind, .big-blind {
                 width: 9%;
                 height: 9%;
-                font-size: 11px;
-                min-width: 27px;
-                min-height: 27px;
+                font-size: 12px; /* Increased for readability */
+                min-width: 30px; /* Adjusted for font size */
+                min-height: 30px; /* Adjusted for font size */
             }
 
             .dealer-button-player1 {
-                bottom: calc(2% + (12% * 726 / 500) + 2%);
+                bottom: calc(2% + (14% * 726 / 500) + 2%);
                 left: 50%;
                 transform: translateX(-50%);
             }
 
             .small-blind-player2 {
-                left: calc(2% + (12% * 2 + 1.5%) + 2%);
+                left: calc(1% + (14% * 2 + 1.5%) + 2%);
                 top: 50%;
                 transform: translateY(-50%);
             }
 
             .big-blind-player3 {
-                top: calc(2% + (12% * 726 / 500) + 2%);
+                top: calc(2% + (14% * 726 / 500) + 2%);
                 left: 50%;
                 transform: translateX(-50%);
             }
