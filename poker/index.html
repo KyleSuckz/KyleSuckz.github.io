@@ -129,19 +129,19 @@
             transition: all 0.2s ease;
         }
 
-        .card-pair-player1 { bottom: 2%; left: 50%; transform: translateX(-50%); }
+        .card-pair-player1 { bottom: 0; left: 50%; transform: translateX(-50%); }
         .card-pair-player1 .card.card-player1-1 { background-image: url('assets/cards/ace_of_spades.png'); aria-label: "Ace of Spades"; }
         .card-pair-player1 .card.card-player1-2 { margin-left: 4px; background-image: url('assets/cards/king_of_hearts.png'); aria-label: "King of Hearts"; }
 
-        .card-pair-player2 { left: 2%; top: 50%; transform: translateY(-50%); }
+        .card-pair-player2 { left: 0; top: 50%; transform: translateY(-50%); }
         .card-pair-player2 .card.card-player2-1 { background-image: url('assets/cards/card_back.png'); aria-label: "Card Back"; }
         .card-pair-player2 .card.card-player2-2 { margin-left: 4px; background-image: url('assets/cards/card_back.png'); aria-label: "Card Back"; }
 
-        .card-pair-player3 { top: 2%; left: 50%; transform: translateX(-50%); }
+        .card-pair-player3 { top: 0; left: 50%; transform: translateX(-50%); }
         .card-pair-player3 .card.card-player3-1 { background-image: url('assets/cards/card_back.png'); aria-label: "Card Back"; }
         .card-pair-player3 .card.card-player3-2 { margin-left: 4px; background-image: url('assets/cards/card_back.png'); aria-label: "Card Back"; }
 
-        .card-pair-player4 { right: 2%; top: 50%; transform: translateY(-50%); }
+        .card-pair-player4 { right: 0; top: 50%; transform: translateY(-50%); }
         .card-pair-player4 .card.card-player4-1 { background-image: url('assets/cards/card_back.png'); aria-label: "Card Back"; }
         .card-pair-player4 .card.card-player4-2 { margin-left: 4px; background-image: url('assets/cards/card_back.png'); aria-label: "Card Back"; }
 
@@ -194,9 +194,9 @@
             z-index: -1;
         }
 
-        .dealer-button-player1 { bottom: calc(2% + (100px * 726 / 500) + 2px); left: 50%; transform: translateX(-50%); }
-        .small-blind-player2 { left: calc(2% + 240px + 2px); top: 50%; transform: translateY(-50%); }
-        .big-blind-player3 { top: calc(2% + (100px * 726 / 500) + 2px); left: 50%; transform: translateX(-50%); }
+        .dealer-button-player1 { bottom: calc(0 + (120px * 726 / 500) + 2px); left: 50%; transform: translateX(-50%); }
+        .small-blind-player2 { left: calc(0 + 240px + 2px); top: 50%; transform: translateY(-50%); }
+        .big-blind-player3 { top: calc(0 + (120px * 726 / 500) + 2px); left: 50%; transform: translateX(-50%); }
 
         /* Continuous scaling for all sizes */
         @media screen and (min-width: 0px) {
@@ -234,9 +234,9 @@
                 font-size: clamp(8px, 1vw, 16px);
             }
 
-            .dealer-button-player1 { bottom: calc(2% + clamp(116px, calc(8vw * 726 / 500), calc(120px * 726 / 500)) + 2px); }
-            .small-blind-player2 { left: calc(2% + clamp(160px, 16vw, 240px) + 2px); }
-            .big-blind-player3 { top: calc(2% + clamp(116px, calc(8vw * 726 / 500), calc(120px * 726 / 500)) + 2px); }
+            .dealer-button-player1 { bottom: calc(0 + clamp(116px, calc(8vw * 726 / 500), calc(120px * 726 / 500)) + 2px); }
+            .small-blind-player2 { left: calc(0 + clamp(160px, 16vw, 240px) + 2px); }
+            .big-blind-player3 { top: calc(0 + clamp(116px, calc(8vw * 726 / 500), calc(120px * 726 / 500)) + 2px); }
         }
 
         /* Fine-tune at specific breakpoints */
