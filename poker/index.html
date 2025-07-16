@@ -129,19 +129,19 @@
             transition: all 0.2s ease;
         }
 
-        .card-pair-player1 { bottom: 5px; left: 50%; transform: translateX(-50%); }
+        .card-pair-player1 { bottom: 0; left: 50%; transform: translateX(-50%); }
         .card-pair-player1 .card.card-player1-1 { background-image: url('assets/cards/ace_of_spades.png'); aria-label: "Ace of Spades"; }
         .card-pair-player1 .card.card-player1-2 { margin-left: 4px; background-image: url('assets/cards/king_of_hearts.png'); aria-label: "King of Hearts"; }
 
-        .card-pair-player2 { left: 5px; top: 50%; transform: translateY(-50%); }
+        .card-pair-player2 { left: 0; top: 50%; transform: translateY(-50%); }
         .card-pair-player2 .card.card-player2-1 { background-image: url('assets/cards/card_back.png'); aria-label: "Card Back"; }
         .card-pair-player2 .card.card-player2-2 { margin-left: 4px; background-image: url('assets/cards/card_back.png'); aria-label: "Card Back"; }
 
-        .card-pair-player3 { top: 5px; left: 50%; transform: translateX(-50%); }
+        .card-pair-player3 { top: 0; left: 50%; transform: translateX(-50%); }
         .card-pair-player3 .card.card-player3-1 { background-image: url('assets/cards/card_back.png'); aria-label: "Card Back"; }
         .card-pair-player3 .card.card-player3-2 { margin-left: 4px; background-image: url('assets/cards/card_back.png'); aria-label: "Card Back"; }
 
-        .card-pair-player4 { right: 5px; top: 50%; transform: translateY(-50%); }
+        .card-pair-player4 { right: 0; top: 50%; transform: translateY(-50%); }
         .card-pair-player4 .card.card-player4-1 { background-image: url('assets/cards/card_back.png'); aria-label: "Card Back"; }
         .card-pair-player4 .card.card-player4-2 { margin-left: 4px; background-image: url('assets/cards/card_back.png'); aria-label: "Card Back"; }
 
@@ -180,24 +180,6 @@
         .community-card:nth-child(4) { background-image: url('assets/cards/10_of_spades.png'); aria-label: "Ten of Spades"; }
         .community-card:nth-child(5) { background-image: url('assets/cards/4_of_diamonds.png'); aria-label: "Four of Diamonds"; }
 
-        .dealer-button, .small-blind, .big-blind {
-            position: absolute;
-            background: #ddd;
-            border: 1px solid #333;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #000;
-            font-size: 16px;
-            font-weight: bold;
-            z-index: 2; /* Above cards */
-        }
-
-        .dealer-button-player1 { top: calc(5px + clamp(116px, calc(8vw * 726 / 500), calc(120px * 726 / 500)) + 2px); left: 50%; transform: translateX(-50%); }
-        .small-blind-player2 { right: calc(5px + clamp(160px, 16vw, 240px) + 2px); top: 50%; transform: translateY(-50%); }
-        .big-blind-player3 { bottom: calc(5px + clamp(116px, calc(8vw * 726 / 500), calc(120px * 726 / 500)) + 2px); left: 50%; transform: translateX(-50%); }
-
         /* Continuous scaling for all sizes */
         @media screen and (min-width: 0px) {
             .card-pair {
@@ -227,16 +209,6 @@
                 height: clamp(116px, calc(8vw * 726 / 500), calc(120px * 726 / 500));
                 margin: 0 clamp(2px, 0.5vw, 4px);
             }
-
-            .dealer-button, .small-blind, .big-blind {
-                width: clamp(18px, 2vw, 36px);
-                height: clamp(18px, 2vw, 36px);
-                font-size: clamp(8px, 1vw, 16px);
-            }
-
-            .dealer-button-player1 { top: calc(5px + clamp(116px, calc(8vw * 726 / 500), calc(120px * 726 / 500)) + 2px); }
-            .small-blind-player2 { right: calc(5px + clamp(160px, 16vw, 240px) + 2px); }
-            .big-blind-player3 { bottom: calc(5px + clamp(116px, calc(8vw * 726 / 500), calc(120px * 726 / 500)) + 2px); }
         }
 
         /* Fine-tune at specific breakpoints */
@@ -305,9 +277,6 @@
                     <div class="card card-player4-1"></div>
                     <div class="card card-player4-2"></div>
                 </div>
-                <div class="dealer-button dealer-button-player1">D</div>
-                <div class="small-blind small-blind-player2">SB</div>
-                <div class="big-blind big-blind-player3">BB</div>
             </div>
             <div class="player player-human">You</div>
             <div class="player player-ai1">AI 1</div>
