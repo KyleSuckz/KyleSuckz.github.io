@@ -28,7 +28,7 @@
             margin: 0 5vw;
             position: relative;
             perspective: 1000px;
-            min-width: 300px; /* Prevent extreme narrowing */
+            min-width: 300px;
         }
 
         .table {
@@ -140,13 +140,12 @@
             width: 80px;
             height: calc(80px * 726 / 500);
             background: transparent;
-            background-color: #fff; /* Fallback color */
+            background-color: #fff;
             border-radius: 8px;
             z-index: 2;
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
-            aria-label: ""; /* Add specific card names if possible */
         }
 
         .card-pair-player1 {
@@ -170,7 +169,7 @@
         }
 
         .card-pair-player2 {
-            left: 1%; /* Adjusted for narrow screens */
+            left: 1%;
             top: 50%;
             transform: translateY(-50%);
             border: none;
@@ -210,7 +209,7 @@
         }
 
         .card-pair-player4 {
-            right: 1%; /* Adjusted for narrow screens */
+            right: 1%;
             top: 50%;
             transform: translateY(-50%);
             border: none;
@@ -238,7 +237,7 @@
             transform: translate(-50%, -50%);
             background: rgba(0, 0, 0, 0.2);
             border: 1px solid #1a1a1a;
-            border-radius: 28px; /* Scaled with size increase */
+            border-radius: 28px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -249,7 +248,7 @@
             width: 80px;
             height: calc(80px * 726 / 500);
             background: transparent;
-            background-color: #fff; /* Fallback color */
+            background-color: #fff;
             border: none;
             border-radius: 8px;
             margin: 0 4px;
@@ -257,7 +256,6 @@
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
-            aria-label: ""; /* Add specific card names if possible */
         }
 
         .community-card:nth-child(1) {
@@ -296,7 +294,7 @@
             justify-content: center;
             align-items: center;
             color: #000;
-            font-size: 16px; /* Increased for readability */
+            font-size: 16px;
             font-weight: bold;
             z-index: 3;
         }
@@ -308,7 +306,7 @@
         }
 
         .small-blind-player2 {
-            left: calc(1% + 164px + 5px); /* Adjusted for new card size */
+            left: calc(1% + 164px + 5px);
             top: 50%;
             transform: translateY(-50%);
         }
@@ -497,7 +495,7 @@
             .community-cards {
                 width: calc(14% * 5 + 1% * 4);
                 height: calc(14% * 726 / 500);
-                border-radius: 7%; /* Scaled with size increase */
+                border-radius: 7%;
             }
 
             .community-card {
@@ -536,9 +534,9 @@
             .dealer-button, .small-blind, .big-blind {
                 width: 9%;
                 height: 9%;
-                font-size: 12px; /* Increased for readability */
-                min-width: 30px; /* Adjusted for font size */
-                min-height: 30px; /* Adjusted for font size */
+                font-size: 12px;
+                min-width: 30px;
+                min-height: 30px;
             }
 
             .dealer-button-player1 {
@@ -557,6 +555,28 @@
                 top: calc(2% + (14% * 726 / 500) + 2%);
                 left: 50%;
                 transform: translateX(-50%);
+            }
+        }
+
+        @media (max-width: 300px) {
+            .table-container {
+                margin: 0 2vw;
+            }
+            .card {
+                width: 12%;
+                height: calc(12% * 726 / 500);
+            }
+            .card-pair {
+                width: calc(12% * 2 + 1.5%);
+                height: calc(12% * 726 / 500);
+            }
+            .community-cards {
+                width: calc(12% * 5 + 1% * 4);
+                height: calc(12% * 726 / 500);
+            }
+            .community-card {
+                width: 12%;
+                height: calc(12% * 726 / 500);
             }
         }
 
@@ -581,11 +601,7 @@
         <div class="table">
             <div class="table-felt">
                 <div class="community-cards">
-                    <div class="community-card"></div>
-                    <div class="community-card"></div>
-                    <div class="community-card"></div>
-                    <div class="community-card"></div>
-                    <div class="community-card"></div>
+                    <!-- Community cards styled via CSS nth-child -->
                 </div>
                 <div class="card-pair card-pair-player1">
                     <div class="card card-player1-1"></div>
