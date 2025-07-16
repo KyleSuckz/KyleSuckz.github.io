@@ -35,7 +35,7 @@
             height: 100%;
             background: 
                 linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.3)),
-                radial-gradient(circle at 50% 20%, #2a6041, #1e4d2b);
+                radial-gradient(circle at 50% 20%, #254b33, #1e4d2b);
             border: 20px solid transparent;
             border-radius: 150px;
             position: relative;
@@ -125,8 +125,17 @@
             transform: translateY(-50%);
         }
 
-        .card {
+        .card-pair {
             position: absolute;
+            width: 116px;
+            height: 86px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .card {
             width: 56px;
             height: 86px;
             background: #333;
@@ -134,55 +143,67 @@
             z-index: 2;
         }
 
-        .table-felt .card.card-player1-1 {
+        .card-pair-player1 {
             bottom: 2%;
-            left: 45%;
+            left: 50%;
+            transform: translateX(-50%);
             border: 2px solid red;
         }
 
-        .table-felt .card.card-player1-2 {
-            bottom: 2%;
-            left: 55%;
+        .card-pair-player1 .card.card-player1-1 {
             border: 2px solid red;
         }
 
-        .table-felt .card.card-player2-1 {
-            left: -5%;
+        .card-pair-player1 .card.card-player1-2 {
+            margin-left: 4px;
+            border: 2px solid red;
+        }
+
+        .card-pair-player2 {
+            left: 2%;
             top: 50%;
             transform: translateY(-50%);
             border: 2px solid blue;
         }
 
-        .table-felt .card.card-player2-2 {
-            left: 5%;
-            top: 50%;
-            transform: translateY(-50%);
+        .card-pair-player2 .card.card-player2-1 {
             border: 2px solid blue;
         }
 
-        .table-felt .card.card-player3-1 {
+        .card-pair-player2 .card.card-player2-2 {
+            margin-left: 4px;
+            border: 2px solid blue;
+        }
+
+        .card-pair-player3 {
             top: 2%;
-            left: 48%;
+            left: 50%;
+            transform: translateX(-50%);
             border: 2px solid green;
         }
 
-        .table-felt .card.card-player3-2 {
-            top: 2%;
-            left: 58%;
+        .card-pair-player3 .card.card-player3-1 {
             border: 2px solid green;
         }
 
-        .table-felt .card.card-player4-1 {
+        .card-pair-player3 .card.card-player3-2 {
+            margin-left: 4px;
+            border: 2px solid green;
+        }
+
+        .card-pair-player4 {
             right: 2%;
             top: 50%;
             transform: translateY(-50%);
             border: 2px solid yellow;
         }
 
-        .table-felt .card.card-player4-2 {
-            right: 12%;
-            top: 50%;
-            transform: translateY(-50%);
+        .card-pair-player4 .card.card-player4-1 {
+            border: 2px solid yellow;
+        }
+
+        .card-pair-player4 .card.card-player4-2 {
+            margin-left: 4px;
             border: 2px solid yellow;
         }
 
@@ -284,61 +305,78 @@
                 right: -12px;
             }
 
+            .card-pair {
+                width: 76px;
+                height: 56px;
+            }
+
             .card {
                 width: 36px;
                 height: 56px;
                 border-radius: 6px;
             }
 
-            .table-felt .card.card-player1-1 {
+            .card-pair-player1 {
                 bottom: 2%;
-                left: 45%;
+                left: 50%;
+                transform: translateX(-50%);
                 border: 2px solid red;
             }
 
-            .table-felt .card.card-player1-2 {
-                bottom: 2%;
-                left: 55%;
+            .card-pair-player1 .card.card-player1-1 {
                 border: 2px solid red;
             }
 
-            .table-felt .card.card-player2-1 {
-                left: -5%;
+            .card-pair-player1 .card.card-player1-2 {
+                margin-left: 4px;
+                border: 2px solid red;
+            }
+
+            .card-pair-player2 {
+                left: 2%;
                 top: 50%;
                 transform: translateY(-50%);
                 border: 2px solid blue;
             }
 
-            .table-felt .card.card-player2-2 {
-                left: 5%;
-                top: 50%;
-                transform: translateY(-50%);
+            .card-pair-player2 .card.card-player2-1 {
                 border: 2px solid blue;
             }
 
-            .table-felt .card.card-player3-1 {
+            .card-pair-player2 .card.card-player2-2 {
+                margin-left: 4px;
+                border: 2px solid blue;
+            }
+
+            .card-pair-player3 {
                 top: 2%;
-                left: 48%;
+                left: 50%;
+                transform: translateX(-50%);
                 border: 2px solid green;
             }
 
-            .table-felt .card.card-player3-2 {
-                top: 2%;
-                left: 58%;
+            .card-pair-player3 .card.card-player3-1 {
                 border: 2px solid green;
             }
 
-            .table-felt .card.card-player4-1 {
+            .card-pair-player3 .card.card-player3-2 {
+                margin-left: 4px;
+                border: 2px solid green;
+            }
+
+            .card-pair-player4 {
                 right: 2%;
                 top: 50%;
                 transform: translateY(-50%);
                 border: 2px solid yellow;
             }
 
-            .table-felt .card.card-player4-2 {
-                right: 12%;
-                top: 50%;
-                transform: translateY(-50%);
+            .card-pair-player4 .card.card-player4-1 {
+                border: 2px solid yellow;
+            }
+
+            .card-pair-player4 .card.card-player4-2 {
+                margin-left: 4px;
                 border: 2px solid yellow;
             }
 
@@ -391,14 +429,22 @@
                     <div class="community-card"></div>
                     <div class="community-card"></div>
                 </div>
-                <div class="card card-player1-1"></div>
-                <div class="card card-player1-2"></div>
-                <div class="card card-player2-1"></div>
-                <div class="card card-player2-2"></div>
-                <div class="card card-player3-1"></div>
-                <div class="card card-player3-2"></div>
-                <div class="card card-player4-1"></div>
-                <div class="card card-player4-2"></div>
+                <div class="card-pair card-pair-player1">
+                    <div class="card card-player1-1"></div>
+                    <div class="card card-player1-2"></div>
+                </div>
+                <div class="card-pair card-pair-player2">
+                    <div class="card card-player2-1"></div>
+                    <div class="card card-player2-2"></div>
+                </div>
+                <div class="card-pair card-pair-player3">
+                    <div class="card card-player3-1"></div>
+                    <div class="card card-player3-2"></div>
+                </div>
+                <div class="card-pair card-pair-player4">
+                    <div class="card card-player4-1"></div>
+                    <div class="card card-player4-2"></div>
+                </div>
                 <div class="dealer-button">D</div>
             </div>
             <div class="player player-human">You</div>
