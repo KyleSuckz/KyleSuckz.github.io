@@ -251,6 +251,32 @@
             left: 55%;
         }
 
+        @media (min-width: 601px) {
+            .card-pair {
+                width: 116px;
+                height: 86px;
+            }
+
+            .card {
+                width: 56px;
+                height: 86px;
+                border-radius: 8px;
+            }
+
+            .community-cards {
+                width: 50%;
+                height: 15%;
+                border-radius: 20px;
+            }
+
+            .community-card {
+                width: 56px;
+                height: 86px;
+                border-radius: 8px;
+                margin: 0 4px;
+            }
+        }
+
         @media (max-width: 600px) {
             .table-container {
                 width: calc(min(50vh, 50vw) * 2);
@@ -306,14 +332,16 @@
             }
 
             .card-pair {
-                width: 52px;
-                height: 34px;
+                width: calc(8% * 2 + 1.33%);
+                height: 24%;
             }
 
             .card {
-                width: 24px;
-                height: 34px;
-                border-radius: 6px;
+                width: 8%;
+                height: 24%;
+                border-radius: 2%;
+                min-width: 20px;
+                min-height: 28px;
             }
 
             .card-pair-player1 {
@@ -328,7 +356,7 @@
             }
 
             .card-pair-player1 .card.card-player1-2 {
-                margin-left: 4px;
+                margin-left: 1.33%;
                 border: none;
             }
 
@@ -344,7 +372,7 @@
             }
 
             .card-pair-player2 .card.card-player2-2 {
-                margin-left: 4px;
+                margin-left: 1.33%;
                 border: none;
             }
 
@@ -360,7 +388,7 @@
             }
 
             .card-pair-player3 .card.card-player3-2 {
-                margin-left: 4px;
+                margin-left: 1.33%;
                 border: none;
             }
 
@@ -376,121 +404,34 @@
             }
 
             .card-pair-player4 .card.card-player4-2 {
-                margin-left: 4px;
+                margin-left: 1.33%;
                 border: none;
             }
 
             .community-cards {
-                width: 45%;
-                height: 12%;
-                border-radius: 15px;
+                width: calc(8% * 5 + 1% * 4);
+                height: 24%;
+                border-radius: 5%;
             }
 
             .community-card {
-                width: 24px;
-                height: 34px;
+                width: 8%;
+                height: 24%;
                 border: none;
-                border-radius: 6px;
-                margin: 0 3px;
+                border-radius: 2%;
+                margin: 0 1%;
+                min-width: 20px;
+                min-height: 28px;
             }
 
             .dealer-button {
-                width: 30px;
-                height: 30px;
+                width: 10%;
+                height: 10%;
                 font-size: 12px;
                 bottom: 15%;
                 left: 56%;
-            }
-        }
-
-        @media (max-width: 600px) and (orientation: landscape) {
-            .card-pair {
-                width: 44px;
-                height: 28px;
-            }
-
-            .card {
-                width: 20px;
-                height: 28px;
-                border-radius: 5px;
-            }
-
-            .card-pair-player1 {
-                bottom: 2%;
-                left: 50%;
-                transform: translateX(-50%);
-                border: none;
-            }
-
-            .card-pair-player1 .card.card-player1-1 {
-                border: none;
-            }
-
-            .card-pair-player1 .card.card-player1-2 {
-                margin-left: 4px;
-                border: none;
-            }
-
-            .card-pair-player2 {
-                left: 2%;
-                top: 50%;
-                transform: translateY(-50%);
-                border: none;
-            }
-
-            .card-pair-player2 .card.card-player2-1 {
-                border: none;
-            }
-
-            .card-pair-player2 .card.card-player2-2 {
-                margin-left: 4px;
-                border: none;
-            }
-
-            .card-pair-player3 {
-                top: 2%;
-                left: 50%;
-                transform: translateX(-50%);
-                border: none;
-            }
-
-            .card-pair-player3 .card.card-player3-1 {
-                border: none;
-            }
-
-            .card-pair-player3 .card.card-player3-2 {
-                margin-left: 4px;
-                border: none;
-            }
-
-            .card-pair-player4 {
-                right: 2%;
-                top: 50%;
-                transform: translateY(-50%);
-                border: none;
-            }
-
-            .card-pair-player4 .card.card-player4-1 {
-                border: none;
-            }
-
-            .card-pair-player4 .card.card-player4-2 {
-                margin-left: 4px;
-                border: none;
-            }
-
-            .community-cards {
-                width: 40%;
-                height: 12%;
-                border-radius: 15px;
-            }
-
-            .community-card {
-                width: 20px;
-                height: 28px;
-                border: none;
-                border-radius: 5px;
-                margin: 0 3px;
+                min-width: 30px;
+                min-height: 30px;
             }
         }
 
