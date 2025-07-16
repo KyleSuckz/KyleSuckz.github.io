@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Texas Hold'em Table</title>
     <style>
+        :root {
+            --card-width-pc: 80px;
+            --card-height-pc: calc(var(--card-width-pc) * 726 / 500);
+            --card-width-mobile: 16%;
+            --card-height-mobile: calc(var(--card-width-mobile) * 726 / 500);
+            --border-radius-pc: 150px;
+            --border-radius-mobile: 90px;
+            --shadow-color: rgba(0, 0, 0, 0.8);
+            --inset-shadow: rgba(255, 255, 255, 0.2);
+        }
+
         * {
             box-sizing: border-box;
         }
@@ -34,36 +45,27 @@
         .table {
             width: 100%;
             height: 100%;
-            background: 
-                linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.3)),
-                radial-gradient(circle at 50% 20%, #254b33, #1e4d2b);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.3)), radial-gradient(circle at 50% 20%, #254b33, #1e4d2b);
             border: 20px solid transparent;
-            border-radius: 150px;
+            border-radius: var(--border-radius-pc);
             position: relative;
-            box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.8),
-                inset 0 0 20px rgba(255, 255, 255, 0.2),
-                inset 0 0 25px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 15px 30px var(--shadow-color), inset 0 0 15px var(--inset-shadow), inset 0 0 20px rgba(0, 0, 0, 0.5);
             transform: rotateX(3deg);
         }
 
         .table-felt {
             width: 94%;
             height: 88%;
-            background: 
-                url('assets/table_felt.jpg'),
-                #2a6041;
+            background: url('assets/table_felt.jpg'), #2a6041;
             background-size: cover;
             background-position: center;
             border: 5px solid #1a1a1a;
-            border-radius: 140px;
+            border-radius: calc(var(--border-radius-pc) - 10px);
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            box-shadow: 
-                inset 0 0 10px rgba(0, 0, 0, 0.7),
-                0 0 20px rgba(255, 255, 255, 0.15);
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.7), 0 0 15px rgba(255, 255, 255, 0.1);
             overflow: visible;
         }
 
@@ -75,20 +77,14 @@
             right: -20px;
             bottom: -20px;
             border: 20px solid transparent;
-            border-radius: 150px;
-            background: 
-                linear-gradient(45deg, #151515, #252525),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
-            box-shadow: 
-                inset 0 0 12px rgba(255, 255, 255, 0.25),
-                0 0 15px rgba(0, 0, 0, 0.5);
+            border-radius: var(--border-radius-pc);
+            background: linear-gradient(45deg, #151515, #252525), linear-gradient(90deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.2), 0 0 10px var(--shadow-color);
             z-index: -1;
         }
 
         .player {
             position: absolute;
-            width: auto;
-            height: auto;
             padding: 5px 10px;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid #4a4a4a;
@@ -102,34 +98,15 @@
             z-index: 4;
         }
 
-        .player-human {
-            bottom: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .player-ai1 {
-            left: -20px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .player-ai2 {
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .player-ai3 {
-            right: -20px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
+        .player-human { bottom: -20px; left: 50%; transform: translateX(-50%); }
+        .player-ai1 { left: -20px; top: 50%; transform: translateY(-50%); }
+        .player-ai2 { top: -20px; left: 50%; transform: translateX(-50%); }
+        .player-ai3 { right: -20px; top: 50%; transform: translateY(-50%); }
 
         .card-pair {
             position: absolute;
-            width: 164px;
-            height: calc(80px * 726 / 500);
+            width: calc(var(--card-width-pc) * 2 + 4px);
+            height: var(--card-height-pc);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -137,8 +114,8 @@
         }
 
         .card {
-            width: 80px;
-            height: calc(80px * 726 / 500);
+            width: var(--card-width-pc);
+            height: var(--card-height-pc);
             background: transparent;
             background-color: #fff;
             border-radius: 8px;
@@ -148,96 +125,32 @@
             background-position: center;
         }
 
-        .card-pair-player1 {
-            bottom: 2%;
-            left: 50%;
-            transform: translateX(-50%);
-            border: none;
-        }
+        .card-pair-player1 { bottom: 2%; left: 50%; transform: translateX(-50%); border: none; }
+        .card-pair-player1 .card.card-player1-1 { border: none; background-image: url('assets/cards/ace_of_spades.png'); aria-label: "Ace of Spades"; }
+        .card-pair-player1 .card.card-player1-2 { margin-left: 4px; border: none; background-image: url('assets/cards/king_of_hearts.png'); aria-label: "King of Hearts"; }
 
-        .card-pair-player1 .card.card-player1-1 {
-            border: none;
-            background-image: url('assets/cards/ace_of_spades.png');
-            aria-label: "Ace of Spades";
-        }
+        .card-pair-player2 { left: 1%; top: 50%; transform: translateY(-50%); border: none; }
+        .card-pair-player2 .card.card-player2-1 { border: none; background-image: url('assets/cards/card_back.png'); aria-label: "Card Back"; }
+        .card-pair-player2 .card.card-player2-2 { margin-left: 4px; border: none; background-image: url('assets/cards/card_back.png'); aria-label: "Card Back"; }
 
-        .card-pair-player1 .card.card-player1-2 {
-            margin-left: 4px;
-            border: none;
-            background-image: url('assets/cards/king_of_hearts.png');
-            aria-label: "King of Hearts";
-        }
+        .card-pair-player3 { top: 2%; left: 50%; transform: translateX(-50%); border: none; }
+        .card-pair-player3 .card.card-player3-1 { border: none; background-image: url('assets/cards/card_back.png'); aria-label: "Card Back"; }
+        .card-pair-player3 .card.card-player3-2 { margin-left: 4px; border: none; background-image: url('assets/cards/card_back.png'); aria-label: "Card Back"; }
 
-        .card-pair-player2 {
-            left: 1%;
-            top: 50%;
-            transform: translateY(-50%);
-            border: none;
-        }
-
-        .card-pair-player2 .card.card-player2-1 {
-            border: none;
-            background-image: url('assets/cards/card_back.png');
-            aria-label: "Card Back";
-        }
-
-        .card-pair-player2 .card.card-player2-2 {
-            margin-left: 4px;
-            border: none;
-            background-image: url('assets/cards/card_back.png');
-            aria-label: "Card Back";
-        }
-
-        .card-pair-player3 {
-            top: 2%;
-            left: 50%;
-            transform: translateX(-50%);
-            border: none;
-        }
-
-        .card-pair-player3 .card.card-player3-1 {
-            border: none;
-            background-image: url('assets/cards/card_back.png');
-            aria-label: "Card Back";
-        }
-
-        .card-pair-player3 .card.card-player3-2 {
-            margin-left: 4px;
-            border: none;
-            background-image: url('assets/cards/card_back.png');
-            aria-label: "Card Back";
-        }
-
-        .card-pair-player4 {
-            right: 1%;
-            top: 50%;
-            transform: translateY(-50%);
-            border: none;
-        }
-
-        .card-pair-player4 .card.card-player4-1 {
-            border: none;
-            background-image: url('assets/cards/card_back.png');
-            aria-label: "Card Back";
-        }
-
-        .card-pair-player4 .card.card-player4-2 {
-            margin-left: 4px;
-            border: none;
-            background-image: url('assets/cards/card_back.png');
-            aria-label: "Card Back";
-        }
+        .card-pair-player4 { right: 1%; top: 50%; transform: translateY(-50%); border: none; }
+        .card-pair-player4 .card.card-player4-1 { border: none; background-image: url('assets/cards/card_back.png'); aria-label: "Card Back"; }
+        .card-pair-player4 .card.card-player4-2 { margin-left: 4px; border: none; background-image: url('assets/cards/card_back.png'); aria-label: "Card Back"; }
 
         .community-cards {
             position: absolute;
-            width: calc(80px * 5 + 4px * 4);
-            height: calc(80px * 726 / 500);
+            width: calc(var(--card-width-pc) * 5 + 4px * 4);
+            height: var(--card-height-pc);
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.15);
             border: 1px solid #1a1a1a;
-            border-radius: 28px;
+            border-radius: calc(var(--border-radius-pc) / 5.36);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -245,8 +158,8 @@
         }
 
         .community-card {
-            width: 80px;
-            height: calc(80px * 726 / 500);
+            width: var(--card-width-pc);
+            height: var(--card-height-pc);
             background: transparent;
             background-color: #fff;
             border: none;
@@ -258,30 +171,11 @@
             background-position: center;
         }
 
-        .community-card:nth-child(1) {
-            background-image: url('assets/cards/2_of_clubs.png');
-            aria-label: "Two of Clubs";
-        }
-
-        .community-card:nth-child(2) {
-            background-image: url('assets/cards/queen_of_diamonds.png');
-            aria-label: "Queen of Diamonds";
-        }
-
-        .community-card:nth-child(3) {
-            background-image: url('assets/cards/7_of_hearts.png');
-            aria-label: "Seven of Hearts";
-        }
-
-        .community-card:nth-child(4) {
-            background-image: url('assets/cards/10_of_spades.png');
-            aria-label: "Ten of Spades";
-        }
-
-        .community-card:nth-child(5) {
-            background-image: url('assets/cards/4_of_diamonds.png');
-            aria-label: "Four of Diamonds";
-        }
+        .community-card:nth-child(1) { background-image: url('assets/cards/2_of_clubs.png'); aria-label: "Two of Clubs"; }
+        .community-card:nth-child(2) { background-image: url('assets/cards/queen_of_diamonds.png'); aria-label: "Queen of Diamonds"; }
+        .community-card:nth-child(3) { background-image: url('assets/cards/7_of_hearts.png'); aria-label: "Seven of Hearts"; }
+        .community-card:nth-child(4) { background-image: url('assets/cards/10_of_spades.png'); aria-label: "Ten of Spades"; }
+        .community-card:nth-child(5) { background-image: url('assets/cards/4_of_diamonds.png'); aria-label: "Four of Diamonds"; }
 
         .dealer-button, .small-blind, .big-blind {
             position: absolute;
@@ -297,302 +191,57 @@
             font-size: 16px;
             font-weight: bold;
             z-index: 3;
+            outline: 2px solid transparent; /* For future focus states */
+            outline-offset: 2px;
         }
 
-        .dealer-button-player1 {
-            bottom: calc(2% + (80px * 726 / 500) + 5px);
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .small-blind-player2 {
-            left: calc(1% + 164px + 5px);
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .big-blind-player3 {
-            top: calc(2% + (80px * 726 / 500) + 5px);
-            left: 50%;
-            transform: translateX(-50%);
-        }
+        .dealer-button-player1 { bottom: calc(2% + var(--card-height-pc) + 5px); left: 50%; transform: translateX(-50%); }
+        .small-blind-player2 { left: calc(1% + calc(var(--card-width-pc) * 2 + 4px) + 5px); top: 50%; transform: translateY(-50%); }
+        .big-blind-player3 { top: calc(2% + var(--card-height-pc) + 5px); left: 50%; transform: translateX(-50%); }
 
         @media (min-width: 601px) {
-            .card-pair {
-                width: 164px;
-                height: calc(80px * 726 / 500);
-            }
-
-            .card {
-                width: 80px;
-                height: calc(80px * 726 / 500);
-                border-radius: 8px;
-            }
-
-            .community-cards {
-                width: calc(80px * 5 + 4px * 4);
-                height: calc(80px * 726 / 500);
-                border-radius: 28px;
-            }
-
-            .community-card {
-                width: 80px;
-                height: calc(80px * 726 / 500);
-                border-radius: 8px;
-                margin: 0 4px;
-            }
+            .card-pair { width: calc(var(--card-width-pc) * 2 + 4px); height: var(--card-height-pc); }
+            .card { width: var(--card-width-pc); height: var(--card-height-pc); border-radius: 8px; }
+            .community-cards { width: calc(var(--card-width-pc) * 5 + 4px * 4); height: var(--card-height-pc); border-radius: calc(var(--border-radius-pc) / 5.36); }
+            .community-card { width: var(--card-width-pc); height: var(--card-height-pc); border-radius: 8px; margin: 0 4px; }
         }
 
         @media (max-width: 600px) {
-            .table-container {
-                width: calc(min(50vh, 50vw) * 2);
-                height: calc(min(50vh, 50vw) + 120px);
-                max-height: calc(min(70vh, 50vw) + 120px);
-                aspect-ratio: 2 / 1;
-                margin: 0 5vw;
-            }
-
-            .table {
-                border: 12px solid transparent;
-                border-radius: 90px;
-                box-shadow: 
-                    0 12px 25px rgba(0, 0, 0, 0.8),
-                    inset 0 0 12px rgba(255, 255, 255, 0.2),
-                    inset 0 0 18px rgba(0, 0, 0, 0.6);
-            }
-
-            .table-felt {
-                border: 3px solid #1a1a1a;
-                border-radius: 80px;
-                background-size: cover;
-            }
-
-            .table::before {
-                top: -12px;
-                left: -12px;
-                right: -12px;
-                bottom: -12px;
-                border: 12px solid transparent;
-                border-radius: 90px;
-                box-shadow: 
-                    inset 0 0 6px rgba(255, 255, 255, 0.2),
-                    0 0 8px rgba(0, 0, 0, 0.5);
-            }
-
-            .player {
-                padding: 4px 8px;
-                font-size: 12px;
-                border-radius: 12px;
-            }
-
-            .player-human {
-                bottom: -12px;
-            }
-
-            .player-ai1 {
-                left: -12px;
-            }
-
-            .player-ai2 {
-                top: -12px;
-            }
-
-            .player-ai3 {
-                right: -12px;
-            }
-
-            .card-pair {
-                width: calc(14% * 2 + 1.5%);
-                height: calc(14% * 726 / 500);
-            }
-
-            .card {
-                width: 14%;
-                height: calc(14% * 726 / 500);
-                border-radius: 2%;
-            }
-
-            .card-pair-player1 {
-                bottom: 2%;
-                left: 50%;
-                transform: translateX(-50%);
-                border: none;
-            }
-
-            .card-pair-player1 .card.card-player1-1 {
-                border: none;
-                background-image: url('assets/cards/ace_of_spades.png');
-                aria-label: "Ace of Spades";
-            }
-
-            .card-pair-player1 .card.card-player1-2 {
-                margin-left: 1.5%;
-                border: none;
-                background-image: url('assets/cards/king_of_hearts.png');
-                aria-label: "King of Hearts";
-            }
-
-            .card-pair-player2 {
-                left: 1%;
-                top: 50%;
-                transform: translateY(-50%);
-                border: none;
-            }
-
-            .card-pair-player2 .card.card-player2-1 {
-                border: none;
-                background-image: url('assets/cards/card_back.png');
-                aria-label: "Card Back";
-            }
-
-            .card-pair-player2 .card.card-player2-2 {
-                margin-left: 1.5%;
-                border: none;
-                background-image: url('assets/cards/card_back.png');
-                aria-label: "Card Back";
-            }
-
-            .card-pair-player3 {
-                top: 2%;
-                left: 50%;
-                transform: translateX(-50%);
-                border: none;
-            }
-
-            .card-pair-player3 .card.card-player3-1 {
-                border: none;
-                background-image: url('assets/cards/card_back.png');
-                aria-label: "Card Back";
-            }
-
-            .card-pair-player3 .card.card-player3-2 {
-                margin-left: 1.5%;
-                border: none;
-                background-image: url('assets/cards/card_back.png');
-                aria-label: "Card Back";
-            }
-
-            .card-pair-player4 {
-                right: 1%;
-                top: 50%;
-                transform: translateY(-50%);
-                border: none;
-            }
-
-            .card-pair-player4 .card.card-player4-1 {
-                border: none;
-                background-image: url('assets/cards/card_back.png');
-                aria-label: "Card Back";
-            }
-
-            .card-pair-player4 .card.card-player4-2 {
-                margin-left: 1.5%;
-                border: none;
-                background-image: url('assets/cards/card_back.png');
-                aria-label: "Card Back";
-            }
-
-            .community-cards {
-                width: calc(14% * 5 + 1% * 4);
-                height: calc(14% * 726 / 500);
-                border-radius: 7%;
-            }
-
-            .community-card {
-                width: 14%;
-                height: calc(14% * 726 / 500);
-                border: none;
-                border-radius: 2%;
-                margin: 0 1%;
-            }
-
-            .community-card:nth-child(1) {
-                background-image: url('assets/cards/2_of_clubs.png');
-                aria-label: "Two of Clubs";
-            }
-
-            .community-card:nth-child(2) {
-                background-image: url('assets/cards/queen_of_diamonds.png');
-                aria-label: "Queen of Diamonds";
-            }
-
-            .community-card:nth-child(3) {
-                background-image: url('assets/cards/7_of_hearts.png');
-                aria-label: "Seven of Hearts";
-            }
-
-            .community-card:nth-child(4) {
-                background-image: url('assets/cards/10_of_spades.png');
-                aria-label: "Ten of Spades";
-            }
-
-            .community-card:nth-child(5) {
-                background-image: url('assets/cards/4_of_diamonds.png');
-                aria-label: "Four of Diamonds";
-            }
-
-            .dealer-button, .small-blind, .big-blind {
-                width: 9%;
-                height: 9%;
-                font-size: 12px;
-                min-width: 30px;
-                min-height: 30px;
-            }
-
-            .dealer-button-player1 {
-                bottom: calc(2% + (14% * 726 / 500) + 2%);
-                left: 50%;
-                transform: translateX(-50%);
-            }
-
-            .small-blind-player2 {
-                left: calc(1% + (14% * 2 + 1.5%) + 2%);
-                top: 50%;
-                transform: translateY(-50%);
-            }
-
-            .big-blind-player3 {
-                top: calc(2% + (14% * 726 / 500) + 2%);
-                left: 50%;
-                transform: translateX(-50%);
-            }
+            .table-container { width: calc(min(50vh, 50vw) * 2); height: calc(min(50vh, 50vw) + 120px); max-height: calc(min(70vh, 50vw) + 120px); aspect-ratio: 2 / 1; margin: 0 5vw; }
+            .table { border: 12px solid transparent; border-radius: var(--border-radius-mobile); box-shadow: 0 10px 20px var(--shadow-color), inset 0 0 10px var(--inset-shadow), inset 0 0 15px rgba(0, 0, 0, 0.5); }
+            .table-felt { border: 3px solid #1a1a1a; border-radius: calc(var(--border-radius-mobile) - 10px); background-size: cover; }
+            .table::before { top: -12px; left: -12px; right: -12px; bottom: -12px; border: 12px solid transparent; border-radius: var(--border-radius-mobile); box-shadow: inset 0 0 5px var(--inset-shadow), 0 0 8px var(--shadow-color); }
+            .player { padding: 4px 8px; font-size: 12px; border-radius: 12px; }
+            .player-human { bottom: -12px; }
+            .player-ai1 { left: -12px; }
+            .player-ai2 { top: -12px; }
+            .player-ai3 { right: -12px; }
+            .card-pair { width: calc(var(--card-width-mobile) * 2 + 1.5%); height: var(--card-height-mobile); }
+            .card { width: var(--card-width-mobile); height: var(--card-height-mobile); border-radius: 2%; }
+            .card-pair-player1 { bottom: 2%; left: 50%; transform: translateX(-50%); }
+            .card-pair-player2 { left: 1%; top: 50%; transform: translateY(-50%); }
+            .card-pair-player3 { top: 2%; left: 50%; transform: translateX(-50%); }
+            .card-pair-player4 { right: 1%; top: 50%; transform: translateY(-50%); }
+            .community-cards { width: calc(var(--card-width-mobile) * 5 + 1% * 4); height: var(--card-height-mobile); border-radius: calc(var(--border-radius-mobile) / 12.86); }
+            .community-card { width: var(--card-width-mobile); height: var(--card-height-mobile); border-radius: 2%; margin: 0 1%; }
+            .dealer-button, .small-blind, .big-blind { width: 9%; height: 9%; font-size: 12px; min-width: 30px; min-height: 30px; }
+            .dealer-button-player1 { bottom: calc(2% + var(--card-height-mobile) + 2%); }
+            .small-blind-player2 { left: calc(1% + calc(var(--card-width-mobile) * 2 + 1.5%) + 2%); }
+            .big-blind-player3 { top: calc(2% + var(--card-height-mobile) + 2%); }
         }
 
         @media (max-width: 300px) {
-            .table-container {
-                margin: 0 2vw;
-            }
-            .card {
-                width: 12%;
-                height: calc(12% * 726 / 500);
-            }
-            .card-pair {
-                width: calc(12% * 2 + 1.5%);
-                height: calc(12% * 726 / 500);
-            }
-            .community-cards {
-                width: calc(12% * 5 + 1% * 4);
-                height: calc(12% * 726 / 500);
-            }
-            .community-card {
-                width: 12%;
-                height: calc(12% * 726 / 500);
-            }
+            .table-container { margin: 0 2vw; }
+            --card-width-mobile: 12%;
+            .card { width: var(--card-width-mobile); height: var(--card-height-mobile); }
+            .card-pair { width: calc(var(--card-width-mobile) * 2 + 1.5%); height: var(--card-height-mobile); }
+            .community-cards { width: calc(var(--card-width-mobile) * 5 + 1% * 4); height: var(--card-height-mobile); }
+            .community-card { width: var(--card-width-mobile); height: var(--card-height-mobile); }
         }
 
         @media (min-resolution: 2dppx) {
-            .table, .table-felt, .table::before {
-                border-radius: calc(150px * 2);
-            }
-
-            @media (max-width: 600px) {
-                .table, .table::before {
-                    border-radius: calc(90px * 2);
-                }
-                .table-felt {
-                    border-radius: calc(80px * 2);
-                }
-            }
+            .table, .table-felt, .table::before { border-radius: calc(var(--border-radius-pc) * 2); }
+            @media (max-width: 600px) { .table, .table::before { border-radius: calc(var(--border-radius-mobile) * 2); } .table-felt { border-radius: calc(var(--border-radius-mobile) * 2 - 20px); } }
         }
     </style>
 </head>
@@ -601,7 +250,11 @@
         <div class="table">
             <div class="table-felt">
                 <div class="community-cards">
-                    <!-- Community cards styled via CSS nth-child -->
+                    <div class="community-card"></div>
+                    <div class="community-card"></div>
+                    <div class="community-card"></div>
+                    <div class="community-card"></div>
+                    <div class="community-card"></div>
                 </div>
                 <div class="card-pair card-pair-player1">
                     <div class="card card-player1-1"></div>
