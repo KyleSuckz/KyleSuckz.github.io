@@ -117,11 +117,11 @@
         }
 
         .card {
-            padding: 4px; /* Enlarge box to fit images fully */
+            padding: 4px;
             background: transparent;
             background-color: #fff;
             border-radius: 8px;
-            background-clip: content-box; /* Prevent white overflow */
+            background-clip: content-box;
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
@@ -200,42 +200,49 @@
         /* Continuous scaling for all sizes */
         @media screen and (min-width: 0px) {
             .card-pair {
-                width: clamp(84px, 5.5vw, 164px);
-                height: clamp(122px, calc(5.5vw * 726 / 500), calc(80px * 726 / 500));
+                width: clamp(100px, 8vw, 164px);
+                height: clamp(145px, calc(8vw * 726 / 500), calc(80px * 726 / 500));
             }
 
             .card {
-                width: clamp(40px, 2.75vw, 80px);
-                height: clamp(61px, calc(2.75vw * 726 / 500), calc(80px * 726 / 500));
+                width: clamp(50px, 4vw, 80px);
+                height: clamp(72px, calc(4vw * 726 / 500), calc(80px * 726 / 500));
             }
 
             .card-pair-player1 .card.card-player1-2,
             .card-pair-player2 .card.card-player2-2,
             .card-pair-player3 .card.card-player3-2,
             .card-pair-player4 .card.card-player4-2 {
-                margin-left: clamp(2px, 0.25vw, 4px);
+                margin-left: clamp(2px, 0.5vw, 4px);
             }
 
             .community-cards {
-                width: clamp(210px, 27.5vw, calc(80px * 5 + 4px * 4));
-                height: clamp(61px, calc(27.5vw * 726 / 1500), calc(80px * 726 / 500));
+                width: clamp(250px, 20vw, calc(80px * 5 + 4px * 4));
+                height: clamp(72px, calc(20vw * 726 / 1500), calc(80px * 726 / 500));
             }
 
             .community-card {
-                width: clamp(40px, 2.75vw, 80px);
-                height: clamp(61px, calc(2.75vw * 726 / 500), calc(80px * 726 / 500));
-                margin: 0 clamp(2px, 0.25vw, 4px);
+                width: clamp(50px, 4vw, 80px);
+                height: clamp(72px, calc(4vw * 726 / 500), calc(80px * 726 / 500));
+                margin: 0 clamp(2px, 0.5vw, 4px);
             }
 
             .dealer-button, .small-blind, .big-blind {
-                width: clamp(18px, 2.75vw, 36px);
-                height: clamp(18px, 2.75vw, 36px);
-                font-size: clamp(8px, 1.25vw, 16px);
+                width: clamp(18px, 2vw, 36px);
+                height: clamp(18px, 2vw, 36px);
+                font-size: clamp(8px, 1vw, 16px);
             }
 
-            .dealer-button-player1 { bottom: calc(2% + clamp(61px, calc(2.75vw * 726 / 500), calc(80px * 726 / 500)) + 5px); }
-            .small-blind-player2 { left: calc(2% + clamp(84px, 5.5vw, 164px) + 5px); }
-            .big-blind-player3 { top: calc(2% + clamp(61px, calc(2.75vw * 726 / 500), calc(80px * 726 / 500)) + 5px); }
+            .dealer-button-player1 { bottom: calc(2% + clamp(72px, calc(4vw * 726 / 500), calc(80px * 726 / 500)) + 5px); }
+            .small-blind-player2 { left: calc(2% + clamp(100px, 8vw, 164px) + 5px); }
+            .big-blind-player3 { top: calc(2% + clamp(72px, calc(4vw * 726 / 500), calc(80px * 726 / 500)) + 5px); }
+        }
+
+        @media (max-width: 980px) {
+            .card-pair { width: clamp(100px, 7vw, 164px); }
+            .card { width: clamp(50px, 3.5vw, 80px); }
+            .community-cards { width: clamp(250px, 17.5vw, calc(80px * 5 + 4px * 4)); }
+            .community-card { width: clamp(50px, 3.5vw, 80px); }
         }
 
         @media (max-width: 600px) {
@@ -252,10 +259,10 @@
 
         @media (max-width: 300px) {
             .table-container { margin: 0 2vw; }
-            .card-pair { width: calc(10% * 2 + 1%); }
-            .card { width: 10%; }
-            .community-cards { width: calc(10% * 5 + 1% * 4); }
-            .community-card { width: 10%; }
+            .card-pair { width: calc(12% * 2 + 1%); }
+            .card { width: 12%; }
+            .community-cards { width: calc(12% * 5 + 1% * 4); }
+            .community-card { width: 12%; }
         }
 
         @media (min-resolution: 2dppx) {
