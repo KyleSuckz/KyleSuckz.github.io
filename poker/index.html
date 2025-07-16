@@ -219,7 +219,7 @@
 
         .community-cards {
             position: absolute;
-            width: calc(116px * 2.5);
+            width: 116px;
             height: 15%;
             top: 50%;
             left: 50%;
@@ -234,7 +234,7 @@
         }
 
         .community-card {
-            width: 56px;
+            width: calc(116px / 5 - 4px * 4 / 5);
             height: 86px;
             background: #333;
             border: none;
@@ -287,70 +287,16 @@
             transform: translateX(-50%);
         }
 
-        .small-blind-player1 {
-            bottom: calc(2% + 86px + 5px);
-            left: calc(50% + 45px);
-            transform: translateX(-50%);
-        }
-
-        .big-blind-player1 {
-            bottom: calc(2% + 86px + 5px);
-            left: calc(50% + 90px);
-            transform: translateX(-50%);
-        }
-
-        .dealer-button-player2 {
+        .small-blind-player2 {
             left: calc(2% + 116px + 5px);
             top: 50%;
             transform: translateY(-50%);
         }
 
-        .small-blind-player2 {
-            left: calc(2% + 116px + 50px);
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .big-blind-player2 {
-            left: calc(2% + 116px + 95px);
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .dealer-button-player3 {
+        .big-blind-player3 {
             top: calc(2% + 86px + 5px);
             left: 50%;
             transform: translateX(-50%);
-        }
-
-        .small-blind-player3 {
-            top: calc(2% + 86px + 5px);
-            left: calc(50% + 45px);
-            transform: translateX(-50%);
-        }
-
-        .big-blind-player3 {
-            top: calc(2% + 86px + 5px);
-            left: calc(50% + 90px);
-            transform: translateX(-50%);
-        }
-
-        .dealer-button-player4 {
-            right: calc(2% + 116px + 5px);
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .small-blind-player4 {
-            right: calc(2% + 116px + 50px);
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .big-blind-player4 {
-            right: calc(2% + 116px + 95px);
-            top: 50%;
-            transform: translateY(-50%);
         }
 
         @media (min-width: 601px) {
@@ -366,13 +312,13 @@
             }
 
             .community-cards {
-                width: calc(116px * 2.5);
+                width: 116px;
                 height: 15%;
                 border-radius: 20px;
             }
 
             .community-card {
-                width: 56px;
+                width: calc(116px / 5 - 4px * 4 / 5);
                 height: 86px;
                 border-radius: 8px;
                 margin: 0 4px;
@@ -523,13 +469,13 @@
             }
 
             .community-cards {
-                width: calc(8% * 5 + 1% * 4);
+                width: calc(8% * 2 + 1.33%);
                 height: 24%;
                 border-radius: 5%;
             }
 
             .community-card {
-                width: 8%;
+                width: calc((8% * 2 + 1.33%) / 5 - 1% * 4 / 5);
                 height: 24%;
                 border: none;
                 border-radius: 2%;
@@ -572,70 +518,16 @@
                 transform: translateX(-50%);
             }
 
-            .small-blind-player1 {
-                bottom: calc(2% + 24% + 2%);
-                left: calc(50% + 2%);
-                transform: translateX(-50%);
-            }
-
-            .big-blind-player1 {
-                bottom: calc(2% + 24% + 2%);
-                left: calc(50% + 4%);
-                transform: translateX(-50%);
-            }
-
-            .dealer-button-player2 {
+            .small-blind-player2 {
                 left: calc(2% + 8% + 2%);
                 top: 50%;
                 transform: translateY(-50%);
             }
 
-            .small-blind-player2 {
-                left: calc(2% + 8% + 4%);
-                top: 50%;
-                transform: translateY(-50%);
-            }
-
-            .big-blind-player2 {
-                left: calc(2% + 8% + 6%);
-                top: 50%;
-                transform: translateY(-50%);
-            }
-
-            .dealer-button-player3 {
+            .big-blind-player3 {
                 top: calc(2% + 24% + 2%);
                 left: 50%;
                 transform: translateX(-50%);
-            }
-
-            .small-blind-player3 {
-                top: calc(2% + 24% + 2%);
-                left: calc(50% + 2%);
-                transform: translateX(-50%);
-            }
-
-            .big-blind-player3 {
-                top: calc(2% + 24% + 2%);
-                left: calc(50% + 4%);
-                transform: translateX(-50%);
-            }
-
-            .dealer-button-player4 {
-                right: calc(2% + 8% + 2%);
-                top: 50%;
-                transform: translateY(-50%);
-            }
-
-            .small-blind-player4 {
-                right: calc(2% + 8% + 4%);
-                top: 50%;
-                transform: translateY(-50%);
-            }
-
-            .big-blind-player4 {
-                right: calc(2% + 8% + 6%);
-                top: 50%;
-                transform: translateY(-50%);
             }
         }
 
@@ -683,17 +575,8 @@
                     <div class="card card-player4-2"></div>
                 </div>
                 <div class="dealer-button dealer-button-player1">D</div>
-                <div class="small-blind small-blind-player1">SB</div>
-                <div class="big-blind big-blind-player1">BB</div>
-                <div class="dealer-button dealer-button-player2">D</div>
                 <div class="small-blind small-blind-player2">SB</div>
-                <div class="big-blind big-blind-player2">BB</div>
-                <div class="dealer-button dealer-button-player3">D</div>
-                <div class="small-blind small-blind-player3">SB</div>
                 <div class="big-blind big-blind-player3">BB</div>
-                <div class="dealer-button dealer-button-player4">D</div>
-                <div class="small-blind small-blind-player4">SB</div>
-                <div class="big-blind big-blind-player4">BB</div>
             </div>
             <div class="player player-human">You</div>
             <div class="player player-ai1">AI 1</div>
