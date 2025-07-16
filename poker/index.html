@@ -98,7 +98,7 @@
             color: #fff;
             font-size: 14px;
             text-align: center;
-            z-index: 1;
+            z-index: 4;
         }
 
         .player-human {
@@ -141,6 +141,8 @@
             background: #333;
             border-radius: 8px;
             z-index: 2;
+            background-size: cover;
+            background-position: center;
         }
 
         .card-pair-player1 {
@@ -152,11 +154,13 @@
 
         .card-pair-player1 .card.card-player1-1 {
             border: none;
+            background-image: url('assets/cards/ace_of_spades.png');
         }
 
         .card-pair-player1 .card.card-player1-2 {
             margin-left: 4px;
             border: none;
+            background-image: url('assets/cards/king_of_hearts.png');
         }
 
         .card-pair-player2 {
@@ -168,11 +172,13 @@
 
         .card-pair-player2 .card.card-player2-1 {
             border: none;
+            background-image: url('assets/cards/card_back.png');
         }
 
         .card-pair-player2 .card.card-player2-2 {
             margin-left: 4px;
             border: none;
+            background-image: url('assets/cards/card_back.png');
         }
 
         .card-pair-player3 {
@@ -184,11 +190,13 @@
 
         .card-pair-player3 .card.card-player3-1 {
             border: none;
+            background-image: url('assets/cards/card_back.png');
         }
 
         .card-pair-player3 .card.card-player3-2 {
             margin-left: 4px;
             border: none;
+            background-image: url('assets/cards/card_back.png');
         }
 
         .card-pair-player4 {
@@ -200,16 +208,18 @@
 
         .card-pair-player4 .card.card-player4-1 {
             border: none;
+            background-image: url('assets/cards/card_back.png');
         }
 
         .card-pair-player4 .card.card-player4-2 {
             margin-left: 4px;
             border: none;
+            background-image: url('assets/cards/card_back.png');
         }
 
         .community-cards {
             position: absolute;
-            width: 50%;
+            width: calc(5.5% * 5 + 0.4% * 4);
             height: 15%;
             top: 50%;
             left: 50%;
@@ -231,6 +241,28 @@
             border-radius: 8px;
             margin: 0 4px;
             z-index: 2;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .community-card:nth-child(1) {
+            background-image: url('assets/cards/2_of_clubs.png');
+        }
+
+        .community-card:nth-child(2) {
+            background-image: url('assets/cards/queen_of_diamonds.png');
+        }
+
+        .community-card:nth-child(3) {
+            background-image: url('assets/cards/7_of_hearts.png');
+        }
+
+        .community-card:nth-child(4) {
+            background-image: url('assets/cards/10_of_spades.png');
+        }
+
+        .community-card:nth-child(5) {
+            background-image: url('assets/cards/4_of_diamonds.png');
         }
 
         .dealer-button {
@@ -264,7 +296,7 @@
             }
 
             .community-cards {
-                width: 50%;
+                width: calc(5.5% * 5 + 0.4% * 4);
                 height: 15%;
                 border-radius: 20px;
             }
@@ -302,6 +334,10 @@
             }
 
             .table::before {
+                top: -12px;
+                left: -12px;
+                right: -12px;
+                bottom: -12px;
                 border: 12px solid transparent;
                 border-radius: 90px;
                 box-shadow: 
@@ -353,11 +389,13 @@
 
             .card-pair-player1 .card.card-player1-1 {
                 border: none;
+                background-image: url('assets/cards/ace_of_spades.png');
             }
 
             .card-pair-player1 .card.card-player1-2 {
                 margin-left: 1.33%;
                 border: none;
+                background-image: url('assets/cards/king_of_hearts.png');
             }
 
             .card-pair-player2 {
@@ -369,11 +407,13 @@
 
             .card-pair-player2 .card.card-player2-1 {
                 border: none;
+                background-image: url('assets/cards/card_back.png');
             }
 
             .card-pair-player2 .card.card-player2-2 {
                 margin-left: 1.33%;
                 border: none;
+                background-image: url('assets/cards/card_back.png');
             }
 
             .card-pair-player3 {
@@ -385,11 +425,13 @@
 
             .card-pair-player3 .card.card-player3-1 {
                 border: none;
+                background-image: url('assets/cards/card_back.png');
             }
 
             .card-pair-player3 .card.card-player3-2 {
                 margin-left: 1.33%;
                 border: none;
+                background-image: url('assets/cards/card_back.png');
             }
 
             .card-pair-player4 {
@@ -401,11 +443,13 @@
 
             .card-pair-player4 .card.card-player4-1 {
                 border: none;
+                background-image: url('assets/cards/card_back.png');
             }
 
             .card-pair-player4 .card.card-player4-2 {
                 margin-left: 1.33%;
                 border: none;
+                background-image: url('assets/cards/card_back.png');
             }
 
             .community-cards {
@@ -422,6 +466,26 @@
                 margin: 0 1%;
                 min-width: 20px;
                 min-height: 28px;
+            }
+
+            .community-card:nth-child(1) {
+                background-image: url('assets/cards/2_of_clubs.png');
+            }
+
+            .community-card:nth-child(2) {
+                background-image: url('assets/cards/queen_of_diamonds.png');
+            }
+
+            .community-card:nth-child(3) {
+                background-image: url('assets/cards/7_of_hearts.png');
+            }
+
+            .community-card:nth-child(4) {
+                background-image: url('assets/cards/10_of_spades.png');
+            }
+
+            .community-card:nth-child(5) {
+                background-image: url('assets/cards/4_of_diamonds.png');
             }
 
             .dealer-button {
