@@ -7,16 +7,17 @@
     <style>
         :root {
             --card-width: 80px;
-            --card-height: calc(var(--card-width) * 726 / 500);
+            --card-aspect-ratio: 1.452; /* 726 / 500 */
+            --card-height: calc(var(--card-width) * var(--card-aspect-ratio));
             --card-margin: 4px;
             --border-radius-large: 150px;
             --border-radius-small: 90px;
             --felt-border-radius: 140px;
             --table-border: 20px;
-            --table-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
-            --felt-shadow: inset 0 0 10px rgba(0, 0, 0, 0.7);
+            --offset: 5px;
             --player-font-size: 14px;
             --button-size: 36px;
+            --min-card-width: 40px;
         }
 
         * {
@@ -48,15 +49,11 @@
         .table {
             width: 100%;
             height: 100%;
-            background: 
-                linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.3)),
-                radial-gradient(circle at 50% 20%, #254b33, #1e4d2b);
+            background: radial-gradient(circle at 50% 20%, #254b33, #1e4d2b);
             border: var(--table-border) solid transparent;
             border-radius: var(--border-radius-large);
             position: relative;
-            box-shadow: var(--table-shadow), inset 0 0 20px rgba(255, 255, 255, 0.2);
-            transform: rotateX(3deg);
-            will-change: transform;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
         }
 
         .table-felt {
@@ -69,7 +66,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            box-shadow: var(--felt-shadow);
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6);
         }
 
         .table::before {
@@ -79,17 +76,15 @@
             left: calc(-1 * var(--table-border));
             right: calc(-1 * var(--table-border));
             bottom: calc(-1 * var(--table-border));
-            border: var(--table-border) solid transparent;
             border-radius: var(--border-radius-large);
             background: linear-gradient(45deg, #151515, #252525);
-            box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.25);
             z-index: -1;
         }
 
         .player {
             position: absolute;
             padding: 5px 10px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.7);
             border: 1px solid #4a4a4a;
             border-radius: 15px;
             color: #fff;
@@ -115,19 +110,16 @@
         .card {
             width: var(--card-width);
             height: var(--card-height);
+            min-width: var(--min-card-width);
             background: #fff center/contain no-repeat;
             border-radius: 8px;
+            background-color: #e0e0e0; /* Fallback for missing images */
         }
 
         .card-pair-player1 { bottom: 2%; left: 50%; transform: translateX(-50%); }
         .card-pair-player2 { left: 1%; top: 50%; transform: translateY(-50%); }
         .card-pair-player3 { top: 2%; left: 50%; transform: translateX(-50%); }
         .card-pair-player4 { right: 1%; top: 50%; transform: translateY(-50%); }
-
-        .card-player1-1 { background-image: url('assets/cards/ace_of_spades.png'); }
-        .card-player1-2 { background-image: url('assets/cards/king_of_hearts.png'); }
-        .card-player2-1, .card-player2-2, .card-player3-1, .card-player3-2,
-        .card-player4-1, .card-player4-2 { background-image: url('assets/cards/card_back.png'); }
 
         .community-cards {
             position: absolute;
@@ -145,14 +137,6 @@
             z-index: 1;
         }
 
-        .community-card {
-            width: var(--card-width);
-            height: var(--card-height);
-            background: #fff center/contain no-repeat;
-            border-radius: 8px;
-            margin: 0 var(--card-margin);
-        }
-
         .dealer-button, .small-blind, .big-blind {
             position: absolute;
             width: var(--button-size);
@@ -167,43 +151,32 @@
             font-size: 16px;
             font-weight: bold;
             z-index: 3;
+            cursor: pointer;
         }
 
-        .dealer-button-player1 { bottom: calc(2% + var(--card-height) + 5px); left: 50%; transform: translateX(-50%); }
-        .small-blind-player2 { left: calc(1% + var(--card-width) * 2 + var(--card-margin) + 5px); top: 50%; transform: translateY(-50%); }
-        .big-blind-player3 { top: calc(2% + var(--card-height) + 5px); left: 50%; transform: translateX(-50%); }
+        .dealer-button-player1 { bottom: calc(2% + var(--card-height) + var(--offset)); left: 50%; transform: translateX(-50%); }
+        .small-blind-player2 { left: calc(1% + var(--card-width) * 2 + var(--card-margin) + var(--offset)); top: 50%; transform: translateY(-50%); }
+        .big-blind-player3 { top: calc(2% + var(--card-height) + var(--offset)); left: 50%; transform: translateX(-50%); }
 
         @media (max-width: 600px) {
             :root {
                 --card-width: 14vw;
-                --card-height: calc(var(--card-width) * 726 / 500);
                 --card-margin: 1vw;
                 --table-border: 12px;
                 --border-radius-large: var(--border-radius-small);
                 --felt-border-radius: 80px;
-                --table-shadow: 0 12px 25px rgba(0, 0, 0, 0.8);
-                --felt-shadow: inset 0 0 6px rgba(0, 0, 0, 0.7);
                 --player-font-size: 12px;
                 --button-size: 9vw;
             }
 
-            .table-container { margin: 0 5vw; }
-            .table-felt { border: 3px solid #1a1a1a; }
-            .table::before {
-                top: calc(-1 * var(--table-border));
-                left: calc(-1 * var(--table-border));
-                right: calc(-1 * var(--table-border));
-                bottom: calc(-1 * var(--table-border));
-                border: var(--table-border) solid transparent;
-                box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.2);
-            }
-
+            .table { box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6); }
+            .table-felt { border: 3px solid #1a1a1a; box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.6); }
+            .table::before { box-shadow: none; }
             .player { padding: 4px 8px; }
             .player-human { bottom: -12px; }
             .player-ai1 { left: -12px; }
             .player-ai2 { top: -12px; }
             .player-ai3 { right: -12px; }
-
             .card { border-radius: 2vw; }
             .community-cards { border-radius: 7vw; }
             .dealer-button, .small-blind, .big-blind { min-width: 30px; min-height: 30px; font-size: 12px; }
@@ -213,11 +186,6 @@
             :root { --card-width: 12vw; }
             .table-container { margin: 0 2vw; }
         }
-
-        @media (min-resolution: 2dppx) {
-            .table, .table::before { border-radius: calc(var(--border-radius-large) * 1.5); }
-            .table-felt { border-radius: calc(var(--felt-border-radius) * 1.5); }
-        }
     </style>
 </head>
 <body>
@@ -225,36 +193,36 @@
         <div class="table">
             <div class="table-felt">
                 <div class="community-cards" role="region" aria-label="Community Cards">
-                    <div class="community-card" style="background-image: url('assets/cards/2_of_clubs.png');" aria-label="Two of Clubs"></div>
-                    <div class="community-card" style="background-image: url('assets/cards/queen_of_diamonds.png');" aria-label="Queen of Diamonds"></div>
-                    <div class="community-card" style="background-image: url('assets/cards/7_of_hearts.png');" aria-label="Seven of Hearts"></div>
-                    <div class="community-card" style="background-image: url('assets/cards/10_of_spades.png');" aria-label="Ten of Spades"></div>
-                    <div class="community-card" style="background-image: url('assets/cards/4_of_diamonds.png');" aria-label="Four of Diamonds"></div>
+                    <div class="card" style="background-image: url('assets/cards/2_of_clubs.png');" aria-label="Two of Clubs" aria-describedby="community-cards"></div>
+                    <div class="card" style="background-image: url('assets/cards/queen_of_diamonds.png');" aria-label="Queen of Diamonds" aria-describedby="community-cards"></div>
+                    <div class="card" style="background-image: url('assets/cards/7_of_hearts.png');" aria-label="Seven of Hearts" aria-describedby="community-cards"></div>
+                    <div class="card" style="background-image: url('assets/cards/10_of_spades.png');" aria-label="Ten of Spades" aria-describedby="community-cards"></div>
+                    <div class="card" style="background-image: url('assets/cards/4_of_diamonds.png');" aria-label="Four of Diamonds" aria-describedby="community-cards"></div>
                 </div>
-                <div class="card-pair card-pair-player1" aria-label="Your Cards">
-                    <div class="card card-player1-1" aria-label="Ace of Spades"></div>
-                    <div class="card card-player1-2" aria-label="King of Hearts"></div>
+                <div class="card-pair card-pair-player1" aria-label="Your Cards" aria-describedby="player-human">
+                    <div class="card" style="background-image: url('assets/cards/ace_of_spades.png');" aria-label="Ace of Spades"></div>
+                    <div class="card" style="background-image: url('assets/cards/king_of_hearts.png');" aria-label="King of Hearts"></div>
                 </div>
-                <div class="card-pair card-pair-player2" aria-label="AI 1 Cards">
-                    <div class="card card-player2-1" aria-label="Card Back"></div>
-                    <div class="card card-player2-2" aria-label="Card Back"></div>
+                <div class="card-pair card-pair-player2" aria-label="AI 1 Cards" aria-describedby="player-ai1">
+                    <div class="card" style="background-image: url('assets/cards/card_back.png');" aria-label="Card Back"></div>
+                    <div class="card" style="background-image: url('assets/cards/card_back.png');" aria-label="Card Back"></div>
                 </div>
-                <div class="card-pair card-pair-player3" aria-label="AI 2 Cards">
-                    <div class="card card-player3-1" aria-label="Card Back"></div>
-                    <div class="card card-player3-2" aria-label="Card Back"></div>
+                <div class="card-pair card-pair-player3" aria-label="AI 2 Cards" aria-describedby="player-ai2">
+                    <div class="card" style="background-image: url('assets/cards/card_back.png');" aria-label="Card Back"></div>
+                    <div class="card" style="background-image: url('assets/cards/card_back.png');" aria-label="Card Back"></div>
                 </div>
-                <div class="card-pair card-pair-player4" aria-label="AI 3 Cards">
-                    <div class="card card-player4-1" aria-label="Card Back"></div>
-                    <div class="card card-player4-2" aria-label="Card Back"></div>
+                <div class="card-pair card-pair-player4" aria-label="AI 3 Cards" aria-describedby="player-ai3">
+                    <div class="card" style="background-image: url('assets/cards/card_back.png');" aria-label="Card Back"></div>
+                    <div class="card" style="background-image: url('assets/cards/card_back.png');" aria-label="Card Back"></div>
                 </div>
-                <div class="dealer-button dealer-button-player1" role="button" aria-label="Dealer Button">D</div>
-                <div class="small-blind small-blind-player2" role="button" aria-label="Small Blind">SB</div>
-                <div class="big-blind big-blind-player3" role="button" aria-label="Big Blind">BB</div>
+                <div class="dealer-button dealer-button-player1" role="button" aria-label="Dealer Button" tabindex="0">D</div>
+                <div class="small-blind small-blind-player2" role="button" aria-label="Small Blind" tabindex="0">SB</div>
+                <div class="big-blind big-blind-player3" role="button" aria-label="Big Blind" tabindex="0">BB</div>
             </div>
-            <div class="player player-human" aria-label="Your Position">You</div>
-            <div class="player player-ai1" aria-label="AI 1 Position">AI 1</div>
-            <div class="player player-ai2" aria-label="AI 2 Position">AI 2</div>
-            <div class="player player-ai3" aria-label="AI 3 Position">AI 3</div>
+            <div class="player player-human" id="player-human" aria-label="Your Position">You</div>
+            <div class="player player-ai1" id="player-ai1" aria-label="AI 1 Position">AI 1</div>
+            <div class="player player-ai2" id="player-ai2" aria-label="AI 2 Position">AI 2</div>
+            <div class="player player-ai3" id="player-ai3" aria-label="AI 3 Position">AI 3</div>
         </div>
     </section>
 </body>

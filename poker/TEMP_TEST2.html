@@ -4,204 +4,153 @@
   <meta charset="utf-8">
   <title>Texas Hold’em Table</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-
-  <!-- Preload heavy images -->
+  <meta name="color-scheme" content="dark">
   <link rel="preload" href="assets/table_felt.jpg" as="image">
   <link rel="preload" href="assets/cards/ace_of_spades.png" as="image">
-  <link rel="preload" href="assets/cards/king_of_hearts.png" as="image">
   <link rel="preload" href="assets/cards/card_back.png" as="image">
 
   <style>
+    /* ---------- Design token ---------- */
     :root{
-      /* One knob to rule them all – everything scales from this */
-      --card-w: clamp(40px, 10vw, 80px);
+      /* 1 u = 1/100 of the shortest viewport side */
+      --u: clamp(.4rem, 1vmin, 1rem);
+      --radius: calc(var(--u) * 12);
+      --card-w: calc(var(--u) * 8);
       --card-h: calc(var(--card-w) * 726 / 500);
-      --gap:   calc(var(--card-w) * .05);
-      --radius: clamp(60px, 12vw, 150px);
-      --felt-pad: 4%;
+      --gap: calc(var(--card-w) * .1);
+      --shadow: 0 calc(var(--u) * .5) calc(var(--u) * 1.5) rgb(0 0 0 / .6);
     }
 
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      height:100vh;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      background:radial-gradient(circle at 50% 30%,#1a1a1a 0%,#0a0a0a 100%);
-      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-      overflow-x:hidden;
-    }
+    /* ---------- Reset ---------- */
+    *,*::before,*::after{box-sizing:border-box}
+    body{margin:0;height:100vh;display:flex;align-items:center;justify-content:center;
+         background:radial-gradient(circle at 50% 30%,#1a1a1a 0%,#0a0a0a 100%);
+         font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+         color:#fff;
+         overflow:hidden}
 
-    /* ---------- Table shell ---------- */
-    .table-shell{
-      position:relative;
-      width:min(90vw, 160vh);
-      aspect-ratio:2 / 1;
-      min-width:300px;
-    }
-
+    /* ---------- Table ---------- */
     .table{
-      width:100%;
-      height:100%;
+      position:relative;
+      width:min(90vw,160vh);
+      aspect-ratio:2 / 1;
       border-radius:var(--radius);
       background:
-        linear-gradient(135deg,rgba(255,255,255,.1),rgba(0,0,0,.3)),
+        url("assets/table_felt.jpg") center/cover,
         radial-gradient(circle at 50% 20%,#254b33 0%,#1e4d2b 100%);
-      box-shadow:
-        0 12px 30px rgb(0 0 0 / .8),
-        inset 0 0 20px rgb(255 255 255 / .15),
-        inset 0 0 30px rgb(0 0 0 / .6);
-      position:relative;
+      box-shadow:var(--shadow), inset 0 0 calc(var(--u) * 2) rgb(255 255 255 / .15);
+      display:grid;
+      place-content:center;
     }
 
-    /* Felt layer */
-    .felt{
-      position:absolute;
-      inset:var(--felt-pad);
-      border-radius:calc(var(--radius) - var(--felt-pad));
-      background:url("assets/table_felt.jpg") center/cover, #2a6041;
-      box-shadow:inset 0 0 15px rgb(0 0 0 / .7);
-      overflow:visible;
-    }
-
-    /* ---------- Players & seats ---------- */
+    /* ---------- Seats ---------- */
     .seat{
       position:absolute;
       display:flex;
       flex-direction:column;
       align-items:center;
-      gap:calc(var(--card-h) * .15);
-      color:#fff;
-      font-size:clamp(.75rem, 2vw, 1rem);
-      pointer-events:none;          /* cards will handle clicks later */
+      gap:calc(var(--u) * .5);
+      font-size:calc(var(--u) * 1.4);
     }
-    .seat.bottom{bottom:0;left:50%;transform:translateX(-50%);}
-    .seat.top   {top:0;   left:50%;transform:translateX(-50%);}
-    .seat.left  {left:0;  top:50%;transform:translateY(-50%);}
-    .seat.right {right:0; top:50%;transform:translateY(-50%);}
+    .seat.bottom{bottom:calc(var(--u) * 2);left:50%;translate:-50% 0}
+    .seat.top   {top:   calc(var(--u) * 2);left:50%;translate:-50% 0}
+    .seat.left  {left:  calc(var(--u) * 2);top:50%;translate:0 -50%}
+    .seat.right {right: calc(var(--u) * 2);top:50%;translate:0 -50%}
 
-    .player-label{
-      background:rgba(255 255 255 /.1);
-      border:1px solid #4a4a4a;
-      padding:.25em .75em;
-      border-radius:1em;
-    }
+    .label{background:rgba(255 255 255 /.1);border:1px solid #4a4a4a;
+           padding:.25em .75em;border-radius:1em}
 
     /* ---------- Cards ---------- */
+    .hand,.board{display:flex;gap:var(--gap)}
     .card{
       width:var(--card-w);
       height:var(--card-h);
       border-radius:calc(var(--card-w) * .1);
       background:#fff center/contain no-repeat;
-      box-shadow:0 2px 6px rgb(0 0 0 /.4);
-      flex-shrink:0;
-    }
-    .hand{
-      display:flex;
-      gap:var(--gap);
+      box-shadow:var(--shadow);
     }
 
-    /* Community board */
-    .board{
-      position:absolute;
-      top:50%;left:50%;
-      transform:translate(-50%,-50%);
-      display:flex;
-      gap:var(--gap);
-      padding:calc(var(--card-h) * .1);
-      background:rgba(0 0 0 /.2);
-      border-radius:calc(var(--card-w) * .3);
-    }
-
-    /* Dealer / blind buttons */
-    .button{
+    /* ---------- Buttons ---------- */
+    button{
       position:absolute;
       width:calc(var(--card-w) * .45);
       height:calc(var(--card-w) * .45);
       border-radius:50%;
+      border:0;
       background:#ddd;
       color:#000;
       font-size:calc(var(--card-w) * .22);
       font-weight:bold;
-      display:grid;
-      place-content:center;
-      box-shadow:0 2px 4px rgb(0 0 0 /.4);
+      box-shadow:var(--shadow);
+      cursor:pointer;
     }
-    .button.dealer{bottom:calc(100% + var(--gap));left:50%;transform:translateX(-50%);}
-    .button.sb{left:calc(100% + var(--gap));top:50%;transform:translateY(-50%);}
-    .button.bb{top:calc(100% + var(--gap));left:50%;transform:translateX(-50%);}
+    .dealer{bottom:calc(100% + var(--gap));left:50%;translate:-50% 0}
+    .sb     {left:calc(100% + var(--gap));top:50%;translate:0 -50%}
+    .bb     {top:calc(100% + var(--gap));left:50%;translate:-50% 0}
 
-    /* ---------- Responsive fine-tuning ---------- */
-    @media (max-width:600px){
-      :root{--card-w:clamp(30px, 12vw, 50px);}
+    /* ---------- Respect user motion preference ---------- */
+    @media (prefers-reduced-motion: reduce){
+      *,*::before,*::after{transition:none!important;animation:none!important}
     }
   </style>
 </head>
 <body>
 
-  <div class="table-shell">
-    <div class="table">
-      <div class="felt">
+  <figure class="table" aria-label="Texas Hold’em poker table">
+    <figcaption class="sr-only">Community cards and four players</figcaption>
 
-        <!-- Community cards -->
-        <div class="board" role="region" aria-label="Community cards">
-          <img class="card" src="assets/cards/2_of_clubs.png"   alt="2 of clubs">
-          <img class="card" src="assets/cards/queen_of_diamonds.png" alt="Queen of diamonds">
-          <img class="card" src="assets/cards/7_of_hearts.png"   alt="7 of hearts">
-          <img class="card" src="assets/cards/10_of_spades.png"  alt="10 of spades">
-          <img class="card" src="assets/cards/4_of_diamonds.png" alt="4 of diamonds">
-        </div>
-
-        <!-- Seats (players) -->
-        <div class="seat bottom">
-          <div class="hand">
-            <img class="card" src="assets/cards/ace_of_spades.png" alt="Ace of spades">
-            <img class="card" src="assets/cards/king_of_hearts.png" alt="King of hearts">
-          </div>
-          <span class="player-label">You</span>
-          <div class="button dealer" aria-label="Dealer button">D</div>
-        </div>
-
-        <div class="seat left">
-          <div class="hand">
-            <img class="card" src="assets/cards/card_back.png" alt="Hidden card">
-            <img class="card" src="assets/cards/card_back.png" alt="Hidden card">
-          </div>
-          <span class="player-label">AI 1</span>
-          <div class="button sb" aria-label="Small blind">SB</div>
-        </div>
-
-        <div class="seat top">
-          <div class="hand">
-            <img class="card" src="assets/cards/card_back.png" alt="Hidden card">
-            <img class="card" src="assets/cards/card_back.png" alt="Hidden card">
-          </div>
-          <span class="player-label">AI 2</span>
-          <div class="button bb" aria-label="Big blind">BB</div>
-        </div>
-
-        <div class="seat right">
-          <div class="hand">
-            <img class="card" src="assets/cards/card_back.png" alt="Hidden card">
-            <img class="card" src="assets/cards/card_back.png" alt="Hidden card">
-          </div>
-          <span class="player-label">AI 3</span>
-        </div>
-
-      </div>
+    <!-- Board -->
+    <div class="board" aria-label="Community cards">
+      <img class="card" src="assets/cards/2_of_clubs.png"   alt="2 of clubs">
+      <img class="card" src="assets/cards/queen_of_diamonds.png" alt="Queen of diamonds">
+      <img class="card" src="assets/cards/7_of_hearts.png"   alt="7 of hearts">
+      <img class="card" src="assets/cards/10_of_spades.png"  alt="10 of spades">
+      <img class="card" src="assets/cards/4_of_diamonds.png" alt="4 of diamonds">
     </div>
-  </div>
 
-  <!-- Optional: tiny ES-module to swap cards dynamically
+    <!-- Seats -->
+    <div class="seat bottom">
+      <div class="hand">
+        <img class="card" src="assets/cards/ace_of_spades.png" alt="Ace of spades">
+        <img class="card" src="assets/cards/king_of_hearts.png" alt="King of hearts">
+      </div>
+      <span class="label">You</span>
+      <button class="dealer" aria-label="Dealer button">D</button>
+    </div>
+
+    <div class="seat left">
+      <div class="hand">
+        <img class="card" src="assets/cards/card_back.png" alt="Hidden card">
+        <img class="card" src="assets/cards/card_back.png" alt="Hidden card">
+      </div>
+      <span class="label">AI 1</span>
+      <button class="sb" aria-label="Small blind">SB</button>
+    </div>
+
+    <div class="seat top">
+      <div class="hand">
+        <img class="card" src="assets/cards/card_back.png" alt="Hidden card">
+        <img class="card" src="assets/cards/card_back.png" alt="Hidden card">
+      </div>
+      <span class="label">AI 2</span>
+      <button class="bb" aria-label="Big blind">BB</button>
+    </div>
+
+    <div class="seat right">
+      <div class="hand">
+        <img class="card" src="assets/cards/card_back.png" alt="Hidden card">
+        <img class="card" src="assets/cards/card_back.png" alt="Hidden card">
+      </div>
+      <span class="label">AI 3</span>
+    </div>
+  </figure>
+
+  <!-- Optional one-liner for dynamic dealing
   <script type="module">
-    // Example: reveal AI 1 after 3 s
-    setTimeout(()=>{
-      document.querySelector('.seat.left .hand').innerHTML = `
-        <img class="card" src="assets/cards/7_of_clubs.png" alt="7 of clubs">
-        <img class="card" src="assets/cards/ace_of_diamonds.png" alt="Ace of diamonds">
-      `;
-    },3000);
+    const rand = () => `assets/cards/${['2','3','4','5','6','7','8','9','10','jack','queen','king','ace'][Math.random()*13|0]}_of_${['hearts','diamonds','clubs','spades'][Math.random()*4|0]}.png`;
+    document.querySelector('.seat.left .hand').innerHTML = `
+      <img class="card" src="${rand()}" alt="Hole card">
+      <img class="card" src="${rand()}" alt="Hole card">`;
   </script>
   -->
 </body>
