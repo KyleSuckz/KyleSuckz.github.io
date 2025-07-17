@@ -216,9 +216,9 @@
         .dealer-button::after {
             content: attr(data-label);
         }
-        .player-1-dealer { left: calc(50% - var(--card-width) * 2 - var(--spacing) * 2.5); top: calc(var(--spacing)); }
-        .player-2-sb { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 1.5); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
-        .player-3-bb { left: calc(50% + var(--card-width) + var(--spacing) * 0.5); bottom: calc(var(--spacing)); }
+        .player-1-dealer { left: calc(50% - var(--card-width) * 3 - var(--spacing) * 4); top: calc(var(--spacing) * 4); }
+        .player-2-sb { left: calc(var(--spacing) + var(--card-width) * 2.5 + var(--spacing) * 4); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 4); }
+        .player-3-bb { left: calc(50% + var(--card-width) * 2.5 + var(--spacing) * 4); bottom: calc(var(--spacing) * 4); }
 
         @keyframes dealCard {
             from { transform: translate(-50%, -50%) scale(0); left: 50%; top: 50%; }
@@ -341,8 +341,16 @@
             const chipSize = chip ? parseFloat(getComputedStyle(chip).width) : NaN;
             const spacing = Math.max(4, 0.006 * tableWidth);
             const player1Card1 = document.querySelector('.player-1-card-1').getBoundingClientRect();
+            const player1Card2 = document.querySelector('.player-1-card-2').getBoundingClientRect();
+            const player1Chips = document.querySelector('.player-1-chips').getBoundingClientRect();
             const player1Dealer = document.querySelector('.player-1-dealer').getBoundingClientRect();
+            const player2Card1 = document.querySelector('.player-2-card-1').getBoundingClientRect();
+            const player2Card2 = document.querySelector('.player-2-card-2').getBoundingClientRect();
+            const player2Chips = document.querySelector('.player-2-chips').getBoundingClientRect();
             const player2SB = document.querySelector('.player-2-sb').getBoundingClientRect();
+            const player3Card1 = document.querySelector('.player-3-card-1').getBoundingClientRect();
+            const player3Card2 = document.querySelector('.player-3-card-2').getBoundingClientRect();
+            const player3Chips = document.querySelector('.player-3-chips').getBoundingClientRect();
             const player3BB = document.querySelector('.player-3-bb').getBoundingClientRect();
             console.log('Layout Debug:', {
                 tableWidth: `${tableWidth.toFixed(2)}px`,
@@ -350,8 +358,16 @@
                 chipSize: `${chipSize.toFixed(2)}px`,
                 spacing: `${spacing.toFixed(2)}px`,
                 player1Card1: { left: Math.round(player1Card1.left), bottom: Math.round(player1Card1.bottom) },
+                player1Card2: { left: Math.round(player1Card2.left), bottom: Math.round(player1Card2.bottom) },
+                player1Chips: { left: Math.round(player1Chips.left), bottom: Math.round(player1Chips.bottom) },
                 player1Dealer: { left: Math.round(player1Dealer.left), top: Math.round(player1Dealer.top) },
+                player2Card1: { left: Math.round(player2Card1.left), top: Math.round(player2Card1.top) },
+                player2Card2: { left: Math.round(player2Card2.left), top: Math.round(player2Card2.top) },
+                player2Chips: { left: Math.round(player2Chips.left), top: Math.round(player2Chips.top) },
                 player2SB: { left: Math.round(player2SB.left), top: Math.round(player2SB.top) },
+                player3Card1: { left: Math.round(player3Card1.left), top: Math.round(player3Card1.top) },
+                player3Card2: { left: Math.round(player3Card2.left), top: Math.round(player3Card2.top) },
+                player3Chips: { left: Math.round(player3Chips.left), top: Math.round(player3Chips.top) },
                 player3BB: { left: Math.round(player3BB.left), bottom: Math.round(player3BB.bottom) }
             });
         }
