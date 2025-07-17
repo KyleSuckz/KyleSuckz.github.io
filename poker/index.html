@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Texas Hold'em Table</title>
-    <link rel="preload" href="assets/table_felt.jpg" as="image">
+    <link rel="preload" href="/assets/table_felt.jpg" as="image">
     <style>
         :root {
             --table-border-width: min(2vw, 20px);
@@ -12,8 +12,7 @@
             --felt-radius: 14vw;
             --felt-border-color: #1a1a1a;
             --shadow-color: rgba(0, 0, 0, 0.8);
-            --felt-color: #2a6041;
-            --felt-dark: #1e4d2b;
+            --felt-color: #4CAF50; /* Light green for poker table felt */
             --leather-color: #151515;
             --leather-dark: #252525;
             --3d-transform: rotateX(3deg);
@@ -36,10 +35,10 @@
 
         /* Table Container */
         .table-container {
-            width: calc(min(50vh, 50vw) * 2);
-            max-height: min(50vh, 50vw);
+            width: 80vw; /* Larger, based on window width */
             height: auto;
             aspect-ratio: 2 / 1;
+            max-height: 80vh; /* Prevent overflow on tall screens */
             margin: 0 5vw;
             position: relative;
             perspective: 1000px;
@@ -49,7 +48,7 @@
         .table {
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 50% 20%, var(--felt-color), var(--felt-dark));
+            background: radial-gradient(circle at 50% 20%, var(--felt-color), #1e4d2b);
             border: var(--table-border-width) solid transparent;
             border-radius: var(--table-radius);
             position: relative;
@@ -62,13 +61,7 @@
         .table-felt {
             width: 94%;
             height: 92%;
-            background: 
-                image-set(
-                    url('assets/table_felt.jpg') 1x,
-                    url('assets/table_felt_2x.jpg') 2x
-                ) center/cover,
-                url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6AAAADUlEQVQYV2NgYGD4DwABBAEAcWZeAAAAAElFTkSuQmCC') center/cover,
-                repeating-linear-gradient(45deg, var(--felt-color), var(--felt-color) 10px, var(--felt-dark) 10px, var(--felt-dark) 20px);
+            background: url('/assets/table_felt.jpg') center/cover, var(--felt-color);
             border: 5px solid;
             border-image: linear-gradient(to bottom, #333, #111) 1;
             border-radius: var(--felt-radius);
@@ -108,17 +101,10 @@
         }
 
         /* Responsive adjustments */
-        @media (min-width: 1200px) {
-            .table-container {
-                width: calc(min(40vh, 40vw) * 2);
-                max-height: min(40vh, 40vw);
-            }
-        }
-
         @media (max-width: 900px) {
             .table-container {
-                width: calc(min(60vh, 60vw) * 2);
-                max-height: min(60vh, 60vw);
+                width: 90vw; /* Slightly larger on medium screens */
+                max-height: 90vh;
             }
         }
 
