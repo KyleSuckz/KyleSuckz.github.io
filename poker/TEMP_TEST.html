@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Texas Hold'em Table</title>
-    <link rel="preload" href="assets/table_felt.jpg" as="image">
-    <link rel="preload" href="assets/card_back.png" as="image">
-    <link rel="preload" href="assets/chip_stack.png" as="image">
+    <link rel="preload" href="./assets/table_felt.jpg" as="image">
+    <link rel="preload" href="./assets/card_back.png" as="image">
+    <link rel="preload" href="./assets/chip_stack.png" as="image">
     <style>
         :root {
-            --table-width: min(95vw, calc(2 * (100vh - clamp(48px, 7vw, 68px) - clamp(6px, 1vw, 10px) - clamp(10px, 2vw, 20px))));
+            --table-width: min(95vw, calc(2 * (100vh - 96px)));
             --table-border-width: clamp(10px, 2vw, 28px);
             --felt-border-width: clamp(2px, 0.5vw, 7px);
             --table-radius: clamp(90px, 15vw, 200px);
@@ -17,13 +17,13 @@
             --felt-border-color: #1a1a1a;
             --shadow-color: rgba(0, 0, 0, 0.8);
             --3d-transform: rotateX(3deg);
-            --card-width: clamp(40px, calc(0.045 * var(--table-width)), 80px);
+            --card-width: clamp(40px, calc(0.045 * var(--table-width)), 100px);
             --card-height: calc(var(--card-width) * 1.4);
-            --chip-size: clamp(24px, calc(0.03 * var(--table-width)), 56px);
+            --chip-size: clamp(24px, calc(0.03 * var(--table-width)), 70px);
             --button-bg: linear-gradient(#4a4a4a, #2a2a2a);
             --button-hover-bg: linear-gradient(#5a5a5a, #3a3a3a);
-            --name-font-size: clamp(0.7rem, calc(0.009 * var(--table-width)), 1.1rem);
-            --spacing: clamp(3px, calc(0.004 * var(--table-width)), 7px);
+            --name-font-size: clamp(0.7rem, calc(0.009 * var(--table-width)), 1.2rem);
+            --spacing: max(3px, calc(0.004 * var(--table-width)));
         }
 
         * {
@@ -44,7 +44,7 @@
 
         .game-container {
             width: var(--table-width);
-            height: 100vh;
+            max-height: calc(100vh - 10px);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -72,10 +72,10 @@
         }
 
         .table-felt {
-            width: 90%;
-            height: 88%;
+            width: 88%;
+            height: 86%;
             background: 
-                url('assets/table_felt.jpg') center/cover,
+                url('./assets/table_felt.jpg') center/cover,
                 #2a6041;
             border: var(--felt-border-width) solid var(--felt-border-color);
             border-radius: var(--felt-radius);
@@ -128,14 +128,14 @@
         .action-text-area {
             position: absolute;
             width: calc(var(--card-width) * 4 + var(--spacing) * 5);
-            height: calc(clamp(0.8rem, calc(0.008 * var(--table-width)), 1.2rem) * 1.5);
-            top: calc(50% - calc(var(--card-height) + var(--spacing) * 4) / 2 - calc(clamp(0.8rem, calc(0.008 * var(--table-width)), 1.2rem) * 1.5) - calc(var(--spacing) / 2));
+            height: calc(clamp(0.8rem, calc(0.008 * var(--table-width)), 1.3rem) * 1.5);
+            top: calc(50% - calc(var(--card-height) + var(--spacing) * 4) / 2 - calc(clamp(0.8rem, calc(0.008 * var(--table-width)), 1.3rem) * 1.5) - calc(var(--spacing) / 2));
             left: 50%;
             transform: translate(-50%, 0);
             background: radial-gradient(rgba(0, 0, 0, 0.2), transparent);
             border-radius: 10px;
             z-index: 2;
-            font-size: clamp(0.8rem, calc(0.008 * var(--table-width)), 1.2rem);
+            font-size: clamp(0.8rem, calc(0.008 * var(--table-width)), 1.3rem);
             line-height: 1;
             padding: calc(var(--spacing) / 2);
             color: #fff;
@@ -145,14 +145,14 @@
         .pot-area {
             position: absolute;
             width: calc(var(--card-width) * 4 + var(--spacing) * 5);
-            height: calc(clamp(0.8rem, calc(0.008 * var(--table-width)), 1.2rem) * 1.5);
+            height: calc(clamp(0.8rem, calc(0.008 * var(--table-width)), 1.3rem) * 1.5);
             top: calc(50% + calc(var(--card-height) + var(--spacing) * 4) / 2 + calc(var(--spacing) / 2));
             left: 50%;
             transform: translate(-50%, 0);
             background: radial-gradient(rgba(0, 0, 0, 0.2), transparent);
             border-radius: 10px;
             z-index: 1;
-            font-size: clamp(0.8rem, calc(0.008 * var(--table-width)), 1.2rem);
+            font-size: clamp(0.8rem, calc(0.008 * var(--table-width)), 1.3rem);
             line-height: 1;
             padding: calc(var(--spacing) / 2);
             color: #fff;
@@ -163,7 +163,7 @@
             position: absolute;
             width: var(--card-width);
             height: var(--card-height);
-            background: url('assets/card_back.png') center/cover;
+            background: url('./assets/card_back.png') center/cover;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
             animation: dealCard 0.5s ease-out forwards;
@@ -183,7 +183,7 @@
             position: absolute;
             width: var(--chip-size);
             height: var(--chip-size);
-            background: url('assets/chip_stack.png') center/cover;
+            background: url('./assets/chip_stack.png') center/cover;
             border-radius: 50%;
             box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.4);
             z-index: 2;
@@ -203,7 +203,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(0.5rem, calc(0.004 * var(--table-width)), 0.8rem);
+            font-size: clamp(0.5rem, calc(0.004 * var(--table-width)), 0.9rem);
             color: #000;
             text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
         }
@@ -213,9 +213,9 @@
         .dealer-button::after {
             content: attr(data-label);
         }
-        .player-1-dealer { bottom: calc(var(--card-height) + var(--spacing) * 2 + var(--felt-border-width)); left: min(50% - var(--chip-size) / 2, calc(50% - var(--chip-size) / 2)); }
-        .player-2-sb { left: calc(var(--spacing) * 2 + var(--card-width) * 2 + var(--spacing) * 2); top: calc(50% - var(--chip-size) / 2); }
-        .player-3-bb { top: calc(var(--card-height) + var(--spacing) * 2 + var(--felt-border-width)); left: min(50% - var(--chip-size) / 2, calc(50% - var(--chip-size) / 2)); }
+        .player-1-dealer { bottom: calc(var(--card-height) + var(--spacing) * 3 + var(--felt-border-width)); left: min(50% - var(--chip-size) / 2, calc(50% - var(--chip-size) / 2)); }
+        .player-2-sb { left: calc(var(--spacing) * 3 + var(--card-width) * 2 + var(--spacing) * 2); top: calc(50% - var(--chip-size) / 2); }
+        .player-3-bb { top: calc(var(--card-height) + var(--spacing) * 3 + var(--felt-border-width)); left: min(50% - var(--chip-size) / 2, calc(50% - var(--chip-size) / 2)); }
 
         @keyframes dealCard {
             from { transform: translate(-50%, -50%) scale(0); left: 50%; top: 50%; }
@@ -242,7 +242,8 @@
             z-index: 10;
             background: rgba(0, 0, 0, 0.5);
             border-radius: 5px;
-            padding: clamp(6px, 1vw, 10px);
+            padding: clamp(4px, 0.8vw, 8px);
+            max-height: 10vh;
             flex: 0 0 auto;
         }
         .action-button {
@@ -272,11 +273,11 @@
                 --card-height: calc(var(--card-width) * 1.4);
                 --chip-size: clamp(20px, calc(0.03 * var(--table-width)), 32px);
                 --name-font-size: clamp(0.6rem, calc(0.009 * var(--table-width)), 0.8rem);
-                --spacing: clamp(2px, calc(0.004 * var(--table-width)), 4px);
+                --spacing: max(2px, calc(0.004 * var(--table-width)));
             }
             .game-container {
                 width: var(--table-width);
-                height: 100vh;
+                max-height: calc(100vh - 10px);
             }
             .table {
                 box-shadow: 0 12px 25px var(--shadow-color), inset 0 0 12px rgba(0, 0, 0, 0.6);
@@ -318,39 +319,50 @@
         }
     </style>
     <script>
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
         function logLayout() {
-            const tableWidth = getComputedStyle(document.documentElement).getPropertyValue('--table-width').trim();
-            const cardWidth = getComputedStyle(document.documentElement).getPropertyValue('--card-width').trim();
-            const chipSize = getComputedStyle(document.documentElement).getPropertyValue('--chip-size').trim();
-            const spacing = getComputedStyle(document.documentElement).getPropertyValue('--spacing').trim();
+            const rootStyle = getComputedStyle(document.documentElement);
+            const tableWidth = parseFloat(rootStyle.getPropertyValue('--table-width'));
+            const cardWidth = parseFloat(rootStyle.getPropertyValue('--card-width'));
+            const chipSize = parseFloat(rootStyle.getPropertyValue('--chip-size'));
+            const spacing = parseFloat(rootStyle.getPropertyValue('--spacing'));
             const player1Card1 = document.querySelector('.player-1-card-1').getBoundingClientRect();
             const player1Dealer = document.querySelector('.player-1-dealer').getBoundingClientRect();
             const player2SB = document.querySelector('.player-2-sb').getBoundingClientRect();
             const player3BB = document.querySelector('.player-3-bb').getBoundingClientRect();
             console.log('Layout Debug:', {
-                tableWidth: tableWidth,
-                cardWidth: cardWidth,
-                chipSize: chipSize,
-                spacing: spacing,
-                player1Card1: { left: player1Card1.left, bottom: player1Card1.bottom },
-                player1Dealer: { left: player1Dealer.left, bottom: player1Dealer.bottom },
-                player2SB: { left: player2SB.left, top: player2SB.top },
-                player3BB: { left: player3BB.left, top: player3BB.top }
+                tableWidth: `${tableWidth}px`,
+                cardWidth: `${cardWidth}px`,
+                chipSize: `${chipSize}px`,
+                spacing: `${spacing}px`,
+                player1Card1: { left: Math.round(player1Card1.left), bottom: Math.round(player1Card1.bottom) },
+                player1Dealer: { left: Math.round(player1Dealer.left), bottom: Math.round(player1Dealer.bottom) },
+                player2SB: { left: Math.round(player2SB.left), top: Math.round(player2SB.top) },
+                player3BB: { left: Math.round(player3BB.left), top: Math.round(player3BB.top) }
             });
         }
 
         function updateTableWidth() {
             const vh = window.innerHeight;
             const vw = window.innerWidth;
-            const buttonHeight = Math.min(Math.max(48, vw * 0.07), 68);
-            const buttonPadding = Math.min(Math.max(6, vw * 0.01), 10);
-            const buttonMargin = Math.min(Math.max(10, vw * 0.02), 20);
-            const tableWidth = Math.min(vw * 0.95, 2 * (vh - buttonHeight - buttonPadding - buttonMargin));
+            const tableWidth = Math.min(vw * 0.95, 2 * (vh - 96));
             document.documentElement.style.setProperty('--table-width', `${tableWidth}px`);
             logLayout();
         }
 
-        window.addEventListener('resize', updateTableWidth);
+        const debouncedUpdateTableWidth = debounce(updateTableWidth, 100);
+        window.addEventListener('resize', debouncedUpdateTableWidth);
         window.addEventListener('load', updateTableWidth);
     </script>
 </head>
