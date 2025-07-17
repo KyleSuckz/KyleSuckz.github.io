@@ -205,10 +205,10 @@
             background: transparent;
             z-index: 3;
         }
-        .player-1-container { left: calc(50% - var(--card-width) - var(--spacing) * 2.5); top: calc(var(--spacing) * 2); }
-        .player-2-container { left: calc(var(--spacing) + var(--card-width) + var(--spacing) * 1.5); top: calc(50% - var(--card-height) / 2 - var(--spacing) * 2.5); }
-        .player-3-container { left: calc(50% + var(--card-width) + var(--spacing) * 0.5); bottom: calc(var(--spacing) * 2); }
-        .player-4-container { right: calc(var(--spacing) + var(--card-width) + var(--spacing) * 1.5); top: calc(50% + var(--card-height) / 2 + var(--spacing) * 2.5); }
+        .player-1-container { left: calc(50% - var(--card-width) - var(--spacing) * 1.5); top: calc(var(--spacing) * 2); }
+        .player-2-container { left: calc(var(--spacing) + var(--card-width) + var(--spacing) * 1.5); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 1.5); }
+        .player-3-container { left: calc(50% + var(--card-width) + var(--spacing) * 1.5); bottom: calc(var(--spacing) * 2); }
+        .player-4-container { right: calc(var(--spacing) + var(--card-width) + var(--spacing) * 1.5); top: calc(50% + var(--card-height) / 2 + var(--chip-size) + var(--spacing) * 1.5); }
 
         .action-buttons {
             margin-top: calc(var(--spacing) * 2);
@@ -298,10 +298,10 @@
                 padding: clamp(4px, 1vw, 8px) clamp(8px, 1.5vw, 16px);
                 font-size: clamp(0.7rem, calc(0.01 * var(--table-width)), 0.9rem);
             }
-            .player-1-container { left: calc(50% - var(--card-width) - var(--spacing) * 2.5); top: calc(var(--spacing) * 2); }
-            .player-2-container { left: calc(var(--spacing) + var(--card-width) + var(--spacing) * 1.5); top: calc(50% - var(--card-height) / 2 - var(--spacing) * 2.5); }
-            .player-3-container { left: calc(50% + var(--card-width) + var(--spacing) * 0.5); bottom: calc(var(--spacing) * 2); }
-            .player-4-container { right: calc(var(--spacing) + var(--card-width) + var(--spacing) * 1.5); top: calc(50% + var(--card-height) / 2 + var(--spacing) * 2.5); }
+            .player-1-container { left: calc(50% - var(--card-width) - var(--spacing) * 1.5); top: calc(var(--spacing) * 2); }
+            .player-2-container { left: calc(var(--spacing) + var(--card-width) + var(--spacing) * 1.5); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 1.5); }
+            .player-3-container { left: calc(50% + var(--card-width) + var(--spacing) * 1.5); bottom: calc(var(--spacing) * 2); }
+            .player-4-container { right: calc(var(--spacing) + var(--card-width) + var(--spacing) * 1.5); top: calc(50% + var(--card-height) / 2 + var(--chip-size) + var(--spacing) * 1.5); }
         }
 
         @media (prefers-reduced-motion: reduce) {
