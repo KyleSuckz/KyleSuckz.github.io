@@ -35,7 +35,6 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            margin-top: 20px;
             background: radial-gradient(circle at 50% 30%, #1a1a1a, #0a0a0a);
             font-family: Arial, sans-serif;
             overflow: auto;
@@ -44,7 +43,7 @@
 
         .game-container {
             width: clamp(70vw, 95vw, 95vw);
-            max-height: clamp(50vh, calc(100vh - 20px - var(--spacing) - 40px), calc(95vw / 2));
+            max-height: calc(100vh - var(--spacing) - clamp(6px, 1vw, 10px) - clamp(28px, 5vw, 40px));
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -274,7 +273,7 @@
             }
             .game-container {
                 width: clamp(80vw, 95vw, 95vw);
-                max-height: clamp(55vh, calc(100vh - 20px - var(--spacing) - 30px), calc(95vw / 2));
+                max-height: calc(100vh - var(--spacing) - clamp(6px, 1vw, 10px) - clamp(28px, 5vw, 40px));
             }
             .table {
                 box-shadow: 0 12px 25px var(--shadow-color), inset 0 0 12px rgba(0, 0, 0, 0.6);
