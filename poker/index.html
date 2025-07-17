@@ -20,35 +20,39 @@
             overflow-x: hidden;
         }
 
+        .label-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            z-index: 10;
+        }
+
         .table-container {
             max-width: calc(min(100vw, 100vh * 2));
-            height: calc(min(100vh, 100vw * 0.5) + 120px);
-            max-height: calc(min(70vh, 100vw * 0.5) + 120px);
+            height: calc(min(100vh, 100vw * 0.5) + 10vh);
+            max-height: calc(min(70vh, 100vw * 0.5) + 10vh);
             aspect-ratio: 2 / 1;
             margin: 0 5vw;
             position: relative;
-            perspective: 1000px;
             min-width: 300px;
             border: 2px solid red;
         }
         .table-container::before {
-            content: "Table Container";
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
+            content: "Red: Table Container (Starts here)";
+            top: -2.5rem;
             color: red;
-            font-weight: bold;
         }
         .table-container::after {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            border: 2px dashed red;
-            pointer-events: none;
+            content: "Ends here";
+            bottom: -2.5rem;
+            color: red;
         }
         .table-container::before, .table-container::after {
-            z-index: 10;
+            @media (max-width: 600px) {
+                top: -1.5rem;
+                bottom: -1.5rem;
+            }
         }
 
         .table {
@@ -60,57 +64,65 @@
             background: radial-gradient(circle at 50% 20%, #254b33, #1e4d2b);
         }
         .table::before {
-            content: "Table (Starts here)";
-            position: absolute;
-            top: -25px;
-            left: 50%;
-            transform: translateX(-50%);
+            content: "Black: Table (Starts here)";
+            top: -3rem;
             color: black;
-            font-weight: bold;
         }
         .table::after {
             content: "Ends here";
-            position: absolute;
-            bottom: -25px;
-            left: 50%;
-            transform: translateX(-50%);
+            bottom: -3rem;
             color: black;
-            font-weight: bold;
         }
         .table::before, .table::after {
-            z-index: 10;
+            @media (max-width: 600px) {
+                top: -2rem;
+                bottom: -2rem;
+            }
         }
 
         .table-felt {
             width: 94%;
             height: 88%;
             background: #2a6041;
-            border: 5px solid #1a1a1a; /* Inner dark green border */
+            border: 5px solid #1a1a1a; /* Dark green: Inner border */
             border-radius: 140px;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            border: 2px solid green; /* Outer light green border */
+            border: 2px solid green; /* Light green: Outer border */
         }
         .table-felt::before {
-            content: "Table Felt (Inside light green border)";
-            position: absolute;
-            top: -25px;
-            left: 50%;
-            transform: translateX(-50%);
+            content: "Light Green: Border (Starts here)";
+            top: -3.5rem;
             color: green;
-            font-weight: bold;
+        }
+        .table-felt::after {
+            content: "Light Green: Border (Ends here)";
+            bottom: -3.5rem;
+            color: green;
+        }
+        .table-felt .dark-green-start::before {
+            content: "Dark Green: Inner Border (Starts here)";
+            top: -4rem;
+            color: #1a1a1a;
+        }
+        .table-felt .dark-green-end::after {
+            content: "Dark Green: Inner Border (Ends here)";
+            bottom: -4rem;
+            color: #1a1a1a;
         }
         .table-felt::after {
             content: "";
-            position: absolute;
             top: 2px; left: 2px; right: 2px; bottom: 2px;
             border: 2px dashed #2a6041;
             pointer-events: none;
         }
-        .table-felt::before, .table-felt::after {
-            z-index: 10;
+        .table-felt::before, .table-felt::after, .table-felt .dark-green-start::before, .table-felt .dark-green-end::after {
+            @media (max-width: 600px) {
+                top: -2rem;
+                bottom: -2rem;
+            }
         }
 
         .player {
@@ -130,10 +142,10 @@
             z-index: 4;
         }
 
-        .player-human { bottom: -20px; left: 50%; transform: translateX(-50%); }
-        .player-ai1 { left: -20px; top: 50%; transform: translateY(-50%); }
-        .player-ai2 { top: -20px; left: 50%; transform: translateX(-50%); }
-        .player-ai3 { right: -20px; top: 50%; transform: translateY(-50%); }
+        .player-human { bottom: -5%; left: 50%; transform: translateX(-50%); min-bottom: -20px; }
+        .player-ai1 { left: -5%; top: 50%; transform: translateY(-50%); min-left: -20px; }
+        .player-ai2 { top: -5%; left: 50%; transform: translateX(-50%); min-top: -20px; }
+        .player-ai3 { right: -5%; top: 50%; transform: translateY(-50%); min-right: -20px; }
 
         .community-cards {
             position: absolute;
@@ -148,17 +160,15 @@
         }
         .community-cards::before {
             content: "Community Cards (Inside Table Felt)";
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
+            top: -2rem;
             color: yellow;
-            font-weight: bold;
         }
 
         .community-card {
-            width: 80px;
-            height: 116px;
+            width: 10%;
+            height: 14.5vw;
+            min-width: 60px;
+            min-height: 87px;
             margin: 0 2px;
             background: #fff;
             border-radius: 8px;
@@ -176,45 +186,43 @@
             border: 2px solid orange;
         }
         .card-pair::before {
-            content: "Player Cards (Inside Table Felt)";
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
+            content: "Player Cards (Inside Table)";
+            top: -2rem;
             color: orange;
-            font-weight: bold;
         }
 
         .card {
-            width: 80px;
-            height: 116px;
+            width: 10%;
+            height: 14.5vw;
+            min-width: 60px;
+            min-height: 87px;
             padding: 4px;
-            background: #fff;
+            background: #fff url('assets/cards/ace_of_spades.png') no-repeat center;
             border-radius: 8px;
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
         }
 
-        .card-pair-player1 { bottom: 7px; left: 50%; transform: translateX(-50%); }
+        .card-pair-player1 { bottom: 2%; left: 50%; transform: translateX(-50%); }
         .card-pair-player1 .card:nth-child(1) { background-image: url('assets/cards/ace_of_spades.png'); }
         .card-pair-player1 .card:nth-child(2) { margin-left: 4px; background-image: url('assets/cards/king_of_hearts.png'); }
 
-        .card-pair-player2 { left: 7px; top: 50%; transform: translateY(-50%); }
+        .card-pair-player2 { left: 2%; top: 50%; transform: translateY(-50%); }
         .card-pair-player2 .card:nth-child(1) { background-image: url('assets/cards/card_back.png'); }
         .card-pair-player2 .card:nth-child(2) { margin-left: 4px; background-image: url('assets/cards/card_back.png'); }
 
-        .card-pair-player3 { top: 7px; left: 50%; transform: translateX(-50%); }
+        .card-pair-player3 { top: 2%; left: 50%; transform: translateX(-50%); }
         .card-pair-player3 .card:nth-child(1) { background-image: url('assets/cards/card_back.png'); }
         .card-pair-player3 .card:nth-child(2) { margin-left: 4px; background-image: url('assets/cards/card_back.png'); }
 
-        .card-pair-player4 { right: 7px; top: 50%; transform: translateY(-50%); }
+        .card-pair-player4 { right: 2%; top: 50%; transform: translateY(-50%); }
         .card-pair-player4 .card:nth-child(1) { background-image: url('assets/cards/card_back.png'); }
         .card-pair-player4 .card:nth-child(2) { margin-left: 4px; background-image: url('assets/cards/card_back.png'); }
     </style>
 </head>
 <body>
-    <div class="table-container">
+    <div class="table-container" role="region" aria-label="Texas Hold'em Table Container">
         <div class="table">
             <div class="table-felt">
                 <div class="community-cards">
