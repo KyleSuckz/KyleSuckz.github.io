@@ -8,7 +8,7 @@
     <link rel="preload" href="./assets/cards/card_back.png" as="image">
     <style>
         :root {
-            --table-width: min(98vw, calc(2 * (100vh - 80px)));
+            --table-width: min(98vw, calc(2.2 * (100vh - 80px)));
             --table-border-width: clamp(8px, 1.5vw, 20px);
             --felt-border-width: clamp(2px, 0.5vw, 6px);
             --table-radius: clamp(80px, 12vw, 180px);
@@ -16,9 +16,9 @@
             --felt-border-color: #1a1a1a;
             --shadow-color: rgba(0, 0, 0, 0.8);
             --3d-transform: rotateX(3deg);
-            --card-width: clamp(40px, calc(0.045 * var(--table-width)), 120px);
+            --card-width: clamp(40px, calc(0.05 * var(--table-width)), 140px);
             --card-height: calc(var(--card-width) * 1.4);
-            --chip-size: clamp(24px, calc(0.03 * var(--table-width)), 80px);
+            --chip-size: clamp(24px, calc(0.035 * var(--table-width)), 90px);
             --button-bg: linear-gradient(#4a4a4a, #2a2a2a);
             --button-hover-bg: linear-gradient(#5a5a5a, #3a3a3a);
             --name-font-size: clamp(0.7rem, calc(0.009 * var(--table-width)), 1.3rem);
@@ -268,9 +268,9 @@
                 --felt-border-width: clamp(1px, 0.3vw, 3px);
                 --table-radius: clamp(50px, 8vw, 80px);
                 --felt-radius: calc(var(--table-radius) - 6px);
-                --card-width: clamp(30px, calc(0.045 * var(--table-width)), 60px);
+                --card-width: clamp(30px, calc(0.05 * var(--table-width)), 70px);
                 --card-height: calc(var(--card-width) * 1.4);
-                --chip-size: clamp(20px, calc(0.03 * var(--table-width)), 40px);
+                --chip-size: clamp(20px, calc(0.035 * var(--table-width)), 50px);
                 --name-font-size: clamp(0.6rem, calc(0.009 * var(--table-width)), 0.9rem);
                 --spacing: max(2px, calc(0.004 * var(--table-width)));
             }
@@ -321,7 +321,7 @@
         function updateTableWidth() {
             const vh = window.innerHeight;
             const vw = window.innerWidth;
-            const tableWidth = Math.min(vw * 0.98, 2 * (vh - 80));
+            const tableWidth = Math.min(vw * 0.98, 2.2 * (vh - 80));
             document.documentElement.style.setProperty('--table-width', `${tableWidth}px`);
             requestAnimationFrame(logLayout);
         }
@@ -331,10 +331,10 @@
             const table = document.querySelector('.table');
             const card = document.querySelector('.player-card');
             const chip = document.querySelector('.chip-stack');
-            const tableWidth = parseFloat(getComputedStyle(root).getPropertyValue('--table-width'));
+            const tableWidth = parseFloat(getComputedStyle(root).getPropertyValue('--table-width')) || 0;
             const cardWidth = card ? parseFloat(getComputedStyle(card).width) : NaN;
             const chipSize = chip ? parseFloat(getComputedStyle(chip).width) : NaN;
-            const spacing = parseFloat(getComputedStyle(root).getPropertyValue('--spacing'));
+            const spacing = Math.max(3, 0.004 * tableWidth);
             const player1Card1 = document.querySelector('.player-1-card-1').getBoundingClientRect();
             const player1Dealer = document.querySelector('.player-1-dealer').getBoundingClientRect();
             const player2SB = document.querySelector('.player-2-sb').getBoundingClientRect();
