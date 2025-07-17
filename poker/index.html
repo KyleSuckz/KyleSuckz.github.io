@@ -37,13 +37,13 @@
             align-items: flex-start;
             background: radial-gradient(circle at 50% 30%, #1a1a1a, #0a0a0a);
             font-family: Arial, sans-serif;
-            overflow: auto;
+            overflow: hidden;
             position: relative;
         }
 
         .game-container {
-            width: clamp(70vw, 95vw, 95vw);
-            max-height: calc(100vh - var(--spacing) - clamp(6px, 1vw, 10px) - clamp(28px, 5vw, 40px));
+            width: min(95vw, calc(2 * (100vh - clamp(28px, 5vw, 40px) - clamp(6px, 1vw, 10px))));
+            height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -54,6 +54,7 @@
             width: 100%;
             height: 100%;
             aspect-ratio: 2 / 1;
+            flex: 1;
         }
 
         .table {
@@ -241,6 +242,7 @@
             background: rgba(0, 0, 0, 0.5);
             border-radius: 5px;
             padding: clamp(6px, 1vw, 10px);
+            flex: 0 0 auto;
         }
         .action-button {
             padding: clamp(6px, 1.5vw, 12px) clamp(12px, 2vw, 24px);
@@ -272,8 +274,8 @@
                 --spacing: clamp(2px, 0.4vw, 4px);
             }
             .game-container {
-                width: clamp(80vw, 95vw, 95vw);
-                max-height: calc(100vh - var(--spacing) - clamp(6px, 1vw, 10px) - clamp(28px, 5vw, 40px));
+                width: min(95vw, calc(2 * (100vh - clamp(28px, 5vw, 40px) - clamp(6px, 1vw, 10px))));
+                height: 100vh;
             }
             .table {
                 box-shadow: 0 12px 25px var(--shadow-color), inset 0 0 12px rgba(0, 0, 0, 0.6);
@@ -329,6 +331,10 @@
                     <div class="player-card player-3-card-2"></div>
                     <div class="player-card player-2-card-1"></div>
                     <div class="player-card player-2-card-2"></div>
+                    <div class="player-card player-4-card-1"></div>
+                    <div class="player-card player-4-card-2"></div>
+                    <div class="chip-stack player-1-chips"></div>
+                    <div class="chip-stack player-3-chips"></div>
                     <div class="player-card player-4-card-1"></div>
                     <div class="player-card player-4-card-2"></div>
                     <div class="chip-stack player-1-chips"></div>
