@@ -8,7 +8,7 @@
     <link rel="preload" href="./assets/cards/card_back.png" as="image">
     <style>
         :root {
-            --table-width: min(98vw, calc(2.5 * (100vh - 80px)));
+            --table-width: clamp(360px, 98vw, 1635.62px);
             --table-border-width: clamp(8px, 1.5vw, 20px);
             --felt-border-width: clamp(2px, 0.5vw, 6px);
             --table-radius: clamp(80px, 12vw, 180px);
@@ -110,10 +110,10 @@
             white-space: nowrap;
             max-width: calc(var(--table-width) * 0.1);
         }
-        .player-1-name { bottom: calc(var(--table-border-width) + var(--spacing) * 4); left: 50%; transform: translate(-50%, 50%); }
-        .player-2-name { left: calc(var(--table-border-width) + var(--felt-border-width) + var(--spacing) * 4); top: 50%; transform: translate(0, -50%) rotate(-90deg); }
-        .player-3-name { top: calc(var(--spacing) * 3); left: 50%; transform: translate(-50%, -100%); }
-        .player-4-name { right: calc(var(--table-border-width) + var(--felt-border-width) + var(--spacing) * 4); top: 50%; transform: translate(0, -50%) rotate(90deg); }
+        .player-1-name { bottom: calc(var(--table-border-width) + var(--spacing) * 2); left: 50%; transform: translate(-50%, 50%); }
+        .player-2-name { left: calc(var(--table-border-width) + var(--felt-border-width) + var(--spacing) * 2); top: 50%; transform: translate(0, -50%) rotate(-90deg); }
+        .player-3-name { top: calc(var(--spacing) * 2); left: 50%; transform: translate(-50%, -100%); }
+        .player-4-name { right: calc(var(--table-border-width) + var(--felt-border-width) + var(--spacing) * 2); top: 50%; transform: translate(0, -50%) rotate(90deg); }
 
         .community-cards {
             position: absolute;
@@ -173,10 +173,10 @@
             will-change: transform;
             z-index: 2;
         }
-        .player-1-card-1 { bottom: var(--spacing); left: min(50% - var(--card-width) - var(--spacing) * 1.5, calc(50% - var(--card-width) - var(--spacing) * 1.5)); }
-        .player-1-card-2 { bottom: var(--spacing); left: min(50% + var(--spacing) * 0.5, calc(50% + var(--spacing) * 0.5)); }
-        .player-3-card-1 { top: var(--spacing); left: min(50% - var(--card-width) - var(--spacing) * 1.5, calc(50% - var(--card-width) - var(--spacing) * 1.5)); }
-        .player-3-card-2 { top: var(--spacing); left: min(50% + var(--spacing) * 0.5, calc(50% + var(--spacing) * 0.5)); }
+        .player-1-card-1 { bottom: var(--spacing); left: calc(50% - var(--card-width) - var(--spacing) * 1.5); }
+        .player-1-card-2 { bottom: var(--spacing); left: calc(50% + var(--spacing) * 0.5); }
+        .player-3-card-1 { top: var(--spacing); left: calc(50% - var(--card-width) - var(--spacing) * 1.5); }
+        .player-3-card-2 { top: var(--spacing); left: calc(50% + var(--spacing) * 0.5); }
         .player-2-card-1 { left: var(--spacing); top: calc(50% - var(--card-height) / 2); }
         .player-2-card-2 { left: calc(var(--spacing) + var(--card-width) + var(--spacing) * 1.5); top: calc(50% - var(--card-height) / 2); }
         .player-4-card-1 { right: var(--spacing); top: calc(50% - var(--card-height) / 2); }
@@ -191,34 +191,24 @@
             box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.4);
             z-index: 2;
         }
-        .player-1-chips { bottom: var(--spacing); left: min(50% + var(--card-width) + var(--spacing) * 2.5, calc(50% + var(--card-width) + var(--spacing) * 2.5)); }
-        .player-3-chips { top: var(--spacing); left: min(50% - var(--card-width) * 2 - var(--spacing) * 2.5, calc(50% - var(--card-width) * 2 - var(--spacing) * 2.5)); }
+        .player-1-chips { bottom: var(--spacing); left: calc(50% + var(--card-width) + var(--spacing) * 2.5); }
+        .player-3-chips { top: var(--spacing); left: calc(50% - var(--card-width) * 2 - var(--spacing) * 2.5); }
         .player-2-chips { left: var(--spacing); top: calc(50% + var(--card-height) / 2 + var(--spacing) * 1.5); }
         .player-4-chips { right: var(--spacing); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 1.5); }
 
-        .dealer-button {
+        .dealer-button-container {
             position: absolute;
             width: var(--chip-size);
             height: var(--chip-size);
             border-radius: 50%;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: transparent;
             z-index: 3;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: clamp(0.5rem, calc(0.005 * var(--table-width)), 1rem);
-            color: #000;
-            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
         }
-        .dealer-button.dealer { background: radial-gradient(#ffffff, #d3d3d3); }
-        .dealer-button.sb { background: radial-gradient(#4682b4, #2f4f4f); }
-        .dealer-button.bb { background: radial-gradient(#ffd700, #daa520); }
-        .dealer-button::after {
-            content: attr(data-label);
-        }
-        .player-1-dealer { left: calc(50% - var(--card-width) * 2 - var(--spacing) * 2.5); top: var(--spacing); }
-        .player-2-sb { left: calc(var(--spacing) + var(--card-width) + var(--spacing) * 1.5); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 1.5); }
-        .player-3-bb { left: calc(50% + var(--card-width) + var(--spacing) * 2.5); bottom: var(--spacing); }
+        .player-1-container { left: calc(50% - var(--card-width) * 2 - var(--spacing) * 5); top: calc(var(--spacing) * 3); }
+        .player-2-container { left: calc(var(--spacing) + var(--card-width) + var(--spacing) * 5); top: calc(50% - var(--card-height) / 2 - var(--spacing) * 3); }
+        .player-3-container { left: calc(50% + var(--card-width) + var(--spacing) * 5); bottom: calc(var(--spacing) * 3); }
+        .player-4-container { right: calc(var(--spacing) + var(--card-width) + var(--spacing) * 5); bottom: calc(var(--spacing) * 3); }
 
         @keyframes dealCard {
             from { transform: translate(-50%, -50%) scale(0); left: 50%; top: 50%; }
@@ -278,9 +268,7 @@
             .game-container {
                 width: var(--table-width);
                 max-height: calc(100vh - 20px);
-            }
-            .table {
-                box-shadow: 0 12px 25px var(--shadow-color), inset 0 0 12px rgba(0, 0, 0, 0.6);
+                box-shadow: 0 12px 25px var(--shadow-color);
             }
             .table-felt {
                 border: var(--felt-border-width) solid var(--felt-border-color);
@@ -294,30 +282,26 @@
                 height: calc(clamp(0.7rem, calc(0.01 * var(--table-width)), 1rem) * 1.5);
                 top: calc(50% - calc(var(--card-height) + var(--spacing) * 5) / 2 - calc(clamp(0.7rem, calc(0.01 * var(--table-width)), 1rem) * 1.5) - calc(var(--spacing) / 2));
                 font-size: clamp(0.7rem, calc(0.01 * var(--table-width)), 1rem);
-                line-height: 1;
                 padding: calc(var(--spacing) / 2);
             }
             .pot-area {
                 width: calc(var(--card-width) * 4 + var(--spacing) * 6);
                 height: calc(clamp(0.7rem, calc(0.01 * var(--table-width)), 1rem) * 1.5);
                 font-size: clamp(0.7rem, calc(0.01 * var(--table-width)), 1rem);
-                line-height: 1;
                 padding: calc(var(--spacing) / 2);
             }
             .action-buttons {
-                margin-top: calc(var(--spacing) * 1.5);
+                margin-top: calc(var(--spacing) * 2);
                 padding: clamp(3px, 0.6vw, 6px);
             }
             .action-button {
                 padding: clamp(4px, 1vw, 8px) clamp(8px, 1.5vw, 16px);
                 font-size: clamp(0.7rem, calc(0.01 * var(--table-width)), 0.9rem);
             }
-            .dealer-button {
-                font-size: clamp(0.4rem, calc(0.005 * var(--table-width)), 0.7rem);
-            }
-            .player-1-dealer { left: calc(50% - var(--card-width) * 2 - var(--spacing) * 2.5); top: var(--spacing); }
-            .player-2-sb { left: calc(var(--spacing) + var(--card-width) + var(--spacing) * 1.5); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 1.5); }
-            .player-3-bb { left: calc(50% + var(--card-width) + var(--spacing) * 2.5); bottom: var(--spacing); }
+            .player-1-container { left: calc(50% - var(--card-width) * 2 - var(--spacing) * 5); top: calc(var(--spacing) * 3); }
+            .player-2-container { left: calc(var(--spacing) + var(--card-width) + var(--spacing) * 5); top: calc(50% - var(--card-height) / 2 - var(--spacing) * 3); }
+            .player-3-container { left: calc(50% + var(--card-width) + var(--spacing) * 5); bottom: calc(var(--spacing) * 3); }
+            .player-4-container { right: calc(var(--spacing) + var(--card-width) + var(--spacing) * 5); bottom: calc(var(--spacing) * 3); }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -327,66 +311,79 @@
     </style>
     <script>
         function updateTableWidth() {
+            const root = document.documentElement;
             const vh = window.innerHeight;
             const vw = window.innerWidth;
             const tableWidth = Math.min(vw * 0.98, 2.5 * (vh - 80));
-            document.documentElement.style.setProperty('--table-width', `${tableWidth}px`);
+            root.style.setProperty('--table-width', `${tableWidth}px`);
             requestAnimationFrame(logLayout);
         }
 
         function logLayout() {
             const root = document.documentElement;
-            const table = document.querySelector('.table');
-            const card = document.querySelector('.player-card');
-            const chip = document.querySelector('.chip-stack');
             const tableWidth = parseFloat(getComputedStyle(root).getPropertyValue('--table-width')) || 0;
-            const cardWidth = card ? parseFloat(getComputedStyle(card).width) : NaN;
-            const chipSize = chip ? parseFloat(getComputedStyle(chip).width) : NaN;
+            const cardWidth = parseFloat(getComputedStyle(document.querySelector('.player-card')).width) || 0;
+            const chipSize = parseFloat(getComputedStyle(document.querySelector('.chip-stack')).width) || 0;
             const spacing = Math.max(4, 0.006 * tableWidth);
-            const player1Card1 = document.querySelector('.player-1-card-1').getBoundingClientRect();
-            const player1Card2 = document.querySelector('.player-1-card-2').getBoundingClientRect();
-            const player1Chips = document.querySelector('.player-1-chips').getBoundingClientRect();
-            const player1Dealer = document.querySelector('.player-1-dealer').getBoundingClientRect();
-            const player2Card1 = document.querySelector('.player-2-card-1').getBoundingClientRect();
-            const player2Card2 = document.querySelector('.player-2-card-2').getBoundingClientRect();
-            const player2Chips = document.querySelector('.player-2-chips').getBoundingClientRect();
-            const player2SB = document.querySelector('.player-2-sb').getBoundingClientRect();
-            const player3Card1 = document.querySelector('.player-3-card-1').getBoundingClientRect();
-            const player3Card2 = document.querySelector('.player-3-card-2').getBoundingClientRect();
-            const player3Chips = document.querySelector('.player-3-chips').getBoundingClientRect();
-            const player3BB = document.querySelector('.player-3-bb').getBoundingClientRect();
+            const players = {
+                player1: {
+                    card1: document.querySelector('.player-1-card-1')?.getBoundingClientRect(),
+                    card2: document.querySelector('.player-1-card-2')?.getBoundingClientRect(),
+                    chips: document.querySelector('.player-1-chips')?.getBoundingClientRect(),
+                    container: document.querySelector('.player-1-container')?.getBoundingClientRect()
+                },
+                player2: {
+                    card1: document.querySelector('.player-2-card-1')?.getBoundingClientRect(),
+                    card2: document.querySelector('.player-2-card-2')?.getBoundingClientRect(),
+                    chips: document.querySelector('.player-2-chips')?.getBoundingClientRect(),
+                    container: document.querySelector('.player-2-container')?.getBoundingClientRect()
+                },
+                player3: {
+                    card1: document.querySelector('.player-3-card-1')?.getBoundingClientRect(),
+                    card2: document.querySelector('.player-3-card-2')?.getBoundingClientRect(),
+                    chips: document.querySelector('.player-3-chips')?.getBoundingClientRect(),
+                    container: document.querySelector('.player-3-container')?.getBoundingClientRect()
+                },
+                player4: {
+                    card1: document.querySelector('.player-4-card-1')?.getBoundingClientRect(),
+                    card2: document.querySelector('.player-4-card-2')?.getBoundingClientRect(),
+                    chips: document.querySelector('.player-4-chips')?.getBoundingClientRect(),
+                    container: document.querySelector('.player-4-container')?.getBoundingClientRect()
+                }
+            };
             console.log('Layout Debug:', {
                 tableWidth: `${tableWidth.toFixed(2)}px`,
                 cardWidth: `${cardWidth.toFixed(2)}px`,
                 chipSize: `${chipSize.toFixed(2)}px`,
                 spacing: `${spacing.toFixed(2)}px`,
-                player1Card1: { left: Math.round(player1Card1.left), bottom: Math.round(player1Card1.bottom) },
-                player1Card2: { left: Math.round(player1Card2.left), bottom: Math.round(player1Card2.bottom) },
-                player1Chips: { left: Math.round(player1Chips.left), bottom: Math.round(player1Chips.bottom) },
-                player1Dealer: { left: Math.round(player1Dealer.left), top: Math.round(player1Dealer.top) },
-                player2Card1: { left: Math.round(player2Card1.left), top: Math.round(player2Card1.top) },
-                player2Card2: { left: Math.round(player2Card2.left), top: Math.round(player2Card2.top) },
-                player2Chips: { left: Math.round(player2Chips.left), top: Math.round(player2Chips.top) },
-                player2SB: { left: Math.round(player2SB.left), top: Math.round(player2SB.top) },
-                player3Card1: { left: Math.round(player3Card1.left), top: Math.round(player3Card1.top) },
-                player3Card2: { left: Math.round(player3Card2.left), top: Math.round(player3Card2.top) },
-                player3Chips: { left: Math.round(player3Chips.left), top: Math.round(player3Chips.top) },
-                player3BB: { left: Math.round(player3BB.left), bottom: Math.round(player3BB.bottom) }
+                player1: {
+                    card1: players.player1.card1 ? { left: Math.round(players.player1.card1.left), bottom: Math.round(players.player1.card1.bottom) } : null,
+                    card2: players.player1.card2 ? { left: Math.round(players.player1.card2.left), bottom: Math.round(players.player1.card2.bottom) } : null,
+                    chips: players.player1.chips ? { left: Math.round(players.player1.chips.left), bottom: Math.round(players.player1.chips.bottom) } : null,
+                    container: players.player1.container ? { left: Math.round(players.player1.container.left), top: Math.round(players.player1.container.top) } : null
+                },
+                player2: {
+                    card1: players.player2.card1 ? { left: Math.round(players.player2.card1.left), top: Math.round(players.player2.card1.top) } : null,
+                    card2: players.player2.card2 ? { left: Math.round(players.player2.card2.left), top: Math.round(players.player2.card2.top) } : null,
+                    chips: players.player2.chips ? { left: Math.round(players.player2.chips.left), top: Math.round(players.player2.chips.top) } : null,
+                    container: players.player2.container ? { left: Math.round(players.player2.container.left), top: Math.round(players.player2.container.top) } : null
+                },
+                player3: {
+                    card1: players.player3.card1 ? { left: Math.round(players.player3.card1.left), top: Math.round(players.player3.card1.top) } : null,
+                    card2: players.player3.card2 ? { left: Math.round(players.player3.card2.left), top: Math.round(players.player3.card2.top) } : null,
+                    chips: players.player3.chips ? { left: Math.round(players.player3.chips.left), top: Math.round(players.player3.chips.top) } : null,
+                    container: players.player3.container ? { left: Math.round(players.player3.container.left), bottom: Math.round(players.player3.container.bottom) } : null
+                },
+                player4: {
+                    card1: players.player4.card1 ? { right: Math.round(players.player4.card1.right), top: Math.round(players.player4.card1.top) } : null,
+                    card2: players.player4.card2 ? { right: Math.round(players.player4.card2.right), top: Math.round(players.player4.card2.top) } : null,
+                    chips: players.player4.chips ? { right: Math.round(players.player4.chips.right), top: Math.round(players.player4.chips.top) } : null,
+                    container: players.player4.container ? { right: Math.round(players.player4.container.right), bottom: Math.round(players.player4.container.bottom) } : null
+                }
             });
         }
 
-        let lastUpdate = 0;
-        function handleResize() {
-            const now = performance.now();
-            if (now - lastUpdate >= 16) {
-                updateTableWidth();
-                lastUpdate = now;
-            } else {
-                requestAnimationFrame(handleResize);
-            }
-        }
-
-        window.addEventListener('resize', handleResize);
+        window.addEventListener('resize', updateTableWidth);
         window.addEventListener('load', updateTableWidth);
     </script>
 </head>
@@ -410,9 +407,10 @@
                     <div class="chip-stack player-3-chips"></div>
                     <div class="chip-stack player-2-chips"></div>
                     <div class="chip-stack player-4-chips"></div>
-                    <div class="dealer-button player-1-dealer dealer" data-label="D" aria-label="Dealer Button"></div>
-                    <div class="dealer-button player-2-sb sb" data-label="SB" aria-label="Small Blind"></div>
-                    <div class="dealer-button player-3-bb bb" data-label="BB" aria-label="Big Blind"></div>
+                    <div class="dealer-button-container player-1-container" aria-label="Player 1 Dealer/Blinds Container"></div>
+                    <div class="dealer-button-container player-2-container" aria-label="Player 2 Dealer/Blinds Container"></div>
+                    <div class="dealer-button-container player-3-container" aria-label="Player 3 Dealer/Blinds Container"></div>
+                    <div class="dealer-button-container player-4-container" aria-label="Player 4 Dealer/Blinds Container"></div>
                 </div>
                 <div class="player-name player-1-name" aria-label="Player 1 (Human)">Player 1</div>
                 <div class="player-name player-3-name" aria-label="Player 3 (AI 2)">AI 2</div>
