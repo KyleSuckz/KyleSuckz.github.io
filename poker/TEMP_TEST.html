@@ -43,11 +43,12 @@
 
         .game-container {
             width: var(--table-width);
-            max-height: 100vh;
+            max-height: calc(100vh - 40px);
             display: flex;
             flex-direction: column;
             align-items: center;
             perspective: 1000px;
+            overflow-y: auto;
         }
 
         .table-container {
@@ -109,10 +110,10 @@
             white-space: nowrap;
             max-width: calc(var(--table-width) * 0.1);
         }
-        .player-1-name { bottom: calc(var(--spacing) * 3); left: 50%; transform: translate(-50%, 50%); }
-        .player-2-name { left: calc(var(--spacing) * 2 + var(--table-border-width)); top: 50%; transform: translate(0, -50%) rotate(-90deg); }
+        .player-1-name { bottom: calc(var(--table-border-width) + var(--spacing) * 4); left: 50%; transform: translate(-50%, 50%); }
+        .player-2-name { left: calc(var(--table-border-width) + var(--felt-border-width) + var(--spacing) * 4); top: 50%; transform: translate(0, -50%) rotate(-90deg); }
         .player-3-name { top: calc(var(--spacing) * 3); left: 50%; transform: translate(-50%, -100%); }
-        .player-4-name { right: calc(var(--spacing) * 2 + var(--table-border-width)); top: 50%; transform: translate(0, -50%) rotate(90deg); }
+        .player-4-name { right: calc(var(--table-border-width) + var(--felt-border-width) + var(--spacing) * 4); top: 50%; transform: translate(0, -50%) rotate(90deg); }
 
         .community-cards {
             position: absolute;
@@ -215,9 +216,9 @@
         .dealer-button::after {
             content: attr(data-label);
         }
-        .player-1-dealer { bottom: var(--spacing); left: calc(50% - var(--card-width) * 2 - var(--spacing) * 2.5); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
+        .player-1-dealer { left: calc(50% - var(--card-width) * 2 - var(--spacing) * 2.5); top: calc(var(--spacing)); }
         .player-2-sb { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 1.5); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
-        .player-3-bb { top: var(--spacing); left: calc(50% + var(--card-width) + var(--spacing) * 0.5); bottom: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
+        .player-3-bb { left: calc(50% + var(--card-width) + var(--spacing) * 0.5); bottom: calc(var(--spacing)); }
 
         @keyframes dealCard {
             from { transform: translate(-50%, -50%) scale(0); left: 50%; top: 50%; }
@@ -236,10 +237,7 @@
         }
 
         .action-buttons {
-            position: absolute;
-            bottom: calc(var(--spacing) * 2);
-            left: 50%;
-            transform: translateX(-50%);
+            margin-top: calc(var(--spacing) * 2);
             display: flex;
             gap: clamp(6px, 1vw, 12px);
             flex-wrap: wrap;
@@ -279,7 +277,7 @@
             }
             .game-container {
                 width: var(--table-width);
-                max-height: 100vh;
+                max-height: calc(100vh - 20px);
             }
             .table {
                 box-shadow: 0 12px 25px var(--shadow-color), inset 0 0 12px rgba(0, 0, 0, 0.6);
@@ -307,7 +305,7 @@
                 padding: calc(var(--spacing) / 2);
             }
             .action-buttons {
-                bottom: calc(var(--spacing) * 1.5);
+                margin-top: calc(var(--spacing) * 1.5);
                 padding: clamp(3px, 0.6vw, 6px);
             }
             .action-button {
@@ -354,7 +352,7 @@
                 player1Card1: { left: Math.round(player1Card1.left), bottom: Math.round(player1Card1.bottom) },
                 player1Dealer: { left: Math.round(player1Dealer.left), top: Math.round(player1Dealer.top) },
                 player2SB: { left: Math.round(player2SB.left), top: Math.round(player2SB.top) },
-                player3BB: { left: Math.round(player3BB.left), top: Math.round(player3BB.top) }
+                player3BB: { left: Math.round(player3BB.left), bottom: Math.round(player3BB.bottom) }
             });
         }
 
@@ -402,11 +400,11 @@
                 <div class="player-name player-2-name" aria-label="Player 2 (AI 1)">AI 1</div>
                 <div class="player-name player-4-name" aria-label="Player 4 (AI 3)">AI 3</div>
             </div>
-            <div class="action-buttons" role="group" aria-label="Player Action Buttons">
-                <button class="action-button" aria-label="Fold" tabindex="0">Fold</button>
-                <button class="action-button" aria-label="Call" tabindex="0">Call</button>
-                <button class="action-button" aria-label="Raise" tabindex="0">Raise</button>
-            </div>
+        </div>
+        <div class="action-buttons" role="group" aria-label="Player Action Buttons">
+            <button class="action-button" aria-label="Fold" tabindex="0">Fold</button>
+            <button class="action-button" aria-label="Call" tabindex="0">Call</button>
+            <button class="action-button" aria-label="Raise" tabindex="0">Raise</button>
         </div>
     </div>
 </body>
