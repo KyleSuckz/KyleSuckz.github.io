@@ -8,7 +8,7 @@
     <link rel="preload" href="./assets/cards/card_back.png" as="image">
     <style>
         :root {
-            --table-width: min(98vw, calc(2.2 * (100vh - 80px)));
+            --table-width: min(98vw, calc(2.5 * (100vh - 80px)));
             --table-border-width: clamp(8px, 1.5vw, 20px);
             --felt-border-width: clamp(2px, 0.5vw, 6px);
             --table-radius: clamp(80px, 12vw, 180px);
@@ -16,13 +16,13 @@
             --felt-border-color: #1a1a1a;
             --shadow-color: rgba(0, 0, 0, 0.8);
             --3d-transform: rotateX(3deg);
-            --card-width: clamp(40px, calc(0.05 * var(--table-width)), 140px);
+            --card-width: clamp(40px, calc(0.07 * var(--table-width)), 160px);
             --card-height: calc(var(--card-width) * 1.4);
-            --chip-size: clamp(24px, calc(0.035 * var(--table-width)), 90px);
+            --chip-size: clamp(24px, calc(0.05 * var(--table-width)), 100px);
             --button-bg: linear-gradient(#4a4a4a, #2a2a2a);
             --button-hover-bg: linear-gradient(#5a5a5a, #3a3a3a);
-            --name-font-size: clamp(0.7rem, calc(0.009 * var(--table-width)), 1.3rem);
-            --spacing: max(3px, calc(0.004 * var(--table-width)));
+            --name-font-size: clamp(0.7rem, calc(0.01 * var(--table-width)), 1.5rem);
+            --spacing: max(4px, calc(0.006 * var(--table-width)));
         }
 
         * {
@@ -71,8 +71,8 @@
         }
 
         .table-felt {
-            width: 92%;
-            height: 90%;
+            width: 94%;
+            height: 92%;
             background: 
                 url('./assets/table_felt.jpg') center/cover,
                 #2a6041;
@@ -113,8 +113,8 @@
 
         .community-cards {
             position: absolute;
-            width: calc(var(--card-width) * 5 + var(--spacing) * 5);
-            height: calc(var(--card-height) + var(--spacing) * 4);
+            width: calc(var(--card-width) * 5 + var(--spacing) * 6);
+            height: calc(var(--card-height) + var(--spacing) * 5);
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -126,15 +126,15 @@
 
         .action-text-area {
             position: absolute;
-            width: calc(var(--card-width) * 4 + var(--spacing) * 5);
-            height: calc(clamp(0.8rem, calc(0.008 * var(--table-width)), 1.3rem) * 1.5);
-            top: calc(50% - calc(var(--card-height) + var(--spacing) * 4) / 2 - calc(clamp(0.8rem, calc(0.008 * var(--table-width)), 1.3rem) * 1.5) - calc(var(--spacing) / 2));
+            width: calc(var(--card-width) * 4 + var(--spacing) * 6);
+            height: calc(clamp(0.8rem, calc(0.01 * var(--table-width)), 1.5rem) * 1.5);
+            top: calc(50% - calc(var(--card-height) + var(--spacing) * 5) / 2 - calc(clamp(0.8rem, calc(0.01 * var(--table-width)), 1.5rem) * 1.5) - calc(var(--spacing) / 2));
             left: 50%;
             transform: translate(-50%, 0);
             background: radial-gradient(rgba(0, 0, 0, 0.2), transparent);
             border-radius: 10px;
             z-index: 2;
-            font-size: clamp(0.8rem, calc(0.008 * var(--table-width)), 1.3rem);
+            font-size: clamp(0.8rem, calc(0.01 * var(--table-width)), 1.5rem);
             line-height: 1;
             padding: calc(var(--spacing) / 2);
             color: #fff;
@@ -143,15 +143,15 @@
 
         .pot-area {
             position: absolute;
-            width: calc(var(--card-width) * 4 + var(--spacing) * 5);
-            height: calc(clamp(0.8rem, calc(0.008 * var(--table-width)), 1.3rem) * 1.5);
-            top: calc(50% + calc(var(--card-height) + var(--spacing) * 4) / 2 + calc(var(--spacing) / 2));
+            width: calc(var(--card-width) * 4 + var(--spacing) * 6);
+            height: calc(clamp(0.8rem, calc(0.01 * var(--table-width)), 1.5rem) * 1.5);
+            top: calc(50% + calc(var(--card-height) + var(--spacing) * 5) / 2 + calc(var(--spacing) / 2));
             left: 50%;
             transform: translate(-50%, 0);
             background: radial-gradient(rgba(0, 0, 0, 0.2), transparent);
             border-radius: 10px;
             z-index: 1;
-            font-size: clamp(0.8rem, calc(0.008 * var(--table-width)), 1.3rem);
+            font-size: clamp(0.8rem, calc(0.01 * var(--table-width)), 1.5rem);
             line-height: 1;
             padding: calc(var(--spacing) / 2);
             color: #fff;
@@ -169,14 +169,14 @@
             will-change: transform;
             z-index: 2;
         }
-        .player-1-card-1 { bottom: var(--spacing); left: min(50% - var(--card-width) - var(--spacing), calc(50% - var(--card-width) - var(--spacing))); }
-        .player-1-card-2 { bottom: var(--spacing); left: min(50% + var(--spacing), calc(50% + var(--spacing))); }
-        .player-3-card-1 { top: var(--spacing); left: min(50% - var(--card-width) - var(--spacing), calc(50% - var(--card-width) - var(--spacing))); }
-        .player-3-card-2 { top: var(--spacing); left: min(50% + var(--spacing), calc(50% + var(--spacing))); }
+        .player-1-card-1 { bottom: var(--spacing); left: min(50% - var(--card-width) - var(--spacing) * 1.5, calc(50% - var(--card-width) - var(--spacing) * 1.5)); }
+        .player-1-card-2 { bottom: var(--spacing); left: min(50% + var(--spacing) * 0.5, calc(50% + var(--spacing) * 0.5)); }
+        .player-3-card-1 { top: var(--spacing); left: min(50% - var(--card-width) - var(--spacing) * 1.5, calc(50% - var(--card-width) - var(--spacing) * 1.5)); }
+        .player-3-card-2 { top: var(--spacing); left: min(50% + var(--spacing) * 0.5, calc(50% + var(--spacing) * 0.5)); }
         .player-2-card-1 { left: var(--spacing); top: calc(50% - var(--card-height) / 2); }
-        .player-2-card-2 { left: calc(var(--spacing) + var(--card-width) + var(--spacing)); top: calc(50% - var(--card-height) / 2); }
+        .player-2-card-2 { left: calc(var(--spacing) + var(--card-width) + var(--spacing) * 1.5); top: calc(50% - var(--card-height) / 2); }
         .player-4-card-1 { right: var(--spacing); top: calc(50% - var(--card-height) / 2); }
-        .player-4-card-2 { right: calc(var(--spacing) + var(--card-width) + var(--spacing)); top: calc(50% - var(--card-height) / 2); }
+        .player-4-card-2 { right: calc(var(--spacing) + var(--card-width) + var(--spacing) * 1.5); top: calc(50% - var(--card-height) / 2); }
 
         .chip-stack {
             position: absolute;
@@ -187,10 +187,10 @@
             box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.4);
             z-index: 2;
         }
-        .player-1-chips { bottom: var(--spacing); left: min(50% + var(--card-width) + var(--spacing) * 2, calc(50% + var(--card-width) + var(--spacing) * 2)); }
-        .player-3-chips { top: var(--spacing); left: min(50% - var(--card-width) * 2 - var(--spacing) * 2, calc(50% - var(--card-width) * 2 - var(--spacing) * 2)); }
-        .player-2-chips { left: var(--spacing); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
-        .player-4-chips { right: var(--spacing); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
+        .player-1-chips { bottom: var(--spacing); left: min(50% + var(--card-width) + var(--spacing) * 2.5, calc(50% + var(--card-width) + var(--spacing) * 2.5)); }
+        .player-3-chips { top: var(--spacing); left: min(50% - var(--card-width) * 2 - var(--spacing) * 2.5, calc(50% - var(--card-width) * 2 - var(--spacing) * 2.5)); }
+        .player-2-chips { left: var(--spacing); top: calc(50% + var(--card-height) / 2 + var(--spacing) * 1.5); }
+        .player-4-chips { right: var(--spacing); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 1.5); }
 
         .dealer-button {
             position: absolute;
@@ -202,7 +202,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(0.5rem, calc(0.004 * var(--table-width)), 0.9rem);
+            font-size: clamp(0.5rem, calc(0.005 * var(--table-width)), 1rem);
             color: #000;
             text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
         }
@@ -212,9 +212,9 @@
         .dealer-button::after {
             content: attr(data-label);
         }
-        .player-1-dealer { bottom: calc(var(--card-height) + var(--spacing) * 3 + var(--felt-border-width)); left: min(50% - var(--chip-size) / 2, calc(50% - var(--chip-size) / 2)); }
-        .player-2-sb { left: calc(var(--spacing) * 3 + var(--card-width) * 2 + var(--spacing) * 2); top: calc(50% - var(--chip-size) / 2); }
-        .player-3-bb { top: calc(var(--card-height) + var(--spacing) * 3 + var(--felt-border-width)); left: min(50% - var(--chip-size) / 2, calc(50% - var(--chip-size) / 2)); }
+        .player-1-dealer { bottom: calc(var(--card-height) + var(--spacing) * 3.5 + var(--felt-border-width)); left: min(50% - var(--chip-size) / 2, calc(50% - var(--chip-size) / 2)); }
+        .player-2-sb { left: calc(var(--spacing) * 3 + var(--card-width) * 2 + var(--spacing) * 2.5); top: calc(50% - var(--chip-size) / 2); }
+        .player-3-bb { top: calc(var(--card-height) + var(--spacing) * 3.5 + var(--felt-border-width)); left: min(50% - var(--chip-size) / 2, calc(50% - var(--chip-size) / 2)); }
 
         @keyframes dealCard {
             from { transform: translate(-50%, -50%) scale(0); left: 50%; top: 50%; }
@@ -225,7 +225,7 @@
             animation: betChip 0.5s ease-out forwards;
             will-change: transform;
             left: 50%;
-            top: calc(50% + calc(var(--card-height) + var(--spacing) * 4) / 2 + calc(var(--spacing) / 2));
+            top: calc(50% + calc(var(--card-height) + var(--spacing) * 5) / 2 + calc(var(--spacing) / 2));
         }
         @keyframes betChip {
             from { transform: translate(0, 0); }
@@ -252,7 +252,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: clamp(0.8rem, 1.5vw, 1.1rem);
+            font-size: clamp(0.8rem, calc(0.01 * var(--table-width)), 1.2rem);
             transition: background 0.2s ease;
         }
         .action-button:hover {
@@ -268,11 +268,11 @@
                 --felt-border-width: clamp(1px, 0.3vw, 3px);
                 --table-radius: clamp(50px, 8vw, 80px);
                 --felt-radius: calc(var(--table-radius) - 6px);
-                --card-width: clamp(30px, calc(0.05 * var(--table-width)), 70px);
+                --card-width: clamp(30px, calc(0.07 * var(--table-width)), 80px);
                 --card-height: calc(var(--card-width) * 1.4);
-                --chip-size: clamp(20px, calc(0.035 * var(--table-width)), 50px);
-                --name-font-size: clamp(0.6rem, calc(0.009 * var(--table-width)), 0.9rem);
-                --spacing: max(2px, calc(0.004 * var(--table-width)));
+                --chip-size: clamp(20px, calc(0.05 * var(--table-width)), 60px);
+                --name-font-size: clamp(0.6rem, calc(0.01 * var(--table-width)), 1rem);
+                --spacing: max(3px, calc(0.006 * var(--table-width)));
             }
             .game-container {
                 width: var(--table-width);
@@ -285,30 +285,30 @@
                 border: var(--felt-border-width) solid var(--felt-border-color);
             }
             .community-cards {
-                width: calc(var(--card-width) * 5 + var(--spacing) * 5);
-                height: calc(var(--card-height) + var(--spacing) * 4);
+                width: calc(var(--card-width) * 5 + var(--spacing) * 6);
+                height: calc(var(--card-height) + var(--spacing) * 5);
             }
             .action-text-area {
-                width: calc(var(--card-width) * 4 + var(--spacing) * 5);
-                height: calc(clamp(0.7rem, calc(0.008 * var(--table-width)), 0.9rem) * 1.5);
-                top: calc(50% - calc(var(--card-height) + var(--spacing) * 4) / 2 - calc(clamp(0.7rem, calc(0.008 * var(--table-width)), 0.9rem) * 1.5) - calc(var(--spacing) / 2));
-                font-size: clamp(0.7rem, calc(0.008 * var(--table-width)), 0.9rem);
+                width: calc(var(--card-width) * 4 + var(--spacing) * 6);
+                height: calc(clamp(0.7rem, calc(0.01 * var(--table-width)), 1rem) * 1.5);
+                top: calc(50% - calc(var(--card-height) + var(--spacing) * 5) / 2 - calc(clamp(0.7rem, calc(0.01 * var(--table-width)), 1rem) * 1.5) - calc(var(--spacing) / 2));
+                font-size: clamp(0.7rem, calc(0.01 * var(--table-width)), 1rem);
                 line-height: 1;
                 padding: calc(var(--spacing) / 2);
             }
             .pot-area {
-                width: calc(var(--card-width) * 4 + var(--spacing) * 5);
-                height: calc(clamp(0.7rem, calc(0.008 * var(--table-width)), 0.9rem) * 1.5);
-                font-size: clamp(0.7rem, calc(0.008 * var(--table-width)), 0.9rem);
+                width: calc(var(--card-width) * 4 + var(--spacing) * 6);
+                height: calc(clamp(0.7rem, calc(0.01 * var(--table-width)), 1rem) * 1.5);
+                font-size: clamp(0.7rem, calc(0.01 * var(--table-width)), 1rem);
                 line-height: 1;
                 padding: calc(var(--spacing) / 2);
             }
             .action-button {
                 padding: clamp(4px, 1vw, 8px) clamp(8px, 1.5vw, 16px);
-                font-size: clamp(0.7rem, 1vw, 0.9rem);
+                font-size: clamp(0.7rem, calc(0.01 * var(--table-width)), 0.9rem);
             }
             .dealer-button {
-                font-size: clamp(0.4rem, calc(0.004 * var(--table-width)), 0.6rem);
+                font-size: clamp(0.4rem, calc(0.005 * var(--table-width)), 0.7rem);
             }
         }
 
@@ -321,7 +321,7 @@
         function updateTableWidth() {
             const vh = window.innerHeight;
             const vw = window.innerWidth;
-            const tableWidth = Math.min(vw * 0.98, 2.2 * (vh - 80));
+            const tableWidth = Math.min(vw * 0.98, 2.5 * (vh - 80));
             document.documentElement.style.setProperty('--table-width', `${tableWidth}px`);
             requestAnimationFrame(logLayout);
         }
@@ -334,7 +334,7 @@
             const tableWidth = parseFloat(getComputedStyle(root).getPropertyValue('--table-width')) || 0;
             const cardWidth = card ? parseFloat(getComputedStyle(card).width) : NaN;
             const chipSize = chip ? parseFloat(getComputedStyle(chip).width) : NaN;
-            const spacing = Math.max(3, 0.004 * tableWidth);
+            const spacing = Math.max(4, 0.006 * tableWidth);
             const player1Card1 = document.querySelector('.player-1-card-1').getBoundingClientRect();
             const player1Dealer = document.querySelector('.player-1-dealer').getBoundingClientRect();
             const player2SB = document.querySelector('.player-2-sb').getBoundingClientRect();
