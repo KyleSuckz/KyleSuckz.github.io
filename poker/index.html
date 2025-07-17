@@ -4,161 +4,121 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Texas Hold'em Table</title>
+    <link rel="preload" href="assets/table_felt.jpg" as="image">
     <style>
+        :root {
+            --table-border-width: 20px;
+            --table-radius: 150px;
+            --felt-border-color: #1a1a1a;
+            --felt-radius: 140px;
+            --shadow-color: rgba(0, 0, 0, 0.8);
+            --3d-transform: rotateX(3deg);
+        }
+
         * {
             box-sizing: border-box;
         }
 
         body {
             margin: 0;
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #1a1a1a;
+            background: radial-gradient(circle at 50% 30%, #1a1a1a, #0a0a0a);
             font-family: 'Arial', sans-serif;
             overflow-x: hidden;
         }
 
-        .label-center {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            font-weight: bold;
-            z-index: 10;
-        }
-
         .table-container {
-            max-width: calc(min(100vw, 100vh * 2));
-            height: calc(min(100vh, 100vw * 0.5) + 10vh);
-            max-height: calc(min(70vh, 100vw * 0.5) + 10vh);
+            width: calc(min(50vh, 50vw) * 2);
+            max-height: min(50vh, 50vw);
+            height: auto;
             aspect-ratio: 2 / 1;
             margin: 0 5vw;
             position: relative;
-            min-width: 300px;
-            border: 2px solid red;
-        }
-        .table-container::before {
-            content: "Red: Table Container (Starts here)";
-            top: -2.5rem;
-            color: red;
-        }
-        .table-container::after {
-            content: "Ends here";
-            bottom: -2.5rem;
-            color: red;
-        }
-        .table-container::before, .table-container::after {
-            @media (max-width: 600px) {
-                top: -1.5rem;
-                bottom: -1.5rem;
-            }
+            perspective: 1000px;
         }
 
         .table {
             width: 100%;
             height: 100%;
-            border: 20px solid black;
-            border-radius: 150px;
+            background: 
+                linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.3)),
+                radial-gradient(circle at 50% 20%, #2a6041, #1e4d2b);
+            border: var(--table-border-width) solid transparent;
+            border-radius: var(--table-radius);
             position: relative;
-            background: radial-gradient(circle at 50% 20%, #254b33, #1e4d2b);
-        }
-        .table::before {
-            content: "Black: Table (Starts here)";
-            top: -3rem;
-            color: black;
-        }
-        .table::after {
-            content: "Ends here";
-            bottom: -3rem;
-            color: black;
-        }
-        .table::before, .table::after {
-            @media (max-width: 600px) {
-                top: -2rem;
-                bottom: -2rem;
-            }
+            box-shadow: 0 20px 40px var(--shadow-color), inset 0 0 15px rgba(0, 0, 0, 0.6);
+            transform: var(--3d-transform);
+            will-change: transform, box-shadow;
         }
 
         .table-felt {
             width: 94%;
-            height: 88%;
-            background: #2a6041;
-            border: 5px solid #1a1a1a;
-            border-radius: 140px;
+            height: 92%;
+            background: 
+                url('assets/table_felt.jpg') center/cover,
+                repeating-linear-gradient(45deg, #2a6041, #2a6041 10px, #1e4d2b 10px, #1e4d2b 20px);
+            border: 5px solid var(--felt-border-color);
+            border-radius: var(--felt-radius);
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            border: 2px solid green;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.7);
         }
-        .table-felt::before {
-            content: "Light Green: Border (Starts here)";
-            top: -3.5rem;
-            color: green;
+
+        .table::before {
+            content: '';
+            position: absolute;
+            top: calc(-1 * var(--table-border-width));
+            left: calc(-1 * var(--table-border-width));
+            right: calc(-1 * var(--table-border-width));
+            bottom: calc(-1 * var(--table-border-width));
+            border: var(--table-border-width) solid transparent;
+            border-radius: var(--table-radius);
+            background: 
+                linear-gradient(45deg, #151515, #252525),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+            box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.25);
+            z-index: -1;
         }
-        .table-felt::after {
-            content: "Light Green: Border (Ends here)";
-            bottom: -3.5rem;
-            color: green;
-        }
-        .table-felt .dark-green-start::before {
-            content: "Dark Green: Inner Border (Starts here)";
-            top: -4rem;
-            color: #1a1a1a;
-        }
-        .table-felt .dark-green-end::after {
-            content: "Dark Green: Inner Border (Ends here)";
-            bottom: -4rem;
-            color: #1a1a1a;
-        }
-        .table-felt::after {
-            content: "";
-            top: 2px;
-            left: 2px;
-            right: 2px;
-            bottom: 2px;
-            border: 2px dashed #2a6041;
-            pointer-events: none;
-        }
-        .table-felt::before, .table-felt::after, .table-felt .dark-green-start::before, .table-felt .dark-green-end::after {
-            @media (max-width: 600px) {
-                top: -2rem;
-                bottom: -2rem;
+
+        /* Responsive adjustments */
+        @media (max-width: 900px) {
+            .table-container {
+                width: calc(min(60vh, 60vw) * 2);
+                max-height: min(60vh, 60vw);
             }
         }
 
-        .player {
-            position: absolute;
-            width: auto;
-            height: auto;
-            padding: 5px 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid blue;
-            border-radius: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
-            font-size: 14px;
-            text-align: center;
-            z-index: 4;
+        @media (max-width: 600px) {
+            :root {
+                --table-border-width: 12px;
+                --table-radius: 90px;
+                --felt-radius: 80px;
+            }
+            .table {
+                box-shadow: 0 12px 25px var(--shadow-color), inset 0 0 12px rgba(0, 0, 0, 0.6);
+            }
+            .table-felt {
+                border: 3px solid var(--felt-border-color);
+            }
         }
 
-        .player-human { bottom: -5%; left: 50%; transform: translateX(-50%); }
-        .player-ai1 { left: -5%; top: 50%; transform: translateY(-50%); }
-        .player-ai2 { top: -5%; left: 50%; transform: translateX(-50%); }
-        .player-ai3 { right: -5%; top: 50%; transform: translateY(-50%); }
+        /* Accessibility: Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .table {
+                --3d-transform: none;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="table-container" role="region" aria-label="Texas Hold'em Table Container">
+    <div class="table-container" role="region" aria-label="Texas Hold'em Poker Table">
         <div class="table">
             <div class="table-felt"></div>
-            <div class="player player-human">You</div>
-            <div class="player player-ai1">AI 1</div>
-            <div class="player player-ai2">AI 2</div>
-            <div class="player player-ai3">AI 3</div>
         </div>
     </div>
 </body>
