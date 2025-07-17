@@ -31,10 +31,10 @@
         }
 
         .table-container {
-            width: min(100vw, calc(100vh * 2));
-            max-height: 50vh;
+            width: clamp(70vw, 90vw, calc(90vh * 2));
+            max-height: clamp(50vh, 75vh, 75vw);
             aspect-ratio: 2 / 1;
-            margin: 0 5vw;
+            margin: 0 auto;
             perspective: 1000px;
         }
 
@@ -56,7 +56,7 @@
             height: 92%;
             background: 
                 url('assets/table_felt.jpg') center/cover,
-                repeating-linear-gradient(45deg, #2a6041, #2a6041 10px, #1e4d2b 10px, #1e4d2b 20px);
+                #2a6041;
             border: 5px solid var(--felt-border-color);
             border-radius: var(--felt-radius);
             position: absolute;
@@ -81,8 +81,8 @@
 
         @media (max-width: 900px) {
             .table-container {
-                width: min(120vw, calc(120vh * 2));
-                max-height: 60vh;
+                width: clamp(75vw, 95vw, calc(95vh * 2));
+                max-height: clamp(55vh, 80vh, 80vw);
             }
         }
 
