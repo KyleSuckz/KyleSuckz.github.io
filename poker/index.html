@@ -22,6 +22,7 @@
             --button-bg: linear-gradient(#4a4a4a, #2a2a2a);
             --button-hover-bg: linear-gradient(#5a5a5a, #3a3a3a);
             --name-font-size: 0.9rem;
+            --spacing: 5px;
         }
 
         * {
@@ -129,14 +130,14 @@
             will-change: transform;
             z-index: 2;
         }
-        .player-1-card-1 { bottom: 0; left: calc(50% - 65px); }
-        .player-1-card-2 { bottom: 0; left: calc(50% - 0px); }
-        .player-3-card-1 { top: 0; left: calc(50% - 65px); }
-        .player-3-card-2 { top: 0; left: calc(50% - 0px); }
-        .player-2-card-1 { left: 0; top: calc(50% - var(--card-height) / 2); }
-        .player-2-card-2 { left: calc(65px); top: calc(50% - var(--card-height) / 2); }
-        .player-4-card-1 { right: 0; top: calc(50% - var(--card-height) / 2); }
-        .player-4-card-2 { right: calc(65px); top: calc(50% - var(--card-height) / 2); }
+        .player-1-card-1 { bottom: var(--spacing); left: calc(50% - 65px); }
+        .player-1-card-2 { bottom: var(--spacing); left: calc(50% - 0px); }
+        .player-3-card-1 { top: var(--spacing); left: calc(50% - 65px); }
+        .player-3-card-2 { top: var(--spacing); left: calc(50% - 0px); }
+        .player-2-card-1 { left: var(--spacing); top: calc(50% - var(--card-height) / 2); }
+        .player-2-card-2 { left: calc(var(--spacing) + 65px); top: calc(50% - var(--card-height) / 2); }
+        .player-4-card-1 { right: var(--spacing); top: calc(50% - var(--card-height) / 2); }
+        .player-4-card-2 { right: calc(var(--spacing) + 65px); top: calc(50% - var(--card-height) / 2); }
 
         /* Chip Stack Areas */
         .chip-stack {
@@ -148,10 +149,10 @@
             box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.4);
             z-index: 2;
         }
-        .player-1-chips { bottom: 0; left: calc(50% + 75px); }
-        .player-3-chips { top: 0; left: calc(50% - 105px); }
-        .player-2-chips { left: 0; top: calc(50% + var(--card-height) / 2 + 5px); }
-        .player-4-chips { right: 0; top: calc(50% - var(--card-height) / 2 - var(--chip-size) - 5px); }
+        .player-1-chips { bottom: var(--spacing); left: calc(50% + 75px); }
+        .player-3-chips { top: var(--spacing); left: calc(50% - 105px); }
+        .player-2-chips { left: var(--spacing); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
+        .player-4-chips { right: var(--spacing); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
 
         /* Dealer and Blinds Buttons */
         .dealer-button {
@@ -165,21 +166,20 @@
             align-items: center;
             justify-content: center;
             font-size: 0.7rem;
-            color: #fff;
+            color: #000;
             text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
         }
         .dealer-button.dealer { background: radial-gradient(#ffffff, #d3d3d3); }
         .dealer-button.sb { background: radial-gradient(#4682b4, #2f4f4f); }
-        .dealer-button.bb { background: radial-gradient(#ff4040, #8b0000); }
+        .dealer-button.bb { background: radial-gradient(#ffd700, #daa520); }
         .dealer-button::after {
             content: attr(data-label);
         }
-        .player-1-dealer { bottom: calc(var(--card-height) + 5px); left: 50%; transform: translate(-50%, 0); }
-        .player-3-dealer { top: calc(var(--card-height) + 5px); left: 50%; transform: translate(-50%, 0); }
-        .player-2-dealer { left: calc(130px + 5px); top: calc(50% - var(--chip-size) / 2); }
-        .player-2-sb { left: calc(130px + 5px); top: calc(50% - var(--chip-size) / 2); }
-        .player-4-dealer { right: calc(130px + 5px); top: calc(50% - var(--chip-size) / 2); }
-        .player-3-bb { top: calc(var(--card-height) + 5px); left: calc(50% + 40px); }
+        .player-1-dealer { bottom: calc(var(--card-height) + var(--spacing)); left: 50%; transform: translate(-50%, 0); }
+        .player-2-dealer { left: calc(130px + var(--spacing)); top: calc(50% - var(--chip-size) / 2); }
+        .player-2-sb { left: calc(130px + var(--spacing)); top: calc(50% - var(--chip-size) / 2); }
+        .player-3-bb { top: calc(var(--card-height) + var(--spacing)); left: calc(50% - 0px); }
+        .player-4-dealer { right: calc(130px + var(--spacing)); top: calc(50% - var(--chip-size) / 2); }
 
         /* Pot Area */
         .pot-area {
@@ -212,8 +212,8 @@
 
         /* Betting Action Buttons */
         .action-buttons {
-            position: fixed;
-            bottom: calc(-1 * var(--table-border-width));
+            position: absolute;
+            bottom: 0;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
@@ -308,10 +308,9 @@
                 <div class="chip-stack player-2-chips"></div>
                 <div class="chip-stack player-4-chips"></div>
                 <div class="dealer-button player-1-dealer dealer" data-label="D" aria-label="Dealer Button"></div>
-                <div class="dealer-button player-3-dealer dealer" data-label="D" aria-label="Dealer Button"></div>
-                <div class="dealer-button player-2-dealer dealer" data-label="D" aria-label="Dealer Button"></div>
                 <div class="dealer-button player-2-sb sb" data-label="SB" aria-label="Small Blind"></div>
                 <div class="dealer-button player-3-bb bb" data-label="BB" aria-label="Big Blind"></div>
+                <div class="dealer-button player-2-dealer dealer" data-label="D" aria-label="Dealer Button"></div>
                 <div class="dealer-button player-4-dealer dealer" data-label="D" aria-label="Dealer Button"></div>
                 <div class="pot-area" aria-label="Pot Area"></div>
             </div>
@@ -320,11 +319,11 @@
             <div class="player-name player-2-name" aria-label="Player 2 (AI 1)">AI 1</div>
             <div class="player-name player-4-name" aria-label="Player 4 (AI 3)">AI 3</div>
         </div>
-    </div>
-    <div class="action-buttons" role="group" aria-label="Player Action Buttons">
-        <button class="action-button" aria-label="Fold" tabindex="0">Fold</button>
-        <button class="action-button" aria-label="Call" tabindex="0">Call</button>
-        <button class="action-button" aria-label="Raise" tabindex="0">Raise</button>
+        <div class="action-buttons" role="group" aria-label="Player Action Buttons">
+            <button class="action-button" aria-label="Fold" tabindex="0">Fold</button>
+            <button class="action-button" aria-label="Call" tabindex="0">Call</button>
+            <button class="action-button" aria-label="Raise" tabindex="0">Raise</button>
+        </div>
     </div>
 </body>
 </html>
