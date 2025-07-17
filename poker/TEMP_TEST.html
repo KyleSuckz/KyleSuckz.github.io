@@ -5,24 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Texas Hold'em Table</title>
     <link rel="preload" href="./assets/table_felt.jpg" as="image">
-    <link rel="preload" href="./assets/card_back.png" as="image">
-    <link rel="preload" href="./assets/chip_stack.png" as="image">
+    <link rel="preload" href="./assets/cards/card_back.png" as="image">
     <style>
         :root {
-            --table-width: min(95vw, calc(2 * (100vh - 96px)));
-            --table-border-width: clamp(10px, 2vw, 28px);
-            --felt-border-width: clamp(2px, 0.5vw, 7px);
-            --table-radius: clamp(90px, 15vw, 200px);
-            --felt-radius: calc(var(--table-radius) - 10px);
+            --table-width: min(98vw, calc(2 * (100vh - 80px)));
+            --table-border-width: clamp(8px, 1.5vw, 20px);
+            --felt-border-width: clamp(2px, 0.5vw, 6px);
+            --table-radius: clamp(80px, 12vw, 180px);
+            --felt-radius: calc(var(--table-radius) - 8px);
             --felt-border-color: #1a1a1a;
             --shadow-color: rgba(0, 0, 0, 0.8);
             --3d-transform: rotateX(3deg);
-            --card-width: clamp(40px, calc(0.045 * var(--table-width)), 100px);
+            --card-width: clamp(40px, calc(0.045 * var(--table-width)), 120px);
             --card-height: calc(var(--card-width) * 1.4);
-            --chip-size: clamp(24px, calc(0.03 * var(--table-width)), 70px);
+            --chip-size: clamp(24px, calc(0.03 * var(--table-width)), 80px);
             --button-bg: linear-gradient(#4a4a4a, #2a2a2a);
             --button-hover-bg: linear-gradient(#5a5a5a, #3a3a3a);
-            --name-font-size: clamp(0.7rem, calc(0.009 * var(--table-width)), 1.2rem);
+            --name-font-size: clamp(0.7rem, calc(0.009 * var(--table-width)), 1.3rem);
             --spacing: max(3px, calc(0.004 * var(--table-width)));
         }
 
@@ -72,8 +71,8 @@
         }
 
         .table-felt {
-            width: 88%;
-            height: 86%;
+            width: 92%;
+            height: 90%;
             background: 
                 url('./assets/table_felt.jpg') center/cover,
                 #2a6041;
@@ -163,7 +162,7 @@
             position: absolute;
             width: var(--card-width);
             height: var(--card-height);
-            background: url('./assets/card_back.png') center/cover;
+            background: url('./assets/cards/card_back.png') center/cover;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
             animation: dealCard 0.5s ease-out forwards;
@@ -183,7 +182,7 @@
             position: absolute;
             width: var(--chip-size);
             height: var(--chip-size);
-            background: url('./assets/chip_stack.png') center/cover;
+            background: radial-gradient(#d3d3d3, #a9a9a9);
             border-radius: 50%;
             box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.4);
             z-index: 2;
@@ -265,14 +264,14 @@
 
         @media (max-width: 600px) {
             :root {
-                --table-border-width: clamp(8px, 1.5vw, 12px);
+                --table-border-width: clamp(6px, 1vw, 10px);
                 --felt-border-width: clamp(1px, 0.3vw, 3px);
-                --table-radius: clamp(60px, 10vw, 100px);
-                --felt-radius: calc(var(--table-radius) - 8px);
-                --card-width: clamp(30px, calc(0.045 * var(--table-width)), 50px);
+                --table-radius: clamp(50px, 8vw, 80px);
+                --felt-radius: calc(var(--table-radius) - 6px);
+                --card-width: clamp(30px, calc(0.045 * var(--table-width)), 60px);
                 --card-height: calc(var(--card-width) * 1.4);
-                --chip-size: clamp(20px, calc(0.03 * var(--table-width)), 32px);
-                --name-font-size: clamp(0.6rem, calc(0.009 * var(--table-width)), 0.8rem);
+                --chip-size: clamp(20px, calc(0.03 * var(--table-width)), 40px);
+                --name-font-size: clamp(0.6rem, calc(0.009 * var(--table-width)), 0.9rem);
                 --spacing: max(2px, calc(0.004 * var(--table-width)));
             }
             .game-container {
@@ -319,33 +318,32 @@
         }
     </style>
     <script>
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
+        function updateTableWidth() {
+            const vh = window.innerHeight;
+            const vw = window.innerWidth;
+            const tableWidth = Math.min(vw * 0.98, 2 * (vh - 80));
+            document.documentElement.style.setProperty('--table-width', `${tableWidth}px`);
+            requestAnimationFrame(logLayout);
         }
 
         function logLayout() {
-            const rootStyle = getComputedStyle(document.documentElement);
-            const tableWidth = parseFloat(rootStyle.getPropertyValue('--table-width'));
-            const cardWidth = parseFloat(rootStyle.getPropertyValue('--card-width'));
-            const chipSize = parseFloat(rootStyle.getPropertyValue('--chip-size'));
-            const spacing = parseFloat(rootStyle.getPropertyValue('--spacing'));
+            const root = document.documentElement;
+            const table = document.querySelector('.table');
+            const card = document.querySelector('.player-card');
+            const chip = document.querySelector('.chip-stack');
+            const tableWidth = parseFloat(getComputedStyle(root).getPropertyValue('--table-width'));
+            const cardWidth = card ? parseFloat(getComputedStyle(card).width) : NaN;
+            const chipSize = chip ? parseFloat(getComputedStyle(chip).width) : NaN;
+            const spacing = parseFloat(getComputedStyle(root).getPropertyValue('--spacing'));
             const player1Card1 = document.querySelector('.player-1-card-1').getBoundingClientRect();
             const player1Dealer = document.querySelector('.player-1-dealer').getBoundingClientRect();
             const player2SB = document.querySelector('.player-2-sb').getBoundingClientRect();
             const player3BB = document.querySelector('.player-3-bb').getBoundingClientRect();
             console.log('Layout Debug:', {
-                tableWidth: `${tableWidth}px`,
-                cardWidth: `${cardWidth}px`,
-                chipSize: `${chipSize}px`,
-                spacing: `${spacing}px`,
+                tableWidth: `${tableWidth.toFixed(2)}px`,
+                cardWidth: `${cardWidth.toFixed(2)}px`,
+                chipSize: `${chipSize.toFixed(2)}px`,
+                spacing: `${spacing.toFixed(2)}px`,
                 player1Card1: { left: Math.round(player1Card1.left), bottom: Math.round(player1Card1.bottom) },
                 player1Dealer: { left: Math.round(player1Dealer.left), bottom: Math.round(player1Dealer.bottom) },
                 player2SB: { left: Math.round(player2SB.left), top: Math.round(player2SB.top) },
@@ -353,16 +351,18 @@
             });
         }
 
-        function updateTableWidth() {
-            const vh = window.innerHeight;
-            const vw = window.innerWidth;
-            const tableWidth = Math.min(vw * 0.95, 2 * (vh - 96));
-            document.documentElement.style.setProperty('--table-width', `${tableWidth}px`);
-            logLayout();
+        let lastUpdate = 0;
+        function handleResize() {
+            const now = performance.now();
+            if (now - lastUpdate >= 16) {
+                updateTableWidth();
+                lastUpdate = now;
+            } else {
+                requestAnimationFrame(handleResize);
+            }
         }
 
-        const debouncedUpdateTableWidth = debounce(updateTableWidth, 100);
-        window.addEventListener('resize', debouncedUpdateTableWidth);
+        window.addEventListener('resize', handleResize);
         window.addEventListener('load', updateTableWidth);
     </script>
 </head>
@@ -388,7 +388,7 @@
                     <div class="chip-stack player-4-chips"></div>
                     <div class="dealer-button player-1-dealer dealer" data-label="D" aria-label="Dealer Button"></div>
                     <div class="dealer-button player-2-sb sb" data-label="SB" aria-label="Small Blind"></div>
-                    <div class="dealer-button player-3-bb bb" data-label="Big Blind"></div>
+                    <div class="dealer-button player-3-bb bb" data-label="BB" aria-label="Big Blind"></div>
                 </div>
                 <div class="player-name player-1-name" aria-label="Player 1 (Human)">Player 1</div>
                 <div class="player-name player-3-name" aria-label="Player 3 (AI 2)">AI 2</div>
