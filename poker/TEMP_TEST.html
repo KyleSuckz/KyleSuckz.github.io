@@ -216,9 +216,9 @@
         .dealer-button::after {
             content: attr(data-label);
         }
-        .player-1-dealer { left: calc(50% - var(--card-width) * 3 - var(--spacing) * 4); top: calc(var(--spacing) * 4); }
-        .player-2-sb { left: calc(var(--spacing) + var(--card-width) * 2.5 + var(--spacing) * 4); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 4); }
-        .player-3-bb { left: calc(50% + var(--card-width) * 2.5 + var(--spacing) * 4); bottom: calc(var(--spacing) * 4); }
+        .player-1-dealer { left: calc(50% - var(--card-width) * 2 - var(--spacing) * 2.5); top: var(--spacing); }
+        .player-2-sb { left: calc(var(--spacing) + var(--card-width) + var(--spacing) * 1.5); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 1.5); }
+        .player-3-bb { left: calc(50% + var(--card-width) + var(--spacing) * 2.5); bottom: var(--spacing); }
 
         @keyframes dealCard {
             from { transform: translate(-50%, -50%) scale(0); left: 50%; top: 50%; }
@@ -315,6 +315,9 @@
             .dealer-button {
                 font-size: clamp(0.4rem, calc(0.005 * var(--table-width)), 0.7rem);
             }
+            .player-1-dealer { left: calc(50% - var(--card-width) * 2 - var(--spacing) * 2.5); top: var(--spacing); }
+            .player-2-sb { left: calc(var(--spacing) + var(--card-width) + var(--spacing) * 1.5); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 1.5); }
+            .player-3-bb { left: calc(50% + var(--card-width) + var(--spacing) * 2.5); bottom: var(--spacing); }
         }
 
         @media (prefers-reduced-motion: reduce) {
