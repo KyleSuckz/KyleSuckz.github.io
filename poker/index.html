@@ -9,20 +9,20 @@
     <link rel="preload" href="assets/chip_stack.png" as="image">
     <style>
         :root {
-            --table-border-width: 20px;
-            --felt-border-width: 5px;
-            --table-radius: 150px;
-            --felt-radius: 140px;
+            --table-border-width: clamp(10px, 2vw, 28px);
+            --felt-border-width: clamp(2px, 0.5vw, 7px);
+            --table-radius: clamp(90px, 15vw, 200px);
+            --felt-radius: calc(var(--table-radius) - 10px);
             --felt-border-color: #1a1a1a;
             --shadow-color: rgba(0, 0, 0, 0.8);
             --3d-transform: rotateX(3deg);
-            --card-width: 60px;
-            --card-height: 84px;
-            --chip-size: 40px;
+            --card-width: clamp(40px, 6vw, 80px);
+            --card-height: calc(var(--card-width) * 1.4);
+            --chip-size: clamp(24px, 4vw, 56px);
             --button-bg: linear-gradient(#4a4a4a, #2a2a2a);
             --button-hover-bg: linear-gradient(#5a5a5a, #3a3a3a);
-            --name-font-size: 0.9rem;
-            --spacing: 5px;
+            --name-font-size: clamp(0.7rem, 1vw, 1.1rem);
+            --spacing: clamp(3px, 0.5vw, 7px);
         }
 
         * {
@@ -38,13 +38,13 @@
             margin-top: 20px;
             background: radial-gradient(circle at 50% 30%, #1a1a1a, #0a0a0a);
             font-family: Arial, sans-serif;
-            overflow-x: hidden;
+            overflow: auto;
             position: relative;
         }
 
         .game-container {
             width: clamp(70vw, 95vw, 95vw);
-            max-height: clamp(50vh, 85vh, 85vw);
+            max-height: clamp(50vh, calc(100vh - 20px - var(--spacing) - 40px), calc(95vw / 2));
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -98,7 +98,6 @@
             z-index: -1;
         }
 
-        /* Player Names on Leather Border */
         .player-name {
             position: absolute;
             color: #fff;
@@ -112,11 +111,10 @@
         .player-3-name { top: 0; left: 50%; transform: translate(-50%, -50%); }
         .player-4-name { right: 0; top: 50%; transform: translate(50%, -50%) rotate(90deg); }
 
-        /* Community Card Area */
         .community-cards {
             position: absolute;
-            width: 40%;
-            height: 20%;
+            width: calc(var(--card-width) * 5 + var(--spacing) * 5);
+            height: calc(var(--card-height) + var(--spacing) * 4);
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -126,7 +124,40 @@
             z-index: 1;
         }
 
-        /* Player Card Slots */
+        .action-text-area {
+            position: absolute;
+            width: calc(var(--card-width) * 4 + var(--spacing) * 5);
+            height: calc(clamp(0.8rem, 1.5vw, 1.2rem) * 1.5);
+            top: calc(50% - calc(var(--card-height) + var(--spacing) * 4) / 2 - calc(clamp(0.8rem, 1.5vw, 1.2rem) * 1.5) - calc(var(--spacing) / 2));
+            left: 50%;
+            transform: translate(-50%, 0);
+            background: radial-gradient(rgba(0, 0, 0, 0.2), transparent);
+            border-radius: 10px;
+            z-index: 2;
+            font-size: clamp(0.8rem, 1.5vw, 1.2rem);
+            line-height: 1;
+            padding: calc(var(--spacing) / 2);
+            color: #fff;
+            text-align: center;
+        }
+
+        .pot-area {
+            position: absolute;
+            width: calc(var(--card-width) * 4 + var(--spacing) * 5);
+            height: calc(clamp(0.8rem, 1.5vw, 1.2rem) * 1.5);
+            top: calc(50% + calc(var(--card-height) + var(--spacing) * 4) / 2 + calc(var(--spacing) / 2));
+            left: 50%;
+            transform: translate(-50%, 0);
+            background: radial-gradient(rgba(0, 0, 0, 0.2), transparent);
+            border-radius: 10px;
+            z-index: 1;
+            font-size: clamp(0.8rem, 1.5vw, 1.2rem);
+            line-height: 1;
+            padding: calc(var(--spacing) / 2);
+            color: #fff;
+            text-align: center;
+        }
+
         .player-card {
             position: absolute;
             width: var(--card-width);
@@ -147,7 +178,6 @@
         .player-4-card-1 { right: var(--spacing); top: calc(50% - var(--card-height) / 2); }
         .player-4-card-2 { right: calc(var(--spacing) + var(--card-width) + var(--spacing)); top: calc(50% - var(--card-height) / 2); }
 
-        /* Chip Stack Areas */
         .chip-stack {
             position: absolute;
             width: var(--chip-size);
@@ -162,7 +192,6 @@
         .player-2-chips { left: var(--spacing); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
         .player-4-chips { right: var(--spacing); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
 
-        /* Dealer and Blinds Buttons */
         .dealer-button {
             position: absolute;
             width: var(--chip-size);
@@ -173,7 +202,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.7rem;
+            font-size: clamp(0.5rem, 0.8vw, 0.8rem);
             color: #000;
             text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
         }
@@ -187,54 +216,41 @@
         .player-2-sb { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 2); top: calc(50% - var(--chip-size) / 2); }
         .player-3-bb { top: calc(var(--card-height) + var(--spacing) + var(--felt-border-width)); left: calc(50% - var(--chip-size) / 2); }
 
-        /* Pot Area */
-        .pot-area {
-            position: absolute;
-            width: 20%;
-            height: 10%;
-            top: 35%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: radial-gradient(rgba(0, 0, 0, 0.2), transparent);
-            border-radius: 10px;
-            z-index: 1;
-        }
-
-        /* Card Dealing Animation */
         @keyframes dealCard {
             from { transform: translate(-50%, -50%) scale(0); left: 50%; top: 50%; }
             to { transform: translate(0, 0) scale(1); }
         }
 
-        /* Chip Betting Animation */
         .chip-stack.bet {
             animation: betChip 0.5s ease-out forwards;
             will-change: transform;
+            left: 50%;
+            top: calc(50% + calc(var(--card-height) + var(--spacing) * 4) / 2 + calc(var(--spacing) / 2));
         }
         @keyframes betChip {
             from { transform: translate(0, 0); }
-            to { transform: translate(calc(50vw - 50%), calc(35vh - 50%)); }
+            to { transform: translate(-50%, 0); }
         }
 
-        /* Betting Action Buttons */
         .game-container .action-buttons {
             margin-top: var(--spacing);
             align-self: center;
             display: flex;
-            gap: 10px;
+            gap: clamp(6px, 1vw, 12px);
             flex-wrap: wrap;
             z-index: 10;
             background: rgba(0, 0, 0, 0.5);
             border-radius: 5px;
+            padding: clamp(6px, 1vw, 10px);
         }
         .action-button {
-            padding: 10px 20px;
+            padding: clamp(6px, 1.5vw, 12px) clamp(12px, 2vw, 24px);
             background: var(--button-bg);
             color: #fff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: clamp(0.8rem, 1.5vw, 1.1rem);
             transition: background 0.2s ease;
         }
         .action-button:hover {
@@ -244,77 +260,54 @@
             outline: 2px solid #ffd700;
         }
 
-        @media (min-width: 1200px) {
-            :root {
-                --table-border-width: 24px;
-                --felt-border-width: 6px;
-                --table-radius: 180px;
-                --felt-radius: 168px;
-                --card-width: 70px;
-                --card-height: 98px;
-                --chip-size: 48px;
-                --name-font-size: 1rem;
-                --spacing: 6px;
-            }
-            .table-felt {
-                border: var(--felt-border-width) solid var(--felt-border-color);
-            }
-            .community-cards { width: 35%; height: 18%; }
-            .pot-area { width: 18%; height: 9%; }
-            .action-button { padding: 12px 24px; font-size: 1.1rem; }
-            .dealer-button { font-size: 0.8rem; }
-        }
-
-        @media (max-width: 900px) {
-            :root {
-                --table-border-width: 16px;
-                --felt-border-width: 4px;
-                --table-radius: 120px;
-                --felt-radius: 112px;
-                --card-width: 50px;
-                --card-height: 70px;
-                --chip-size: 32px;
-                --name-font-size: 0.8rem;
-                --spacing: 4px;
-            }
-            .game-container {
-                width: clamp(75vw, 95vw, 95vw);
-                max-height: clamp(55vh, 80vh, 80vw);
-            }
-            .table-felt {
-                border: var(--felt-border-width) solid var(--felt-border-color);
-            }
-            .community-cards { width: 50%; height: 25%; }
-            .pot-area { width: 25%; height: 12%; }
-            .action-button { padding: 8px 16px; font-size: 0.9rem; }
-            .dealer-button { font-size: 0.6rem; }
-        }
-
         @media (max-width: 600px) {
             :root {
-                --table-border-width: 10px;
-                --felt-border-width: 2px;
-                --table-radius: 90px;
-                --felt-radius: 84px;
-                --card-width: 40px;
-                --card-height: 56px;
-                --chip-size: 24px;
-                --name-font-size: 0.7rem;
-                --spacing: 3px;
+                --table-border-width: clamp(8px, 1.5vw, 12px);
+                --felt-border-width: clamp(1px, 0.3vw, 3px);
+                --table-radius: clamp(60px, 10vw, 100px);
+                --felt-radius: calc(var(--table-radius) - 8px);
+                --card-width: clamp(30px, 5vw, 50px);
+                --card-height: calc(var(--card-width) * 1.4);
+                --chip-size: clamp(20px, 3vw, 32px);
+                --name-font-size: clamp(0.6rem, 0.8vw, 0.8rem);
+                --spacing: clamp(2px, 0.4vw, 4px);
+            }
+            .game-container {
+                width: clamp(80vw, 95vw, 95vw);
+                max-height: clamp(55vh, calc(100vh - 20px - var(--spacing) - 30px), calc(95vw / 2));
             }
             .table {
                 box-shadow: 0 12px 25px var(--shadow-color), inset 0 0 12px rgba(0, 0, 0, 0.6);
             }
-            .game-container {
-                max-height: clamp(60vh, 85vh, 85vw);
-            }
             .table-felt {
                 border: var(--felt-border-width) solid var(--felt-border-color);
             }
-            .community-cards { width: 60%; height: 30%; }
-            .pot-area { width: 30%; height: 15%; }
-            .action-button { padding: 6px 12px; font-size: 0.8rem; }
-            .dealer-button { font-size: 0.5rem; }
+            .community-cards {
+                width: calc(var(--card-width) * 5 + var(--spacing) * 5);
+                height: calc(var(--card-height) + var(--spacing) * 4);
+            }
+            .action-text-area {
+                width: calc(var(--card-width) * 4 + var(--spacing) * 5);
+                height: calc(clamp(0.7rem, 1vw, 0.9rem) * 1.5);
+                top: calc(50% - calc(var(--card-height) + var(--spacing) * 4) / 2 - calc(clamp(0.7rem, 1vw, 0.9rem) * 1.5) - calc(var(--spacing) / 2));
+                font-size: clamp(0.7rem, 1vw, 0.9rem);
+                line-height: 1;
+                padding: calc(var(--spacing) / 2);
+            }
+            .pot-area {
+                width: calc(var(--card-width) * 4 + var(--spacing) * 5);
+                height: calc(clamp(0.7rem, 1vw, 0.9rem) * 1.5);
+                font-size: clamp(0.7rem, 1vw, 0.9rem);
+                line-height: 1;
+                padding: calc(var(--spacing) / 2);
+            }
+            .action-button {
+                padding: clamp(4px, 1vw, 8px) clamp(8px, 1.5vw, 16px);
+                font-size: clamp(0.7rem, 1vw, 0.9rem);
+            }
+            .dealer-button {
+                font-size: clamp(0.4rem, 0.6vw, 0.6rem);
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -329,6 +322,8 @@
             <div class="table">
                 <div class="table-felt">
                     <div class="community-cards" aria-label="Community Cards"></div>
+                    <div class="action-text-area" aria-label="Action Text Area"></div>
+                    <div class="pot-area" aria-label="Pot Area"></div>
                     <div class="player-card player-1-card-1"></div>
                     <div class="player-card player-1-card-2"></div>
                     <div class="player-card player-3-card-1"></div>
@@ -343,8 +338,7 @@
                     <div class="chip-stack player-4-chips"></div>
                     <div class="dealer-button player-1-dealer dealer" data-label="D" aria-label="Dealer Button"></div>
                     <div class="dealer-button player-2-sb sb" data-label="SB" aria-label="Small Blind"></div>
-                    <div class="dealer-button player-3-bb bb" data-label="BB" aria-label="Big Blind"></div>
-                    <div class="pot-area" aria-label="Pot Area"></div>
+                    <div class="dealer-button player-3-bb bb" data-label="Big Blind"></div>
                 </div>
                 <div class="player-name player-1-name" aria-label="Player 1 (Human)">Player 1</div>
                 <div class="player-name player-3-name" aria-label="Player 3 (AI 2)">AI 2</div>
