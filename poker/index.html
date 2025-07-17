@@ -41,13 +41,19 @@
             position: relative;
         }
 
-        .table-container {
+        .game-container {
             width: clamp(70vw, 90vw, calc(90vh * 2));
             max-height: clamp(50vh, 75vh, 75vw);
-            aspect-ratio: 2 / 1;
-            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             perspective: 1000px;
-            position: relative;
+        }
+
+        .table-container {
+            width: 100%;
+            height: 100%;
+            aspect-ratio: 2 / 1;
         }
 
         .table {
@@ -100,10 +106,10 @@
             z-index: 1;
             text-align: center;
         }
-        .player-1-name { bottom: 0; left: 50%; transform: translate(-50%, 50%); } /* Bottom (Human) */
-        .player-2-name { left: 0; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); } /* Left (AI 1) */
-        .player-3-name { top: 0; left: 50%; transform: translate(-50%, -50%); } /* Top (AI 2) */
-        .player-4-name { right: 0; top: 50%; transform: translate(50%, -50%) rotate(90deg); } /* Right (AI 3) */
+        .player-1-name { bottom: 0; left: 50%; transform: translate(-50%, 50%); }
+        .player-2-name { left: 0; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); }
+        .player-3-name { top: 0; left: 50%; transform: translate(-50%, -50%); }
+        .player-4-name { right: 0; top: 50%; transform: translate(50%, -50%) rotate(90deg); }
 
         /* Community Card Area */
         .community-cards {
@@ -131,14 +137,14 @@
             will-change: transform;
             z-index: 2;
         }
-        .player-1-card-1 { bottom: var(--spacing); left: calc(50% - 65px); }
-        .player-1-card-2 { bottom: var(--spacing); left: calc(50% - 0px); }
-        .player-3-card-1 { top: var(--spacing); left: calc(50% - 65px); }
-        .player-3-card-2 { top: var(--spacing); left: calc(50% - 0px); }
+        .player-1-card-1 { bottom: var(--spacing); left: calc(50% - var(--card-width) - var(--spacing)); }
+        .player-1-card-2 { bottom: var(--spacing); left: calc(50% + var(--spacing)); }
+        .player-3-card-1 { top: var(--spacing); left: calc(50% - var(--card-width) - var(--spacing)); }
+        .player-3-card-2 { top: var(--spacing); left: calc(50% + var(--spacing)); }
         .player-2-card-1 { left: var(--spacing); top: calc(50% - var(--card-height) / 2); }
-        .player-2-card-2 { left: calc(var(--spacing) + 65px); top: calc(50% - var(--card-height) / 2); }
+        .player-2-card-2 { left: calc(var(--spacing) + var(--card-width) + var(--spacing)); top: calc(50% - var(--card-height) / 2); }
         .player-4-card-1 { right: var(--spacing); top: calc(50% - var(--card-height) / 2); }
-        .player-4-card-2 { right: calc(var(--spacing) + 65px); top: calc(50% - var(--card-height) / 2); }
+        .player-4-card-2 { right: calc(var(--spacing) + var(--card-width) + var(--spacing)); top: calc(50% - var(--card-height) / 2); }
 
         /* Chip Stack Areas */
         .chip-stack {
@@ -150,8 +156,8 @@
             box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.4);
             z-index: 2;
         }
-        .player-1-chips { bottom: var(--spacing); left: calc(50% + 75px); }
-        .player-3-chips { top: var(--spacing); left: calc(50% - 105px); }
+        .player-1-chips { bottom: var(--spacing); left: calc(50% + var(--card-width) + var(--spacing) * 2); }
+        .player-3-chips { top: var(--spacing); left: calc(50% - var(--card-width) * 2 - var(--spacing) * 2); }
         .player-2-chips { left: var(--spacing); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
         .player-4-chips { right: var(--spacing); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
 
@@ -176,9 +182,9 @@
         .dealer-button::after {
             content: attr(data-label);
         }
-        .player-1-dealer { bottom: calc(var(--card-height) + var(--spacing)); left: 50%; transform: translate(-50%, 0); }
-        .player-2-sb { left: calc(130px + var(--spacing)); top: calc(50% - var(--chip-size) / 2); }
-        .player-3-bb { top: calc(var(--card-height) + var(--spacing)); left: 50%; transform: translate(-50%, 0); }
+        .player-1-dealer { bottom: calc(var(--card-height) + var(--spacing) + var(--felt-border-width)); left: calc(50% - var(--chip-size) / 2); }
+        .player-2-sb { left: calc(var(--spacing) + var(--card-width) + var(--spacing) + var(--spacing)); top: calc(50% - var(--chip-size) / 2); }
+        .player-3-bb { top: calc(var(--card-height) + var(--spacing) + var(--felt-border-width)); left: calc(50% - var(--chip-size) / 2); }
 
         /* Pot Area */
         .pot-area {
@@ -210,17 +216,14 @@
         }
 
         /* Betting Action Buttons */
-        .table-container ~ .action-buttons {
-            position: absolute;
-            top: calc(100% - var(--table-border-width));
-            left: 50%;
-            transform: translateX(-50%);
+        .game-container .action-buttons {
+            margin-top: var(--spacing);
+            align-self: center;
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
             z-index: 10;
             background: rgba(0, 0, 0, 0.5);
-            padding: 5px;
             border-radius: 5px;
         }
         .action-button {
@@ -251,7 +254,7 @@
                 --chip-size: 32px;
                 --name-font-size: 0.8rem;
             }
-            .table-container {
+            .game-container {
                 width: clamp(75vw, 95vw, calc(95vh * 2));
                 max-height: clamp(55vh, 80vh, 80vw);
             }
@@ -278,6 +281,9 @@
             .table {
                 box-shadow: 0 12px 25px var(--shadow-color), inset 0 0 12px rgba(0, 0, 0, 0.6);
             }
+            .game-container {
+                max-height: clamp(60vh, 85vh, 85vw);
+            }
             .table-felt {
                 border: var(--felt-border-width) solid var(--felt-border-color);
             }
@@ -285,7 +291,6 @@
             .pot-area { width: 30%; height: 15%; }
             .action-button { padding: 6px 12px; font-size: 0.8rem; }
             .dealer-button { font-size: 0.5rem; }
-            .table-container ~ .action-buttons { padding: 3px; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -295,37 +300,39 @@
     </style>
 </head>
 <body>
-    <div class="table-container" role="region" aria-label="Texas Hold'em Poker Table">
-        <div class="table">
-            <div class="table-felt">
-                <div class="community-cards" aria-label="Community Cards"></div>
-                <div class="player-card player-1-card-1"></div>
-                <div class="player-card player-1-card-2"></div>
-                <div class="player-card player-3-card-1"></div>
-                <div class="player-card player-3-card-2"></div>
-                <div class="player-card player-2-card-1"></div>
-                <div class="player-card player-2-card-2"></div>
-                <div class="player-card player-4-card-1"></div>
-                <div class="player-card player-4-card-2"></div>
-                <div class="chip-stack player-1-chips"></div>
-                <div class="chip-stack player-3-chips"></div>
-                <div class="chip-stack player-2-chips"></div>
-                <div class="chip-stack player-4-chips"></div>
-                <div class="dealer-button player-1-dealer dealer" data-label="D" aria-label="Dealer Button"></div>
-                <div class="dealer-button player-2-sb sb" data-label="SB" aria-label="Small Blind"></div>
-                <div class="dealer-button player-3-bb bb" data-label="BB" aria-label="Big Blind"></div>
-                <div class="pot-area" aria-label="Pot Area"></div>
+    <div class="game-container">
+        <div class="table-container" role="region" aria-label="Texas Hold'em Poker Table">
+            <div class="table">
+                <div class="table-felt">
+                    <div class="community-cards" aria-label="Community Cards"></div>
+                    <div class="player-card player-1-card-1"></div>
+                    <div class="player-card player-1-card-2"></div>
+                    <div class="player-card player-3-card-1"></div>
+                    <div class="player-card player-3-card-2"></div>
+                    <div class="player-card player-2-card-1"></div>
+                    <div class="player-card player-2-card-2"></div>
+                    <div class="player-card player-4-card-1"></div>
+                    <div class="player-card player-4-card-2"></div>
+                    <div class="chip-stack player-1-chips"></div>
+                    <div class="chip-stack player-3-chips"></div>
+                    <div class="chip-stack player-2-chips"></div>
+                    <div class="chip-stack player-4-chips"></div>
+                    <div class="dealer-button player-1-dealer dealer" data-label="D" aria-label="Dealer Button"></div>
+                    <div class="dealer-button player-2-sb sb" data-label="SB" aria-label="Small Blind"></div>
+                    <div class="dealer-button player-3-bb bb" data-label="BB" aria-label="Big Blind"></div>
+                    <div class="pot-area" aria-label="Pot Area"></div>
+                </div>
+                <div class="player-name player-1-name" aria-label="Player 1 (Human)">Player 1</div>
+                <div class="player-name player-3-name" aria-label="Player 3 (AI 2)">AI 2</div>
+                <div class="player-name player-2-name" aria-label="Player 2 (AI 1)">AI 1</div>
+                <div class="player-name player-4-name" aria-label="Player 4 (AI 3)">AI 3</div>
             </div>
-            <div class="player-name player-1-name" aria-label="Player 1 (Human)">Player 1</div>
-            <div class="player-name player-3-name" aria-label="Player 3 (AI 2)">AI 2</div>
-            <div class="player-name player-2-name" aria-label="Player 2 (AI 1)">AI 1</div>
-            <div class="player-name player-4-name" aria-label="Player 4 (AI 3)">AI 3</div>
         </div>
-    </div>
-    <div class="action-buttons" role="group" aria-label="Player Action Buttons">
-        <button class="action-button" aria-label="Fold" tabindex="0">Fold</button>
-        <button class="action-button" aria-label="Call" tabindex="0">Call</button>
-        <button class="action-button" aria-label="Raise" tabindex="0">Raise</button>
+        <div class="action-buttons" role="group" aria-label="Player Action Buttons">
+            <button class="action-button" aria-label="Fold" tabindex="0">Fold</button>
+            <button class="action-button" aria-label="Call" tabindex="0">Call</button>
+            <button class="action-button" aria-label="Raise" tabindex="0">Raise</button>
+        </div>
     </div>
 </body>
 </html>
