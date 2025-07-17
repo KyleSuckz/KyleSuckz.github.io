@@ -21,7 +21,7 @@
             --chip-size: clamp(24px, calc(0.05 * var(--table-width)), 100px);
             --button-bg: linear-gradient(#4a4a4a, #2a2a2a);
             --button-hover-bg: linear-gradient(#5a5a5a, #3a3a3a);
-            --name-font-size: clamp(0.7rem, calc(0.01 * var(--table-width)), 1.5rem);
+            --name-font-size: clamp(0.8rem, calc(0.012 * var(--table-width)), 1.8rem);
             --spacing: max(4px, calc(0.006 * var(--table-width)));
         }
 
@@ -43,11 +43,12 @@
 
         .game-container {
             width: var(--table-width);
-            max-height: calc(100vh - 10px);
+            max-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             perspective: 1000px;
+            overflow-y: auto;
         }
 
         .table-container {
@@ -106,10 +107,10 @@
             z-index: 1;
             text-align: center;
         }
-        .player-1-name { bottom: calc(var(--spacing) * 2); left: 50%; transform: translate(-50%, 100%); }
-        .player-2-name { left: calc(var(--spacing) * -2); top: 50%; transform: translate(-100%, -50%) rotate(-90deg); }
-        .player-3-name { top: calc(var(--spacing) * 2); left: 50%; transform: translate(-50%, -100%); }
-        .player-4-name { right: calc(var(--spacing) * -2); top: 50%; transform: translate(100%, -50%) rotate(90deg); }
+        .player-1-name { bottom: calc(var(--spacing) * 3); left: 50%; transform: translate(-50%, 50%); }
+        .player-2-name { left: var(--spacing); top: 50%; transform: translate(0, -50%) rotate(-90deg); }
+        .player-3-name { top: calc(var(--spacing) * 3); left: 50%; transform: translate(-50%, -100%); }
+        .player-4-name { right: var(--spacing); top: 50%; transform: translate(0, -50%) rotate(90deg); }
 
         .community-cards {
             position: absolute;
@@ -212,9 +213,9 @@
         .dealer-button::after {
             content: attr(data-label);
         }
-        .player-1-dealer { bottom: calc(var(--card-height) + var(--spacing) * 3.5 + var(--felt-border-width)); left: min(50% - var(--chip-size) / 2, calc(50% - var(--chip-size) / 2)); }
+        .player-1-dealer { bottom: calc(var(--card-height) + var(--spacing) * 5 + var(--felt-border-width)); left: min(50% - var(--chip-size) / 2, calc(50% - var(--chip-size) / 2)); }
         .player-2-sb { left: calc(var(--spacing) * 3 + var(--card-width) * 2 + var(--spacing) * 2.5); top: calc(50% - var(--chip-size) / 2); }
-        .player-3-bb { top: calc(var(--card-height) + var(--spacing) * 3.5 + var(--felt-border-width)); left: min(50% - var(--chip-size) / 2, calc(50% - var(--chip-size) / 2)); }
+        .player-3-bb { top: calc(var(--card-height) + var(--spacing) * 5 + var(--felt-border-width)); left: min(50% - var(--chip-size) / 2, calc(50% - var(--chip-size) / 2)); }
 
         @keyframes dealCard {
             from { transform: translate(-50%, -50%) scale(0); left: 50%; top: 50%; }
@@ -233,7 +234,7 @@
         }
 
         .game-container .action-buttons {
-            margin-top: var(--spacing);
+            margin-top: calc(var(--spacing) * 1.5);
             align-self: center;
             display: flex;
             gap: clamp(6px, 1vw, 12px);
@@ -271,12 +272,12 @@
                 --card-width: clamp(30px, calc(0.07 * var(--table-width)), 80px);
                 --card-height: calc(var(--card-width) * 1.4);
                 --chip-size: clamp(20px, calc(0.05 * var(--table-width)), 60px);
-                --name-font-size: clamp(0.6rem, calc(0.01 * var(--table-width)), 1rem);
+                --name-font-size: clamp(0.7rem, calc(0.012 * var(--table-width)), 1.2rem);
                 --spacing: max(3px, calc(0.006 * var(--table-width)));
             }
             .game-container {
                 width: var(--table-width);
-                max-height: calc(100vh - 10px);
+                max-height: 100vh;
             }
             .table {
                 box-shadow: 0 12px 25px var(--shadow-color), inset 0 0 12px rgba(0, 0, 0, 0.6);
@@ -310,6 +311,12 @@
             .dealer-button {
                 font-size: clamp(0.4rem, calc(0.005 * var(--table-width)), 0.7rem);
             }
+        }
+
+        @media (max-width: 450px) {
+            .player-1-dealer { bottom: calc(var(--card-height) + var(--spacing) * 4 + var(--felt-border-width)); }
+            .player-3-bb { top: calc(var(--card-height) + var(--spacing) * 4 + var(--felt-border-width)); }
+            .player-2-sb { left: calc(var(--spacing) * 2 + var(--card-width) * 2 + var(--spacing) * 1.5); }
         }
 
         @media (prefers-reduced-motion: reduce) {
