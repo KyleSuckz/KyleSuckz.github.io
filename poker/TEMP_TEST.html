@@ -21,7 +21,7 @@
             --chip-size: clamp(24px, calc(0.05 * var(--table-width)), 100px);
             --button-bg: linear-gradient(#4a4a4a, #2a2a2a);
             --button-hover-bg: linear-gradient(#5a5a5a, #3a3a3a);
-            --name-font-size: clamp(0.8rem, calc(0.012 * var(--table-width)), 1.8rem);
+            --name-font-size: clamp(0.7rem, calc(0.01 * var(--table-width)), 1.4rem);
             --spacing: max(4px, calc(0.006 * var(--table-width)));
         }
 
@@ -37,7 +37,7 @@
             align-items: flex-start;
             background: radial-gradient(circle at 50% 30%, #1a1a1a, #0a0a0a);
             font-family: Arial, sans-serif;
-            overflow: hidden;
+            overflow: visible;
             position: relative;
         }
 
@@ -48,13 +48,13 @@
             flex-direction: column;
             align-items: center;
             perspective: 1000px;
-            overflow-y: auto;
         }
 
         .table-container {
             width: 100%;
             height: 100%;
             aspect-ratio: 2 / 1;
+            position: relative;
             flex: 1;
         }
 
@@ -106,11 +106,13 @@
             text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
             z-index: 1;
             text-align: center;
+            white-space: nowrap;
+            max-width: calc(var(--table-width) * 0.1);
         }
         .player-1-name { bottom: calc(var(--spacing) * 3); left: 50%; transform: translate(-50%, 50%); }
-        .player-2-name { left: var(--spacing); top: 50%; transform: translate(0, -50%) rotate(-90deg); }
+        .player-2-name { left: calc(var(--spacing) * 2 + var(--table-border-width)); top: 50%; transform: translate(0, -50%) rotate(-90deg); }
         .player-3-name { top: calc(var(--spacing) * 3); left: 50%; transform: translate(-50%, -100%); }
-        .player-4-name { right: var(--spacing); top: 50%; transform: translate(0, -50%) rotate(90deg); }
+        .player-4-name { right: calc(var(--spacing) * 2 + var(--table-border-width)); top: 50%; transform: translate(0, -50%) rotate(90deg); }
 
         .community-cards {
             position: absolute;
@@ -213,9 +215,9 @@
         .dealer-button::after {
             content: attr(data-label);
         }
-        .player-1-dealer { bottom: calc(var(--card-height) + var(--spacing) * 5 + var(--felt-border-width)); left: min(50% - var(--chip-size) / 2, calc(50% - var(--chip-size) / 2)); }
-        .player-2-sb { left: calc(var(--spacing) * 3 + var(--card-width) * 2 + var(--spacing) * 2.5); top: calc(50% - var(--chip-size) / 2); }
-        .player-3-bb { top: calc(var(--card-height) + var(--spacing) * 5 + var(--felt-border-width)); left: min(50% - var(--chip-size) / 2, calc(50% - var(--chip-size) / 2)); }
+        .player-1-dealer { bottom: var(--spacing); left: calc(50% - var(--card-width) * 2 - var(--spacing) * 2.5); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
+        .player-2-sb { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 1.5); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
+        .player-3-bb { top: var(--spacing); left: calc(50% + var(--card-width) + var(--spacing) * 0.5); bottom: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
 
         @keyframes dealCard {
             from { transform: translate(-50%, -50%) scale(0); left: 50%; top: 50%; }
@@ -233,9 +235,11 @@
             to { transform: translate(-50%, 0); }
         }
 
-        .game-container .action-buttons {
-            margin-top: calc(var(--spacing) * 1.5);
-            align-self: center;
+        .action-buttons {
+            position: absolute;
+            bottom: calc(var(--spacing) * 2);
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
             gap: clamp(6px, 1vw, 12px);
             flex-wrap: wrap;
@@ -243,8 +247,6 @@
             background: rgba(0, 0, 0, 0.5);
             border-radius: 5px;
             padding: clamp(4px, 0.8vw, 8px);
-            max-height: 10vh;
-            flex: 0 0 auto;
         }
         .action-button {
             padding: clamp(6px, 1.5vw, 12px) clamp(12px, 2vw, 24px);
@@ -272,7 +274,7 @@
                 --card-width: clamp(30px, calc(0.07 * var(--table-width)), 80px);
                 --card-height: calc(var(--card-width) * 1.4);
                 --chip-size: clamp(20px, calc(0.05 * var(--table-width)), 60px);
-                --name-font-size: clamp(0.7rem, calc(0.012 * var(--table-width)), 1.2rem);
+                --name-font-size: clamp(0.6rem, calc(0.01 * var(--table-width)), 1rem);
                 --spacing: max(3px, calc(0.006 * var(--table-width)));
             }
             .game-container {
@@ -304,6 +306,10 @@
                 line-height: 1;
                 padding: calc(var(--spacing) / 2);
             }
+            .action-buttons {
+                bottom: calc(var(--spacing) * 1.5);
+                padding: clamp(3px, 0.6vw, 6px);
+            }
             .action-button {
                 padding: clamp(4px, 1vw, 8px) clamp(8px, 1.5vw, 16px);
                 font-size: clamp(0.7rem, calc(0.01 * var(--table-width)), 0.9rem);
@@ -311,12 +317,6 @@
             .dealer-button {
                 font-size: clamp(0.4rem, calc(0.005 * var(--table-width)), 0.7rem);
             }
-        }
-
-        @media (max-width: 450px) {
-            .player-1-dealer { bottom: calc(var(--card-height) + var(--spacing) * 4 + var(--felt-border-width)); }
-            .player-3-bb { top: calc(var(--card-height) + var(--spacing) * 4 + var(--felt-border-width)); }
-            .player-2-sb { left: calc(var(--spacing) * 2 + var(--card-width) * 2 + var(--spacing) * 1.5); }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -352,7 +352,7 @@
                 chipSize: `${chipSize.toFixed(2)}px`,
                 spacing: `${spacing.toFixed(2)}px`,
                 player1Card1: { left: Math.round(player1Card1.left), bottom: Math.round(player1Card1.bottom) },
-                player1Dealer: { left: Math.round(player1Dealer.left), bottom: Math.round(player1Dealer.bottom) },
+                player1Dealer: { left: Math.round(player1Dealer.left), top: Math.round(player1Dealer.top) },
                 player2SB: { left: Math.round(player2SB.left), top: Math.round(player2SB.top) },
                 player3BB: { left: Math.round(player3BB.left), top: Math.round(player3BB.top) }
             });
@@ -402,11 +402,11 @@
                 <div class="player-name player-2-name" aria-label="Player 2 (AI 1)">AI 1</div>
                 <div class="player-name player-4-name" aria-label="Player 4 (AI 3)">AI 3</div>
             </div>
-        </div>
-        <div class="action-buttons" role="group" aria-label="Player Action Buttons">
-            <button class="action-button" aria-label="Fold" tabindex="0">Fold</button>
-            <button class="action-button" aria-label="Call" tabindex="0">Call</button>
-            <button class="action-button" aria-label="Raise" tabindex="0">Raise</button>
+            <div class="action-buttons" role="group" aria-label="Player Action Buttons">
+                <button class="action-button" aria-label="Fold" tabindex="0">Fold</button>
+                <button class="action-button" aria-label="Call" tabindex="0">Call</button>
+                <button class="action-button" aria-label="Raise" tabindex="0">Raise</button>
+            </div>
         </div>
     </div>
 </body>
