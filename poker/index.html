@@ -7,11 +7,15 @@
     <link rel="preload" href="assets/table_felt.jpg" as="image">
     <style>
         :root {
-            --table-border-width: 20px;
-            --table-radius: 150px;
+            --table-border-width: min(2vw, 20px);
+            --table-radius: 15vw;
+            --felt-radius: 14vw;
             --felt-border-color: #1a1a1a;
-            --felt-radius: 140px;
             --shadow-color: rgba(0, 0, 0, 0.8);
+            --felt-color: #2a6041;
+            --felt-dark: #1e4d2b;
+            --leather-color: #151515;
+            --leather-dark: #252525;
             --3d-transform: rotateX(3deg);
         }
 
@@ -30,6 +34,7 @@
             overflow-x: hidden;
         }
 
+        /* Table Container */
         .table-container {
             width: calc(min(50vh, 50vw) * 2);
             max-height: min(50vh, 50vw);
@@ -40,27 +45,32 @@
             perspective: 1000px;
         }
 
+        /* Table Surface */
         .table {
             width: 100%;
             height: 100%;
-            background: 
-                linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.3)),
-                radial-gradient(circle at 50% 20%, #2a6041, #1e4d2b);
+            background: radial-gradient(circle at 50% 20%, var(--felt-color), var(--felt-dark));
             border: var(--table-border-width) solid transparent;
             border-radius: var(--table-radius);
             position: relative;
-            box-shadow: 0 20px 40px var(--shadow-color), inset 0 0 15px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 20px 40px var(--shadow-color);
             transform: var(--3d-transform);
             will-change: transform, box-shadow;
         }
 
+        /* Felt Texture */
         .table-felt {
             width: 94%;
             height: 92%;
             background: 
-                url('assets/table_felt.jpg') center/cover,
-                repeating-linear-gradient(45deg, #2a6041, #2a6041 10px, #1e4d2b 10px, #1e4d2b 20px);
-            border: 5px solid var(--felt-border-color);
+                image-set(
+                    url('assets/table_felt.jpg') 1x,
+                    url('assets/table_felt_2x.jpg') 2x
+                ) center/cover,
+                url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6AAAADUlEQVQYV2NgYGD4DwABBAEAcWZeAAAAAElFTkSuQmCC') center/cover,
+                repeating-linear-gradient(45deg, var(--felt-color), var(--felt-color) 10px, var(--felt-dark) 10px, var(--felt-dark) 20px);
+            border: 5px solid;
+            border-image: linear-gradient(to bottom, #333, #111) 1;
             border-radius: var(--felt-radius);
             position: absolute;
             top: 50%;
@@ -69,6 +79,20 @@
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.7);
         }
 
+        /* Community Card Area */
+        .table-felt::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30%;
+            height: 20%;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        /* Leather Border */
         .table::before {
             content: '';
             position: absolute;
@@ -78,14 +102,19 @@
             bottom: calc(-1 * var(--table-border-width));
             border: var(--table-border-width) solid transparent;
             border-radius: var(--table-radius);
-            background: 
-                linear-gradient(45deg, #151515, #252525),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+            background: linear-gradient(45deg, var(--leather-color), var(--leather-dark));
             box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.25);
             z-index: -1;
         }
 
         /* Responsive adjustments */
+        @media (min-width: 1200px) {
+            .table-container {
+                width: calc(min(40vh, 40vw) * 2);
+                max-height: min(40vh, 40vw);
+            }
+        }
+
         @media (max-width: 900px) {
             .table-container {
                 width: calc(min(60vh, 60vw) * 2);
@@ -95,15 +124,16 @@
 
         @media (max-width: 600px) {
             :root {
-                --table-border-width: 12px;
-                --table-radius: 90px;
-                --felt-radius: 80px;
+                --table-border-width: min(1.5vw, 12px);
+                --table-radius: 10vw;
+                --felt-radius: 9vw;
             }
             .table {
-                box-shadow: 0 12px 25px var(--shadow-color), inset 0 0 12px rgba(0, 0, 0, 0.6);
+                box-shadow: 0 12px 25px var(--shadow-color);
             }
             .table-felt {
-                border: 3px solid var(--felt-border-color);
+                border: 3px solid;
+                border-image: linear-gradient(to bottom, #333, #111) 1;
             }
         }
 
@@ -116,7 +146,7 @@
     </style>
 </head>
 <body>
-    <div class="table-container" role="region" aria-label="Texas Hold'em Poker Table">
+    <div class="table-container" role="region" aria-label="Texas Hold'em Poker Table" tabindex="0">
         <div class="table">
             <div class="table-felt"></div>
         </div>
