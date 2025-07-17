@@ -7,122 +7,110 @@
     <link rel="preload" href="assets/table_felt.jpg" as="image">
     <style>
         :root {
-            /* Colors */
-            --felt-color: #4CAF50; /* Light green poker table felt */
-            --leather-color: #151515;
-            --leather-dark: #252525;
+            --table-border-width: 20px;
+            --table-radius: 150px;
+            --felt-radius: 140px;
             --felt-border-color: #1a1a1a;
             --shadow-color: rgba(0, 0, 0, 0.8);
-            /* Sizes */
-            --table-border-width: clamp(8px, 1.5vw, 12px);
-            --table-radius: clamp(50px, 10vw, 100px);
-            --felt-radius: clamp(45px, 9vw, 90px);
             --3d-transform: rotateX(3deg);
         }
 
         * {
             box-sizing: border-box;
+            margin: 0;
         }
 
         body {
-            margin: 0;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             background: radial-gradient(circle at 50% 30%, #1a1a1a, #0a0a0a);
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             overflow-x: hidden;
         }
 
-        /* Table Container */
         .table-container {
-            width: 80vw;
-            height: auto;
+            width: min(100vw, calc(100vh * 2));
+            max-height: 50vh;
             aspect-ratio: 2 / 1;
-            max-height: 80vh;
             margin: 0 5vw;
-            position: relative;
             perspective: 1000px;
         }
 
-        /* Table Surface */
         .table {
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 50% 20%, var(--felt-color), #1e4d2b);
+            background: 
+                linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.3)),
+                radial-gradient(circle at 50% 20%, #2a6041, #1e4d2b);
             border: var(--table-border-width) solid transparent;
             border-radius: var(--table-radius);
             position: relative;
-            box-shadow: 0 10px 20px var(--shadow-color);
+            box-shadow: 0 20px 40px var(--shadow-color), inset 0 0 15px rgba(0, 0, 0, 0.6);
             transform: var(--3d-transform);
-            will-change: transform, box-shadow;
         }
 
-        /* Felt Texture */
         .table-felt {
             width: 94%;
             height: 92%;
-            background: url('assets/table_felt.jpg') center/cover, var(--felt-color);
-            border: 4px solid;
-            border-image: linear-gradient(to bottom, #444, #222) 1;
+            background: 
+                url('assets/table_felt.jpg') center/cover,
+                repeating-linear-gradient(45deg, #2a6041, #2a6041 10px, #1e4d2b 10px, #1e4d2b 20px);
+            border: 5px solid var(--felt-border-color);
             border-radius: var(--felt-radius);
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.7);
         }
 
-        /* Leather Border */
         .table::before {
             content: '';
             position: absolute;
-            top: calc(-1 * var(--table-border-width));
-            left: calc(-1 * var(--table-border-width));
-            right: calc(-1 * var(--table-border-width));
-            bottom: calc(-1 * var(--table-border-width));
+            inset: calc(-1 * var(--table-border-width));
             border: var(--table-border-width) solid transparent;
             border-radius: var(--table-radius);
-            background: linear-gradient(45deg, var(--leather-color), var(--leather-dark));
-            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.2);
+            background: 
+                linear-gradient(45deg, #151515, #252525),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+            box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.25);
             z-index: -1;
         }
 
-        /* Responsive adjustments */
         @media (max-width: 900px) {
             .table-container {
-                width: 90vw;
-                max-height: 90vh;
+                width: min(120vw, calc(120vh * 2));
+                max-height: 60vh;
             }
         }
 
         @media (max-width: 600px) {
             :root {
-                --table-border-width: clamp(6px, 1vw, 8px);
-                --table-radius: clamp(30px, 8vw, 60px);
-                --felt-radius: clamp(25px, 7vw, 55px);
+                --table-border-width: 12px;
+                --table-radius: 90px;
+                --felt-radius: 80px;
             }
+
             .table {
-                box-shadow: 0 8px 15px var(--shadow-color);
+                box-shadow: 0 12px 25px var(--shadow-color), inset 0 0 12px rgba(0, 0, 0, 0.6);
             }
+
             .table-felt {
-                border: 3px solid;
-                border-image: linear-gradient(to bottom, #444, #222) 1;
-                box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.6);
+                border: 3px solid var(--felt-border-color);
             }
         }
 
-        /* Accessibility: Reduced motion */
         @media (prefers-reduced-motion: reduce) {
             .table {
-                --3d-transform: none;
+                transform: none;
             }
         }
     </style>
 </head>
 <body>
-    <div class="table-container">
+    <div class="table-container" role="region" aria-label="Texas Hold'em Poker Table">
         <div class="table">
             <div class="table-felt"></div>
         </div>
