@@ -61,17 +61,21 @@
     .community-cards {
       display: flex;
       flex-wrap: wrap;
-      gap: 2vw;
+      gap: clamp(0.5vw, 1vw, 1.5vw);
       justify-content: center;
-      max-width: 50%;
+      max-width: 35%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
     .card {
-      width: 7vw;
-      min-width: 35px;
-      max-width: 50px;
-      height: 10vw;
-      min-height: 50px;
-      max-height: 75px;
+      width: clamp(4vw, 5vw, 6vw);
+      min-width: 25px;
+      max-width: 45px;
+      height: clamp(6vw, 7vw, 8vw);
+      min-height: 35px;
+      max-height: 65px;
       background-color: white;
       border: 1px solid black;
       border-radius: 5px;
@@ -80,37 +84,37 @@
       position: absolute;
       text-align: center;
       color: white;
-      font-size: clamp(10px, 1.8vw, 14px);
+      font-size: clamp(8px, 1.2vw, 10px);
     }
     .player-1 {
-      bottom: 5%;
+      bottom: 1%;
       left: 50%;
       transform: translateX(-50%);
     }
     .player-2 {
-      top: 5%;
+      top: 1%;
       left: 50%;
       transform: translateX(-50%);
     }
     .player-3 {
-      left: 5%;
+      left: 1%;
       top: 50%;
       transform: translateY(-50%);
     }
     .player-4 {
-      right: 5%;
+      right: 1%;
       top: 50%;
       transform: translateY(-50%);
     }
     .player-cards {
       display: flex;
-      gap: 1.5vw;
-      margin-top: 1vw;
+      gap: clamp(0.3vw, 0.5vw, 0.8vw);
+      margin-top: 0.5vw;
     }
     .action-buttons {
       margin-top: 2vw;
       display: flex;
-      gap: 1.5vw;
+      gap: clamp(0.5vw, 1vw, 1.5vw);
       justify-content: center;
       width: 90vw;
       max-width: 800px;
@@ -118,14 +122,14 @@
       padding: 1vw;
     }
     .button {
-      width: 15vw;
-      min-width: 70px;
-      max-width: 90px;
-      padding: 2vw;
+      width: clamp(8vw, 10vw, 12vw);
+      min-width: 50px;
+      max-width: 80px;
+      padding: clamp(0.8vw, 1.5vw, 2vw);
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      font-size: clamp(10px, 2vw, 14px);
+      font-size: clamp(8px, 1.5vw, 10px);
       color: white;
     }
     .deal-button {
@@ -142,15 +146,19 @@
     }
     @media (max-width: 600px) {
       .table {
-        width: 95vw;
-        min-height: 50vh;
+       (False: 95vw;
+        min-height: 45vh;
         max-height: 70vh;
       }
       .card {
-        width: 8vw;
-        min-width: 40px;
-        height: 12vw;
-        min-height: 60px;
+        width: clamp(5vw, 6vw, 7vw);
+        min-width: 30px;
+        height: clamp(7vw, 8vw, 9vw);
+        min-height: 40px;
+      }
+      .community-cards {
+        max-width: 40%;
+        gap: clamp(0.3vw, 0.8vw, 1vw);
       }
       .player-3 {
         left: 2%;
@@ -158,14 +166,19 @@
       .player-4 {
         right: 2%;
       }
-      .community-cards {
-        max-width: 60%;
-        gap: 1.5vw;
+      .player-1 {
+        bottom: 2%;
+      }
+      .player-2 {
+        top: 2%;
+      }
+      .player-cards {
+        gap: clamp(0.2vw, 0.4vw, 0.6vw);
       }
       .button {
-        width: 18vw;
-        min-width: 60px;
-        padding: 2.5vw;
+        width: clamp(12vw, 15vw, 18vw);
+        min-width: 45px;
+        padding: 2vw;
       }
       .action-buttons {
         margin-top: 3vw;
@@ -178,24 +191,33 @@
         max-height: 60vh;
       }
       .card {
-        width: 6vw;
-        min-width: 35px;
-        height: 9vw;
-        min-height: 50px;
-      }
-      .player-1 {
-        bottom: 8%;
-      }
-      .player-2 {
-        top: 8%;
+        width: clamp(3vw, 4vw, 5vw);
+        min-width: 25px;
+        height: clamp(4vw, 5vw, 6vw);
+        min-height: 35px;
       }
       .community-cards {
-        max-width: 40%;
-        gap: 1vw;
+        max-width: 30%;
+        gap: clamp(0.2vw, 0.5vw, 0.8vw);
+      }
+      .player-1 {
+        bottom: 3%;
+      }
+      .player-2 {
+        top: 3%;
+      }
+      .player-3 {
+        left: 3%;
+      }
+      .player-4 {
+        right: 3%;
+      }
+      .player-cards {
+        gap: clamp(0.2vw, 0.3vw, 0.5vw);
       }
       .button {
-        width: 15vw;
-        min-width: 60px;
+        width: clamp(8vw, 10vw, 12vw);
+        min-width: 40px;
       }
     }
   </style>
