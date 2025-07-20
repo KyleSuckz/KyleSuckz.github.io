@@ -9,18 +9,26 @@
       margin: 0;
       height: 100vh;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       background-color: #333;
       font-family: Arial, sans-serif;
-      overflow: hidden;
+      overflow: auto;
+    }
+    .game {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 900px;
     }
     .table {
       width: 90vw;
       max-width: 800px;
       aspect-ratio: 3 / 2;
-      background-color: #2e7d32;
-      border: 2vw solid #3e2723;
+      background-color: #2e7d32; /* Felt */
+      border: 2vw solid #3e2723; /* Border */
       border-radius: 10%;
       position: relative;
       display: flex;
@@ -67,27 +75,40 @@
       top: 50%;
       transform: translateY(-50%);
     }
-    .player .cards {
+    .player-cards {
       display: flex;
       gap: 1vw;
       margin-top: 1vw;
     }
-    .deal-button {
-      position: absolute;
-      bottom: 5%;
-      right: 5%;
+    .action-buttons {
+      margin-top: 2vw;
+      display: flex;
+      gap: 1vw;
+      justify-content: center;
+      width: 90vw;
+      max-width: 800px;
+    }
+    .button {
       width: 15vw;
       max-width: 100px;
       padding: 2vw;
-      background-color: #4caf50;
-      color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
       font-size: clamp(12px, 2.5vw, 16px);
+      color: white;
+    }
+    .deal-button {
+      background-color: #4caf50;
     }
     .deal-button:hover {
       background-color: #45a049;
+    }
+    .fold-button {
+      background-color: #f44336;
+    }
+    .fold-button:hover {
+      background-color: #d32f2f;
     }
     @media (max-width: 600px) {
       .table {
@@ -98,51 +119,59 @@
         width: 10vw;
         height: 15vw;
       }
-      .deal-button {
+      .button {
         width: 20vw;
         padding: 3vw;
+      }
+      .action-buttons {
+        margin-top: 3vw;
       }
     }
   </style>
 </head>
 <body>
-  <div class="table">
-    <div class="community-cards">
-      <div class="card"></div>
-      <div class="card"></div>
-      <div class="card"></div>
-      <div class="card"></div>
-      <div class="card"></div>
-    </div>
-    <div class="player player-1">
-      <div>You (Human)</div>
-      <div class="cards">
+  <div class="game">
+    <div class="table">
+      <div class="community-cards">
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
         <div class="card"></div>
         <div class="card"></div>
       </div>
-    </div>
-    <div class="player player-2">
-      <div>AI Player 1</div>
-      <div class="cards">
-        <div class="card"></div>
-        <div class="card"></div>
+      <div class="player player-1">
+        <div class="player-name">You (Human)</div>
+        <div class="player-cards player-1-cards">
+          <div class="card player-1-left-card"></div>
+          <div class="card player-1-right-card"></div>
+        </div>
+      </div>
+      <div class="player player-2">
+        <div class="player-name">AI Player 1</div>
+        <div class="player-cards player-2-cards">
+          <div class="card player-2-left-card"></div>
+          <div class="card player-2-right-card"></div>
+        </div>
+      </div>
+      <div class="player player-3">
+        <div class="player-name">AI Player 2</div>
+        <div class="player-cards player-3-cards">
+          <div class="card player-3-left-card"></div>
+          <div class="card player-3-right-card"></div>
+        </div>
+      </div>
+      <div class="player player-4">
+        <div class="player-name">AI Player 3</div>
+        <div class="player-cards player-4-cards">
+          <div class="card player-4-left-card"></div>
+          <div class="card player-4-right-card"></div>
+        </div>
       </div>
     </div>
-    <div class="player player-3">
-      <div>AI Player 2</div>
-      <div class="cards">
-        <div class="card"></div>
-        <div class="card"></div>
-      </div>
+    <div class="action-buttons">
+      <button class="button deal-button">Deal</button>
+      <button class="button fold-button">Fold</button>
     </div>
-    <div class="player player-4">
-      <div>AI Player 3</div>
-      <div class="cards">
-        <div class="card"></div>
-        <div class="card"></div>
-      </div>
-    </div>
-    <button class="deal-button">Deal</button>
   </div>
 </body>
 </html>
