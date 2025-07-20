@@ -20,11 +20,11 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      width: calc(90vw + 4px); /* Match table width + red border */
+      width: calc(90vw + 4px);
       max-width: calc(800px + 4px);
-      border: 2px solid #0000FF; /* Blue border for game */
+      border: 2px solid #0000FF;
       box-sizing: border-box;
-      padding: 0; /* No padding */
+      padding: 0;
     }
     .table {
       width: 90vw;
@@ -32,7 +32,7 @@
       min-height: 50vh;
       max-height: 80vh;
       aspect-ratio: 3 / 2;
-      border: 2px solid #FF0000; /* Red border for table, square corners */
+      border: 2px solid #FF0000;
       box-sizing: border-box;
       position: relative;
       display: flex;
@@ -42,7 +42,7 @@
     .border {
       width: 100%;
       height: 100%;
-      border: 3vw solid #000000; /* Black border, 3vw */
+      border: 3vw solid #000000;
       border-radius: 10%;
       box-sizing: border-box;
       position: relative;
@@ -50,9 +50,9 @@
     .felt {
       width: 100%;
       height: 100%;
-      background-color: #2e7d32; /* Green felt */
+      background-color: #2e7d32;
       border-radius: 10%;
-      border: 2px solid #FFFF00; /* Yellow border for felt, rounded corners */
+      border: 2px solid #FFFF00;
       position: relative;
       display: flex;
       justify-content: center;
@@ -70,7 +70,7 @@
       transform: translate(-50%, -50%);
     }
     .card {
-      width: clamp(3vw, 5vw, 7vw); /* Allow larger scaling */
+      width: clamp(3vw, 5vw, 7vw);
       min-width: 25px;
       max-width: 50px;
       height: clamp(4.5vw, 7.5vw, 10.5vw);
@@ -109,35 +109,39 @@
       color: white;
       font-size: clamp(8px, 1.2vw, 10px);
       text-align: center;
-      line-height: 3vw; /* Match black border width for vertical centering */
+      line-height: 3vw;
+      box-sizing: border-box;
+      white-space: nowrap;
     }
     .player-name.player-1-name {
-      bottom: calc(-3vw / 2); /* Center on 3vw black border */
+      bottom: -3vw;
+      margin-bottom: -2px;
       left: 50%;
       transform: translateX(-50%);
       width: 100%;
     }
     .player-name.player-2-name {
-      top: calc(-3vw / 2);
+      top: -3vw;
+      margin-top: -2px;
       left: 50%;
       transform: translateX(-50%);
       width: 100%;
     }
     .player-name.player-3-name {
-      left: calc(-3vw / 2);
+      left: -3vw;
+      margin-left: -2px;
       top: 50%;
-      transform: translateY(-50%) rotate(-90deg); /* Bottom faces community cards */
+      transform: translateY(-50%) rotate(-90deg);
       transform-origin: center;
-      width: 3vw; /* Match border width */
-      height: 100%;
+      line-height: 3vw;
     }
     .player-name.player-4-name {
-      right: calc(-3vw / 2);
+      right: -3vw;
+      margin-right: -2px;
       top: 50%;
-      transform: translateY(-50%) rotate(90deg); /* Bottom faces community cards */
+      transform: translateY(-50%) rotate(90deg);
       transform-origin: center;
-      width: 3vw; /* Match border width */
-      height: 100%;
+      line-height: 3vw;
     }
     .player-cards {
       display: flex;
@@ -145,14 +149,15 @@
       margin-top: 0.5vw;
     }
     .action-buttons {
-      margin-top: 0; /* Tight to table */
+      margin-top: 0;
       display: flex;
       gap: clamp(0.2vw, 0.3vw, 0.5vw);
       justify-content: center;
-      width: calc(100% - 6vw - 8px); /* Match felt width (subtract black and red/yellow borders) */
+      width: calc(90vw - 6vw - 8px);
       max-width: calc(800px - 6vw - 8px);
-      border: 2px solid #00FF00; /* Green border for action buttons */
+      border: 2px solid #00FF00;
       padding: 1vw;
+      box-sizing: border-box;
     }
     .button {
       width: clamp(8vw, 10vw, 12vw);
@@ -211,18 +216,20 @@
         top: 2%;
       }
       .player-name.player-1-name {
-        bottom: calc(-3vw / 2);
+        bottom: -3vw;
+        margin-bottom: -2px;
       }
       .player-name.player-2-name {
-        top: calc(-3vw / 2);
+        top: -3vw;
+        margin-top: -2px;
       }
       .player-name.player-3-name {
-        left: calc(-3vw / 2);
-        width: 3vw;
+        left: -3vw;
+        margin-left: -2px;
       }
       .player-name.player-4-name {
-        right: calc(-3vw / 2);
-        width: 3vw;
+        right: -3vw;
+        margin-right: -2px;
       }
       .player-cards {
         gap: clamp(0.1vw, 0.2vw, 0.3vw);
@@ -233,7 +240,7 @@
         padding: 2vw;
       }
       .action-buttons {
-        width: calc(100% - 6vw - 8px);
+        width: calc(95vw - 6vw - 8px);
         max-width: calc(800px - 6vw - 8px);
         padding: 2vw;
       }
@@ -271,18 +278,20 @@
         right: 3%;
       }
       .player-name.player-1-name {
-        bottom: calc(-3vw / 2);
+        bottom: -3vw;
+        margin-bottom: -2px;
       }
       .player-name.player-2-name {
-        top: calc(-3vw / 2);
+        top: -3vw;
+        margin-top: -2px;
       }
       .player-name.player-3-name {
-        left: calc(-3vw / 2);
-        width: 3vw;
+        left: -3vw;
+        margin-left: -2px;
       }
       .player-name.player-4-name {
-        right: calc(-3vw / 2);
-        width: 3vw;
+        right: -3vw;
+        margin-right: -2px;
       }
       .player-cards {
         gap: clamp(0.1vw, 0.2vw, 0.3vw);
@@ -292,7 +301,7 @@
         min-width: 40px;
       }
       .action-buttons {
-        width: calc(100% - 6vw - 8px);
+        width: calc(80vw - 6vw - 8px);
         max-width: calc(800px - 6vw - 8px);
       }
     }
