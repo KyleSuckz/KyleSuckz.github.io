@@ -39,13 +39,12 @@
       justify-content: center;
       align-items: center;
     }
-    .brown-border {
+    .border {
       width: 100%;
       height: 100%;
-      border: 2vw solid #3e2723; /* Brown border */
+      border: 4vw solid #000000; /* Thicker black border */
       border-radius: 10%;
       box-sizing: border-box;
-      border: 2px solid #800080; /* Purple border for brown border */
     }
     .felt {
       width: 100%;
@@ -62,16 +61,17 @@
     .community-cards {
       display: flex;
       flex-wrap: wrap;
-      gap: 1.5vw;
+      gap: 2vw;
       justify-content: center;
+      max-width: 50%;
     }
     .card {
-      width: 8vw;
-      min-width: 40px;
-      max-width: 60px;
-      height: 12vw;
-      min-height: 60px;
-      max-height: 90px;
+      width: 7vw;
+      min-width: 35px;
+      max-width: 50px;
+      height: 10vw;
+      min-height: 50px;
+      max-height: 75px;
       background-color: white;
       border: 1px solid black;
       border-radius: 5px;
@@ -80,25 +80,25 @@
       position: absolute;
       text-align: center;
       color: white;
-      font-size: clamp(12px, 2vw, 16px);
+      font-size: clamp(10px, 1.8vw, 14px);
     }
     .player-1 {
-      bottom: 2%;
+      bottom: 5%;
       left: 50%;
       transform: translateX(-50%);
     }
     .player-2 {
-      top: 2%;
+      top: 5%;
       left: 50%;
       transform: translateX(-50%);
     }
     .player-3 {
-      left: 2%;
+      left: 5%;
       top: 50%;
       transform: translateY(-50%);
     }
     .player-4 {
-      right: 2%;
+      right: 5%;
       top: 50%;
       transform: translateY(-50%);
     }
@@ -119,13 +119,13 @@
     }
     .button {
       width: 15vw;
-      min-width: 80px;
-      max-width: 100px;
+      min-width: 70px;
+      max-width: 90px;
       padding: 2vw;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      font-size: clamp(12px, 2.5vw, 16px);
+      font-size: clamp(10px, 2vw, 14px);
       color: white;
     }
     .deal-button {
@@ -143,19 +143,29 @@
     @media (max-width: 600px) {
       .table {
         width: 95vw;
-        min-height: 55vh;
-        max-height: 75vh;
+        min-height: 50vh;
+        max-height: 70vh;
       }
       .card {
-        width: 10vw;
-        min-width: 45px;
-        height: 15vw;
-        min-height: 65px;
+        width: 8vw;
+        min-width: 40px;
+        height: 12vw;
+        min-height: 60px;
+      }
+      .player-3 {
+        left: 2%;
+      }
+      .player-4 {
+        right: 2%;
+      }
+      .community-cards {
+        max-width: 60%;
+        gap: 1.5vw;
       }
       .button {
-        width: 20vw;
-        min-width: 70px;
-        padding: 3vw;
+        width: 18vw;
+        min-width: 60px;
+        padding: 2.5vw;
       }
       .action-buttons {
         margin-top: 3vw;
@@ -165,16 +175,27 @@
     @media (orientation: landscape) {
       .table {
         width: 80vw;
-        max-height: 65vh;
-      }
-      .game {
-        padding: 1vw;
+        max-height: 60vh;
       }
       .card {
-        width: 7vw;
-        min-width: 40px;
-        height: 10vw;
-        min-height: 60px;
+        width: 6vw;
+        min-width: 35px;
+        height: 9vw;
+        min-height: 50px;
+      }
+      .player-1 {
+        bottom: 8%;
+      }
+      .player-2 {
+        top: 8%;
+      }
+      .community-cards {
+        max-width: 40%;
+        gap: 1vw;
+      }
+      .button {
+        width: 15vw;
+        min-width: 60px;
       }
     }
   </style>
@@ -182,7 +203,7 @@
 <body>
   <div class="game">
     <div class="table">
-      <div class="brown-border">
+      <div class="border">
         <div class="felt">
           <div class="community-cards">
             <div class="card"></div>
