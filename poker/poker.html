@@ -16,6 +16,7 @@
       --deal-hover: #45a049;
       --fold-bg: #f44336;
       --fold-hover: #d32f2f;
+      --white: #FFFFFF;
     }
     * {
       box-sizing: border-box;
@@ -38,6 +39,17 @@
       width: calc(90vw + 4px);
       max-width: calc(800px + 4px);
       border: 2px solid var(--blue);
+      position: relative;
+    }
+    .centerline-vertical {
+      position: absolute;
+      width: 1px;
+      height: 100%;
+      background-color: var(--white);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
     }
     .table {
       width: calc(90vw + 4px);
@@ -49,6 +61,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      position: relative;
     }
     .border {
       width: 100%;
@@ -68,6 +81,16 @@
       align-items: center;
       position: relative;
     }
+    .centerline-horizontal {
+      position: absolute;
+      width: 100%;
+      height: 1px;
+      background-color: var(--white);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+    }
     .community-cards {
       display: flex;
       gap: clamp(0.3vw, 0.3vw, 0.5vw);
@@ -77,6 +100,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      border: 1px solid var(--white);
     }
     .card {
       width: clamp(3vw, 5vw, 7vw);
@@ -118,34 +142,52 @@
       color: #f0f0f0;
       font-size: clamp(10px, 1.2vw, 10px);
       text-align: center;
-      line-height: 1.5vw;
+      line-height: normal;
       white-space: nowrap;
+      border: 1px solid var(--white);
     }
     .player-name.player-1-name {
-      bottom: calc(-1.5vw);
+      bottom: -1.5vw;
       left: 50%;
       transform: translateX(-50%);
     }
     .player-name.player-2-name {
-      top: calc(-1.5vw);
+      top: -1.5vw;
       left: 50%;
       transform: translateX(-50%);
     }
     .player-name.player-3-name {
-      left: calc(-3vw - 2px);
-      top: 50%;
-      transform: translateY(-50%) rotate(-90deg);
-      transform-origin: center;
+      left: -3vw;
+      top: calc(50% - 1.5vw);
+      width: 3vw;
+      height: 3vw;
+      display: grid;
+      place-items: center;
+      border: none;
+    }
+    .player-name.player-3-name span {
+      display: inline-block;
+      transform: rotate(-90deg);
+      border: 1px solid var(--white);
     }
     .player-name.player-4-name {
-      right: calc(-3vw - 2px);
-      top: 50%;
-      transform: translateY(-50%) rotate(90deg);
-      transform-origin: center;
+      right: -3vw;
+      top: calc(50% - 1.5vw);
+      width: 3vw;
+      height: 3vw;
+      display: grid;
+      place-items: center;
+      border: none;
+    }
+    .player-name.player-4-name span {
+      display: inline-block;
+      transform: rotate(90deg);
+      border: 1px solid var(--white);
     }
     .player-cards {
       display: flex;
       gap: clamp(0.3vw, 0.3vw, 0.5vw);
+      border: 1px solid var(--white);
     }
     .action-buttons {
       display: flex;
@@ -216,16 +258,18 @@
         right: 10px;
       }
       .player-name.player-1-name {
-        bottom: calc(-1.5vw);
+        bottom: -1.5vw;
       }
       .player-name.player-2-name {
-        top: calc(-1.5vw);
+        top: -1.5vw;
       }
       .player-name.player-3-name {
-        left: calc(-3vw - 2px);
+        left: -3vw;
+        top: calc(50% - 1.5vw);
       }
       .player-name.player-4-name {
-        right: calc(-3vw - 2px);
+        right: -3vw;
+        top: calc(50% - 1.5vw);
       }
       .player-cards {
         gap: clamp(0.3vw, 0.3vw, 0.5vw);
@@ -275,16 +319,18 @@
         right: 12px;
       }
       .player-name.player-1-name {
-        bottom: calc(-1.5vw);
+        bottom: -1.5vw;
       }
       .player-name.player-2-name {
-        top: calc(-1.5vw);
+        top: -1.5vw;
       }
       .player-name.player-3-name {
-        left: calc(-3vw - 2px);
+        left: -3vw;
+        top: calc(50% - 1.5vw);
       }
       .player-name.player-4-name {
-        right: calc(-3vw - 2px);
+        right: -3vw;
+        top: calc(50% - 1.5vw);
       }
       .player-cards {
         gap: clamp(0.3vw, 0.3vw, 0.5vw);
@@ -302,9 +348,11 @@
 </head>
 <body>
   <div class="game">
+    <div class="centerline-vertical"></div>
     <div class="table">
       <div class="border">
         <div class="felt">
+          <div class="centerline-horizontal"></div>
           <div class="community-cards">
             <div class="card"></div>
             <div class="card"></div>
@@ -339,8 +387,8 @@
         </div>
         <div class="player-name player-1-name">Player 1 (You)</div>
         <div class="player-name player-2-name">Player 3</div>
-        <div class="player-name player-3-name">Player 2</div>
-        <div class="player-name player-4-name">Player 4</div>
+        <div class="player-name player-3-name"><span>Player 2</span></div>
+        <div class="player-name player-4-name"><span>Player 4</span></div>
       </div>
     </div>
     <div class="action-buttons">
