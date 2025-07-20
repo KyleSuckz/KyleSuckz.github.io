@@ -83,8 +83,6 @@
     .player {
       position: absolute;
       text-align: center;
-      color: white;
-      font-size: clamp(8px, 1.2vw, 10px);
     }
     .player-1 {
       bottom: 1%;
@@ -110,26 +108,29 @@
       position: absolute;
       color: white;
       font-size: clamp(8px, 1.2vw, 10px);
+      text-align: center;
     }
     .player-1 .player-name {
-      bottom: calc(-3vw - 1.5em); /* Center on black border */
+      bottom: calc(-1.5vw); /* Center vertically on 3vw black border */
       left: 50%;
       transform: translateX(-50%);
     }
     .player-2 .player-name {
-      top: calc(-3vw - 1.5em);
+      top: calc(-1.5vw);
       left: 50%;
       transform: translateX(-50%);
     }
     .player-3 .player-name {
-      left: calc(-3vw - 1.5em);
+      left: calc(-1.5vw);
       top: 50%;
-      transform: translateY(-50%);
+      transform: translateY(-50%) rotate(-90deg); /* Bottom of text faces community cards */
+      transform-origin: center;
     }
     .player-4 .player-name {
-      right: calc(-3vw - 1.5em);
+      right: calc(-1.5vw);
       top: 50%;
-      transform: translateY(-50%);
+      transform: translateY(-50%) rotate(90deg); /* Bottom of text faces community cards */
+      transform-origin: center;
     }
     .player-cards {
       display: flex;
@@ -141,8 +142,8 @@
       display: flex;
       gap: clamp(0.2vw, 0.3vw, 0.5vw);
       justify-content: center;
-      width: 90vw;
-      max-width: 800px;
+      width: calc(90vw - 6vw); /* Match felt width (table width - 2 * 3vw border) */
+      max-width: calc(800px - 6vw);
       border: 2px solid #00FF00; /* Green border for action buttons */
       padding: 1vw;
     }
@@ -198,16 +199,16 @@
         top: 2%;
       }
       .player-1 .player-name {
-        bottom: calc(-3vw - 1.5em);
+        bottom: calc(-1.5vw);
       }
       .player-2 .player-name {
-        top: calc(-3vw - 1.5em);
+        top: calc(-1.5vw);
       }
       .player-3 .player-name {
-        left: calc(-3vw - 1.5em);
+        left: calc(-1.5vw);
       }
       .player-4 .player-name {
-        right: calc(-3vw - 1.5em);
+        right: calc(-1.5vw);
       }
       .player-cards {
         gap: clamp(0.1vw, 0.2vw, 0.3vw);
@@ -218,6 +219,8 @@
         padding: 2vw;
       }
       .action-buttons {
+        width: calc(95vw - 6vw); /* Match felt width */
+        max-width: calc(800px - 6vw);
         padding: 2vw;
       }
     }
@@ -249,16 +252,16 @@
         right: 3%;
       }
       .player-1 .player-name {
-        bottom: calc(-3vw - 1.5em);
+        bottom: calc(-1.5vw);
       }
       .player-2 .player-name {
-        top: calc(-3vw - 1.5em);
+        top: calc(-1.5vw);
       }
       .player-3 .player-name {
-        left: calc(-3vw - 1.5em);
+        left: calc(-1.5vw);
       }
       .player-4 .player-name {
-        right: calc(-3vw - 1.5em);
+        right: calc(-1.5vw);
       }
       .player-cards {
         gap: clamp(0.1vw, 0.2vw, 0.3vw);
@@ -266,6 +269,10 @@
       .button {
         width: clamp(8vw, 10vw, 12vw);
         min-width: 40px;
+      }
+      .action-buttons {
+        width: calc(80vw - 6vw); /* Match felt width */
+        max-width: calc(800px - 6vw);
       }
     }
   </style>
@@ -283,28 +290,28 @@
             <div class="card"></div>
           </div>
           <div class="player player-1">
-            <div class="player-name">You (Human)</div>
+            <div class="player-name">Player 1 (You)</div>
             <div class="player-cards player-1-cards">
               <div class="card player-1-left-card"></div>
               <div class="card player-1-right-card"></div>
             </div>
           </div>
           <div class="player player-2">
-            <div class="player-name">AI Player Green</div>
+            <div class="player-name">Player 3</div>
             <div class="player-cards player-2-cards">
               <div class="card player-2-left-card"></div>
               <div class="card player-2-right-card"></div>
             </div>
           </div>
           <div class="player player-3">
-            <div class="player-name">AI Player Red</div>
+            <div class="player-name">Player 2</div>
             <div class="player-cards player-3-cards">
               <div class="card player-3-left-card"></div>
               <div class="card player-3-right-card"></div>
             </div>
           </div>
           <div class="player player-4">
-            <div class="player-name">AI Player Yellow</div>
+            <div class="player-name">Player 4</div>
             <div class="player-cards player-4-cards">
               <div class="card player-4-left-card"></div>
               <div class="card player-4-right-card"></div>
