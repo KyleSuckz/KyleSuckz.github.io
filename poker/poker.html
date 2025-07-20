@@ -20,11 +20,11 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      width: 100%;
-      max-width: 900px;
+      width: calc(90vw + 4px); /* Match table width + red border */
+      max-width: calc(800px + 4px);
       border: 2px solid #0000FF; /* Blue border for game */
       box-sizing: border-box;
-      padding: 2vw;
+      padding: 0; /* No padding */
     }
     .table {
       width: 90vw;
@@ -70,12 +70,12 @@
       transform: translate(-50%, -50%);
     }
     .card {
-      width: clamp(3vw, 4vw, 5vw);
+      width: clamp(3vw, 5vw, 7vw); /* Allow larger scaling */
       min-width: 25px;
-      max-width: 40px;
-      height: clamp(4.5vw, 6vw, 7vw);
+      max-width: 50px;
+      height: clamp(4.5vw, 7.5vw, 10.5vw);
       min-height: 35px;
-      max-height: 60px;
+      max-height: 75px;
       background-color: white;
       border: 1px solid black;
       border-radius: 5px;
@@ -109,28 +109,35 @@
       color: white;
       font-size: clamp(8px, 1.2vw, 10px);
       text-align: center;
+      line-height: 3vw; /* Match black border width for vertical centering */
     }
-    .player-1 .player-name {
-      bottom: calc(-1.5vw); /* Center vertically on 3vw black border */
+    .player-name.player-1-name {
+      bottom: calc(-3vw / 2); /* Center on 3vw black border */
       left: 50%;
       transform: translateX(-50%);
+      width: 100%;
     }
-    .player-2 .player-name {
-      top: calc(-1.5vw);
+    .player-name.player-2-name {
+      top: calc(-3vw / 2);
       left: 50%;
       transform: translateX(-50%);
+      width: 100%;
     }
-    .player-3 .player-name {
-      left: calc(-1.5vw);
+    .player-name.player-3-name {
+      left: calc(-3vw / 2);
       top: 50%;
-      transform: translateY(-50%) rotate(-90deg); /* Bottom of text faces community cards */
+      transform: translateY(-50%) rotate(-90deg); /* Bottom faces community cards */
       transform-origin: center;
+      width: 3vw; /* Match border width */
+      height: 100%;
     }
-    .player-4 .player-name {
-      right: calc(-1.5vw);
+    .player-name.player-4-name {
+      right: calc(-3vw / 2);
       top: 50%;
-      transform: translateY(-50%) rotate(90deg); /* Bottom of text faces community cards */
+      transform: translateY(-50%) rotate(90deg); /* Bottom faces community cards */
       transform-origin: center;
+      width: 3vw; /* Match border width */
+      height: 100%;
     }
     .player-cards {
       display: flex;
@@ -142,8 +149,8 @@
       display: flex;
       gap: clamp(0.2vw, 0.3vw, 0.5vw);
       justify-content: center;
-      width: calc(90vw - 6vw); /* Match felt width (table width - 2 * 3vw border) */
-      max-width: calc(800px - 6vw);
+      width: calc(100% - 6vw - 8px); /* Match felt width (subtract black and red/yellow borders) */
+      max-width: calc(800px - 6vw - 8px);
       border: 2px solid #00FF00; /* Green border for action buttons */
       padding: 1vw;
     }
@@ -171,16 +178,21 @@
       background-color: #d32f2f;
     }
     @media (max-width: 600px) {
+      .game {
+        width: calc(95vw + 4px);
+        max-width: calc(800px + 4px);
+      }
       .table {
         width: 95vw;
         min-height: 45vh;
         max-height: 70vh;
       }
       .card {
-        width: clamp(4vw, 5vw, 6vw);
+        width: clamp(4vw, 6vw, 8vw);
         min-width: 30px;
-        height: clamp(6vw, 7vw, 8vw);
+        height: clamp(6vw, 9vw, 12vw);
         min-height: 40px;
+        max-height: 80px;
       }
       .community-cards {
         max-width: 35%;
@@ -198,17 +210,19 @@
       .player-2 {
         top: 2%;
       }
-      .player-1 .player-name {
-        bottom: calc(-1.5vw);
+      .player-name.player-1-name {
+        bottom: calc(-3vw / 2);
       }
-      .player-2 .player-name {
-        top: calc(-1.5vw);
+      .player-name.player-2-name {
+        top: calc(-3vw / 2);
       }
-      .player-3 .player-name {
-        left: calc(-1.5vw);
+      .player-name.player-3-name {
+        left: calc(-3vw / 2);
+        width: 3vw;
       }
-      .player-4 .player-name {
-        right: calc(-1.5vw);
+      .player-name.player-4-name {
+        right: calc(-3vw / 2);
+        width: 3vw;
       }
       .player-cards {
         gap: clamp(0.1vw, 0.2vw, 0.3vw);
@@ -219,21 +233,26 @@
         padding: 2vw;
       }
       .action-buttons {
-        width: calc(95vw - 6vw); /* Match felt width */
-        max-width: calc(800px - 6vw);
+        width: calc(100% - 6vw - 8px);
+        max-width: calc(800px - 6vw - 8px);
         padding: 2vw;
       }
     }
     @media (orientation: landscape) {
+      .game {
+        width: calc(80vw + 4px);
+        max-width: calc(800px + 4px);
+      }
       .table {
         width: 80vw;
         max-height: 60vh;
       }
       .card {
-        width: clamp(3vw, 4vw, 5vw);
+        width: clamp(3vw, 5vw, 7vw);
         min-width: 25px;
-        height: clamp(4vw, 5vw, 6vw);
+        height: clamp(4vw, 7.5vw, 10.5vw);
         min-height: 35px;
+        max-height: 75px;
       }
       .community-cards {
         max-width: 30%;
@@ -251,17 +270,19 @@
       .player-4 {
         right: 3%;
       }
-      .player-1 .player-name {
-        bottom: calc(-1.5vw);
+      .player-name.player-1-name {
+        bottom: calc(-3vw / 2);
       }
-      .player-2 .player-name {
-        top: calc(-1.5vw);
+      .player-name.player-2-name {
+        top: calc(-3vw / 2);
       }
-      .player-3 .player-name {
-        left: calc(-1.5vw);
+      .player-name.player-3-name {
+        left: calc(-3vw / 2);
+        width: 3vw;
       }
-      .player-4 .player-name {
-        right: calc(-1.5vw);
+      .player-name.player-4-name {
+        right: calc(-3vw / 2);
+        width: 3vw;
       }
       .player-cards {
         gap: clamp(0.1vw, 0.2vw, 0.3vw);
@@ -271,8 +292,8 @@
         min-width: 40px;
       }
       .action-buttons {
-        width: calc(80vw - 6vw); /* Match felt width */
-        max-width: calc(800px - 6vw);
+        width: calc(100% - 6vw - 8px);
+        max-width: calc(800px - 6vw - 8px);
       }
     }
   </style>
@@ -290,34 +311,34 @@
             <div class="card"></div>
           </div>
           <div class="player player-1">
-            <div class="player-name">Player 1 (You)</div>
             <div class="player-cards player-1-cards">
               <div class="card player-1-left-card"></div>
               <div class="card player-1-right-card"></div>
             </div>
           </div>
           <div class="player player-2">
-            <div class="player-name">Player 3</div>
             <div class="player-cards player-2-cards">
               <div class="card player-2-left-card"></div>
               <div class="card player-2-right-card"></div>
             </div>
           </div>
           <div class="player player-3">
-            <div class="player-name">Player 2</div>
             <div class="player-cards player-3-cards">
               <div class="card player-3-left-card"></div>
               <div class="card player-3-right-card"></div>
             </div>
           </div>
           <div class="player player-4">
-            <div class="player-name">Player 4</div>
             <div class="player-cards player-4-cards">
               <div class="card player-4-left-card"></div>
               <div class="card player-4-right-card"></div>
             </div>
           </div>
         </div>
+        <div class="player-name player-1-name">Player 1 (You)</div>
+        <div class="player-name player-2-name">Player 3</div>
+        <div class="player-name player-3-name">Player 2</div>
+        <div class="player-name player-4-name">Player 4</div>
       </div>
     </div>
     <div class="action-buttons">
