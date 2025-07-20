@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Texas Hold'em Poker</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #333;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+    .table {
+      width: 90vw;
+      max-width: 800px;
+      aspect-ratio: 3 / 2;
+      background-color: #2e7d32;
+      border: 2vw solid #3e2723;
+      border-radius: 10%;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+    }
+    .community-cards {
+      display: flex;
+      gap: 1vw;
+    }
+    .card {
+      width: 8vw;
+      max-width: 60px;
+      height: 12vw;
+      max-height: 90px;
+      background-color: white;
+      border: 1px solid black;
+      border-radius: 5px;
+    }
+    .player {
+      position: absolute;
+      text-align: center;
+      color: white;
+      font-size: clamp(12px, 2vw, 16px);
+    }
+    .player-1 {
+      bottom: 2%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .player-2 {
+      top: 2%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .player-3 {
+      left: 2%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .player-4 {
+      right: 2%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .player .cards {
+      display: flex;
+      gap: 1vw;
+      margin-top: 1vw;
+    }
+    .deal-button {
+      position: absolute;
+      bottom: 5%;
+      right: 5%;
+      width: 15vw;
+      max-width: 100px;
+      padding: 2vw;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: clamp(12px, 2.5vw, 16px);
+    }
+    .deal-button:hover {
+      background-color: #45a049;
+    }
+    @media (max-width: 600px) {
+      .table {
+        width: 95vw;
+        border: 3vw solid #3e2723;
+      }
+      .card {
+        width: 10vw;
+        height: 15vw;
+      }
+      .deal-button {
+        width: 20vw;
+        padding: 3vw;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="table">
+    <div class="community-cards">
+      <div class="card"></div>
+      <div class="card"></div>
+      <div class="card"></div>
+      <div class="card"></div>
+      <div class="card"></div>
+    </div>
+    <div class="player player-1">
+      <div>You (Human)</div>
+      <div class="cards">
+        <div class="card"></div>
+        <div class="card"></div>
+      </div>
+    </div>
+    <div class="player player-2">
+      <div>AI Player 1</div>
+      <div class="cards">
+        <div class="card"></div>
+        <div class="card"></div>
+      </div>
+    </div>
+    <div class="player player-3">
+      <div>AI Player 2</div>
+      <div class="cards">
+        <div class="card"></div>
+        <div class="card"></div>
+      </div>
+    </div>
+    <div class="player player-4">
+      <div>AI Player 3</div>
+      <div class="cards">
+        <div class="card"></div>
+        <div class="card"></div>
+      </div>
+    </div>
+    <button class="deal-button">Deal</button>
+  </div>
+</body>
+</html>
