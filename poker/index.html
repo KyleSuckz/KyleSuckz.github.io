@@ -36,24 +36,28 @@
             align-items: flex-start;
             background: radial-gradient(circle at 50% 30%, #1a1a1a, #0a0a0a);
             font-family: Arial, sans-serif;
-            overflow: hidden;
+            overflow-y: auto;
             position: relative;
         }
 
         .game-container {
-            width: min(95vw, calc(2 * (100vh - clamp(48px, 7vw, 68px) - clamp(6px, 1vw, 10px) - clamp(10px, 2vw, 20px))));
-            height: 100vh;
+            width: min(95vw, calc(2 * (100vh - clamp(48px, 7vw, 68px) - clamp(10px, 2vw, 20px))));
+            height: calc(0.5 * min(95vw, calc(2 * (100vh - clamp(48px, 7vw, 68px) - clamp(10px, 2vw, 20px)))));
             display: flex;
             flex-direction: column;
             align-items: center;
             perspective: 1000px;
+            position: relative;
+            margin: clamp(10px, 2vw, 20px) auto;
         }
 
         .table-container {
             width: 100%;
             height: 100%;
             aspect-ratio: 2 / 1;
-            flex: 1;
+            max-width: 95vw;
+            max-height: calc(0.5 * 95vw);
+            flex: 1 1 auto;
         }
 
         .table {
@@ -107,14 +111,14 @@
             border-radius: 3px;
         }
         .player-1-name { bottom: 0; left: 50%; transform: translate(-50%, 50%); }
-        .player-2-name { left: 0; top: calc(50% + var(--card-height) / 2 + var(--spacing)); transform: translate(0, 0); }
+        .player-2-name { left: var(--spacing); top: 50%; transform: translate(0, -50%); }
         .player-3-name { top: 0; left: 50%; transform: translate(-50%, -50%); }
-        .player-4-name { right: 0; top: calc(50% - var(--card-height) / 2 - var(--spacing)); transform: translate(0, 0); }
+        .player-4-name { right: var(--spacing); top: 50%; transform: translate(0, -50%); }
 
         .community-cards {
             position: absolute;
-            width: calc(var(--card-width) * 5 + var(--spacing) * 5);
-            height: calc(var(--card-height) + var(--spacing) * 4);
+            width: calc(var(--card-width) * 5 + var(--spacing) * 4);
+            height: calc(var(--card-height) + var(--spacing) * 2);
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -122,6 +126,20 @@
             border-radius: 10px;
             background: rgba(0, 0, 0, 0.1);
             z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--spacing);
+            padding: var(--spacing);
+        }
+
+        .community-card {
+            width: var(--card-width);
+            height: var(--card-height);
+            background: url('assets/cards/card_back.png') center/cover, #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+            z-index: 2;
         }
 
         .action-text-area {
@@ -236,16 +254,17 @@
         }
 
         .game-container .action-buttons {
-            margin-top: var(--spacing);
-            align-self: center;
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
-            gap: clamp(6px, 1vw, 12px);
+            gap: clamp(8px, 1.2vw, 14px);
             flex-wrap: wrap;
             z-index: 10;
             background: rgba(0, 0, 0, 0.5);
             border-radius: 5px;
-            padding: clamp(6px, 1vw, 10px);
-            flex: 0 0 auto;
+            padding: clamp(10px, 1.5vw, 14px);
         }
         .action-button {
             padding: clamp(8px, 1.8vw, 14px) clamp(14px, 2.2vw, 26px);
@@ -278,8 +297,8 @@
                 --spacing: clamp(2px, 0.4vw, 4px);
             }
             .game-container {
-                width: min(95vw, calc(2 * (100vh - clamp(48px, 7vw, 68px) - clamp(6px, 1vw, 10px) - clamp(10px, 2vw, 20px))));
-                height: 100vh;
+                width: min(95vw, calc(2 * (100vh - clamp(48px, 7vw, 68px) - clamp(10px, 2vw, 20px))));
+                height: calc(0.5 * min(95vw, calc(2 * (100vh - clamp(48px, 7vw, 68px) - clamp(10px, 2vw, 20px)))));
             }
             .table {
                 box-shadow: 0 12px 25px var(--shadow-color);
@@ -288,8 +307,8 @@
                 border: var(--felt-border-width) solid var(--felt-border-color);
             }
             .community-cards {
-                width: calc(var(--card-width) * 5 + var(--spacing) * 5);
-                height: calc(var(--card-height) + var(--spacing) * 4);
+                width: calc(var(--card-width) * 5 + var(--spacing) * 4);
+                height: calc(var(--card-height) + var(--spacing) * 2);
             }
             .action-text-area {
                 width: calc(var(--card-width) * 4 + var(--spacing) * 5);
@@ -313,8 +332,8 @@
             .dealer-button {
                 font-size: clamp(0.4rem, 0.6vw, 0.6rem);
             }
-            .player-2-name { left: var(--spacing); top: calc(50% + var(--card-height) / 2 + var(--spacing) + var(--chip-size)); }
-            .player-4-name { right: var(--spacing); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 2); }
+            .player-2-name { left: var(--spacing); top: calc(50% + var(--card-height) / 2 + var(--chip-size) + var(--spacing) * 2); transform: translate(0, 0); }
+            .player-4-name { right: var(--spacing); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 2); transform: translate(0, 0); }
         }
 
         @media (max-width: 400px) {
@@ -325,12 +344,25 @@
             }
             .player-2-chips { left: var(--spacing); top: calc(50% + var(--card-height) / 2 + var(--spacing) * 2 + var(--chip-size)); }
             .player-4-chips { right: var(--spacing); top: calc(50% - var(--card-height) / 2 - var(--chip-size) * 2 - var(--spacing) * 2); }
-            .player-2-sb { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 2); top: calc(50% - var(--chip-size) / 2 + var(--spacing) + var(--chip-size)); }
+            .player-2-sb { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 2); top: calc(50% + var(--spacing) + var(--chip-size)); }
+            .player-2-name { left: var(--spacing); top: calc(50% + var(--card-height) / 2 + var(--spacing) * 3 + var(--chip-size) * 2); }
+            .player-4-name { right: var(--spacing); top: calc(50% - var(--card-height) / 2 - var(--chip-size) * 2 - var(--spacing) * 3); }
+        }
+
+        @media (orientation: landscape) {
+            .game-container {
+                width: 95vw;
+                height: calc(0.5 * 95vw);
+                max-height: calc(100vh - 60px);
+            }
+            .action-buttons {
+                bottom: 5px;
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
             .table { transform: none; }
-            .player-card, .chip-stack.bet { animation: fadeIn 0.3s ease-out forwards; }
+            .player-card, .chip-stack.bet, .community-card { animation: fadeIn 0.3s ease-out forwards; }
         }
     </style>
 </head>
@@ -339,7 +371,13 @@
         <div class="table-container" role="region" aria-label="Texas Hold'em Poker Table">
             <div class="table">
                 <div class="table-felt">
-                    <div class="community-cards" aria-label="Community Cards"></div>
+                    <div class="community-cards" aria-label="Community Cards">
+                        <div class="community-card" aria-label="Community Card 1"></div>
+                        <div class="community-card" aria-label="Community Card 2"></div>
+                        <div class="community-card" aria-label="Community Card 3"></div>
+                        <div class="community-card" aria-label="Community Card 4"></div>
+                        <div class="community-card" aria-label="Community Card 5"></div>
+                    </div>
                     <div class="action-text-area" aria-label="Action Text Area"></div>
                     <div class="pot-area" aria-label="Pot Area"></div>
                     <div class="player-card player-1-card-1"></div>
