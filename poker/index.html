@@ -277,27 +277,10 @@
         .dealer-button::after {
             content: attr(data-label);
         }
-        /* Player 1 (Bottom) */
-        .player-1-button.dealer { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
-        .player-1-button.sb { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
-        .player-1-button.bb { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
-        /* Player 2 (Left) */
-        .player-2-button.dealer { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
-        .player-2-button.sb { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
-        .player-2-button.bb { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
-        /* Player 3 (Top) */
-        .player-3-button.dealer { left: calc(50% + var(--card-width) + var(--spacing) * 1.5); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
-        .player-3-button.sb { left: calc(50% + var(--card-width) + var(--spacing) * 1.5); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
-        .player-3-button.bb { left: calc(50% + var(--card-width) + var(--spacing) * 1.5); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
-        /* Player 4 (Right) */
-        .player-4-button.dealer { right: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
-        .player-4-button.sb { right: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
-        .player-4-button.bb { right: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
-
-        @keyframes dealCard {
-            from { transform: translate(-50%, -50%) scale(0); left: 50%; top: 50%; }
-            to { transform: translate(0, 0) scale(1); }
-        }
+        .player-1-button { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
+        .player-2-button { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
+        .player-3-button { left: calc(50% + var(--card-width) + var(--spacing) * 1.5); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
+        .player-4-button { right: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
 
         @keyframes betChip {
             from { transform: translate(0, 0); }
@@ -457,18 +440,10 @@
             .player-2-chips { left: calc(var(--spacing)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
             .player-3-chips { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
             .player-4-chips { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
-            .player-1-button.dealer { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
-            .player-1-button.sb { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
-            .player-1-button.bb { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
-            .player-2-button.dealer { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
-            .player-2-button.sb { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
-            .player-2-button.bb { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
-            .player-3-button.dealer { left: calc(50% + var(--card-width) + var(--spacing) * 1.5); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
-            .player-3-button.sb { left: calc(50% + var(--card-width) + var(--spacing) * 1.5); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
-            .player-3-button.bb { left: calc(50% + var(--card-width) + var(--spacing) * 1.5); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
-            .player-4-button.dealer { right: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
-            .player-4-button.sb { right: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
-            .player-4-button.bb { right: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
+            .player-1-button { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
+            .player-2-button { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
+            .player-3-button { left: calc(50% + var(--card-width) + var(--spacing) * 1.5); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
+            .player-4-button { right: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
             .action-buttons {
                 bottom: 0;
                 margin-bottom: clamp(5px, 1vw, 10px);
@@ -487,18 +462,10 @@
             .player-2-chips { left: calc(var(--spacing)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
             .player-3-chips { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
             .player-4-chips { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
-            .player-1-button.dealer { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
-            .player-1-button.sb { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
-            .player-1-button.bb { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
-            .player-2-button.dealer { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
-            .player-2-button.sb { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
-            .player-2-button.bb { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
-            .player-3-button.dealer { left: calc(50% + var(--card-width) + var(--spacing) * 1.5); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
-            .player-3-button.sb { left: calc(50% + var(--card-width) + var(--spacing) * 1.5); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
-            .player-3-button.bb { left: calc(50% + var(--card-width) + var(--spacing) * 1.5); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
-            .player-4-button.dealer { right: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
-            .player-4-button.sb { right: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
-            .player-4-button.bb { right: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
+            .player-1-button { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
+            .player-2-button { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
+            .player-3-button { left: calc(50% + var(--card-width) + var(--spacing) * 1.5); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
+            .player-4-button { right: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
             .player-2-name { 
                 left: calc(var(--table-border-width) / 2); 
                 top: 50%; 
@@ -585,50 +552,41 @@
         </div>
     </div>
     <script>
-        // JavaScript to handle dealer and blind button rotation
-        let dealerPosition = 1; // Start with Player 1 as Dealer
+        const BUTTON_ROLES = {
+            dealer: { label: 'D', aria: 'Dealer Button' },
+            sb: { label: 'SB', aria: 'Small Blind' },
+            bb: { label: 'BB', aria: 'Big Blind' }
+        };
+        let dealerPosition = 1;
         const numPlayers = 4;
 
         function updateButtonPositions() {
-            // Get all dealer-button elements
             const buttons = document.querySelectorAll('.dealer-button');
-            // Reset all buttons
             buttons.forEach(button => {
                 button.classList.remove('dealer', 'sb', 'bb');
                 button.setAttribute('data-label', '');
                 button.setAttribute('aria-label', '');
             });
 
-            // Calculate positions: Dealer, SB (Dealer + 1), BB (Dealer + 2)
             const dealerIndex = dealerPosition;
             const sbIndex = (dealerPosition + 1) % numPlayers || numPlayers;
             const bbIndex = (dealerPosition + 2) % numPlayers || numPlayers;
 
-            // Assign Dealer button
-            const dealerButton = document.querySelector(`.player-${dealerIndex}-button`);
-            dealerButton.classList.add('dealer');
-            dealerButton.setAttribute('data-label', 'D');
-            dealerButton.setAttribute('aria-label', 'Dealer Button');
+            const assignButton = (selector, role) => {
+                const button = document.querySelector(selector);
+                button.classList.add(role);
+                button.setAttribute('data-label', BUTTON_ROLES[role].label);
+                button.setAttribute('aria-label', BUTTON_ROLES[role].aria);
+            };
 
-            // Assign Small Blind button
-            const sbButton = document.querySelector(`.player-${sbIndex}-button`);
-            sbButton.classList.add('sb');
-            sbButton.setAttribute('data-label', 'SB');
-            sbButton.setAttribute('aria-label', 'Small Blind');
-
-            // Assign Big Blind button
-            const bbButton = document.querySelector(`.player-${bbIndex}-button`);
-            bbButton.classList.add('bb');
-            bbButton.setAttribute('data-label', 'BB');
-            bbButton.setAttribute('aria-label', 'Big Blind');
+            assignButton(`.player-${dealerIndex}-button`, 'dealer');
+            assignButton(`.player-${sbIndex}-button`, 'sb');
+            assignButton(`.player-${bbIndex}-button`, 'bb');
         }
 
-        // Initialize button positions
         updateButtonPositions();
 
-        // Event listener for "Next Hand" button
         document.getElementById('next-hand').addEventListener('click', () => {
-            // Rotate dealer position clockwise
             dealerPosition = (dealerPosition % numPlayers) + 1;
             updateButtonPositions();
         });
