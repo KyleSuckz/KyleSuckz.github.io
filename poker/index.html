@@ -17,10 +17,10 @@
             --3d-transform: rotateX(3deg);
             --card-width: clamp(40px, 6vw, 80px);
             --card-height: calc(var(--card-width) * 1.4);
-            --chip-size: clamp(24px, 4vw, 56px);
+            --chip-size: clamp(28px, 4vw, 56px);
             --button-bg: linear-gradient(#4a4a4a, #2a2a2a);
             --button-hover-bg: linear-gradient(#5a5a5a, #3a3a3a);
-            --name-font-size: clamp(0.7rem, 1vw, 1.1rem);
+            --name-font-size: clamp(0.8rem, 1.2vw, 1.1rem);
             --spacing: clamp(3px, 0.5vw, 7px);
         }
 
@@ -42,14 +42,14 @@
 
         .game-container {
             width: min(95vw, calc(2 * (100vh - clamp(60px, 10vw, 80px))));
-            height: calc(0.5 * min(95vw, calc(2 * (100vh - clamp(60px, 10vw, 80px)))) + clamp(100px, 15vw, 120px));
+            height: calc(0.5 * min(95vw, calc(2 * (100vh - clamp(60px, 10vw, 80px)))) + clamp(120px, 18vw, 150px));
             display: flex;
             flex-direction: column;
             align-items: center;
             perspective: 1000px;
             position: relative;
             margin: 0 auto;
-            padding-bottom: clamp(100px, 15vw, 120px);
+            padding-bottom: clamp(120px, 18vw, 150px);
             border: 2px solid white; /* TEMP: Visualize game-container */
             overflow: visible;
         }
@@ -86,9 +86,7 @@
         .table-felt {
             width: 94%;
             height: 92%;
-            background: 
-                url('assets/table_felt.jpg') center/cover,
-                #2a6041;
+            background: url('assets/table_felt.jpg') center/cover, #2a6041;
             border: var(--felt-border-width) solid var(--felt-border-color);
             border-radius: var(--felt-radius);
             position: absolute;
@@ -249,10 +247,10 @@
             border: 2px solid pink; /* TEMP: Visualize chip-stack */
             visibility: visible;
         }
-        .player-1-chips { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--card-width) + var(--spacing) * 2); }
-        .player-2-chips { left: calc(var(--spacing)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
-        .player-3-chips { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
-        .player-4-chips { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
+        .player-1-chips { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--card-width) + var(--spacing) * 3); }
+        .player-2-chips { left: calc(var(--spacing)); top: calc(50% + var(--card-height) / 2 + var(--spacing) * 2); }
+        .player-3-chips { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 2); }
+        .player-4-chips { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 2); }
 
         .dealer-button {
             position: absolute;
@@ -264,23 +262,21 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(0.5rem, 0.8vw, 0.8rem);
+            font-size: clamp(0.6rem, 0.8vw, 0.8rem);
             color: #000;
             text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
             border: 2px solid brown; /* TEMP: Visualize dealer-button */
-            visibility: hidden; /* Hidden by default, shown when assigned */
-            transition: all 0.3s ease; /* Smooth transition for movement */
+            visibility: hidden;
+            transition: all 0.3s ease;
         }
         .dealer-button.dealer { background: radial-gradient(#ffffff, #d3d3d3); visibility: visible; }
         .dealer-button.sb { background: radial-gradient(#4682b4, #2f4f4f); visibility: visible; }
         .dealer-button.bb { background: radial-gradient(#ffd700, #daa520); visibility: visible; }
-        .dealer-button::after {
-            content: attr(data-label);
-        }
-        .player-1-button { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
-        .player-2-button { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
-        .player-3-button { left: calc(50% + var(--card-width) + var(--spacing) * 1.5); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
-        .player-4-button { right: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
+        .dealer-button::after { content: attr(data-label); }
+        .player-1-button { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 2); }
+        .player-2-button { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 2 - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 2); }
+        .player-3-button { left: calc(50% + var(--card-width) + var(--spacing) * 2); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
+        .player-4-button { right: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 2 - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing) * 2); }
 
         @keyframes betChip {
             from { transform: translate(0, 0); }
@@ -304,20 +300,20 @@
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: clamp(8px, 1.2vw, 14px);
+            gap: clamp(6px, 1vw, 10px);
             flex-wrap: wrap;
             z-index: 10;
             background: rgba(0, 0, 0, 0.5);
             border-radius: 5px;
             padding: clamp(8px, 1.2vw, 12px);
-            min-width: clamp(180px, 25vw, 280px);
+            min-width: clamp(160px, 24vw, 240px);
             margin-bottom: clamp(10px, 2vw, 15px);
-            border: 1px solid black !important; /* TEMP: Visualize action-buttons */
+            border: 1px solid black; /* TEMP: Visualize action-buttons */
             visibility: visible;
             box-sizing: border-box;
         }
         .action-button {
-            padding: clamp(8px, 1.8vw, 14px) clamp(14px, 2.2vw, 26px);
+            padding: clamp(10px, 2vw, 16px) clamp(14px, 2.2vw, 26px);
             background: var(--button-bg);
             color: #fff;
             border: none;
@@ -328,12 +324,8 @@
             touch-action: manipulation;
             border: 2px solid gray; /* TEMP: Visualize action-button */
         }
-        .action-button:hover {
-            background: var(--button-hover-bg);
-        }
-        .action-button:focus {
-            outline: 2px solid #ffd700;
-        }
+        .action-button:hover { background: var(--button-hover-bg); }
+        .action-button:focus { outline: 2px solid #ffd700; }
 
         @media (max-width: 600px) {
             :root {
@@ -343,14 +335,14 @@
                 --felt-radius: calc(var(--table-radius) - 8px);
                 --card-width: clamp(30px, 5vw, 50px);
                 --card-height: calc(var(--card-width) * 1.4);
-                --chip-size: clamp(20px, 3vw, 32px);
-                --name-font-size: clamp(0.7rem, 1vw, 1rem);
+                --chip-size: clamp(28px, 3vw, 32px);
+                --name-font-size: clamp(0.8rem, 1.2vw, 1.1rem);
                 --spacing: clamp(2px, 0.4vw, 4px);
             }
             .game-container {
                 width: min(95vw, calc(2 * (100vh - clamp(60px, 10vw, 80px))));
-                height: calc(0.5 * min(95vw, calc(2 * (100vh - clamp(60px, 10vw, 80px)))) + clamp(100px, 15vw, 120px));
-                padding-bottom: clamp(100px, 15vw, 120px);
+                height: calc(0.5 * min(95vw, calc(2 * (100vh - clamp(60px, 10vw, 80px)))) + clamp(120px, 18vw, 150px));
+                padding-bottom: clamp(120px, 18vw, 150px);
                 border: 1px solid white; /* TEMP: Visualize game-container */
             }
             .table-container {
@@ -391,12 +383,12 @@
                 border: 1px solid magenta; /* TEMP: Visualize pot-area */
             }
             .action-button {
-                padding: clamp(6px, 1.2vw, 10px) clamp(10px, 1.8vw, 18px);
+                padding: clamp(10px, 2vw, 16px) clamp(10px, 1.8vw, 18px);
                 font-size: clamp(0.8rem, 1.2vw, 1rem);
                 border: 1px solid gray; /* TEMP: Visualize action-button */
             }
             .dealer-button {
-                font-size: clamp(0.4rem, 0.6vw, 0.6rem);
+                font-size: clamp(0.6rem, 0.8vw, 0.8rem);
                 border: 1px solid brown; /* TEMP: Visualize dealer-button */
             }
             .player-name {
@@ -436,19 +428,20 @@
             .player-3-card-2 { top: calc(var(--spacing)); left: calc(50% + var(--spacing) / 2); }
             .player-4-card-1 { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2); }
             .player-4-card-2 { right: calc(var(--spacing) + var(--card-width) + var(--spacing)); top: calc(50% - var(--card-height) / 2); }
-            .player-1-chips { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--card-width) + var(--spacing) * 2); }
-            .player-2-chips { left: calc(var(--spacing)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
-            .player-3-chips { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
-            .player-4-chips { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
-            .player-1-button { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
-            .player-2-button { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
-            .player-3-button { left: calc(50% + var(--card-width) + var(--spacing) * 1.5); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
-            .player-4-button { right: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
+            .player-1-chips { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--card-width) + var(--spacing) * 3); }
+            .player-2-chips { left: calc(var(--spacing)); top: calc(50% + var(--card-height) / 2 + var(--spacing) * 2); }
+            .player-3-chips { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 2); }
+            .player-4-chips { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 2); }
+            .player-1-button { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 2); }
+            .player-2-button { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 2 - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 2); }
+            .player-3-button { left: calc(50% + var(--card-width) + var(--spacing) * 2); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
+            .player-4-button { right: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 2 - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing) * 2); }
             .action-buttons {
                 bottom: 0;
                 margin-bottom: clamp(5px, 1vw, 10px);
-                min-width: clamp(180px, 25vw, 250px);
-                border: 0.5px solid black !important; /* TEMP: Visualize action-buttons */
+                min-width: clamp(160px, 24vw, 240px);
+                gap: clamp(6px, 1vw, 10px);
+                border: 0.5px solid black; /* TEMP: Visualize action-buttons */
             }
         }
 
@@ -456,16 +449,17 @@
             :root {
                 --spacing: clamp(1px, 0.3vw, 3px);
                 --card-width: clamp(25px, 4.5vw, 45px);
-                --chip-size: clamp(18px, 2.8vw, 28px);
+                --chip-size: clamp(28px, 4vw, 56px);
+                --name-font-size: clamp(0.8rem, 1.2vw, 1.1rem);
             }
-            .player-1-chips { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--card-width) + var(--spacing) * 2); }
-            .player-2-chips { left: calc(var(--spacing)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
-            .player-3-chips { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
-            .player-4-chips { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
-            .player-1-button { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
-            .player-2-button { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
-            .player-3-button { left: calc(50% + var(--card-width) + var(--spacing) * 1.5); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
-            .player-4-button { right: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
+            .player-1-chips { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--card-width) + var(--spacing) * 3); }
+            .player-2-chips { left: calc(var(--spacing)); top: calc(50% + var(--card-height) / 2 + var(--spacing) * 2); }
+            .player-3-chips { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 2); }
+            .player-4-chips { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 2); }
+            .player-1-button { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 2); }
+            .player-2-button { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 2 - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 2); }
+            .player-3-button { left: calc(50% + var(--card-width) + var(--spacing) * 2); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
+            .player-4-button { right: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 2 - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing) * 2); }
             .player-2-name { 
                 left: calc(var(--table-border-width) / 2); 
                 top: 50%; 
@@ -480,13 +474,27 @@
             .player-1-card-2 { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--spacing) / 2); }
             .player-3-card-1 { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--spacing) / 2); }
             .player-3-card-2 { top: calc(var(--spacing)); left: calc(50% + var(--spacing) / 2); }
+            .action-button {
+                padding: clamp(10px, 2vw, 16px) clamp(10px, 1.8vw, 18px);
+                font-size: clamp(0.8rem, 1.2vw, 1rem);
+                border: 1px solid gray; /* TEMP: Visualize action-button */
+            }
+            .dealer-button {
+                font-size: clamp(0.6rem, 0.8vw, 0.8rem);
+                border: 1px solid brown; /* TEMP: Visualize dealer-button */
+            }
+            .action-buttons {
+                min-width: clamp(160px, 24vw, 240px);
+                gap: clamp(6px, 1vw, 10px);
+                border: 0.5px solid black; /* TEMP: Visualize action-buttons */
+            }
         }
 
         @media (orientation: landscape) {
             .game-container {
                 width: 95vw;
-                height: calc(0.5 * 95vw + 100px);
-                padding-bottom: 100px;
+                height: calc(0.5 * 95vw + 120px);
+                padding-bottom: 120px;
                 border: 1px solid white; /* TEMP: Visualize game-container */
             }
             .table-container {
@@ -496,7 +504,9 @@
             .action-buttons {
                 bottom: 0;
                 margin-bottom: clamp(5px, 1vw, 10px);
-                border: 0.5px solid black !important; /* TEMP: Visualize action-buttons */
+                min-width: clamp(160px, 24vw, 240px);
+                gap: clamp(6px, 1vw, 10px);
+                border: 0.5px solid black; /* TEMP: Visualize action-buttons */
             }
         }
 
@@ -513,22 +523,22 @@
             <div class="table">
                 <div class="table-felt">
                     <div class="community-cards" aria-label="Community Cards">
-                        <div class="community-card" aria-label="Community Card 1"></div>
-                        <div class="community-card" aria-label="Community Card 2"></div>
-                        <div class="community-card" aria-label="Community Card 3"></div>
-                        <div class="community-card" aria-label="Community Card 4"></div>
-                        <div class="community-card" aria-label="Community Card 5"></div>
+                        <div class="community-card" aria-label="Community Card 1" onerror="this.style.background='#ccc'"></div>
+                        <div class="community-card" aria-label="Community Card 2" onerror="this.style.background='#ccc'"></div>
+                        <div class="community-card" aria-label="Community Card 3" onerror="this.style.background='#ccc'"></div>
+                        <div class="community-card" aria-label="Community Card 4" onerror="this.style.background='#ccc'"></div>
+                        <div class="community-card" aria-label="Community Card 5" onerror="this.style.background='#ccc'"></div>
                     </div>
                     <div class="action-text-area" aria-label="Action Text Area"></div>
                     <div class="pot-area" aria-label="Pot Area"></div>
-                    <div class="player-card player-1-card-1"></div>
-                    <div class="player-card player-1-card-2"></div>
-                    <div class="player-card player-2-card-1"></div>
-                    <div class="player-card player-2-card-2"></div>
-                    <div class="player-card player-3-card-1"></div>
-                    <div class="player-card player-3-card-2"></div>
-                    <div class="player-card player-4-card-1"></div>
-                    <div class="player-card player-4-card-2"></div>
+                    <div class="player-card player-1-card-1" onerror="this.style.background='#ccc'"></div>
+                    <div class="player-card player-1-card-2" onerror="this.style.background='#ccc'"></div>
+                    <div class="player-card player-2-card-1" onerror="this.style.background='#ccc'"></div>
+                    <div class="player-card player-2-card-2" onerror="this.style.background='#ccc'"></div>
+                    <div class="player-card player-3-card-1" onerror="this.style.background='#ccc'"></div>
+                    <div class="player-card player-3-card-2" onerror="this.style.background='#ccc'"></div>
+                    <div class="player-card player-4-card-1" onerror="this.style.background='#ccc'"></div>
+                    <div class="player-card player-4-card-2" onerror="this.style.background='#ccc'"></div>
                     <div class="chip-stack player-1-chips"></div>
                     <div class="chip-stack player-2-chips"></div>
                     <div class="chip-stack player-3-chips"></div>
@@ -545,9 +555,9 @@
             </div>
         </div>
         <div class="action-buttons" role="group" aria-label="Player Action Buttons">
-            <button class="action-button" aria-label="Fold" tabindex="0">Fold</button>
-            <button class="action-button" aria-label="Call" tabindex="0">Call</button>
-            <button class="action-button" aria-label="Raise" tabindex="0">Raise</button>
+            <button class="action-button" id="fold" aria-label="Fold" tabindex="0">Fold</button>
+            <button class="action-button" id="call" aria-label="Call" tabindex="0">Call</button>
+            <button class="action-button" id="raise" aria-label="Raise" tabindex="0">Raise</button>
             <button class="action-button" id="next-hand" aria-label="Next Hand" tabindex="0">Next Hand</button>
         </div>
     </div>
@@ -584,12 +594,19 @@
             assignButton(`.player-${bbIndex}-button`, 'bb');
         }
 
+        function handleAction(action) {
+            console.log(`Player ${action}ed`);
+        }
+
         updateButtonPositions();
 
         document.getElementById('next-hand').addEventListener('click', () => {
             dealerPosition = (dealerPosition % numPlayers) + 1;
             updateButtonPositions();
         });
+        document.getElementById('fold').addEventListener('click', () => handleAction('fold'));
+        document.getElementById('call').addEventListener('click', () => handleAction('call'));
+        document.getElementById('raise').addEventListener('click', () => handleAction('raise'));
     </script>
 </body>
 </html>
