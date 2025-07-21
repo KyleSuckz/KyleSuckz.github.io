@@ -42,14 +42,15 @@
 
         .game-container {
             width: min(95vw, calc(2 * (100vh - clamp(60px, 10vw, 80px))));
-            height: calc(0.5 * min(95vw, calc(2 * (100vh - clamp(60px, 10vw, 80px)))) + clamp(120px, 18vw, 150px));
+            height: calc(0.5 * min(95vw, calc(2 * (100vh - clamp(60px, 10vw, 80px)))) + clamp(140px, 20vw, 180px));
+            max-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             perspective: 1000px;
             position: relative;
             margin: 0 auto;
-            padding-bottom: clamp(120px, 18vw, 150px);
+            padding-bottom: clamp(140px, 20vw, 180px);
             border: 2px solid white; /* TEMP: Visualize game-container */
             overflow: visible;
         }
@@ -341,8 +342,9 @@
             }
             .game-container {
                 width: min(95vw, calc(2 * (100vh - clamp(60px, 10vw, 80px))));
-                height: calc(0.5 * min(95vw, calc(2 * (100vh - clamp(60px, 10vw, 80px)))) + clamp(120px, 18vw, 150px));
-                padding-bottom: clamp(120px, 18vw, 150px);
+                height: calc(0.5 * min(95vw, calc(2 * (100vh - clamp(60px, 10vw, 80px)))) + clamp(140px, 20vw, 180px));
+                max-height: 100vh;
+                padding-bottom: clamp(140px, 20vw, 180px);
                 border: 1px solid white; /* TEMP: Visualize game-container */
             }
             .table-container {
@@ -493,8 +495,9 @@
         @media (orientation: landscape) {
             .game-container {
                 width: 95vw;
-                height: calc(0.5 * 95vw + 120px);
-                padding-bottom: 120px;
+                height: calc(0.5 * 95vw + 140px);
+                max-height: 100vh;
+                padding-bottom: 140px;
                 border: 1px solid white; /* TEMP: Visualize game-container */
             }
             .table-container {
