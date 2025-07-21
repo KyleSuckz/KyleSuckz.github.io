@@ -229,12 +229,12 @@
             border: 2px solid yellow; /* TEMP: Visualize player-card */
             visibility: visible;
         }
-        .player-1-card-1 { bottom: calc(var(--spacing) * 2); left: calc(50% - var(--card-width) - var(--spacing)); }
-        .player-1-card-2 { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--spacing)); }
+        .player-1-card-1 { bottom: calc(var(--spacing) * 2); left: calc(50% - var(--card-width) - var(--spacing) / 2); }
+        .player-1-card-2 { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--spacing) / 2); }
         .player-2-card-1 { left: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2); }
         .player-2-card-2 { left: calc(var(--spacing) + var(--card-width) + var(--spacing)); top: calc(50% - var(--card-height) / 2); }
-        .player-3-card-1 { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--spacing)); }
-        .player-3-card-2 { top: calc(var(--spacing)); left: calc(50% + var(--spacing)); }
+        .player-3-card-1 { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--spacing) / 2); }
+        .player-3-card-2 { top: calc(var(--spacing)); left: calc(50% + var(--spacing) / 2); }
         .player-4-card-1 { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2); }
         .player-4-card-2 { right: calc(var(--spacing) + var(--card-width) + var(--spacing)); top: calc(50% - var(--card-height) / 2); }
 
@@ -251,7 +251,7 @@
         }
         .player-1-chips { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--card-width) + var(--spacing) * 2); }
         .player-2-chips { left: calc(var(--spacing)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
-        .player-3-chips { top: calc(var(--spacing)); left: calc(50% - var(--card-width) * 2 - var(--spacing) * 2); }
+        .player-3-chips { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
         .player-4-chips { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
 
         .dealer-button {
@@ -431,6 +431,17 @@
             .chip-stack {
                 border: 1px solid pink; /* TEMP: Visualize chip-stack */
             }
+            .player-1-card-1 { bottom: calc(var(--spacing) * 2); left: calc(50% - var(--card-width) - var(--spacing) / 2); }
+            .player-1-card-2 { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--spacing) / 2); }
+            .player-2-card-1 { left: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2); }
+            .player-2-card-2 { left: calc(var(--spacing) + var(--card-width) + var(--spacing)); top: calc(50% - var(--card-height) / 2); }
+            .player-3-card-1 { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--spacing) / 2); }
+            .player-3-card-2 { top: calc(var(--spacing)); left: calc(50% + var(--spacing) / 2); }
+            .player-4-card-1 { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2); }
+            .player-4-card-2 { right: calc(var(--spacing) + var(--card-width) + var(--spacing)); top: calc(50% - var(--card-height) / 2); }
+            .player-2-chips { left: calc(var(--spacing)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
+            .player-3-chips { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
+            .player-4-chips { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
             .action-buttons {
                 bottom: 0;
                 margin-bottom: clamp(5px, 1vw, 10px);
@@ -447,6 +458,7 @@
             }
             .player-2-chips { left: calc(var(--spacing)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
             .player-4-chips { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
+            .player-3-chips { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
             .player-2-sb { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 2); top: calc(50% - var(--chip-size) / 2); }
             .player-2-name { 
                 left: calc(var(--table-border-width) / 2); 
@@ -458,6 +470,10 @@
                 top: 50%; 
                 transform: translate(50%, -50%); 
             }
+            .player-1-card-1 { bottom: calc(var(--spacing) * 2); left: calc(50% - var(--card-width) - var(--spacing) / 2); }
+            .player-1-card-2 { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--spacing) / 2); }
+            .player-3-card-1 { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--spacing) / 2); }
+            .player-3-card-2 { top: calc(var(--spacing)); left: calc(50% + var(--spacing) / 2); }
         }
 
         @media (orientation: landscape) {
