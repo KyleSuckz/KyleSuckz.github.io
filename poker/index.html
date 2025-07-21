@@ -30,7 +30,7 @@
         }
 
         body {
-            height: 100vh;
+            min-height: calc(100vh - clamp(10px, 2vw, 20px));
             display: flex;
             justify-content: center;
             align-items: flex-start;
@@ -41,23 +41,31 @@
         }
 
         .game-container {
-            width: min(95vw, calc(2 * (100vh - clamp(48px, 7vw, 68px) - clamp(10px, 2vw, 20px))));
-            height: calc(0.5 * min(95vw, calc(2 * (100vh - clamp(48px, 7vw, 68px) - clamp(10px, 2vw, 20px)))));
+            width: min(95vw, calc(2 * (100vh - clamp(60px, 10vw, 80px))));
+            height: calc(0.5 * min(95vw, calc(2 * (100vh - clamp(60px, 10vw, 80px)))) + clamp(100px, 15vw, 120px));
             display: flex;
             flex-direction: column;
             align-items: center;
             perspective: 1000px;
             position: relative;
-            margin: clamp(10px, 2vw, 20px) auto;
+            margin: 0 auto;
+            padding-bottom: clamp(100px, 15vw, 120px);
+            border: 2px solid white; /* TEMP: Visualize game-container */
+            overflow: visible;
         }
 
         .table-container {
             width: 100%;
-            height: 100%;
+            height: calc(0.5 * min(95vw, calc(2 * (100vh - clamp(60px, 10vw, 80px)))));
             aspect-ratio: 2 / 1;
             max-width: 95vw;
             max-height: calc(0.5 * 95vw);
             flex: 1 1 auto;
+            position: relative;
+            top: 0;
+            border: 2px solid red; /* TEMP: Visualize table-container */
+            display: block;
+            visibility: visible;
         }
 
         .table {
@@ -69,7 +77,10 @@
             position: relative;
             box-shadow: 0 15px 30px var(--shadow-color);
             transform: var(--3d-transform);
-            z-index: -1;
+            z-index: 0;
+            border: 2px solid red; /* TEMP: Visualize table */
+            display: block;
+            visibility: visible;
         }
 
         .table-felt {
@@ -85,13 +96,16 @@
             left: 50%;
             transform: translate(-50%, -50%);
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.7);
-            z-index: 0;
+            z-index: 1;
+            border: 2px solid blue; /* TEMP: Visualize table-felt */
+            display: block;
+            visibility: visible;
         }
 
         .table::before {
             content: '';
             position: absolute;
-            inset: calc(-1 * var(--table-border-width));
+            inset: 0;
             border: var(--table-border-width) solid transparent;
             border-radius: var(--table-radius);
             background: linear-gradient(45deg, #151515, #252525);
@@ -104,16 +118,36 @@
             color: #fff;
             font-size: var(--name-font-size);
             text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
-            z-index: 1;
+            z-index: 5;
             text-align: center;
             background: rgba(0, 0, 0, 0.3);
-            padding: calc(var(--spacing) / 2);
+            padding: var(--spacing);
             border-radius: 3px;
+            border: 2px solid green; /* TEMP: Visualize player-name */
+            visibility: visible;
         }
-        .player-1-name { bottom: 0; left: 50%; transform: translate(-50%, 50%); }
-        .player-2-name { left: var(--spacing); top: 50%; transform: translate(0, -50%); }
-        .player-3-name { top: 0; left: 50%; transform: translate(-50%, -50%); }
-        .player-4-name { right: var(--spacing); top: 50%; transform: translate(0, -50%); }
+        .player-1-name { 
+            bottom: calc(var(--table-border-width) / 2); 
+            left: 50%; 
+            transform: translate(-50%, 50%); 
+            z-index: 11; 
+            padding: calc(var(--spacing) * 2); 
+        }
+        .player-2-name { 
+            left: calc(var(--table-border-width) / 2); 
+            top: 50%; 
+            transform: translate(-50%, -50%); 
+        }
+        .player-3-name { 
+            top: calc(var(--table-border-width) / 2); 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+        }
+        .player-4-name { 
+            right: calc(var(--table-border-width) / 2); 
+            top: 50%; 
+            transform: translate(50%, -50%); 
+        }
 
         .community-cards {
             position: absolute;
@@ -125,12 +159,14 @@
             border: 2px solid rgba(255, 215, 0, 0.2);
             border-radius: 10px;
             background: rgba(0, 0, 0, 0.1);
-            z-index: 1;
+            z-index: 2;
             display: flex;
             justify-content: center;
             align-items: center;
             gap: var(--spacing);
             padding: var(--spacing);
+            border: 2px solid purple; /* TEMP: Visualize community-cards */
+            visibility: visible;
         }
 
         .community-card {
@@ -139,7 +175,9 @@
             background: url('assets/cards/card_back.png') center/cover, #ccc;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-            z-index: 2;
+            z-index: 3;
+            border: 2px solid orange; /* TEMP: Visualize community-card */
+            visibility: visible;
         }
 
         .action-text-area {
@@ -157,6 +195,8 @@
             padding: calc(var(--spacing) / 2);
             color: #fff;
             text-align: center;
+            border: 2px solid cyan; /* TEMP: Visualize action-text-area */
+            visibility: visible;
         }
 
         .pot-area {
@@ -168,12 +208,14 @@
             transform: translate(-50%, 0);
             background: radial-gradient(rgba(0, 0, 0, 0.2), transparent);
             border-radius: 10px;
-            z-index: 1;
+            z-index: 2;
             font-size: clamp(0.8rem, 1.5vw, 1.2rem);
             line-height: 1;
             padding: calc(var(--spacing) / 2);
             color: #fff;
             text-align: center;
+            border: 2px solid magenta; /* TEMP: Visualize pot-area */
+            visibility: visible;
         }
 
         .player-card {
@@ -183,15 +225,17 @@
             background: url('assets/cards/card_back.png') center/cover, #ccc;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-            z-index: 2;
+            z-index: 3;
+            border: 2px solid yellow; /* TEMP: Visualize player-card */
+            visibility: visible;
         }
-        .player-1-card-1 { bottom: var(--spacing); left: calc(50% - var(--card-width) - var(--spacing)); }
-        .player-1-card-2 { bottom: var(--spacing); left: calc(50% + var(--spacing)); }
-        .player-2-card-1 { left: var(--spacing); top: calc(50% - var(--card-height) / 2); }
+        .player-1-card-1 { bottom: calc(var(--spacing) * 2); left: calc(50% - var(--card-width) - var(--spacing)); }
+        .player-1-card-2 { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--spacing)); }
+        .player-2-card-1 { left: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2); }
         .player-2-card-2 { left: calc(var(--spacing) + var(--card-width) + var(--spacing)); top: calc(50% - var(--card-height) / 2); }
-        .player-3-card-1 { top: var(--spacing); left: calc(50% - var(--card-width) - var(--spacing)); }
-        .player-3-card-2 { top: var(--spacing); left: calc(50% + var(--spacing)); }
-        .player-4-card-1 { right: var(--spacing); top: calc(50% - var(--card-height) / 2); }
+        .player-3-card-1 { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--spacing)); }
+        .player-3-card-2 { top: calc(var(--spacing)); left: calc(50% + var(--spacing)); }
+        .player-4-card-1 { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2); }
         .player-4-card-2 { right: calc(var(--spacing) + var(--card-width) + var(--spacing)); top: calc(50% - var(--card-height) / 2); }
 
         .chip-stack {
@@ -201,12 +245,14 @@
             border-radius: 50%;
             background: radial-gradient(#d3d3d3, #a9a9a9);
             box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.4);
-            z-index: 3;
+            z-index: 4;
+            border: 2px solid pink; /* TEMP: Visualize chip-stack */
+            visibility: visible;
         }
-        .player-1-chips { bottom: var(--spacing); left: calc(50% + var(--card-width) + var(--spacing) * 2); }
-        .player-2-chips { left: var(--spacing); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
-        .player-3-chips { top: var(--spacing); left: calc(50% - var(--card-width) * 2 - var(--spacing) * 2); }
-        .player-4-chips { right: var(--spacing); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
+        .player-1-chips { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--card-width) + var(--spacing) * 2); }
+        .player-2-chips { left: calc(var(--spacing)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
+        .player-3-chips { top: calc(var(--spacing)); left: calc(50% - var(--card-width) * 2 - var(--spacing) * 2); }
+        .player-4-chips { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
 
         .dealer-button {
             position: absolute;
@@ -214,13 +260,15 @@
             height: var(--chip-size);
             border-radius: 50%;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-            z-index: 3;
+            z-index: 4;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: clamp(0.5rem, 0.8vw, 0.8rem);
             color: #000;
             text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+            border: 2px solid brown; /* TEMP: Visualize dealer-button */
+            visibility: visible;
         }
         .dealer-button.dealer { background: radial-gradient(#ffffff, #d3d3d3); }
         .dealer-button.sb { background: radial-gradient(#4682b4, #2f4f4f); }
@@ -254,8 +302,8 @@
         }
 
         .game-container .action-buttons {
-            position: fixed;
-            bottom: 10px;
+            position: absolute;
+            bottom: 0;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
@@ -264,7 +312,12 @@
             z-index: 10;
             background: rgba(0, 0, 0, 0.5);
             border-radius: 5px;
-            padding: clamp(10px, 1.5vw, 14px);
+            padding: clamp(8px, 1.2vw, 12px);
+            min-width: clamp(180px, 25vw, 280px);
+            margin-bottom: clamp(10px, 2vw, 15px);
+            border: 1px solid black !important; /* TEMP: Visualize action-buttons */
+            visibility: visible;
+            box-sizing: border-box;
         }
         .action-button {
             padding: clamp(8px, 1.8vw, 14px) clamp(14px, 2.2vw, 26px);
@@ -276,6 +329,7 @@
             font-size: clamp(0.8rem, 1.5vw, 1.1rem);
             transition: background 0.2s ease;
             touch-action: manipulation;
+            border: 2px solid gray; /* TEMP: Visualize action-button */
         }
         .action-button:hover {
             background: var(--button-hover-bg);
@@ -297,18 +351,30 @@
                 --spacing: clamp(2px, 0.4vw, 4px);
             }
             .game-container {
-                width: min(95vw, calc(2 * (100vh - clamp(48px, 7vw, 68px) - clamp(10px, 2vw, 20px))));
-                height: calc(0.5 * min(95vw, calc(2 * (100vh - clamp(48px, 7vw, 68px) - clamp(10px, 2vw, 20px)))));
+                width: min(95vw, calc(2 * (100vh - clamp(60px, 10vw, 80px))));
+                height: calc(0.5 * min(95vw, calc(2 * (100vh - clamp(60px, 10vw, 80px)))) + clamp(100px, 15vw, 120px));
+                padding-bottom: clamp(100px, 15vw, 120px);
+                border: 1px solid white; /* TEMP: Visualize game-container */
+            }
+            .table-container {
+                height: calc(0.5 * min(95vw, calc(2 * (100vh - clamp(60px, 10vw, 80px)))));
+                border: 1px solid red; /* TEMP: Visualize table-container */
             }
             .table {
                 box-shadow: 0 12px 25px var(--shadow-color);
+                border: 1px solid red; /* TEMP: Visualize table */
             }
             .table-felt {
                 border: var(--felt-border-width) solid var(--felt-border-color);
+                border: 1px solid blue; /* TEMP: Visualize table-felt */
             }
             .community-cards {
                 width: calc(var(--card-width) * 5 + var(--spacing) * 4);
                 height: calc(var(--card-height) + var(--spacing) * 2);
+                border: 1px solid purple; /* TEMP: Visualize community-cards */
+            }
+            .community-card {
+                border: 1px solid orange; /* TEMP: Visualize community-card */
             }
             .action-text-area {
                 width: calc(var(--card-width) * 4 + var(--spacing) * 5);
@@ -317,6 +383,7 @@
                 font-size: clamp(0.7rem, 1vw, 0.9rem);
                 line-height: 1;
                 padding: calc(var(--spacing) / 2);
+                border: 1px solid cyan; /* TEMP: Visualize action-text-area */
             }
             .pot-area {
                 width: calc(var(--card-width) * 4 + var(--spacing) * 5);
@@ -324,16 +391,52 @@
                 font-size: clamp(0.7rem, 1vw, 0.9rem);
                 line-height: 1;
                 padding: calc(var(--spacing) / 2);
+                border: 1px solid magenta; /* TEMP: Visualize pot-area */
             }
             .action-button {
                 padding: clamp(6px, 1.2vw, 10px) clamp(10px, 1.8vw, 18px);
                 font-size: clamp(0.8rem, 1.2vw, 1rem);
+                border: 1px solid gray; /* TEMP: Visualize action-button */
             }
             .dealer-button {
                 font-size: clamp(0.4rem, 0.6vw, 0.6rem);
+                border: 1px solid brown; /* TEMP: Visualize dealer-button */
             }
-            .player-2-name { left: var(--spacing); top: calc(50% + var(--card-height) / 2 + var(--chip-size) + var(--spacing) * 2); transform: translate(0, 0); }
-            .player-4-name { right: var(--spacing); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 2); transform: translate(0, 0); }
+            .player-name {
+                border: 1px solid green; /* TEMP: Visualize player-name */
+                padding: var(--spacing);
+            }
+            .player-1-name {
+                bottom: calc(var(--table-border-width) / 2);
+                padding: calc(var(--spacing) * 2);
+                transform: translate(-50%, 50%);
+            }
+            .player-2-name { 
+                left: calc(var(--table-border-width) / 2); 
+                top: 50%; 
+                transform: translate(-50%, -50%); 
+            }
+            .player-3-name { 
+                top: calc(var(--table-border-width) / 2); 
+                transform: translate(-50%, -50%);
+            }
+            .player-4-name { 
+                right: calc(var(--table-border-width) / 2); 
+                top: 50%; 
+                transform: translate(50%, -50%); 
+            }
+            .player-card {
+                border: 1px solid yellow; /* TEMP: Visualize player-card */
+            }
+            .chip-stack {
+                border: 1px solid pink; /* TEMP: Visualize chip-stack */
+            }
+            .action-buttons {
+                bottom: 0;
+                margin-bottom: clamp(5px, 1vw, 10px);
+                min-width: clamp(180px, 25vw, 250px);
+                border: 0.5px solid black !important; /* TEMP: Visualize action-buttons */
+            }
         }
 
         @media (max-width: 400px) {
@@ -342,21 +445,36 @@
                 --card-width: clamp(25px, 4.5vw, 45px);
                 --chip-size: clamp(18px, 2.8vw, 28px);
             }
-            .player-2-chips { left: var(--spacing); top: calc(50% + var(--card-height) / 2 + var(--spacing) * 2 + var(--chip-size)); }
-            .player-4-chips { right: var(--spacing); top: calc(50% - var(--card-height) / 2 - var(--chip-size) * 2 - var(--spacing) * 2); }
-            .player-2-sb { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 2); top: calc(50% + var(--spacing) + var(--chip-size)); }
-            .player-2-name { left: var(--spacing); top: calc(50% + var(--card-height) / 2 + var(--spacing) * 3 + var(--chip-size) * 2); }
-            .player-4-name { right: var(--spacing); top: calc(50% - var(--card-height) / 2 - var(--chip-size) * 2 - var(--spacing) * 3); }
+            .player-2-chips { left: calc(var(--spacing)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
+            .player-4-chips { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
+            .player-2-sb { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 2); top: calc(50% - var(--chip-size) / 2); }
+            .player-2-name { 
+                left: calc(var(--table-border-width) / 2); 
+                top: 50%; 
+                transform: translate(-50%, -50%); 
+            }
+            .player-4-name { 
+                right: calc(var(--table-border-width) / 2); 
+                top: 50%; 
+                transform: translate(50%, -50%); 
+            }
         }
 
         @media (orientation: landscape) {
             .game-container {
                 width: 95vw;
+                height: calc(0.5 * 95vw + 100px);
+                padding-bottom: 100px;
+                border: 1px solid white; /* TEMP: Visualize game-container */
+            }
+            .table-container {
                 height: calc(0.5 * 95vw);
-                max-height: calc(100vh - 60px);
+                border: 1px solid red; /* TEMP: Visualize table-container */
             }
             .action-buttons {
-                bottom: 5px;
+                bottom: 0;
+                margin-bottom: clamp(5px, 1vw, 10px);
+                border: 0.5px solid black !important; /* TEMP: Visualize action-buttons */
             }
         }
 
