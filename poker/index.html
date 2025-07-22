@@ -664,6 +664,24 @@
             console.log(`Player ${action}ed`);
         }
 
+        // Debounce function to limit reflow calls
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Force layout reflow without triggering resize event
+        const forceReflow = () => {
+            document.querySelector('.game-container').offsetHeight;
+        };
+
         updateButtonPositions();
 
         document.getElementById('next-hand').addEventListener('click', () => {
@@ -674,13 +692,9 @@
         document.getElementById('call').addEventListener('click', () => handleAction('call'));
         document.getElementById('raise').addEventListener('click', () => handleAction('raise'));
 
-        // Force layout reflow on resize or zoom
-        window.addEventListener('resize', () => {
-            window.dispatchEvent(new Event('resize'));
-        });
-        window.addEventListener('orientationchange', () => {
-            window.dispatchEvent(new Event('resize'));
-        });
+        // Add debounced reflow handlers for resize and orientation change
+        window.addEventListener('resize', debounce(forceReflow, 200));
+        window.addEventListener('orientationchange', debounce(forceReflow, 200));
     </script>
 </body>
 </html>
