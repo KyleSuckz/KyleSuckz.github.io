@@ -45,8 +45,8 @@
             width: 100%;
             max-width: 95vw;
             height: auto;
-            max-height: 100vh;
-            min-height: calc(0.5 * min(95vw, calc(100vh - clamp(5px, 1vw, 10px) - clamp(60px, 10vw, 80px) - 50px)) + clamp(60px, 10vw, 80px) + clamp(2px, 0.5vw, 5px));
+            max-height: 100dvh;
+            min-height: calc(0.5 * min(95vw, calc(100dvh - clamp(5px, 1vw, 10px))) + clamp(60px, 10vw, 80px) + clamp(2px, 0.5vw, 5px));
             display: flex;
             flex-direction: column;
             position: relative;
@@ -60,7 +60,7 @@
             width: 100%;
             max-width: 100%;
             height: calc(0.5 * 95vw);
-            max-height: calc(100vh - clamp(5px, 1vw, 10px) - clamp(60px, 10vw, 80px) - clamp(2px, 0.5vw, 5px) - 50px);
+            max-height: calc(100dvh - clamp(5px, 1vw, 10px) - clamp(60px, 10vw, 80px) - clamp(2px, 0.5vw, 5px));
             aspect-ratio: 2 / 1;
             flex: 0 0 auto;
             min-height: 100px;
@@ -347,8 +347,8 @@
                 width: 100%;
                 max-width: 95vw;
                 height: auto;
-                max-height: 100vh;
-                min-height: calc(0.5 * min(95vw, calc(100vh - clamp(5px, 1vw, 10px) - clamp(60px, 10vw, 80px) - 50px)) + clamp(60px, 10vw, 80px) + clamp(2px, 0.5vw, 5px));
+                max-height: 100dvh;
+                min-height: calc(0.5 * min(95vw, calc(100dvh - clamp(5px, 1vw, 10px))) + clamp(60px, 10vw, 80px) + clamp(2px, 0.5vw, 5px));
                 margin: clamp(5px, 1vw, 10px) auto 0;
                 border: 1px solid white; /* TEMP: Visualize game-container */
                 box-sizing: border-box;
@@ -357,7 +357,7 @@
             .table-container {
                 max-width: 100%;
                 height: calc(0.5 * 95vw);
-                max-height: calc(100vh - clamp(5px, 1vw, 10px) - clamp(60px, 10vw, 80px) - clamp(2px, 0.5vw, 5px) - 50px);
+                max-height: calc(100dvh - clamp(5px, 1vw, 10px) - clamp(60px, 10vw, 80px) - clamp(2px, 0.5vw, 5px));
                 min-height: 100px;
                 border: 1px solid red; /* TEMP: Visualize table-container */
                 box-sizing: border-box;
@@ -453,7 +453,7 @@
             .player-3-chips { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 2); }
             .player-4-chips { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 2); }
             .player-1-button { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 2); }
-            .player-2-button { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 2 - var(--chip-size)); top: calc(50% - var(---card-height) / 2 - var(--chip-size) - var(--spacing) * 2); }
+            .player-2-button { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 2 - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 2); }
             .player-3-button { left: calc(50% + var(--card-width) + var(--spacing) * 2); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
             .player-4-button { right: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 2 - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing) * 2); }
         }
@@ -469,8 +469,8 @@
                 width: 100%;
                 max-width: 95vw;
                 height: auto;
-                max-height: 100vh;
-                min-height: calc(0.5 * min(95vw, calc(100vh - clamp(5px, 1vw, 10px) - clamp(60px, 10vw, 80px) - 50px)) + clamp(60px, 10vw, 80px) + clamp(2px, 0.5vw, 5px));
+                max-height: 100dvh;
+                min-height: calc(0.5 * min(95vw, calc(100dvh - clamp(5px, 1vw, 10px))) + clamp(60px, 10vw, 80px) + clamp(2px, 0.5vw, 5px));
                 margin: clamp(5px, 1vw, 10px) auto 0;
                 border: 1px solid white; /* TEMP: Visualize game-container */
                 box-sizing: border-box;
@@ -479,7 +479,7 @@
             .table-container {
                 max-width: 100%;
                 height: calc(0.5 * 95vw);
-                max-height: calc(100vh - clamp(5px, 1vw, 10px) - clamp(60px, 10vw, 80px) - clamp(2px, 0.5vw, 5px) - 50px);
+                max-height: calc(100dvh - clamp(5px, 1vw, 10px) - clamp(60px, 10vw, 80px) - clamp(2px, 0.5vw, 5px));
                 min-height: 100px;
                 border: 1px solid red; /* TEMP: Visualize table-container */
                 box-sizing: border-box;
@@ -532,7 +532,7 @@
             .player-1-card-1 { bottom: calc(var(--spacing) * 2); left: calc(50% - var(--card-width) - var(--spacing) / 2); }
             .player-1-card-2 { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--spacing) / 2); }
             .player-2-card-1 { left: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2); }
-            .player-2-card-2 { left: calc(var(--spacing) + var(--card-width) + var(--spacing)); top: calc(50% - var(---card-height) / 2); }
+            .player-2-card-2 { left: calc(var(--spacing) + var(--card-width) + var(--spacing)); top: calc(50% - var(--card-height) / 2); }
             .player-3-card-1 { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--spacing) / 2); }
             .player-3-card-2 { top: calc(var(--spacing)); left: calc(50% + var(--spacing) / 2); }
             .player-4-card-1 { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2); }
@@ -552,8 +552,8 @@
                 width: 100%;
                 max-width: 95vw;
                 height: auto;
-                max-height: 100vh;
-                min-height: calc(0.5 * min(95vw, calc(100vh - clamp(5px, 1vw, 10px) - clamp(60px, 10vw, 80px) - 50px)) + clamp(60px, 10vw, 80px) + clamp(2px, 0.5vw, 5px));
+                max-height: 100dvh;
+                min-height: calc(0.5 * min(95vw, calc(100dvh - clamp(5px, 1vw, 10px))) + clamp(60px, 10vw, 80px) + clamp(2px, 0.5vw, 5px));
                 margin: clamp(5px, 1vw, 10px) auto 0;
                 border: 1px solid white; /* TEMP: Visualize game-container */
                 box-sizing: border-box;
@@ -562,7 +562,7 @@
             .table-container {
                 max-width: 100%;
                 height: calc(0.5 * 95vw);
-                max-height: calc(100vh - clamp(5px, 1vw, 10px) - clamp(60px, 10vw, 80px) - clamp(2px, 0.5vw, 5px) - 50px);
+                max-height: calc(100dvh - clamp(5px, 1vw, 10px) - clamp(60px, 10vw, 80px) - clamp(2px, 0.5vw, 5px));
                 min-height: 100px;
                 border: 1px solid red; /* TEMP: Visualize table-container */
                 box-sizing: border-box;
@@ -673,6 +673,14 @@
         document.getElementById('fold').addEventListener('click', () => handleAction('fold'));
         document.getElementById('call').addEventListener('click', () => handleAction('call'));
         document.getElementById('raise').addEventListener('click', () => handleAction('raise'));
+
+        // Force layout reflow on resize or zoom
+        window.addEventListener('resize', () => {
+            window.dispatchEvent(new Event('resize'));
+        });
+        window.addEventListener('orientationchange', () => {
+            window.dispatchEvent(new Event('resize'));
+        });
     </script>
 </body>
 </html>
