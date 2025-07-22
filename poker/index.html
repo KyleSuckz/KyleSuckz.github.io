@@ -16,7 +16,7 @@
             --shadow-color: rgba(0, 0, 0, 0.8);
             --card-width: clamp(40px, 6vw, 80px);
             --card-height: calc(var(--card-width) * 1.4);
-            --chip-size: clamp(28px, 4vw, 56px);
+            --chip-size: clamp(18px, 2.67vw, 37px);
             --button-bg: linear-gradient(#4a4a4a, #2a2a2a);
             --button-hover-bg: linear-gradient(#5a5a5a, #3a3a3a);
             --name-font-size: clamp(0.8rem, 1.2vw, 1.1rem);
@@ -249,9 +249,9 @@
             border: 2px solid pink; /* TEMP: Visualize chip-stack */
             visibility: visible;
         }
-        .player-1-chips { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--card-width) + var(--spacing) * 3); }
+        .player-1-chips { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--card-width) + var(--spacing) * 2); }
         .player-2-chips { left: calc(var(--spacing)); top: calc(50% + var(--card-height) / 2 + var(--spacing) * 2); }
-        .player-3-chips { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 2); }
+        .player-3-chips { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--spacing) * 2 - var(--chip-size)); }
         .player-4-chips { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 2); }
 
         .dealer-button {
@@ -264,21 +264,21 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(0.6rem, 0.8vw, 0.8rem);
+            font-size: clamp(0.5rem, 0.6vw, 0.7rem);
             color: #000;
             text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
             border: 2px solid brown; /* TEMP: Visualize dealer-button */
             visibility: hidden;
-            transition: all 0.3s ease;
+            transition: background 0.3s ease, visibility 0.3s ease;
         }
         .dealer-button.dealer { background: radial-gradient(#ffffff, #d3d3d3); visibility: visible; }
         .dealer-button.sb { background: radial-gradient(#4682b4, #2f4f4f); visibility: visible; }
         .dealer-button.bb { background: radial-gradient(#ffd700, #daa520); visibility: visible; }
         .dealer-button::after { content: attr(data-label); }
-        .player-1-button { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 2); }
-        .player-2-button { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 2 - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 2); }
-        .player-3-button { left: calc(50% + var(--card-width) + var(--spacing) * 2); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
-        .player-4-button { right: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 2 - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing) * 2); }
+        .player-1-button { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
+        .player-2-button { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
+        .player-3-button { left: calc(50% + var(--card-width) + var(--spacing) * 1.5); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
+        .player-4-button { right: calc(var(--spacing) * 2 + var(--card-width) * 2 - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
 
         @keyframes betChip {
             from { transform: translate(0, 0); }
@@ -339,7 +339,7 @@
                 --felt-radius: calc(var(--table-radius) - 8px);
                 --card-width: clamp(30px, 5vw, 50px);
                 --card-height: calc(var(--card-width) * 1.4);
-                --chip-size: clamp(28px, 3vw, 32px);
+                --chip-size: clamp(18px, 2vw, 21px);
                 --name-font-size: clamp(0.8rem, 1.2vw, 1.1rem);
                 --spacing: clamp(2px, 0.4vw, 4px);
             }
@@ -408,7 +408,7 @@
                 border: 1px solid gray !important; /* TEMP: Visualize action-button */
             }
             .dealer-button {
-                font-size: clamp(0.6rem, 0.8vw, 0.8rem);
+                font-size: clamp(0.5rem, 0.6vw, 0.7rem);
                 border: 1px solid brown; /* TEMP: Visualize dealer-button */
             }
             .player-name {
@@ -448,21 +448,22 @@
             .player-3-card-2 { top: calc(var(--spacing)); left: calc(50% + var(--spacing) / 2); }
             .player-4-card-1 { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2); }
             .player-4-card-2 { right: calc(var(--spacing) + var(--card-width) + var(--spacing)); top: calc(50% - var(--card-height) / 2); }
-            .player-1-chips { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--card-width) + var(--spacing) * 3); }
+            .player-1-chips { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--card-width) + var(--spacing) * 2); }
             .player-2-chips { left: calc(var(--spacing)); top: calc(50% + var(--card-height) / 2 + var(--spacing) * 2); }
-            .player-3-chips { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 2); }
+            .player-3-chips { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--spacing) * 2 - var(--chip-size)); }
             .player-4-chips { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 2); }
-            .player-1-button { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 2); }
-            .player-2-button { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 2 - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 2); }
-            .player-3-button { left: calc(50% + var(--card-width) + var(--spacing) * 2); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
-            .player-4-button { right: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 2 - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing) * 2); }
+            .player-1-button { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
+            .player-2-button { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
+            .player-3-button { left: calc(50% + var(--card-width) + var(--spacing) * 1.5); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
+            .player-4-button { right: calc(var(--spacing) * 2 + var(--card-width) * 2 - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
         }
 
         @media (max-width: 400px) {
             :root {
                 --spacing: clamp(1px, 0.3vw, 3px);
                 --card-width: clamp(25px, 4.5vw, 45px);
-                --chip-size: clamp(24px, 3vw, 32px);
+                --card-height: calc(var(--card-width) * 1.4);
+                --chip-size: clamp(16px, 2vw, 21px);
                 --name-font-size: clamp(0.8rem, 1.2vw, 1.1rem);
             }
             .game-container {
@@ -497,7 +498,7 @@
                 border: 1px solid gray !important; /* TEMP: Visualize action-button */
             }
             .dealer-button {
-                font-size: clamp(0.6rem, 0.8vw, 0.8rem);
+                font-size: clamp(0.5rem, 0.6vw, 0.7rem);
                 border: 1px solid brown; /* TEMP: Visualize dealer-button */
             }
             .player-name {
@@ -537,14 +538,14 @@
             .player-3-card-2 { top: calc(var(--spacing)); left: calc(50% + var(--spacing) / 2); }
             .player-4-card-1 { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2); }
             .player-4-card-2 { right: calc(var(--spacing) + var(--card-width) + var(--spacing)); top: calc(50% - var(--card-height) / 2); }
-            .player-1-chips { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--card-width) + var(--spacing) * 3); }
+            .player-1-chips { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--card-width) + var(--spacing) * 2); }
             .player-2-chips { left: calc(var(--spacing)); top: calc(50% + var(--card-height) / 2 + var(--spacing) * 2); }
-            .player-3-chips { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 2); }
+            .player-3-chips { top: calc(var(--spacing)); left: calc(50% - var(--card-width) - var(--spacing) * 2 - var(--chip-size)); }
             .player-4-chips { right: calc(var(--spacing)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 2); }
-            .player-1-button { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 2); }
-            .player-2-button { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 2 - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing) * 2); }
-            .player-3-button { left: calc(50% + var(--card-width) + var(--spacing) * 2); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
-            .player-4-button { right: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) * 2 - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing) * 2); }
+            .player-1-button { bottom: calc(var(--spacing) * 2 + var(--card-height) - var(--chip-size)); left: calc(50% - var(--card-width) - var(--chip-size) - var(--spacing) * 1.5); }
+            .player-2-button { left: calc(var(--spacing) + var(--card-width) * 2 + var(--spacing) - var(--chip-size)); top: calc(50% - var(--card-height) / 2 - var(--chip-size) - var(--spacing)); }
+            .player-3-button { left: calc(50% + var(--card-width) + var(--spacing) * 1.5); top: calc(var(--spacing) + var(--card-height) - var(--chip-size)); }
+            .player-4-button { right: calc(var(--spacing) * 2 + var(--card-width) * 2 - var(--chip-size)); top: calc(50% + var(--card-height) / 2 + var(--spacing)); }
         }
 
         @media (orientation: landscape) {
@@ -664,7 +665,6 @@
             console.log(`Player ${action}ed`);
         }
 
-        // Debounce function to limit reflow calls
         function debounce(func, wait) {
             let timeout;
             return function executedFunction(...args) {
@@ -677,7 +677,6 @@
             };
         }
 
-        // Force layout reflow without triggering resize event
         const forceReflow = () => {
             document.querySelector('.game-container').offsetHeight;
         };
@@ -692,7 +691,6 @@
         document.getElementById('call').addEventListener('click', () => handleAction('call'));
         document.getElementById('raise').addEventListener('click', () => handleAction('raise'));
 
-        // Add debounced reflow handlers for resize and orientation change
         window.addEventListener('resize', debounce(forceReflow, 200));
         window.addEventListener('orientationchange', debounce(forceReflow, 200));
     </script>
