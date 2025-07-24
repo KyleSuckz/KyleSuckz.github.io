@@ -192,6 +192,9 @@
             scale: {
                 mode: Phaser.Scale.FIT,
                 autoCenter: Phaser.Scale.CENTER_BOTH
+            },
+            canvas: {
+                contextAttributes: { willReadFrequently: true } // Optimize canvas for readback
             }
         };
 
@@ -223,14 +226,15 @@
         let mapGroup, slumsSprite, overlay;
 
         function preload() {
-            // Placeholder assets (pixel-art map)
-            this.load.image('slums', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAAAXNSR0IArs4c6QAAAGFJREFUeJzt0jENAAAMw7CNA5g3sZ0DGDgAFzAAAQQQQAABBBBAAAEEEEAAAQQQQAABBBBAAAEEEEAAAQQQQAABBBBAAAEEEEAAAQQQQAABBBBAAAEEEEAAAQQQQAABBBBAAAFzAwBP8rG0J6F6sQAAAABJRU5ErkJggg==');
+            // No external image loading; use Phaser graphics for placeholder
         }
 
         function create() {
-            // Map (50% of screen)
+            // Map (50% of screen) - Use rectangle instead of image
             mapGroup = this.add.group();
-            slumsSprite = this.add.sprite(window.innerWidth * 0.35, window.innerHeight * 0.5, 'slums').setDisplaySize(window.innerWidth * 0.7, window.innerHeight * 0.8).setInteractive();
+            slumsSprite = this.add.rectangle(window.innerWidth * 0.35, window.innerHeight * 0.5, window.innerWidth * 0.7, window.innerHeight * 0.8, 0x4a3728).setInteractive();
+            slumsSprite.setStrokeStyle(2, 0xd4a373);
+            this.add.text(window.innerWidth * 0.35, window.innerHeight * 0.5, 'Slums', { fontFamily: 'Bebas Neue', fontSize: 24, color: '#d4a373' }).setOrigin(0.5);
             slumsSprite.on('pointerdown', () => {
                 if (crimeCooldown <= 0 && player.energy >= 1) {
                     startPickpocketing();
