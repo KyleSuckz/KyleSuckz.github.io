@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prohibition Underworld</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            background: #2b2b2b;
+            color: #d4a373;
+            font-family: 'Courier New', monospace;
+        }
+        canvas {
+            display: block;
+            margin: auto;
+        }
+        #ui {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        #top-bar {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 10%;
+            background: #1a1a1a;
+            border-bottom: 2px solid #d4a373;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            pointer-events: auto;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 24px;
+        }
+        #dashboard {
+            position: absolute;
+            top: 10%;
+            right: 0;
+            width: 30%;
+            height: 80%;
+            background: #3c2f2f;
+            border-left: 2px solid #d4a373;
+            padding: 10px;
+            pointer-events: auto;
+            font-size: 16px;
+            overflow-y: auto;
+        }
+        #action-bar {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 10%;
+            background: #1a1a1a;
+            border-top: 2px solid #d4a373;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: auto;
+        }
+        .button {
+            background: #d4a373;
+            color: #1a1a1a;
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+            border: 1px solid #000;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 18px;
+        }
+        .button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+        .tooltip {
+            display: none;
+            position: absolute;
+            background: #3c2f2f;
+            border: 1px solid #d4a373;
+            padding: 5px;
+            font-size: 14px;
+            z-index: 10;
+        }
+        .progress-bar {
+            display: inline-block;
+            width: 50px;
+            height: 10px;
+            background: #666;
+            border: 1px solid #d4a373;
+            margin-left: 5px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #d4a373;
+        }
+        #milestone-popup {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #3c2f2f;
+            border: 2px solid #d4a373;
+            padding: 20px;
+            text-align: center;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 24px;
+            z-index: 20;
+            pointer-events: auto;
+        }
+        #bounty-screen, #safehouse-screen {
+            display: none;
+            position: absolute;
+            top: 10%;
+            left: 35%;
+            width: 30%;
+            height: 80%;
+            background: #3c2f2f;
+            border: 2px solid #d4a373;
+            padding: 10px;
+            z-index: 15;
+            pointer-events: auto;
+            font-size: 16px;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+    </style>
+</head>
+<body>
+    <div id="ui">
+        <div id="top-bar">
+            <span id="player-info">Player: Johnny | Rank: Soldier | Influence: <span id="influence">0</span></span>
+            <button class="button" id="safehouse-btn">Safehouse</button>
+            <button class="button" id="bounty-btn">Bounty Board</button>
+        </div>
+        <div id="dashboard">
+            <h3>Dashboard</h3>
+            <p>Money: $<span id="money">0</span></p>
+            <p>Shadow Funds: <span id="sf">0</span></p>
+            <p>Energy: <span id="energy">300</span>/300</p>
+            <p>Heat: <span id="heat">0</span></p>
+            <p>XP: <span id="xp">0</span></p>
+            <p>Rank: <span id="rank">Soldier</span></p>
+            <p>Inventory: <span id="inventory">0 whiskey, 0 bullets</span></p>
+            <p>Skills: <span id="skills">None</span></p>
+            <p>Mission Log: <span id="mission-log">None</span></p>
+            <p>Heat Decay: <span id="heat-decay">-5/hour</span></p>
+            <p>Market Ticker: <span id="market-ticker">Whiskey: $5</span></p>
+            <p>Family Mission: <span id="family-mission">No new missions</span></p>
+            <p>Leaderboard: <span id="leaderboard">1. Big Tony (1000) | 2. Sal (800) | 3. Vinny (600)</span></p>
+            <p>Bounty Target: <span id="bounty-target">None</span></p>
+        </div>
+        <div id="action-bar">
+            <button class="button" id="crime-btn">Crimes</button>
+            <span class="progress-bar" id="crime-progress"><span class="progress-fill" style="width: 0%;"></span></span>
+            <button class="button" id="bounty-action-btn">Bounties</button>
+            <span class="progress-bar" id="bounty-progress"><span class="progress-fill" style="width: 0%;"></span></span>
+            <div class="tooltip" id="crime-tooltip"></div>
+        </div>
+        <div id="milestone-popup"></div>
+        <div id="bounty-screen">
+            <h3>Bounty Board</h3>
+            <p>Active Bounty: <span id="bounty-details">Big Tony: $1000, 1 SF</span></p>
+            <button class="button" id="hire-pi-btn">Hire PI (10 Energy)</button>
+            <button class="button" id="hit-btn" disabled>Hit Target (5 Bullets)</button>
+            <button class="button" id="bounty-close-btn">Close</button>
+        </div>
+        <div id="safehouse-screen">
+            <h3>Safehouse</h3>
+            <p>Storage: <span id="safehouse-storage">0/100 kg</span></p>
+            <p>Items: <span id="safehouse-items">0 whiskey, 0 bullets</span></p>
+            <button class="button" id="store-btn">Store Items</button>
+            <button class="button" id="safehouse-close-btn">Close</button>
+        </div>
+    </div>
+    <script>
+        // Phaser Game Configuration
+        const config = {
+            type: Phaser.AUTO,
+            width: window.innerWidth * 0.7,
+            height: window.innerHeight,
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            },
+            parent: 'game',
+            scale: {
+                mode: Phaser.Scale.FIT,
+                autoCenter: Phaser.Scale.CENTER_BOTH
+            }
+        };
+
+        const game = new Phaser.Game(config);
+
+        // Player Data
+        let player = {
+            name: 'Johnny',
+            money: 0,
+            sf: 0,
+            energy: 300,
+            heat: 0,
+            xp: 0,
+            influence: 0,
+            rank: 'Soldier',
+            inventory: { whiskey: 0, bullets: 0 },
+            safehouse: { whiskey: 0, bullets: 0, capacity: 100 },
+            skills: [],
+            missions: [],
+            bountyTarget: null,
+            piSearch: null
+        };
+
+        // Game State
+        let crimeCooldown = 0;
+        let bountyCooldown = 0;
+        let whiskeyPrice = 5;
+        let mapZoom = 1;
+        let mapGroup, slumsSprite, overlay;
+
+        function preload() {
+            // Placeholder assets (pixel-art map)
+            this.load.image('slums', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAAAXNSR0IArs4c6QAAAGFJREFUeJzt0jENAAAMw7CNA5g3sZ0DGDgAFzAAAQQQQAABBBBAAAEEEEAAAQQQQAABBBBAAAEEEEAAAQQQQAABBBBAAAEEEEAAAQQQQAABBBBAAAEEEEAAAQQQQAABBBBAAAFzAwBP8rG0J6F6sQAAAABJRU5ErkJggg==');
+        }
+
+        function create() {
+            // Map (50% of screen)
+            mapGroup = this.add.group();
+            slumsSprite = this.add.sprite(window.innerWidth * 0.35, window.innerHeight * 0.5, 'slums').setDisplaySize(window.innerWidth * 0.7, window.innerHeight * 0.8).setInteractive();
+            slumsSprite.on('pointerdown', () => {
+                if (crimeCooldown <= 0 && player.energy >= 1) {
+                    startPickpocketing();
+                }
+            });
+            overlay = this.add.rectangle(window.innerWidth * 0.35, window.innerHeight * 0.5, window.innerWidth * 0.7, window.innerHeight * 0.8, 0xff0000, 0.2).setVisible(false);
+            this.input.on('pointerdown', (pointer) => {
+                if (pointer.rightButtonDown()) {
+                    mapZoom = mapZoom === 1 ? 2 : 1;
+                    mapGroup.setScale(mapZoom);
+                }
+            });
+
+            // UI Updates
+            updateDashboard();
+            setupUIEvents();
+
+            // Animations
+            this.tweens.add({
+                targets: document.getElementById('bounty-target'),
+                alpha: { from: 1, to: 0.5 },
+                duration: 1000,
+                yoyo: true,
+                repeat: -1
+            });
+
+            // Game Loop
+            setInterval(() => {
+                player.energy = Math.min(player.energy + 5/3600, 300);
+                player.heat = Math.max(player.heat - 5/3600, 0);
+                crimeCooldown = Math.max(crimeCooldown - 1, 0);
+                bountyCooldown = Math.max(bountyCooldown - 1, 0);
+                updateDashboard();
+                updateProgressBars();
+                simulateMultiplayer();
+            }, 1000);
+        }
+
+        function update() {
+            // Toggle faction overlay
+            overlay.setVisible(player.influence > 50);
+        }
+
+        function updateDashboard() {
+            document.getElementById('money').textContent = player.money.toFixed(2);
+            document.getElementById('sf').textContent = player.sf;
+            document.getElementById('energy').textContent = Math.floor(player.energy);
+            document.getElementById('heat').textContent = Math.floor(player.heat);
+            document.getElementById('xp').textContent = player.xp;
+            document.getElementById('rank').textContent = player.rank;
+            document.getElementById('inventory').textContent = `${player.inventory.whiskey} whiskey, ${player.inventory.bullets} bullets`;
+            document.getElementById('skills').textContent = player.skills.length ? player.skills.join(', ') : 'None';
+            document.getElementById('mission-log').textContent = player.missions.length ? player.missions.join('; ') : 'None';
+            document.getElementById('bounty-target').textContent = player.bountyTarget ? `${player.bountyTarget.name}: $${player.bountyTarget.reward}` : 'None';
+            document.getElementById('safehouse-storage').textContent = `${player.safehouse.whiskey * 5 + player.safehouse.bullets * 0.1}/${player.safehouse.capacity} kg`;
+            document.getElementById('safehouse-items').textContent = `${player.safehouse.whiskey} whiskey, ${player.safehouse.bullets} bullets`;
+        }
+
+        function updateProgressBars() {
+            const crimeFill = document.querySelector('#crime-progress .progress-fill');
+            crimeFill.style.width = `${(1 - crimeCooldown / 30) * 100}%`;
+            document.getElementById('crime-btn').disabled = crimeCooldown > 0 || player.energy < 1;
+            const bountyFill = document.querySelector('#bounty-progress .progress-fill');
+            bountyFill.style.width = `${(1 - bountyCooldown / 5) * 100}%`;
+            document.getElementById('bounty-action-btn').disabled = bountyCooldown > 0;
+            document.getElementById('hit-btn').disabled = !player.piSearch || player.inventory.bullets < 5;
+        }
+
+        function setupUIEvents() {
+            const crimeBtn = document.getElementById('crime-btn');
+            const crimeTooltip = document.getElementById('crime-tooltip');
+            crimeBtn.addEventListener('mouseover', () => {
+                crimeTooltip.style.display = 'block';
+                crimeTooltip.style.left = `${crimeBtn.offsetLeft}px`;
+                crimeTooltip.style.top = `${crimeBtn.offsetTop - 40}px`;
+                crimeTooltip.textContent = 'Pickpocketing: $0.50-$2, 5-10 XP, 1-2 Energy, 30s';
+            });
+            crimeBtn.addEventListener('mouseout', () => {
+                crimeTooltip.style.display = 'none';
+            });
+            crimeBtn.addEventListener('click', () => {
+                if (crimeCooldown <= 0 && player.energy >= 1) {
+                    startPickpocketing();
+                }
+            });
+
+            document.getElementById('bounty-action-btn').addEventListener('click', () => {
+                toggleScreen('bounty-screen');
+            });
+            document.getElementById('safehouse-btn').addEventListener('click', () => {
+                toggleScreen('safehouse-screen');
+            });
+            document.getElementById('bounty-btn').addEventListener('click', () => {
+                toggleScreen('bounty-screen');
+            });
+            document.getElementById('bounty-close-btn').addEventListener('click', () => {
+                toggleScreen('bounty-screen');
+            });
+            document.getElementById('safehouse-close-btn').addEventListener('click', () => {
+                toggleScreen('safehouse-screen');
+            });
+            document.getElementById('hire-pi-btn').addEventListener('click', () => {
+                if (player.energy >= 10 && !player.piSearch) {
+                    player.energy -= 10;
+                    player.piSearch = { target: 'Big Tony', time: 5 };
+                    player.bountyTarget = { name: 'Big Tony', reward: 1000 };
+                    updateDashboard();
+                }
+            });
+            document.getElementById('hit-btn').addEventListener('click', () => {
+                if (player.piSearch && player.inventory.bullets >= 5) {
+                    player.inventory.bullets -= 5;
+                    player.money += 1000;
+                    player.heat += 20;
+                    player.influence += 50;
+                    player.bountyTarget = null;
+                    player.piSearch = null;
+                    bountyCooldown = 5;
+                    checkMilestone();
+                    updateDashboard();
+                }
+            });
+            document.getElementById('store-btn').addEventListener('click', () => {
+                const used = player.safehouse.whiskey * 5 + player.safehouse.bullets * 0.1;
+                const available = player.safehouse.capacity - used;
+                const toStoreWhiskey = Math.min(player.inventory.whiskey, Math.floor(available / 5));
+                const toStoreBullets = Math.min(player.inventory.bullets, Math.floor(available / 0.1));
+                player.safehouse.whiskey += toStoreWhiskey;
+                player.safehouse.bullets += toStoreBullets;
+                player.inventory.whiskey -= toStoreWhiskey;
+                player.inventory.bullets -= toStoreBullets;
+                updateDashboard();
+            });
+        }
+
+        function startPickpocketing() {
+            crimeCooldown = 30;
+            player.energy -= Math.floor(Math.random() * 2) + 1;
+            const moneyEarned = (Math.random() * 1.5 + 0.5).toFixed(2);
+            const xpEarned = Math.floor(Math.random() * 6) + 5;
+            player.money += parseFloat(moneyEarned);
+            player.xp += xpEarned;
+            player.influence += 5;
+            player.heat += 5;
+            player.missions.push(`Pickpocketing: +$${moneyEarned}, +${xpEarned} XP`);
+            if (Math.random() < 0.1) player.inventory.whiskey += 1;
+            if (Math.random() < 0.05) player.inventory.bullets += 1;
+            checkMilestone();
+            updateDashboard();
+            animateCrime();
+        }
+
+        function animateCrime() {
+            const scene = game.scene.scenes[0];
+            const bottle = scene.add.text(window.innerWidth * 0.35, window.innerHeight * 0.5, '🥃', { fontSize: '32px' });
+            scene.tweens.add({
+                targets: bottle,
+                y: window.innerHeight * 0.4,
+                alpha: 0,
+                duration: 1000,
+                onComplete: () => bottle.destroy()
+            });
+        }
+
+        function checkMilestone() {
+            if (player.influence >= 50 && !player.skills.includes('Rising Crook')) {
+                player.skills.push('Rising Crook');
+                const popup = document.getElementById('milestone-popup');
+                popup.textContent = 'Milestone: 50 Influence - Rising Crook!';
+                popup.style.display = 'block';
+                setTimeout(() => popup.style.display = 'none', 3000);
+            }
+        }
+
+        function simulateMultiplayer() {
+            if (Math.random() < 0.01) {
+                document.getElementById('family-mission').textContent = 'New Family Mission: Group Heist';
+                setTimeout(() => {
+                    document.getElementById('family-mission').textContent = 'No new missions';
+                }, 5000);
+            }
+            if (Math.random() < 0.01) {
+                document.getElementById('market-ticker').textContent = `Whiskey: $${(whiskeyPrice * (1 + (Math.random() - 0.5) * 0.5)).toFixed(2)}`;
+            }
+        }
+
+        function toggleScreen(screenId) {
+            const screens = ['bounty-screen', 'safehouse-screen'];
+            screens.forEach(id => {
+                document.getElementById(id).style.display = id === screenId && document.getElementById(id).style.display !== 'block' ? 'block' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>

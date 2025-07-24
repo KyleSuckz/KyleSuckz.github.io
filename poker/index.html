@@ -12,14 +12,14 @@
             --felt-border-width: clamp(2px, 0.5vw, 7px);
             --table-radius: clamp(90px, 15vw, 200px);
             --felt-radius: calc(var(--table-radius) - 10px);
-            --felt-border-color: #1a1a1a;
+            --felt-border-color: #1a1a1a; /* Black felt border */
             --shadow-color: rgba(0, 0, 0, 0.8);
-            --card-width: clamp(40px, 6vw, 80px);
+            --card-width: clamp(45px, 6vw, 80px);
             --card-height: calc(var(--card-width) * 1.4);
-            --chip-size: clamp(18px, 2.67vw, 37px);
+            --chip-size: clamp(20px, 2.67vw, 37px);
             --button-bg: linear-gradient(#4a4a4a, #2a2a2a);
             --button-hover-bg: linear-gradient(#5a5a5a, #3a3a3a);
-            --name-font-size: clamp(0.8rem, 1.2vw, 1.1rem);
+            --name-font-size: clamp(0.9rem, 1.2vw, 1.2rem);
             --spacing: clamp(3px, 0.5vw, 7px);
         }
 
@@ -31,12 +31,13 @@
         body {
             min-height: calc(100vh - clamp(10px, 2vw, 20px));
             height: 100dvh;
+            height: 100vh; /* Fallback */
             display: flex;
             justify-content: center;
             align-items: flex-start;
             background: radial-gradient(circle at 50% 30%, #1a1a1a, #0a0a0a);
             font-family: Arial, sans-serif;
-            overflow-y: hidden;
+            overflow-y: auto;
             overflow-x: hidden;
             position: relative;
         }
@@ -46,29 +47,31 @@
             max-width: 95vw;
             height: auto;
             max-height: 100dvh;
-            min-height: calc(0.5 * min(95vw, calc(100dvh - clamp(5px, 1vw, 10px))) + clamp(60px, 10vw, 80px) + clamp(2px, 0.5vw, 5px));
+            max-height: 100vh;
+            min-height: calc(0.5 * 95vw + clamp(70px, 12vw, 90px));
             display: flex;
             flex-direction: column;
             position: relative;
             margin: clamp(5px, 1vw, 10px) auto 0;
-            border: 2px solid white; /* TEMP: Visualize game-container */
             box-sizing: border-box;
             overflow: hidden;
+            border: none;
         }
 
         .table-container {
             width: 100%;
             max-width: 100%;
             height: calc(0.5 * 95vw);
-            max-height: calc(100dvh - clamp(5px, 1vw, 10px) - clamp(60px, 10vw, 80px) - clamp(2px, 0.5vw, 5px));
+            max-height: calc(100dvh - clamp(70px, 12vw, 90px));
+            max-height: calc(100vh - clamp(70px, 12vw, 90px));
             aspect-ratio: 2 / 1;
             flex: 0 0 auto;
-            min-height: 100px;
+            min-height: 120px;
             position: relative;
-            border: 2px solid red; /* TEMP: Visualize table-container */
             display: block;
             visibility: visible;
             box-sizing: border-box;
+            border: none;
         }
 
         .table {
@@ -80,9 +83,9 @@
             position: relative;
             box-shadow: 0 15px 30px var(--shadow-color);
             z-index: 0;
-            border: 2px solid red; /* TEMP: Visualize table */
             display: block;
             visibility: visible;
+            border: none;
         }
 
         .table-felt {
@@ -97,9 +100,9 @@
             transform: translate(-50%, -50%);
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.7);
             z-index: 1;
-            border: 2px solid blue; /* TEMP: Visualize table-felt */
             display: block;
             visibility: visible;
+            border-color: #1a1a1a;
         }
 
         .table::before {
@@ -109,8 +112,9 @@
             border: var(--table-border-width) solid transparent;
             border-radius: var(--table-radius);
             background: linear-gradient(45deg, #151515, #252525);
-            box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.25);
+            box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.25);
             z-index: -1;
+            border-color: transparent;
         }
 
         .player-name {
@@ -121,32 +125,36 @@
             z-index: 5;
             text-align: center;
             background: rgba(0, 0, 0, 0.3);
-            padding: var(--spacing);
             border-radius: 3px;
-            border: 2px solid green; /* TEMP: Visualize player-name */
             visibility: visible;
+            border: none;
+            min-width: 0;
+            white-space: nowrap;
         }
         .player-1-name { 
-            bottom: calc(var(--table-border-width) / 2); 
+            bottom: calc(var(--table-border-width) + var(--spacing)); 
             left: 50%; 
-            transform: translate(-50%, 50%); 
+            transform: translate(-50%, 100%); 
             z-index: 11; 
             padding: calc(var(--spacing) * 2); 
         }
         .player-2-name { 
-            left: calc(var(--table-border-width) / 2); 
+            left: calc(var(--table-border-width) + var(--felt-border-width) + var(--card-width) * 2 + var(--spacing) * 10); 
             top: 50%; 
-            transform: translate(-50%, -50%); 
+            transform: translate(0, -50%); 
+            padding: calc(var(--spacing) / 8);
         }
         .player-3-name { 
-            top: calc(var(--table-border-width) / 2); 
+            top: calc(var(--table-border-width) + var(--spacing)); 
             left: 50%; 
-            transform: translate(-50%, -50%); 
+            transform: translate(-50%, -100%); 
+            padding: calc(var(--spacing) * 2);
         }
         .player-4-name { 
-            right: calc(var(--table-border-width) / 2); 
+            right: calc(var(--table-border-width) + var(--felt-border-width) + var(--card-width) * 2 + var(--spacing) * 10); 
             top: 50%; 
-            transform: translate(50%, -50%); 
+            transform: translate(0, -50%); 
+            padding: calc(var(--spacing) / 8);
         }
 
         .community-cards {
@@ -165,7 +173,6 @@
             align-items: center;
             gap: var(--spacing);
             padding: var(--spacing);
-            border: 2px solid purple; /* TEMP: Visualize community-cards */
             visibility: visible;
         }
 
@@ -176,7 +183,6 @@
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
             z-index: 3;
-            border: 2px solid orange; /* TEMP: Visualize community-card */
             visibility: visible;
         }
 
@@ -195,8 +201,8 @@
             padding: calc(var(--spacing) / 2);
             color: #fff;
             text-align: center;
-            border: 2px solid cyan; /* TEMP: Visualize action-text-area */
             visibility: visible;
+            aria-live: "polite";
         }
 
         .pot-area {
@@ -214,8 +220,8 @@
             padding: calc(var(--spacing) / 2);
             color: #fff;
             text-align: center;
-            border: 2px solid magenta; /* TEMP: Visualize pot-area */
             visibility: visible;
+            aria-live: "polite";
         }
 
         .player-card {
@@ -226,7 +232,6 @@
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
             z-index: 3;
-            border: 2px solid yellow; /* TEMP: Visualize player-card */
             visibility: visible;
         }
         .player-1-card-1 { bottom: calc(var(--spacing) * 2); left: calc(50% - var(--card-width) - var(--spacing) / 2); }
@@ -246,7 +251,6 @@
             background: radial-gradient(#d3d3d3, #a9a9a9);
             box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.4);
             z-index: 4;
-            border: 2px solid pink; /* TEMP: Visualize chip-stack */
             visibility: visible;
         }
         .player-1-chips { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--card-width) + var(--spacing) * 2); }
@@ -267,7 +271,6 @@
             font-size: clamp(0.5rem, 0.6vw, 0.7rem);
             color: #000;
             text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
-            border: 2px solid brown; /* TEMP: Visualize dealer-button */
             visibility: hidden;
             transition: background 0.3s ease, visibility 0.3s ease;
         }
@@ -300,36 +303,52 @@
             flex: 0 0 auto;
             order: 1;
             position: relative;
-            margin-top: clamp(2px, 0.5vw, 5px) !important;
+            margin-top: clamp(2px, 0.5vw, 5px);
             display: flex;
             flex-wrap: nowrap;
             justify-content: center;
             gap: clamp(6px, 1vw, 10px);
             z-index: 10;
-            background: rgba(0, 0, 0, 0.5) !important;
-            border-radius: 5px !important;
-            padding: clamp(8px, 1.2vw, 12px) !important;
-            min-width: clamp(140px, 20vw, 200px);
-            min-height: clamp(60px, 10vw, 80px);
-            border: 1px solid black !important; /* TEMP: Visualize action-buttons */
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            padding: clamp(8px, 1.2vw, 12px);
+            min-width: clamp(160px, 25vw, 220px);
+            min-height: clamp(70px, 12vw, 90px);
             visibility: visible;
             box-sizing: border-box;
         }
 
         .action-button {
-            padding: clamp(10px, 2vw, 16px) clamp(14px, 2.2vw, 26px) !important;
-            background: var(--button-bg) !important;
+            padding: clamp(10px, 2vw, 16px) clamp(14px, 2.2vw, 26px);
+            background: var(--button-bg);
             color: #fff;
-            border: none !important;
-            border-radius: 5px !important;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: clamp(0.8rem, 1.5vw, 1.1rem) !important;
+            font-size: clamp(0.9rem, 1.5vw, 1.2rem);
             transition: background 0.2s ease;
             touch-action: manipulation;
-            border: 2px solid gray !important; /* TEMP: Visualize action-button */
         }
-        .action-button:hover { background: var(--button-hover-bg) !important; }
+        .action-button:hover, .action-button:active {
+            background: var(--button-hover-bg);
+        }
         .action-button:focus { outline: 2px solid #ffd700; }
+
+        /* Debug mode for visualization */
+        .debug .game-container { border: 2px solid white; }
+        .debug .table-container { border: 2px solid red; }
+        .debug .table { border: 2px solid red; }
+        .debug .table-felt { border: 2px solid blue; }
+        .debug .player-name { border: 2px solid green; }
+        .debug .community-cards { border: 2px solid purple; }
+        .debug .community-card { border: 2px solid orange; }
+        .debug .action-text-area { border: 2px solid cyan; }
+        .debug .pot-area { border: 2px solid magenta; }
+        .debug .player-card { border: 2px solid yellow; }
+        .debug .chip-stack { border: 2px solid pink; }
+        .debug .dealer-button { border: 2px solid brown; }
+        .debug .action-buttons { border: 1px solid black; }
+        .debug .action-button { border: 2px solid gray; }
 
         @media (max-width: 600px) {
             :root {
@@ -337,9 +356,9 @@
                 --felt-border-width: clamp(1px, 0.3vw, 3px);
                 --table-radius: clamp(60px, 10vw, 100px);
                 --felt-radius: calc(var(--table-radius) - 8px);
-                --card-width: clamp(30px, 5vw, 50px);
+                --card-width: clamp(35px, 5vw, 50px);
                 --card-height: calc(var(--card-width) * 1.4);
-                --chip-size: clamp(18px, 2vw, 21px);
+                --chip-size: clamp(20px, 2vw, 21px);
                 --name-font-size: clamp(0.8rem, 1.2vw, 1.1rem);
                 --spacing: clamp(2px, 0.4vw, 4px);
             }
@@ -348,35 +367,30 @@
                 max-width: 95vw;
                 height: auto;
                 max-height: 100dvh;
-                min-height: calc(0.5 * min(95vw, calc(100dvh - clamp(5px, 1vw, 10px))) + clamp(60px, 10vw, 80px) + clamp(2px, 0.5vw, 5px));
+                max-height: 100vh;
+                min-height: calc(0.5 * 95vw + clamp(70px, 12vw, 90px));
                 margin: clamp(5px, 1vw, 10px) auto 0;
-                border: 1px solid white; /* TEMP: Visualize game-container */
                 box-sizing: border-box;
                 overflow: hidden;
             }
             .table-container {
                 max-width: 100%;
                 height: calc(0.5 * 95vw);
-                max-height: calc(100dvh - clamp(5px, 1vw, 10px) - clamp(60px, 10vw, 80px) - clamp(2px, 0.5vw, 5px));
-                min-height: 100px;
-                border: 1px solid red; /* TEMP: Visualize table-container */
+                max-height: calc(100dvh - clamp(70px, 12vw, 90px));
+                max-height: calc(100vh - clamp(70px, 12vw, 90px));
+                min-height: 120px;
                 box-sizing: border-box;
             }
             .table {
                 box-shadow: 0 12px 25px var(--shadow-color);
-                border: 1px solid red; /* TEMP: Visualize table */
             }
             .table-felt {
                 border: var(--felt-border-width) solid var(--felt-border-color);
-                border: 1px solid blue; /* TEMP: Visualize table-felt */
+                border-color: #1a1a1a;
             }
             .community-cards {
                 width: calc(var(--card-width) * 5 + var(--spacing) * 4);
                 height: calc(var(--card-height) + var(--spacing) * 2);
-                border: 1px solid purple; /* TEMP: Visualize community-cards */
-            }
-            .community-card {
-                border: 1px solid orange; /* TEMP: Visualize community-card */
             }
             .action-text-area {
                 width: calc(var(--card-width) * 4 + var(--spacing) * 5);
@@ -385,7 +399,6 @@
                 font-size: clamp(0.7rem, 1vw, 0.9rem);
                 line-height: 1;
                 padding: calc(var(--spacing) / 2);
-                border: 1px solid cyan; /* TEMP: Visualize action-text-area */
             }
             .pot-area {
                 width: calc(var(--card-width) * 4 + var(--spacing) * 5);
@@ -393,52 +406,45 @@
                 font-size: clamp(0.7rem, 1vw, 0.9rem);
                 line-height: 1;
                 padding: calc(var(--spacing) / 2);
-                border: 1px solid magenta; /* TEMP: Visualize pot-area */
             }
             .action-buttons {
-                margin-top: clamp(2px, 0.5vw, 5px) !important;
-                min-width: clamp(140px, 20vw, 200px);
-                min-height: clamp(60px, 10vw, 80px);
+                margin-top: clamp(2px, 0.5vw, 5px);
+                min-width: clamp(160px, 25vw, 220px);
+                min-height: clamp(70px, 12vw, 90px);
                 gap: clamp(6px, 1vw, 10px);
-                border: 1px solid black !important; /* TEMP: Visualize action-buttons */
             }
             .action-button {
-                padding: clamp(10px, 2vw, 16px) clamp(10px, 1.8vw, 18px) !important;
-                font-size: clamp(0.8rem, 1.2vw, 1rem) !important;
-                border: 1px solid gray !important; /* TEMP: Visualize action-button */
+                padding: clamp(10px, 2vw, 16px) clamp(10px, 1.8vw, 18px);
+                font-size: clamp(0.8rem, 1.2vw, 1rem);
             }
             .dealer-button {
                 font-size: clamp(0.5rem, 0.6vw, 0.7rem);
-                border: 1px solid brown; /* TEMP: Visualize dealer-button */
             }
             .player-name {
-                border: 1px solid green; /* TEMP: Visualize player-name */
-                padding: var(--spacing);
+                min-width: 0;
+                white-space: nowrap;
             }
             .player-1-name {
-                bottom: calc(var(--table-border-width) / 2);
+                bottom: calc(var(--table-border-width) + var(--spacing));
                 padding: calc(var(--spacing) * 2);
-                transform: translate(-50%, 50%);
+                transform: translate(-50%, 100%);
             }
             .player-2-name { 
-                left: calc(var(--table-border-width) / 2); 
+                left: calc(var(--table-border-width) + var(--felt-border-width) + var(--card-width) * 2 + var(--spacing) * 10); 
                 top: 50%; 
-                transform: translate(-50%, -50%); 
+                transform: translate(0, -50%); 
+                padding: calc(var(--spacing) / 8);
             }
             .player-3-name { 
-                top: calc(var(--table-border-width) / 2); 
-                transform: translate(-50%, -50%);
+                top: calc(var(--table-border-width) + var(--spacing)); 
+                transform: translate(-50%, -100%);
+                padding: calc(var(--spacing) * 2);
             }
             .player-4-name { 
-                right: calc(var(--table-border-width) / 2); 
+                right: calc(var(--table-border-width) + var(--felt-border-width) + var(--card-width) * 2 + var(--spacing) * 10); 
                 top: 50%; 
-                transform: translate(50%, -50%); 
-            }
-            .player-card {
-                border: 1px solid yellow; /* TEMP: Visualize player-card */
-            }
-            .chip-stack {
-                border: 1px solid pink; /* TEMP: Visualize chip-stack */
+                transform: translate(0, -50%); 
+                padding: calc(var(--spacing) / 8);
             }
             .player-1-card-1 { bottom: calc(var(--spacing) * 2); left: calc(50% - var(--card-width) - var(--spacing) / 2); }
             .player-1-card-2 { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--spacing) / 2); }
@@ -461,9 +467,9 @@
         @media (max-width: 400px) {
             :root {
                 --spacing: clamp(1px, 0.3vw, 3px);
-                --card-width: clamp(25px, 4.5vw, 45px);
+                --card-width: clamp(30px, 4.5vw, 45px);
                 --card-height: calc(var(--card-width) * 1.4);
-                --chip-size: clamp(16px, 2vw, 21px);
+                --chip-size: clamp(18px, 2vw, 21px);
                 --name-font-size: clamp(0.8rem, 1.2vw, 1.1rem);
             }
             .game-container {
@@ -471,64 +477,58 @@
                 max-width: 95vw;
                 height: auto;
                 max-height: 100dvh;
-                min-height: calc(0.5 * min(95vw, calc(100dvh - clamp(5px, 1vw, 10px))) + clamp(60px, 10vw, 80px) + clamp(2px, 0.5vw, 5px));
+                max-height: 100vh;
+                min-height: calc(0.5 * 95vw + clamp(70px, 12vw, 90px));
                 margin: clamp(5px, 1vw, 10px) auto 0;
-                border: 1px solid white; /* TEMP: Visualize game-container */
                 box-sizing: border-box;
                 overflow: hidden;
             }
             .table-container {
                 max-width: 100%;
                 height: calc(0.5 * 95vw);
-                max-height: calc(100dvh - clamp(5px, 1vw, 10px) - clamp(60px, 10vw, 80px) - clamp(2px, 0.5vw, 5px));
-                min-height: 100px;
-                border: 1px solid red; /* TEMP: Visualize table-container */
+                max-height: calc(100dvh - clamp(70px, 12vw, 90px));
+                max-height: calc(100vh - clamp(70px, 12vw, 90px));
+                min-height: 120px;
                 box-sizing: border-box;
             }
             .action-buttons {
-                margin-top: clamp(2px, 0.5vw, 5px) !important;
-                min-width: clamp(140px, 20vw, 200px);
-                min-height: clamp(60px, 10vw, 80px);
+                margin-top: clamp(2px, 0.5vw, 5px);
+                min-width: clamp(160px, 25vw, 220px);
+                min-height: clamp(70px, 12vw, 90px);
                 gap: clamp(6px, 1vw, 10px);
-                border: 1px solid black !important; /* TEMP: Visualize action-buttons */
             }
             .action-button {
-                padding: clamp(10px, 2vw, 16px) clamp(10px, 1.8vw, 18px) !important;
-                font-size: clamp(0.8rem, 1.2vw, 1rem) !important;
-                border: 1px solid gray !important; /* TEMP: Visualize action-button */
+                padding: clamp(10px, 2vw, 16px) clamp(10px, 1.8vw, 18px);
+                font-size: clamp(0.8rem, 1.2vw, 1rem);
             }
             .dealer-button {
                 font-size: clamp(0.5rem, 0.6vw, 0.7rem);
-                border: 1px solid brown; /* TEMP: Visualize dealer-button */
             }
             .player-name {
-                border: 1px solid green; /* TEMP: Visualize player-name */
-                padding: var(--spacing);
+                min-width: 0;
+                white-space: nowrap;
             }
             .player-1-name {
-                bottom: calc(var(--table-border-width) / 2);
+                bottom: calc(var(--table-border-width) + var(--spacing));
                 padding: calc(var(--spacing) * 2);
-                transform: translate(-50%, 50%);
+                transform: translate(-50%, 100%);
             }
             .player-2-name { 
-                left: calc(var(--table-border-width) / 2); 
+                left: calc(var(--table-border-width) + var(--felt-border-width) + var(--card-width) * 2 + var(--spacing) * 10); 
                 top: 50%; 
-                transform: translate(-50%, -50%); 
+                transform: translate(0, -50%); 
+                padding: calc(var(--spacing) / 8);
             }
             .player-3-name { 
-                top: calc(var(--table-border-width) / 2); 
-                transform: translate(-50%, -50%);
+                top: calc(var(--table-border-width) + var(--spacing)); 
+                transform: translate(-50%, -100%);
+                padding: calc(var(--spacing) * 2);
             }
             .player-4-name { 
-                right: calc(var(--table-border-width) / 2); 
+                right: calc(var(--table-border-width) + var(--felt-border-width) + var(--card-width) * 2 + var(--spacing) * 10); 
                 top: 50%; 
-                transform: translate(50%, -50%); 
-            }
-            .player-card {
-                border: 1px solid yellow; /* TEMP: Visualize player-card */
-            }
-            .chip-stack {
-                border: 1px solid pink; /* TEMP: Visualize chip-stack */
+                transform: translate(0, -50%); 
+                padding: calc(var(--spacing) / 8);
             }
             .player-1-card-1 { bottom: calc(var(--spacing) * 2); left: calc(50% - var(--card-width) - var(--spacing) / 2); }
             .player-1-card-2 { bottom: calc(var(--spacing) * 2); left: calc(50% + var(--spacing) / 2); }
@@ -554,26 +554,25 @@
                 max-width: 95vw;
                 height: auto;
                 max-height: 100dvh;
-                min-height: calc(0.5 * min(95vw, calc(100dvh - clamp(5px, 1vw, 10px))) + clamp(60px, 10vw, 80px) + clamp(2px, 0.5vw, 5px));
+                max-height: 100vh;
+                min-height: calc(0.5 * 95vw + clamp(70px, 12vw, 90px));
                 margin: clamp(5px, 1vw, 10px) auto 0;
-                border: 1px solid white; /* TEMP: Visualize game-container */
                 box-sizing: border-box;
                 overflow: hidden;
             }
             .table-container {
                 max-width: 100%;
                 height: calc(0.5 * 95vw);
-                max-height: calc(100dvh - clamp(5px, 1vw, 10px) - clamp(60px, 10vw, 80px) - clamp(2px, 0.5vw, 5px));
-                min-height: 100px;
-                border: 1px solid red; /* TEMP: Visualize table-container */
+                max-height: calc(100dvh - clamp(70px, 12vw, 90px));
+                max-height: calc(100vh - clamp(70px, 12vw, 90px));
+                min-height: 120px;
                 box-sizing: border-box;
             }
             .action-buttons {
-                margin-top: clamp(2px, 0.5vw, 5px) !important;
-                min-width: clamp(140px, 20vw, 200px);
-                min-height: clamp(60px, 10vw, 80px);
+                margin-top: clamp(2px, 0.5vw, 5px);
+                min-width: clamp(160px, 25vw, 220px);
+                min-height: clamp(70px, 12vw, 90px);
                 gap: clamp(6px, 1vw, 10px);
-                border: 1px solid black !important; /* TEMP: Visualize action-buttons */
             }
         }
 
@@ -637,32 +636,48 @@
         let dealerPosition = 1;
         const numPlayers = 4;
 
+        // Debug toggle (disabled by default)
+        const toggleDebug = () => {
+            document.body.classList.toggle('debug');
+            console.log('Debug mode:', document.body.classList.contains('debug') ? 'Enabled' : 'Disabled');
+        };
+
         function updateButtonPositions() {
-            const buttons = document.querySelectorAll('.dealer-button');
-            buttons.forEach(button => {
-                button.classList.remove('dealer', 'sb', 'bb');
-                button.setAttribute('data-label', '');
-                button.setAttribute('aria-label', '');
-            });
+            try {
+                const buttons = document.querySelectorAll('.dealer-button');
+                if (!buttons.length) throw new Error('No dealer buttons found');
 
-            const dealerIndex = dealerPosition;
-            const sbIndex = (dealerPosition + 1) % numPlayers || numPlayers;
-            const bbIndex = (dealerPosition + 2) % numPlayers || numPlayers;
+                buttons.forEach(button => {
+                    button.classList.remove('dealer', 'sb', 'bb');
+                    button.setAttribute('data-label', '');
+                    button.setAttribute('aria-label', '');
+                });
 
-            const assignButton = (selector, role) => {
-                const button = document.querySelector(selector);
-                button.classList.add(role);
-                button.setAttribute('data-label', BUTTON_ROLES[role].label);
-                button.setAttribute('aria-label', BUTTON_ROLES[role].aria);
-            };
+                const dealerIndex = dealerPosition;
+                const sbIndex = (dealerPosition % numPlayers) + 1;
+                const bbIndex = ((dealerPosition + 1) % numPlayers) + 1;
 
-            assignButton(`.player-${dealerIndex}-button`, 'dealer');
-            assignButton(`.player-${sbIndex}-button`, 'sb');
-            assignButton(`.player-${bbIndex}-button`, 'bb');
+                const assignButton = (selector, role) => {
+                    const button = document.querySelector(selector);
+                    if (button) {
+                        button.classList.add(role);
+                        button.setAttribute('data-label', BUTTON_ROLES[role].label);
+                        button.setAttribute('aria-label', BUTTON_ROLES[role].aria);
+                    }
+                };
+
+                assignButton(`.player-${dealerIndex}-button`, 'dealer');
+                assignButton(`.player-${sbIndex}-button`, 'sb');
+                assignButton(`.player-${bbIndex}-button`, 'bb');
+            } catch (error) {
+                console.error('Error updating button positions:', error);
+            }
         }
 
         function handleAction(action) {
             console.log(`Player ${action}ed`);
+            const nextButton = document.querySelector(`#${action === 'fold' ? 'call' : action === 'call' ? 'raise' : 'fold'}`);
+            if (nextButton) nextButton.focus();
         }
 
         function debounce(func, wait) {
@@ -678,21 +693,48 @@
         }
 
         const forceReflow = () => {
-            document.querySelector('.game-container').offsetHeight;
+            try {
+                const container = document.querySelector('.game-container');
+                if (container) {
+                    container.style.display = 'none';
+                    container.offsetHeight;
+                    container.style.display = 'flex';
+                }
+            } catch (error) {
+                console.error('Error forcing reflow:', error);
+            }
         };
 
-        updateButtonPositions();
+        try {
+            // Check for debug mode on load
+            if (document.body.classList.contains('debug')) {
+                console.warn('Debug mode is enabled. Green borders on player names may appear. Disable by removing "debug" class from <body> or calling toggleDebug().');
+            }
 
-        document.getElementById('next-hand').addEventListener('click', () => {
-            dealerPosition = (dealerPosition % numPlayers) + 1;
             updateButtonPositions();
-        });
-        document.getElementById('fold').addEventListener('click', () => handleAction('fold'));
-        document.getElementById('call').addEventListener('click', () => handleAction('call'));
-        document.getElementById('raise').addEventListener('click', () => handleAction('raise'));
+            const actions = ['fold', 'call', 'raise', 'next-hand'];
+            actions.forEach(action => {
+                const button = document.getElementById(action);
+                if (button) {
+                    button.addEventListener('click', () => {
+                        if (action === 'next-hand') {
+                            dealerPosition = (dealerPosition % numPlayers) + 1;
+                            updateButtonPositions();
+                        } else {
+                            handleAction(action);
+                        }
+                    });
+                }
+            });
 
-        window.addEventListener('resize', debounce(forceReflow, 200));
-        window.addEventListener('orientationchange', debounce(forceReflow, 200));
+            // Enable debug mode via console or UI (uncomment to use)
+            // document.addEventListener('keydown', e => e.key === 'd' && toggleDebug());
+
+            window.addEventListener('resize', debounce(forceReflow, 200));
+            window.addEventListener('orientationchange', debounce(forceReflow, 200));
+        } catch (error) {
+            console.error('Initialization error:', error);
+        }
     </script>
 </body>
 </html>
