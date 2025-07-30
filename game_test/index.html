@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prohibition Kings</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #f4e9d8; font-family: 'Futura', Arial, sans-serif; color: #3c2f2f; }
+        body { background-color: #f4e9d8; font-family: Arial, sans-serif; color: #3c2f2f; }
+        h1, h2, h3 { font-family: 'Cinzel', serif; }
         .header { background-color: #8b5e3c; color: white; padding: 10px; text-align: center; }
         .nav-tabs .nav-link { color: #3c2f2f; }
         .nav-tabs .nav-link.active { background-color: #d4a373; color: white; }
@@ -14,12 +16,22 @@
         button { background-color: #8b5e3c; color: white; border: none; padding: 5px 10px; }
         button:hover { background-color: #a67b5b; }
         button:disabled { background-color: #cccccc; cursor: not-allowed; }
+        .energy-bar { width: 100%; height: 20px; background-color: #ccc; border: 1px solid #3c2f2f; }
+        .energy-fill { height: 100%; background-color: #4CAF50; transition: width 0.5s; }
+        .success { animation: flashSuccess 0.5s; }
+        .failure { animation: flashFailure 0.5s; }
+        @keyframes flashSuccess { 0% { background-color: #4CAF50; } 100% { background-color: transparent; } }
+        @keyframes flashFailure { 0% { background-color: #FF6347; } 100% { background-color: transparent; } }
+        .tooltip { position: relative; display: inline-block; }
+        .tooltip .tooltiptext { visibility: hidden; width: 120px; background-color: #3c2f2f; color: white; text-align: center; border-radius: 6px; padding: 5px; position: absolute; z-index: 1; bottom: 100%; left: 50%; margin-left: -60px; }
+        .tooltip:hover .tooltiptext { visibility: visible; }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>Prohibition Kings</h1>
         <p id="player-stats">Player: Unknown | Rank: Thug | Cash: $0 | XP: 0 | Influence: 0 | Energy: 10000 | Gold: 0</p>
+        <div class="energy-bar"><div class="energy-fill" id="energy-fill" style="width: 100%;"></div></div>
     </div>
     <div class="container mt-3">
         <ul class="nav nav-tabs">
@@ -93,16 +105,16 @@
         };
 
         const crimes = [
-            { name: "Pickpocketing", cash: [1, 5], xp: 5, influence: 2, energy: 10, risk: 0.1, maxPerHour: 60 },
-            { name: "Bootleg Run", cash: [10, 20], xp: 10, influence: 5, energy: 15, risk: 0.15, maxPerHour: 60 },
-            { name: "Speakeasy Heist", cash: [500, 2000], xp: 100, influence: 50, gold: [2, 5], risk: 0.25, maxPerDay: 3 }
+            { name: "Pickpocketing", cash: [1, 5], xp: 5, influence: 2, energy: 10, risk: 0.1, tooltip: "Steal small cash, low risk." },
+            { name: "Bootleg Run", cash: [10, 20], xp: 10, influence: 5, energy: 15, risk: 0.15, tooltip: "Smuggle booze, moderate rewards." },
+            { name: "Speakeasy Heist", cash: [500, 2000], xp: 100, influence: 50, gold: [2, 5], risk: 0.25, maxPerDay: 3, tooltip: "Rob a rival speakeasy, high rewards." }
         ];
 
         const market = [
-            { name: "Crowbar", price: 10, effect: { crime: "Pickpocketing", success: 0.05 } },
-            { name: "Revolver", price: 50, effect: { crime: "Speakeasy Heist", success: 0.1 } },
-            { name: "Bribe", price: 100, effect: { risk: -0.1 } },
-            { name: "Gold", price: 10000 }
+            { name: "Crowbar", price: 10, effect: { crime: "Pickpocketing", success: 0.05 }, tooltip: "+5% Pickpocketing success" },
+            { name: "Revolver", price: 50, effect: { crime: "Speakeasy Heist", success: 0.1 }, tooltip: "+10% Speakeasy Heist success" },
+            { name: "Bribe", price: 100, effect: { risk: -0.1 }, tooltip: "-10% risk for all crimes" },
+            { name: "Gold", price: 10000, tooltip: "Buy Gold for $10,000" }
         ];
 
         function savePlayer() {
@@ -129,25 +141,20 @@
             const stats = `Player: ${player.name} | Rank: ${player.rank} | Cash: $${player.cash} | XP: ${player.xp} | Influence: ${player.influence} | Energy: ${player.energy} | Gold: ${player.gold}`;
             document.getElementById("player-stats").textContent = stats;
             document.getElementById("profile-stats").textContent = stats + ` | Health: ${player.health}`;
+            document.getElementById("energy-fill").style.width = `${(player.energy / 10000) * 100}%`;
 
             let crimeList = "";
             const now = Date.now();
             for (let crime of crimes) {
                 let canAttempt = true;
                 let status = "";
-                if (crime.energy) {
-                    if (player.energy < crime.energy) {
-                        canAttempt = false;
-                        status = "Not enough Energy";
-                    }
-                    const attempts = player.crimeAttempts[crime.name].count;
-                    const lastReset = player.crimeAttempts[crime.name].lastReset;
-                    if (attempts >= crime.maxPerHour && now - lastReset < 3600000) {
-                        canAttempt = false;
-                        const remaining = Math.ceil((3600000 - (now - lastReset)) / 60000);
-                        status = `Hourly limit reached. Wait ${remaining} min`;
-                    }
-                } else {
+                if (crime.name === "Speakeasy Heist" && player.xp < 500) {
+                    canAttempt = false;
+                    status = "Requires Capo rank (500 XP)";
+                } else if (crime.energy && player.energy < crime.energy) {
+                    canAttempt = false;
+                    status = "Not enough Energy";
+                } else if (crime.maxPerDay) {
                     const attempts = player.crimeAttempts[crime.name].timestamps.filter(t => now - t < 86400000);
                     if (attempts.length >= crime.maxPerDay) {
                         canAttempt = false;
@@ -157,8 +164,11 @@
                     }
                 }
                 crimeList += `
-                    <p>${crime.name}: $${crime.cash[0]}-$${crime.cash[1]}, ${crime.xp} XP, ${crime.influence} Influence${crime.gold ? `, ${crime.gold[0]}-${crime.gold[1]} Gold` : ""}, ${crime.energy ? crime.energy + " Energy" : crime.maxPerDay + "/day"} (Risk: ${crime.risk * 100}% Failure)<br>
-                    <button ${canAttempt ? "" : "disabled"} onclick="commitCrime('${crime.name}')">Attempt</button> ${status}</p>`;
+                    <div class="tooltip">
+                        <p>${crime.name}: $${crime.cash[0]}-$${crime.cash[1]}, ${crime.xp} XP, ${crime.influence} Influence${crime.gold ? `, ${crime.gold[0]}-${crime.gold[1]} Gold` : ""}, ${crime.energy ? crime.energy + " Energy" : crime.maxPerDay + "/day"} (Risk: ${crime.risk * 100}% Failure)<br>
+                        <button ${canAttempt ? "" : "disabled"} onclick="commitCrime('${crime.name}')">Attempt</button> ${status}</p>
+                        <span class="tooltiptext">${crime.tooltip}</span>
+                    </div>`;
             }
             document.getElementById("crime-list").innerHTML = crimeList;
 
@@ -167,7 +177,11 @@
 
             let marketList = "";
             for (let item of market) {
-                marketList += `<p>${item.name}: $${item.price} <button onclick="buyItem('${item.name}')">Buy</button></p>`;
+                marketList += `
+                    <div class="tooltip">
+                        <p>${item.name}: $${item.price} <button onclick="buyItem('${item.name}')">Buy</button></p>
+                        <span class="tooltiptext">${item.tooltip}</span>
+                    </div>`;
             }
             document.getElementById("market-list").innerHTML = marketList;
         }
@@ -176,19 +190,13 @@
             const crime = crimes.find(c => c.name === crimeName);
             if (!crime) return;
             const now = Date.now();
-            if (crime.energy) {
-                if (player.energy < crime.energy || (player.crimeAttempts[crime.name].count >= crime.maxPerHour && now - player.crimeAttempts[crime.name].lastReset < 3600000)) return;
-                player.crimeAttempts[crime.name].count++;
-                if (now - player.crimeAttempts[crime.name].lastReset >= 3600000) {
-                    player.crimeAttempts[crime.name].count = 1;
-                    player.crimeAttempts[crime.name].lastReset = now;
-                }
-                player.energy -= crime.energy;
-            } else {
+            if (crime.energy && player.energy < crime.energy) return;
+            if (crime.maxPerDay) {
                 const attempts = player.crimeAttempts[crime.name].timestamps.filter(t => now - t < 86400000);
                 if (attempts.length >= crime.maxPerDay) return;
                 player.crimeAttempts[crime.name].timestamps.push(now);
             }
+            if (crime.energy) player.energy -= crime.energy;
 
             let risk = crime.risk;
             for (let item of player.items) {
@@ -209,6 +217,7 @@
                 } else {
                     message = `Success! Gained $${cash}, ${crime.xp} XP, ${crime.influence} Influence.`;
                 }
+                document.getElementById("crime-list").innerHTML += `<p class="success">${message}</p>`;
             } else {
                 player.health -= 10;
                 message = `Failed! Lost 10 Health.`;
@@ -218,8 +227,8 @@
                     player.health = 100;
                     message += " You died and lost all cash and items (Gold preserved).";
                 }
+                document.getElementById("crime-list").innerHTML += `<p class="failure">${message}</p>`;
             }
-            document.getElementById("crime-list").innerHTML += `<p>${message}</p>`;
             updateRank();
             savePlayer();
             updateUI();
