@@ -26,6 +26,13 @@
       border: 2px solid #8b5a2b;
       box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     }
+    .card:hover {
+      transform: scale(1.02);
+      transition: transform 0.2s;
+    }
+    .bg-sepia-900 {
+      background-color: rgba(242, 226, 195, 0.9);
+    }
   </style>
 </head>
 <body class="min-h-screen">
@@ -34,31 +41,31 @@
     
     <!-- Dashboard -->
     <div id="dashboard" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-      <div class="card p-4">
-        <h2 class="text-2xl art-deco">Player Stats</h2>
+      <details open class="card p-4">
+        <summary class="text-2xl art-deco cursor-pointer">Player Stats</summary>
         <p><strong>Name:</strong> <span id="playerName">Greenhorn</span></p>
         <p><strong>Rank:</strong> <span id="rank">Greenhorn</span></p>
         <p><strong>Cash:</strong> $<span id="cash">0</span></p>
         <p><strong>Hooch:</strong> <span id="hooch">0</span></p>
         <p><strong>Bullets:</strong> <span id="bullets">0</span></p>
-        <p><strong>Action Points:</strong> <span id="ap">30000</span>/30000</p>
+        <p><strong>Action Points:</strong> <span id="ap">30000/30000</span></p>
         <p><strong>Health:</strong> <span id="health">100</span>/100</p>
         <p><strong>Experience:</strong> <span id="xp">0</span></p>
         <p><strong>Influence:</strong> <span id="influence">0</span></p>
         <p><strong>Perks:</strong> <span id="perks">None</span></p>
-      </div>
-      <div class="card p-4">
-        <h2 class="text-2xl art-deco">Inventory</h2>
+      </details>
+      <details open class="card p-4">
+        <summary class="text-2xl art-deco cursor-pointer">Inventory</summary>
         <ul id="inventory" class="list-disc pl-5"></ul>
         <h2 class="text-2xl art-deco mt-4">Equipped Items</h2>
         <p><strong>Weapon:</strong> <span id="equippedWeapon">None</span></p>
         <p><strong>Vehicle:</strong> <span id="equippedVehicle">None</span></p>
         <p><strong>Clothing:</strong> <span id="equippedClothing">None</span></p>
-      </div>
+      </details>
     </div>
 
     <!-- Navigation Tabs -->
-    <div class="flex flex-wrap border-b-2 border-gray-700 mb-4">
+    <div class="flex flex-wrap border-b-2 border-gray-700 mb-4 sticky top-0 z-10 bg-sepia-900">
       <button class="tab-button px-4 py-2 font-bold art-deco bg-gray-200 hover:bg-gray-300" data-tab="crimes">Crimes</button>
       <button class="tab-button px-4 py-2 font-bold art-deco bg-gray-200 hover:bg-gray-300" data-tab="shop">Shop</button>
       <button class="tab-button px-4 py-2 font-bold art-deco bg-gray-200 hover:bg-gray-300" data-tab="crew">Crew</button>
@@ -70,7 +77,7 @@
     <!-- Tab Content -->
     <div id="crimes" class="tab-content hidden">
       <h2 class="text-2xl art-deco mb-4">Available Crimes</h2>
-      <div id="crimeList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      <div id="crimeList" class="grid grid-cols-1 sm:grid-cols-2 gap-6"></div>
     </div>
     <div id="shop" class="tab-content hidden">
       <h2 class="text-2xl art-deco mb-4">Black Market</h2>
@@ -78,7 +85,7 @@
         <button id="buyHooch" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Buy Hooch ($10–$50)</button>
         <button id="sellHooch" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Sell Hooch ($8–$40)</button>
       </div>
-      <div id="shopItems" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      <div id="shopItems" class="grid grid-cols-1 sm:grid-cols-2 gap-6"></div>
     </div>
     <div id="crew" class="tab-content hidden">
       <h2 class="text-2xl art-deco mb-4">Crew Management</h2>
@@ -99,7 +106,9 @@
         <button id="playThreeCardMonte" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Three Card Monte</button>
         <button id="playCraps" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Craps</button>
       </div>
-      <p id="gamblingResult"></p>
+      <p id="gamblingResult" class="text-lg font-bold"></p>
+      <h3 class="text-xl art-deco mt-4">Recent Bets</h3>
+      <div id="betHistory" class="h-32 overflow-y-auto border p-2"></div>
     </div>
     <div id="chat" class="tab-content hidden">
       <h2 class="text-2xl art-deco mb-4">Speakeasy Chat</h2>
@@ -117,7 +126,8 @@
     <!-- Event Log -->
     <div class="mt-6 card p-4">
       <h2 class="text-2xl art-deco mb-4">Event Log</h2>
-      <div id="eventLog" class="h-32 overflow-y-auto"></div>
+      <button id="clearLog" class="mb-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Clear Log</button>
+      <div id="eventLog" class="h-64 overflow-y-auto"></div>
     </div>
   </div>
 
@@ -162,7 +172,7 @@
       { name: "Order a Hit", tier: 2, apCost: 0, cooldown: 3600000, cashMin: 200, cashMax: 500, hoochMin: 5, hoochMax: 10, xpMin: 20, xpMax: 30, influenceMin: 10, influenceMax: 20, risk: 0.2, bulletCost: 10, healthCost: 20, requirements: ["Colt .45 Pistol"] },
       { name: "Speakeasy Operation", tier: 2, apCost: 0, cooldown: 3600000, cashMin: 200, cashMax: 500, hoochMin: 5, hoochMax: 10, xpMin: 20, xpMax: 30, influenceMin: 5, influenceMax: 10, risk: 0.2, bulletCost: 0, healthCost: 15, requirements: ["Safehouse", "Liquor Crate", "Liquor Crate", "Liquor Crate"] },
       { name: "Liquor Shipment Hijack", tier: 2, apCost: 0, cooldown: 3600000, cashMin: 300, cashMax: 700, hoochMin: 5, hoochMax: 10, xpMin: 25, xpMax: 40, influenceMin: 10, influenceMax: 15, risk: 0.25, bulletCost: 10, healthCost: 20, requirements: ["Ford Model T", "Colt .45 Pistol"] },
-      { name: "Bank Heist", tier: 3, apCost: 0, cooldown: 28800000, cashMin: 2000, cashMax: 5000, hoochMin: 10, hoochMax: 20, xpMin: 50, xpMax: 100, influenceMin: 20, influenceMax: 50, risk: 0.4, bulletCost: 20, healthCost: 30, requirements: ["Crew", "Cadillac", "Tommy Gun"] },
+      { name: "Bank Heist", tier: 3, apCost: 0, cooldown: 28800000, cashMin: 2000, cashMax: 500 Votes: 5000, hoochMin: 10, hoochMax: 20, xpMin: 50, xpMax: 100, influenceMin: 20, influenceMax: 50, risk: 0.4, bulletCost: 20, healthCost: 30, requirements: ["Crew", "Cadillac", "Tommy Gun"] },
       { name: "Large-Scale Smuggling", tier: 3, apCost: 0, cooldown: 28800000, cashMin: 5000, cashMax: 10000, hoochMin: 20, hoochMax: 50, xpMin: 80, xpMax: 150, influenceMin: 50, influenceMax: 100, risk: 0.5, bulletCost: 20, healthCost: 30, requirements: ["Crew", "Boat", "Bribe Money"] }
     ];
 
@@ -192,14 +202,12 @@
       const saved = localStorage.getItem("bootlegEmpire");
       if (saved) {
         const savedPlayer = JSON.parse(saved);
-        // Merge saved data with default to ensure all properties, including equipped, are present
         player = { ...defaultPlayer, ...savedPlayer, equipped: { ...defaultPlayer.equipped, ...savedPlayer.equipped } };
-        // Ensure AP starts at max for new games or invalid AP values
         if (!savedPlayer.ap || savedPlayer.ap > defaultPlayer.maxAp) {
           player.ap = defaultPlayer.maxAp;
         }
       } else {
-        player.ap = defaultPlayer.maxAp; // Ensure new game starts with full AP
+        player.ap = defaultPlayer.maxAp;
       }
       updateUI();
     }
@@ -224,7 +232,7 @@
       // Inventory
       const inventory = document.getElementById("inventory");
       inventory.innerHTML = player.inventory
-        .filter(item => shopItems.some(i => i.name === item)) // Skip invalid items
+        .filter(item => shopItems.some(i => i.name === item))
         .map(item => {
           const isEquipped = player.equipped.weapon === item || player.equipped.vehicle === item || player.equipped.clothing === item;
           const itemData = shopItems.find(i => i.name === item);
@@ -318,23 +326,25 @@
         const crimeName = e.target.dataset.crime;
         const crime = crimes.find(c => c.name === crimeName);
         if (player.lastDeath && Date.now() < player.lastDeath + 3600000) {
-          logEvent("You're dead! Wait for respawn.");
+          logEvent("You're dead! Wait for respawn.", "death");
           return;
         }
         if (crime.apCost > 0 && player.ap < crime.apCost) {
-          logEvent("Not enough AP!");
+          logEvent("Not enough AP!", "failure");
           return;
         }
         if (crime.cooldown && player.cooldowns[crime.name] && Date.now() < player.cooldowns[crime.name]) {
-          logEvent(`On cooldown for ${crime.name}!`);
+          logEvent(`On cooldown for ${crime.name}!`, "failure");
           return;
         }
-        if (!crime.requirements.every(req => req === "Crew" ? player.crew : player.inventory.includes(req))) {
-          logEvent(`Missing requirements for ${crime.name}!`);
+        if (!crime.requirements.every(req => req === "Crew" ? player.crew : player.inventory「あ
+
+System: inventory.includes(req))) {
+          logEvent(`Missing requirements for ${crime.name}!`, "failure");
           return;
         }
         if (player.bullets < crime.bulletCost) {
-          logEvent(`Not enough Bullets for ${crime.name}!`);
+          logEvent(`Not enough Bullets for ${crime.name}!`, "failure");
           return;
         }
         player.ap -= crime.apCost;
@@ -367,10 +377,10 @@
           player.hooch += hooch;
           player.xp += xp;
           player.influence += influence;
-          logEvent(`Success! Gained $${cash}, ${hooch} Hooch, ${xp} XP, ${influence} Influence from ${crime.name}.${extra}`);
+          logEvent(`Success! Gained $${cash}, ${hooch} Hooch, ${xp} XP, ${influence} Influence from ${crime.name}.${extra}`, "success");
           updateRank();
         } else {
-          logEvent(`Failed ${crime.name}!`);
+          logEvent(`Failed ${crime.name}!`, "failure");
           player.health = Math.max(0, player.health - crime.healthCost);
           if (player.health === 0 && crime.name !== "Order a Hit") {
             player.lastDeath = Date.now();
@@ -379,9 +389,9 @@
             if (player.inventory.length) {
               const lostItems = player.inventory.splice(0, Math.min(2, player.inventory.length));
               player.equipped = { weapon: null, vehicle: null, clothing: null };
-              logEvent(`Killed! Lost 50% cash, all Bullets, and ${lostItems.join(", ")}. Respawn in 1 hour.`);
+              logEvent(`Killed! Lost 50% cash, all Bullets, and ${lostItems.join(", ")}. Respawn in 1 hour.`, "death");
             } else {
-              logEvent(`Killed! Lost 50% cash and all Bullets. Respawn in 1 hour.`);
+              logEvent(`Killed! Lost 50% cash and all Bullets. Respawn in 1 hour.`, "death");
             }
             player.ap = 50;
             player.health = 100;
@@ -392,9 +402,9 @@
             if (player.inventory.length) {
               const lostItems = player.inventory.splice(0, Math.min(2, player.inventory.length));
               player.equipped = { weapon: null, vehicle: null, clothing: null };
-              logEvent(`Killed by rival hit! Lost 50% cash, all Bullets, and ${lostItems.join(", ")}. Respawn in 1 hour.`);
+              logEvent(`Killed by rival hit! Lost 50% cash, all Bullets, and ${lostItems.join(", ")}. Respawn in 1 hour.`, "death");
             } else {
-              logEvent(`Killed by rival hit! Lost 50% cash and all Bullets. Respawn in 1 hour.`);
+              logEvent(`Killed by rival hit! Lost 50% cash and all Bullets. Respawn in 1 hour.`, "death");
             }
             player.ap = 50;
             player.health = 100;
@@ -404,10 +414,10 @@
               const type = shopItems.find(i => i.name === lostItem).type.toLowerCase();
               player.equipped[type] = null;
             }
-            logEvent(`Lost ${lostItem} due to failure.`);
+            logEvent(`Lost ${lostItem} due to failure.`, "failure");
           } else {
             player.cash = Math.max(0, player.cash - 100);
-            logEvent("Lost $100 due to failure.");
+            logEvent("Lost $100 due to failure.", "failure");
           }
         }
         updateUI();
@@ -444,7 +454,7 @@
           } else {
             player.inventory.push(item.name);
           }
-          logEvent(`Bought ${item.name} for $${item.cost}${item.hoochCost ? ` and ${item.hoochCost} Hooch` : ""}${item.apCost ? ` and ${item.apCost} AP` : ""}.`);
+          logEvent(`Bought ${item.name} for $${item.cost}${item.hoochCost ? ` and ${item.hoochCost} Hooch` : ""}${item.apCost ? ` and ${item.apCost} AP` : ""}.`, "success");
           updateUI();
           saveGame();
         }
@@ -456,7 +466,7 @@
           player.inventory = player.inventory.filter(i => i !== itemName);
           if (player.equipped.vehicle === itemName) player.equipped.vehicle = null;
           player.cash += item.sellPrice;
-          logEvent(`Sold ${itemName} for $${item.sellPrice}.`);
+          logEvent(`Sold ${itemName} for $${item.sellPrice}.`, "success");
           updateUI();
           saveGame();
         }
@@ -468,7 +478,7 @@
           player.inventory = player.inventory.filter(i => i !== itemName);
           if (player.equipped.vehicle === itemName) player.equipped.vehicle = null;
           player.bullets += item.scrapBullets;
-          logEvent(`Scrapped ${itemName} for ${item.scrapBullets} Bullets.`);
+          logEvent(`Scrapped ${itemName} for ${item.scrapBullets} Bullets.`, "success");
           updateUI();
           saveGame();
         }
@@ -478,7 +488,7 @@
         const type = e.target.dataset.type;
         if (player.inventory.includes(itemName)) {
           player.equipped[type] = itemName;
-          logEvent(`Equipped ${itemName}.`);
+          logEvent(`Equipped ${itemName}.`, "success");
           updateUI();
           saveGame();
         }
@@ -486,9 +496,12 @@
       if (e.target.classList.contains("unequip-item")) {
         const type = e.target.dataset.type;
         player.equipped[type] = null;
-        logEvent(`Unequipped ${type}.`);
+        logEvent(`Unequipped ${type}.`, "success");
         updateUI();
         saveGame();
+      }
+      if (e.target.id === "clearLog") {
+        document.getElementById("eventLog").innerHTML = "";
       }
     });
 
@@ -498,11 +511,11 @@
       if (player.cash >= cost) {
         player.cash -= cost;
         player.hooch += 1;
-        logEvent(`Bought 1 Hooch for $${cost}.`);
+        logEvent(`Bought 1 Hooch for $${cost}.`, "success");
         updateUI();
         saveGame();
       } else {
-        logEvent("Not enough cash!");
+        logEvent("Not enough cash!", "failure");
       }
     });
 
@@ -511,11 +524,11 @@
         const price = Math.floor(Math.random() * 33) + 8;
         player.hooch -= 1;
         player.cash += price;
-        logEvent(`Sold 1 Hooch for $${price}.`);
+        logEvent(`Sold 1 Hooch for $${price}.`, "success");
         updateUI();
         saveGame();
       } else {
-        logEvent("Not enough Hooch!");
+        logEvent("Not enough Hooch!", "failure");
       }
     });
 
@@ -523,11 +536,11 @@
     document.getElementById("joinCrew").addEventListener("click", () => {
       if (player.rank !== "Greenhorn") {
         player.crew = { name: "Generic Crew", rank: "Soldier" };
-        logEvent("Joined a crew!");
+        logEvent("Joined a crew!", "success");
         updateUI();
         saveGame();
       } else {
-        logEvent("Need to be at least Soldier rank to join a crew!");
+        logEvent("Need to be at least Soldier rank to join a crew!", "failure");
       }
     });
 
@@ -535,11 +548,11 @@
       if (player.rank === "Consigliere" && player.cash >= 5000 && player.influence >= 201) {
         player.cash -= 5000;
         player.crew = { name: `${player.name}'s Family`, rank: "Boss" };
-        logEvent("Formed your own crew!");
+        logEvent("Formed your own crew!", "success");
         updateUI();
         saveGame();
       } else {
-        logEvent("Need Consigliere rank, $5,000, and 201 Influence to form a crew!");
+        logEvent("Need Consigliere rank, $5,000, and 201 Influence to form a crew!", "failure");
       }
     });
 
@@ -561,19 +574,27 @@
           player.cash -= bet;
           const gameName = game.replace("play", "");
           document.getElementById("gamblingResult").textContent = "";
+          const betHistory = document.getElementById("betHistory");
           if (Math.random() < gamblingGames[game].winChance) {
             const winnings = bet * gamblingGames[game].multiplier;
             player.cash += winnings;
+            document.getElementById("gamblingResult").className = "text-green-600";
             document.getElementById("gamblingResult").textContent = `Won $${winnings} at ${gameName}!`;
-            logEvent(`Won $${winnings} at ${gameName}!`);
+            betHistory.innerHTML += `<p class="text-green-600">${new Date().toLocaleTimeString()}: Won $${winnings} at ${gameName}</p>`;
+            logEvent(`Won $${winnings} at ${gameName}!`, "success");
           } else {
+            document.getElementById("gamblingResult").className = "text-red-600";
             document.getElementById("gamblingResult").textContent = `Lost $${bet} at ${gameName}.`;
-            logEvent(`Lost $${bet} at ${gameName}.`);
+            betHistory.innerHTML += `<p class="text-red-600">${new Date().toLocaleTimeString()}: Lost $${bet} at ${gameName}</p>`;
+            logEvent(`Lost $${bet} at ${gameName}.`, "failure");
           }
+          betHistory.scrollTop = betHistory.scrollHeight;
+          const historyEntries = betHistory.getElementsByTagName("p");
+          while (historyEntries.length > 20) historyEntries[0].remove();
           updateUI();
           saveGame();
         } else {
-          logEvent("Invalid bet amount!");
+          logEvent("Invalid bet amount!", "failure");
         }
       });
     });
@@ -594,11 +615,11 @@
       if (player.cash >= 1000 && player.inventory.includes("Safehouse") && !player.businesses.some(b => b.name === "Speakeasy")) {
         player.cash -= 1000;
         player.businesses.push({ name: "Speakeasy", dailyIncome: 50 });
-        logEvent("Bought a Speakeasy!");
+        logEvent("Bought a Speakeasy!", "success");
         updateUI();
         saveGame();
       } else {
-        logEvent("Need $1,000 and a Safehouse, or already own a Speakeasy!");
+        logEvent("Need $1,000 and a Safehouse, or already own a Speakeasy!", "failure");
       }
     });
 
@@ -606,11 +627,11 @@
       if (player.cash >= 2500 && !player.businesses.some(b => b.name === "Distillery")) {
         player.cash -= 2500;
         player.businesses.push({ name: "Distillery", dailyIncome: 100 });
-        logEvent("Bought a Distillery!");
+        logEvent("Bought a Distillery!", "success");
         updateUI();
         saveGame();
       } else {
-        logEvent("Not enough cash or already own a Distillery!");
+        logEvent("Not enough cash or already own a Distillery!", "failure");
       }
     });
 
@@ -626,7 +647,7 @@
         if (Math.random() > raidRisk) {
           const income = Math.floor(Math.random() * (b.dailyIncome * 2 - b.dailyIncome + 1)) + b.dailyIncome;
           player.cash += income;
-          logEvent(`${b.name} earned $${income} today.`);
+          logEvent(`${b.name} earned $${income} today.`, "success");
           if (b.name === "Speakeasy" && player.inventory.filter(i => i === "Liquor Crate").length >= 2) {
             let cratesRemoved = 0;
             player.inventory = player.inventory.filter(i => {
@@ -637,20 +658,20 @@
               return true;
             });
           } else if (b.name === "Speakeasy") {
-            logEvent("Speakeasy needs 2 Liquor Crates to operate!");
+            logEvent("Speakeasy needs 2 Liquor Crates to operate!", "failure");
           }
           if (b.name === "Distillery") {
             const crates = Math.floor(Math.random() * 3) + 3;
             for (let i = 0; i < crates; i++) player.inventory.push("Liquor Crate");
-            logEvent(`Distillery produced ${crates} Liquor Crates.`);
+            logEvent(`Distillery produced ${crates} Liquor Crates.`, "success");
           }
         } else {
-          logEvent(`${b.name} was raided! No income today.`);
+          logEvent(`${b.name} was raided! No income today.`, "failure");
         }
       });
       if (player.businesses.some(b => b.name === "Distillery")) {
         player.cash = Math.max(0, player.cash - 500);
-        logEvent("Paid $500 Distillery upkeep.");
+        logEvent("Paid $500 Distillery upkeep.", "info");
       }
       updateUI();
       saveGame();
@@ -667,15 +688,15 @@
           if (player.inventory.length) {
             const lostItems = player.inventory.splice(0, Math.min(2, player.inventory.length));
             player.equipped = { weapon: null, vehicle: null, clothing: null };
-            logEvent(`Rival gang killed you! Lost 50% cash, all Bullets, and ${lostItems.join(", ")}. Respawn in 1 hour.`);
+            logEvent(`Rival gang killed you! Lost 50% cash, all Bullets, and ${lostItems.join(", ")}. Respawn in 1 hour.`, "death");
           } else {
-            logEvent(`Rival gang killed you! Lost 50% cash and all Bullets. Respawn in 1 hour.`);
+            logEvent(`Rival gang killed you! Lost 50% cash and all Bullets. Respawn in 1 hour.`, "death");
           }
           player.ap = 50;
           player.health = 100;
         } else {
           player.health = Math.max(0, player.health - 20);
-          logEvent(`Rival gang attacked! Lost 20 Health${player.health === 0 ? " and died! Respawn in 1 hour." : "."}`);
+          logEvent(`Rival gang attacked! Lost 20 Health${player.health === 0 ? " and died! Respawn in 1 hour." : "."}`, player.health === 0 ? "death" : "failure");
           if (player.health === 0) {
             player.lastDeath = now;
             player.cash = Math.floor(player.cash / 2);
@@ -683,7 +704,7 @@
             if (player.inventory.length) {
               const lostItems = player.inventory.splice(0, Math.min(2, player.inventory.length));
               player.equipped = { weapon: null, vehicle: null, clothing: null };
-              logEvent(`Lost ${lostItems.join(", ")} due to death.`);
+              logEvent(`Lost ${lostItems.join(", ")} due to death.`, "death");
             }
             player.ap = 50;
             player.health = 100;
@@ -698,7 +719,7 @@
     setInterval(() => {
       if (player.inventory.includes("Moonshine Still")) {
         player.inventory.push("Liquor Crate");
-        logEvent("Moonshine Still produced 1 Liquor Crate.");
+        logEvent("Moonshine Still produced 1 Liquor Crate.", "success");
         updateUI();
         saveGame();
       }
@@ -726,16 +747,22 @@
         if (player.xp >= ranks[i].xp && player.influence >= ranks[i].influence) {
           if (player.rank !== ranks[i].name) {
             player.rank = ranks[i].name;
-            logEvent(`Promoted to ${player.rank}!`);
+            logEvent(`Promoted to ${player.rank}!`, "success");
           }
           break;
         }
       }
     }
 
-    function logEvent(message) {
+    function logEvent(message, type = "info") {
       const eventLog = document.getElementById("eventLog");
-      eventLog.innerHTML += `<p>${new Date().toLocaleTimeString()}: ${message}</p>`;
+      const classMap = {
+        info: "text-gray-800",
+        success: "text-green-600",
+        failure: "text-red-600",
+        death: "text-red-800 font-bold"
+      };
+      eventLog.innerHTML += `<p class="${classMap[type]}">${new Date().toLocaleTimeString()}: ${message}</p>`;
       const entries = eventLog.getElementsByTagName("p");
       while (entries.length > 50) entries[0].remove();
       eventLog.scrollTop = eventLog.scrollHeight;
