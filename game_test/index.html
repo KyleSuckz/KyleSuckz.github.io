@@ -62,8 +62,10 @@
       top: 100%;
       left: 50%;
       transform: translateX(-50%);
+      min-width: 150px;
+      text-align: center;
     }
-    .group:hover .tooltip {
+    .group:not(.opacity-50):hover .tooltip {
       display: block;
     }
     .hide-timestamp .timestamp {
@@ -175,7 +177,7 @@
         <input id="betAmount" type="number" min="5" max="100" value="10" class="border p-2">
         <button id="playPoker" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Poker</button>
         <button id="playBlackjack" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Blackjack</button>
-        <button id="playKeno" class="px-4 py-1 bg-gray-700 text-white rounded hover:bg-gray-800">Keno</button>
+        <button id="playKeno" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Keno</button>
         <button id="playHorseRacing" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Horse Racing</button>
         <button id="playRoulette" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Roulette</button>
         <button id="playThreeCardMonte" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Three Card Monte</button>
@@ -237,8 +239,7 @@
       crew: null,
       businesses: [],
       perks: [],
-      cooldowns: {},
-      lastDeath: null
+      cooldowns: {}
     };
 
     let player = { ...defaultPlayer };
@@ -327,20 +328,37 @@
       document.getElementById("influence").textContent = player.influence;
       document.getElementById("perks").textContent = player.perks.length ? player.perks.join(", ") : "None";
 
-      // Inventory
+      // Inventory with Counts
       const inventory = document.getElementById("inventory");
-      inventory.innerHTML = player.inventory
-        .filter(item => shopItems.some(i => i.name === item))
+      const itemCounts = player.inventory.reduce((acc, item) => {
+        if (shopItems.some(i => i.name === item)) {
+          acc[item] = (acc[item] || 0) + 1;
+        }
+        return acc;
+      }, {});
+      const sortedItems = Object.keys(itemCounts).sort((a, b) => {
+        if (document.getElementById("sortType").classList.contains("bg-gray-800")) {
+          const typeA = shopItems.find(i => i.name === a)?.type || "";
+          const typeB = shopItems.find(i => i.name === b)?.type || "";
+          return typeA.localeCompare(typeB) || a.localeCompare(b);
+        }
+        return a.localeCompare(b);
+      });
+      inventory.innerHTML = sortedItems
         .map(item => {
+          const count = itemCounts[item];
           const isEquipped = player.equipped.weapon === item || player.equipped.vehicle === item || player.equipped.clothing === item;
           const itemData = shopItems.find(i => i.name === item);
           const canEquip = itemData && ["Weapon", "Vehicle", "Clothing"].includes(itemData.type) && !isEquipped;
           const equipType = itemData?.type.toLowerCase();
+          const sellPrice = itemData.sellPrice || (itemData.cost > 0 ? Math.floor(itemData.cost * 0.5) : Math.floor(itemData.hoochCost * 0.1 * 10));
           return `
             <li class="${isEquipped ? 'border-2 border-yellow-600' : ''}">
-              ${item}
+              ${item} (${count})
               ${canEquip ? `<button class="equip-item ml-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" data-item="${item}" data-type="${equipType}">Equip</button>` : ""}
               ${isEquipped ? `<button class="unequip-item ml-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" data-type="${equipType}">Unequip</button>` : ""}
+              <button class="sell-item ml-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" data-item="${item}">Sell ($${sellPrice})</button>
+              <button class="drop-item ml-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800 ${isEquipped ? 'opacity-50 cursor-not-allowed' : ''}" data-item="${item}" ${isEquipped ? 'disabled' : ''}>Drop</button>
             </li>
           `;
         }).join("") || "Empty";
@@ -354,7 +372,7 @@
       const crimeList = document.getElementById("crimeList");
       let filteredCrimes = crimes.filter(crime => {
         const rankIndex = ranks.findIndex(r => r.name === player.rank);
-        if (!crime.tier <= Math.ceil((rankIndex + 1) / 2)) return false;
+        if (crime.tier > Math.ceil((rankIndex + 1) / 2)) return false;
         if (currentCrimeFilter === "all") return true;
         if (currentCrimeFilter === `tier-${crime.tier}`) return true;
         if (currentCrimeFilter === "ap-based" && crime.apCost > 0) return true;
@@ -366,7 +384,12 @@
           const cooldownEnd = player.cooldowns[crime.name] || 0;
           const now = Date.now();
           const remaining = cooldownEnd > now ? Math.ceil((cooldownEnd - now) / 1000) : 0;
-          const disabled = (crime.apCost > 0 && player.ap < crime.apCost) || (remaining > 0) || (player.health < player.maxHealth * 0.5);
+          const requirementsMet = crime.requirements.every(req => req === "Crew" ? player.crew : player.inventory.includes(req));
+          const disabled = (crime.apCost > 0 && player.ap < crime.apCost) || 
+                          (remaining > 0) || 
+                          (player.health < player.maxHealth * 0.5) || 
+                          !requirementsMet ||
+                          (player.bullets < crime.bulletCost);
           const progress = remaining > 0 ? ((crime.cooldown - remaining * 1000) / crime.cooldown) * 100 : 100;
           return `
             <div class="card p-3">
@@ -388,20 +411,23 @@
 
       // Shop
       const shopItemsList = document.getElementById("shopItems");
-      shopItemsList.innerHTML = shopItems.map(item => `
-        <div class="card p-3">
-          <h3 class="text-xl art-deco">${item.name}</h3>
-          <p>Cost: ${item.cost > 0 ? `$${item.cost}` : `${item.hoochCost} Hooch`}${item.apCost ? `, ${item.apCost} AP` : ""}</p>
-          <p>Type: ${item.type}</p>
-          <p class="text-sm">${item.description}</p>
-          <button class="buy-item group relative mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 ${player.cash < item.cost || player.hooch < item.hoochCost || player.ap < (item.apCost || 0) ? 'opacity-50 cursor-not-allowed' : ''}" data-item="${item.name}" ${player.cash < item.cost || player.hooch < item.hoochCost || player.ap < (item.apCost || 0) ? "disabled" : ""}>
-            ${item.type === "Resource" ? "Buy 1" : "Buy"}
-            <span class="tooltip">${item.description}</span>
-          </button>
-          ${item.sellPrice ? `<button class="sell-vehicle group relative mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 ${!player.inventory.includes(item.name) ? 'opacity-50 cursor-not-allowed' : ''}" data-item="${item.name}" ${!player.inventory.includes(item.name) ? "disabled" : ""}>Sell ($${item.sellPrice})<span class="tooltip">Sell for $${item.sellPrice}</span></button>` : ""}
-          ${item.scrapBullets ? `<button class="scrap-vehicle group relative mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 ${!player.inventory.includes(item.name) ? 'opacity-50 cursor-not-allowed' : ''}" data-item="${item.name}" ${!player.inventory.includes(item.name) ? "disabled" : ""}>Scrap (${item.scrapBullets} Bullets)<span class="tooltip">Scrap for ${item.scrapBullets} Bullets</span></button>` : ""}
-        </div>
-      `).join("");
+      shopItemsList.innerHTML = shopItems.map(item => {
+        const disabled = player.cash < item.cost || player.hooch < item.hoochCost || player.ap < (item.apCost || 0);
+        return `
+          <div class="card p-3">
+            <h3 class="text-xl art-deco">${item.name}</h3>
+            <p>Cost: ${item.cost > 0 ? `$${item.cost}` : `${item.hoochCost} Hooch`}${item.apCost ? `, ${item.apCost} AP` : ""}</p>
+            <p>Type: ${item.type}</p>
+            <p class="text-sm">${item.description}</p>
+            <button class="buy-item group relative mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 ${disabled ? 'opacity-50 cursor-not-allowed' : ''}" data-item="${item.name}" ${disabled ? "disabled" : ""}>
+              ${item.type === "Resource" ? "Buy 1" : "Buy"}
+              ${item.description && !disabled ? `<span class="tooltip">${item.description}</span>` : ""}
+            </button>
+            ${item.sellPrice ? `<button class="sell-vehicle group relative mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 ${!player.inventory.includes(item.name) ? 'opacity-50 cursor-not-allowed' : ''}" data-item="${item.name}" ${!player.inventory.includes(item.name) ? "disabled" : ""}>Sell ($${item.sellPrice})<span class="tooltip">Sell for $${item.sellPrice}</span></button>` : ""}
+            ${item.scrapBullets ? `<button class="scrap-vehicle group relative mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 ${!player.inventory.includes(item.name) ? 'opacity-50 cursor-not-allowed' : ''}" data-item="${item.name}" ${!player.inventory.includes(item.name) ? "disabled" : ""}>Scrap (${item.scrapBullets} Bullets)<span class="tooltip">Scrap for ${item.scrapBullets} Bullets</span></button>` : ""}
+          </div>
+        `;
+      }).join("");
 
       // Crew
       const crewStatus = document.getElementById("crewStatus");
@@ -418,7 +444,6 @@
 
     // AP and Health Regeneration
     setInterval(() => {
-      const now = Date.now();
       if (player.ap < player.maxAp) {
         const regen = player.perks.includes("Coffee") ? 7 : 5;
         player.ap = Math.min(player.maxAp, player.ap + regen);
@@ -436,10 +461,16 @@
     }, 1000); // 1 second for smooth cooldown progress bars
 
     // Commit Crime
-    document.addEventListener("click", e => {
-      if (e.target.classList.contains("commit-crime") || e.target.id === "quickPickpocket") {
-        const crimeName = e.target.dataset.crime || "Pickpocketing";
+    document.getElementById("crimeList").addEventListener("click", e => {
+      const button = e.target.closest(".commit-crime");
+      if (button && !button.disabled) {
+        const crimeName = button.dataset.crime;
+        console.log(`Attempting to commit crime: ${crimeName}`); // Debug log
         const crime = crimes.find(c => c.name === crimeName);
+        if (!crime) {
+          logEvent(`Error: Crime ${crimeName} not found!`, "failure");
+          return;
+        }
         if (player.health < player.maxHealth * 0.5) {
           logEvent("Health too low! Need at least 50% health to commit crimes.", "failure");
           return;
@@ -502,7 +533,41 @@
       }
     });
 
-    // Buy/Sell/Equip/Unequip Items
+    // Quick Pickpocket
+    document.getElementById("quickPickpocket").addEventListener("click", () => {
+      console.log("Quick Pickpocket clicked"); // Debug log
+      const crime = crimes.find(c => c.name === "Pickpocketing");
+      if (player.health < player.maxHealth * 0.5) {
+        logEvent("Health too low! Need at least 50% health to commit crimes.", "failure");
+        return;
+      }
+      if (player.ap < crime.apCost) {
+        logEvent("Not enough AP!", "failure");
+        return;
+      }
+      player.ap -= crime.apCost;
+      const success = Math.random() > crime.risk * (1 - getSuccessBonus());
+      if (success) {
+        const cash = Math.floor(Math.random() * (crime.cashMax - crime.cashMin + 1)) + crime.cashMin;
+        const hooch = Math.floor(Math.random() * (crime.hoochMax - crime.hoochMin + 1)) + crime.hoochMin;
+        const xp = Math.floor(Math.random() * (crime.xpMax - crime.xpMin + 1)) + crime.xpMin;
+        const influence = Math.floor(Math.random() * (crime.influenceMax - crime.influenceMin + 1)) + crime.influenceMin + getInfluenceBonus();
+        player.cash += cash;
+        player.hooch += hooch;
+        player.xp += xp;
+        player.influence += influence;
+        logEvent(`Success! Gained $${cash}, ${hooch} Hooch, ${xp} XP, ${influence} Influence from Pickpocketing.`, "success");
+        updateRank();
+      } else {
+        player.health = Math.max(0, player.health - crime.healthCost);
+        player.cash = Math.max(0, player.cash - 100);
+        logEvent(`Failed Pickpocketing! Lost $100 and ${crime.healthCost} Health.`, "failure");
+      }
+      updateUI();
+      saveGame();
+    });
+
+    // Buy/Sell/Equip/Unequip/Drop Items
     document.addEventListener("click", e => {
       if (e.target.classList.contains("buy-item") || e.target.id === "quickBuyHooch") {
         const itemName = e.target.dataset.item || "Hooch";
@@ -547,13 +612,15 @@
           logEvent(`Bought ${item.name} for $${item.cost}${item.hoochCost ? ` and ${item.hoochCost} Hooch` : ""}${item.apCost ? ` and ${item.apCost} AP` : ""}.`, "success");
           updateUI();
           saveGame();
+        } else {
+          logEvent(`Not enough resources to buy ${item.name}!`, "failure");
         }
       }
       if (e.target.classList.contains("sell-vehicle")) {
         const itemName = e.target.dataset.item;
         const item = shopItems.find(i => i.name === itemName);
         if (player.inventory.includes(itemName)) {
-          player.inventory = player.inventory.filter(i => i !== itemName);
+          player.inventory.splice(player.inventory.indexOf(itemName), 1);
           if (player.equipped.vehicle === itemName) player.equipped.vehicle = null;
           player.cash += item.sellPrice;
           logEvent(`Sold ${itemName} for $${item.sellPrice}.`, "success");
@@ -565,10 +632,34 @@
         const itemName = e.target.dataset.item;
         const item = shopItems.find(i => i.name === itemName);
         if (player.inventory.includes(itemName)) {
-          player.inventory = player.inventory.filter(i => i !== itemName);
+          player.inventory.splice(player.inventory.indexOf(itemName), 1);
           if (player.equipped.vehicle === itemName) player.equipped.vehicle = null;
           player.bullets += item.scrapBullets;
           logEvent(`Scrapped ${itemName} for ${item.scrapBullets} Bullets.`, "success");
+          updateUI();
+          saveGame();
+        }
+      }
+      if (e.target.classList.contains("sell-item")) {
+        const itemName = e.target.dataset.item;
+        if (player.inventory.includes(itemName)) {
+          const item = shopItems.find(i => i.name === itemName);
+          const sellPrice = item.sellPrice || (item.cost > 0 ? Math.floor(item.cost * 0.5) : Math.floor(item.hoochCost * 0.1 * 10));
+          player.inventory.splice(player.inventory.indexOf(itemName), 1);
+          if (player.equipped.weapon === itemName) player.equipped.weapon = null;
+          if (player.equipped.vehicle === itemName) player.equipped.vehicle = null;
+          if (player.equipped.clothing === itemName) player.equipped.clothing = null;
+          player.cash += sellPrice;
+          logEvent(`Sold ${itemName} for $${sellPrice}.`, "success");
+          updateUI();
+          saveGame();
+        }
+      }
+      if (e.target.classList.contains("drop-item") && !e.target.disabled) {
+        const itemName = e.target.dataset.item;
+        if (player.inventory.includes(itemName)) {
+          player.inventory.splice(player.inventory.indexOf(itemName), 1);
+          logEvent(`Dropped ${itemName}.`, "info");
           updateUI();
           saveGame();
         }
@@ -608,18 +699,14 @@
         updateUI();
       }
       if (e.target.id === "sortName") {
-        player.inventory.sort((a, b) => a.localeCompare(b));
+        document.getElementById("sortName").classList.add("bg-gray-800");
+        document.getElementById("sortType").classList.remove("bg-gray-800");
         updateUI();
-        saveGame();
       }
       if (e.target.id === "sortType") {
-        player.inventory.sort((a, b) => {
-          const typeA = shopItems.find(i => i.name === a)?.type || "";
-          const typeB = shopItems.find(i => i.name === b)?.type || "";
-          return typeA.localeCompare(typeB) || a.localeCompare(b);
-        });
+        document.getElementById("sortType").classList.add("bg-gray-800");
+        document.getElementById("sortName").classList.remove("bg-gray-800");
         updateUI();
-        saveGame();
       }
       if (e.target.id === "themeToggle") {
         document.body.classList.toggle("grayscale-theme");
@@ -766,7 +853,7 @@
         let raidRisk = 0.1;
         if (player.perks.includes("Connected")) raidRisk *= 0.8;
         if (player.inventory.includes("Bribe Money")) {
-          player.inventory = player.inventory.filter(i => i !== "Bribe Money");
+          player.inventory.splice(player.inventory.indexOf("Bribe Money"), 1);
           raidRisk *= 0.9;
         }
         b.raided = Math.random() <= raidRisk;
@@ -804,17 +891,6 @@
       saveGame();
     }, 86400000); // 24 hours
 
-    // Random Events
-    setInterval(() => {
-      const now = Date.now();
-      if (player.influence > 50 && Math.random() < 0.05) {
-        player.health = Math.max(0, player.health - 20);
-        logEvent(`Rival gang attacked! Lost 20 Health.`, "failure");
-        updateUI();
-        saveGame();
-      }
-    }, 3600000); // 1 hour
-
     // Daily Moonshine Still Production
     setInterval(() => {
       if (player.inventory.includes("Moonshine Still")) {
@@ -824,6 +900,16 @@
         saveGame();
       }
     }, 86400000); // 24 hours
+
+    // Random Events
+    setInterval(() => {
+      if (player.influence > 50 && Math.random() < 0.05) {
+        player.health = Math.max(0, player.health - 20);
+        logEvent(`Rival gang attacked! Lost 20 Health.`, "failure");
+        updateUI();
+        saveGame();
+      }
+    }, 3600000); // 1 hour
 
     // Helper Functions
     function getSuccessBonus() {
@@ -859,8 +945,7 @@
       const classMap = {
         info: "text-gray-800",
         success: "text-green-600",
-        failure: "text-red-600",
-        death: "text-red-800 font-bold"
+        failure: "text-red-600"
       };
       eventLog.innerHTML += `<p class="${classMap[type]}"><span class="timestamp">${new Date().toLocaleTimeString()}: </span>${message}</p>`;
       const entries = eventLog.getElementsByTagName("p");
