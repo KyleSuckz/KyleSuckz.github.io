@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bootleg Empire</title>
+  <!-- Note: Tailwind CSS CDN is used for development. For production, install Tailwind CLI or use PostCSS: https://tailwindcss.com/docs/installation -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -172,7 +173,7 @@
       { name: "Order a Hit", tier: 2, apCost: 0, cooldown: 3600000, cashMin: 200, cashMax: 500, hoochMin: 5, hoochMax: 10, xpMin: 20, xpMax: 30, influenceMin: 10, influenceMax: 20, risk: 0.2, bulletCost: 10, healthCost: 20, requirements: ["Colt .45 Pistol"] },
       { name: "Speakeasy Operation", tier: 2, apCost: 0, cooldown: 3600000, cashMin: 200, cashMax: 500, hoochMin: 5, hoochMax: 10, xpMin: 20, xpMax: 30, influenceMin: 5, influenceMax: 10, risk: 0.2, bulletCost: 0, healthCost: 15, requirements: ["Safehouse", "Liquor Crate", "Liquor Crate", "Liquor Crate"] },
       { name: "Liquor Shipment Hijack", tier: 2, apCost: 0, cooldown: 3600000, cashMin: 300, cashMax: 700, hoochMin: 5, hoochMax: 10, xpMin: 25, xpMax: 40, influenceMin: 10, influenceMax: 15, risk: 0.25, bulletCost: 10, healthCost: 20, requirements: ["Ford Model T", "Colt .45 Pistol"] },
-      { name: "Bank Heist", tier: 3, apCost: 0, cooldown: 28800000, cashMin: 2000, cashMax: 500 Votes: 5000, hoochMin: 10, hoochMax: 20, xpMin: 50, xpMax: 100, influenceMin: 20, influenceMax: 50, risk: 0.4, bulletCost: 20, healthCost: 30, requirements: ["Crew", "Cadillac", "Tommy Gun"] },
+      { name: "Bank Heist", tier: 3, apCost: 0, cooldown: 28800000, cashMin: 2000, cashMax: 5000, hoochMin: 10, hoochMax: 20, xpMin: 50, xpMax: 100, influenceMin: 20, influenceMax: 50, risk: 0.4, bulletCost: 20, healthCost: 30, requirements: ["Crew", "Cadillac", "Tommy Gun"] },
       { name: "Large-Scale Smuggling", tier: 3, apCost: 0, cooldown: 28800000, cashMin: 5000, cashMax: 10000, hoochMin: 20, hoochMax: 50, xpMin: 80, xpMax: 150, influenceMin: 50, influenceMax: 100, risk: 0.5, bulletCost: 20, healthCost: 30, requirements: ["Crew", "Boat", "Bribe Money"] }
     ];
 
@@ -337,9 +338,7 @@
           logEvent(`On cooldown for ${crime.name}!`, "failure");
           return;
         }
-        if (!crime.requirements.every(req => req === "Crew" ? player.crew : player.inventory「あ
-
-System: inventory.includes(req))) {
+        if (!crime.requirements.every(req => req === "Crew" ? player.crew : player.inventory.includes(req))) {
           logEvent(`Missing requirements for ${crime.name}!`, "failure");
           return;
         }
