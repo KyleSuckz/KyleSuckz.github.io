@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bootleg Empire</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-image: url('https://images.unsplash.com/photo-1591280063464-0a6336e93e43?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+      background-size: cover;
+      background-attachment: fixed;
+      font-family: 'Times New Roman', Times, serif;
+      color: #2c2c2c;
+    }
+    .art-deco {
+      font-family: 'Cinzel', serif;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+    .sepia {
+      background-color: rgba(242, 226, 195, 0.95);
+    }
+    .card {
+      border: 2px solid #8b5a2b;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <div id="game" class="container mx-auto p-4 max-w-5xl sepia rounded-lg min-h-screen">
+    <h1 class="text-4xl font-bold text-center mb-6 art-deco">Bootleg Empire</h1>
+    
+    <!-- Dashboard -->
+    <div id="dashboard" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div class="card p-4">
+        <h2 class="text-2xl art-deco">Player Stats</h2>
+        <p><strong>Name:</strong> <span id="playerName">Greenhorn</span></p>
+        <p><strong>Rank:</strong> <span id="rank">Greenhorn</span></p>
+        <p><strong>Cash:</strong> $<span id="cash">0</span></p>
+        <p><strong>Hooch:</strong> <span id="hooch">0</span></p>
+        <p><strong>Bullets:</strong> <span id="bullets">0</span></p>
+        <p><strong>Action Points:</strong> <span id="ap">50</span>/300</p>
+        <p><strong>Experience:</strong> <span id="xp">0</span></p>
+        <p><strong>Influence:</strong> <span id="influence">0</span></p>
+      </div>
+      <div class="card p-4">
+        <h2 class="text-2xl art-deco">Inventory</h2>
+        <ul id="inventory" class="list-disc pl-5"></ul>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="flex flex-wrap border-b-2 border-gray-700 mb-4">
+      <button class="tab-button px-4 py-2 font-bold art-deco bg-gray-200 hover:bg-gray-300" data-tab="crimes">Crimes</button>
+      <button class="tab-button px-4 py-2 font-bold art-deco bg-gray-200 hover:bg-gray-300" data-tab="shop">Shop</button>
+      <button class="tab-button px-4 py-2 font-bold art-deco bg-gray-200 hover:bg-gray-300" data-tab="crew">Crew</button>
+      <button class="tab-button px-4 py-2 font-bold art-deco bg-gray-200 hover:bg-gray-300" data-tab="gambling">Gambling</button>
+      <button class="tab-button px-4 py-2 font-bold art-deco bg-gray-200 hover:bg-gray-300" data-tab="chat">Chat</button>
+      <button class="tab-button px-4 py-2 font-bold art-deco bg-gray-200 hover:bg-gray-300" data-tab="business">Business</button>
+    </div>
+
+    <!-- Tab Content -->
+    <div id="crimes" class="tab-content hidden">
+      <h2 class="text-2xl art-deco mb-4">Available Crimes</h2>
+      <div id="crimeList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </div>
+    <div id="shop" class="tab-content hidden">
+      <h2 class="text-2xl art-deco mb-4">Black Market</h2>
+      <div class="mb-4">
+        <button id="buyHooch" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Buy Hooch ($10–$50)</button>
+        <button id="sellHooch" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Sell Hooch ($8–$40)</button>
+      </div>
+      <div id="shopItems" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </div>
+    <div id="crew" class="tab-content hidden">
+      <h2 class="text-2xl art-deco mb-4">Crew Management</h2>
+      <div id="crewStatus"></div>
+      <button id="joinCrew" class="mt-4 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Join a Crew</button>
+      <button id="formCrew" class="mt-4 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Form a Crew ($5,000)</button>
+    </div>
+    <div id="gambling" class="tab-content hidden">
+      <h2 class="text-2xl art-deco mb-4">Gambling Den</h2>
+      <div class="mb-4">
+        <label for="betAmount">Bet Amount ($):</label>
+        <input id="betAmount" type="number" min="5" max="100" value="10" class="border p-2">
+        <button id="playPoker" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Poker</button>
+        <button id="playBlackjack" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Blackjack</button>
+        <button id="playKeno" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Keno</button>
+        <button id="playHorseRacing" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Horse Racing</button>
+        <button id="playRoulette" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Roulette</button>
+        <button id="playThreeCardMonte" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Three Card Monte</button>
+        <button id="playCraps" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Craps</button>
+      </div>
+      <p id="gamblingResult"></p>
+    </div>
+    <div id="chat" class="tab-content hidden">
+      <h2 class="text-2xl art-deco mb-4">Speakeasy Chat</h2>
+      <div id="chatMessages" class="h-64 overflow-y-auto border p-2 mb-4"></div>
+      <input id="chatInput" type="text" class="border p-2 w-full" placeholder="Type your message...">
+      <button id="sendChat" class="mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Send</button>
+    </div>
+    <div id="business" class="tab-content hidden">
+      <h2 class="text-2xl art-deco mb-4">Business Management</h2>
+      <div id="businessStatus"></div>
+      <button id="buySpeakeasy" class="mt-4 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Buy Speakeasy ($1,000)</button>
+      <button id="buyDistillery" class="mt-4 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Buy Distillery ($2,500)</button>
+    </div>
+
+    <!-- Event Log -->
+    <div class="mt-6 card p-4">
+      <h2 class="text-2xl art-deco mb-4">Event Log</h2>
+      <div id="eventLog" class="h-32 overflow-y-auto"></div>
+    </div>
+  </div>
+
+  <script>
+    // Game State
+    let player = {
+      name: "Greenhorn",
+      rank: "Greenhorn",
+      cash: 0,
+      hooch: 0,
+      bullets: 0,
+      ap: 50,
+      maxAp: 300,
+      xp: 0,
+      influence: 0,
+      inventory: [],
+      crew: null,
+      businesses: [],
+      perks: [],
+      injury: null,
+      cooldowns: {},
+      lastDeath: null
+    };
+
+    const ranks = [
+      { name: "Greenhorn", xp: 0, influence: 0 },
+      { name: "Soldier", xp: 101, influence: 11 },
+      { name: "Caporegime", xp: 501, influence: 51 },
+      { name: "Consigliere", xp: 2001, influence: 201 },
+      { name: "Underboss", xp: 5001, influence: 501 },
+      { name: "Don", xp: 10001, influence: 1001 }
+    ];
+
+    const crimes = [
+      { name: "Pickpocketing", tier: 1, apCost: 5, cashMin: 5, cashMax: 20, hoochMin: 0, hoochMax: 5, xpMin: 5, xpMax: 10, influenceMin: 0, influenceMax: 1, risk: 0.1, bulletCost: 0, requirements: [] },
+      { name: "Steal a Car", tier: 1, apCost: 10, cashMin: 100, cashMax: 300, hoochMin: 0, hoochMax: 5, xpMin: 5, xpMax: 15, influenceMin: 1, influenceMax: 3, risk: 0.2, bulletCost: 0, requirements: [] },
+      { name: "Bootlegging Small Batch", tier: 1, apCost: 10, cashMin: 50, cashMax: 100, hoochMin: 1, hoochMax: 5, xpMin: 10, xpMax: 15, influenceMin: 1, influenceMax: 2, risk: 0.15, bulletCost: 0, requirements: ["Moonshine Still", "Liquor Crate"] },
+      { name: "Order a Hit", tier: 2, apCost: 0, cooldown: 3600000, cashMin: 200, cashMax: 500, hoochMin: 5, hoochMax: 10, xpMin: 20, xpMax: 30, influenceMin: 10, influenceMax: 20, risk: 0.2, bulletCost: 10, requirements: ["Colt .45 Pistol"] },
+      { name: "Speakeasy Operation", tier: 2, apCost: 0, cooldown: 3600000, cashMin: 200, cashMax: 500, hoochMin: 5, hoochMax: 10, xpMin: 20, xpMax: 30, influenceMin: 5, influenceMax: 10, risk: 0.2, bulletCost: 0, requirements: ["Safehouse", "Liquor Crate", "Liquor Crate", "Liquor Crate"] },
+      { name: "Liquor Shipment Hijack", tier: 2, apCost: 0, cooldown: 3600000, cashMin: 300, cashMax: 700, hoochMin: 5, hoochMax: 10, xpMin: 25, xpMax: 40, influenceMin: 10, influenceMax: 15, risk: 0.25, bulletCost: 10, requirements: ["Ford Model T", "Colt .45 Pistol"] },
+      { name: "Bank Heist", tier: 3, apCost: 0, cooldown: 28800000, cashMin: 2000, cashMax: 5000, hoochMin: 10, hoochMax: 20, xpMin: 50, xpMax: 100, influenceMin: 20, influenceMax: 50, risk: 0.4, bulletCost: 20, requirements: ["Crew", "Cadillac", "Tommy Gun"] },
+      { name: "Large-Scale Smuggling", tier: 3, apCost: 0, cooldown: 28800000, cashMin: 5000, cashMax: 10000, hoochMin: 20, hoochMax: 50, xpMin: 80, xpMax: 150, influenceMin: 50, influenceMax: 100, risk: 0.5, bulletCost: 20, requirements: ["Crew", "Boat", "Bribe Money"] }
+    ];
+
+    const shopItems = [
+      { name: "Switchblade", cost: 10, hoochCost: 0, type: "Weapon", bulletCost: 1, bonus: { success: 0.05 } },
+      { name: "Colt .45 Pistol", cost: 50, hoochCost: 0, type: "Weapon", bulletCost: 5, bonus: { success: 0.1 } },
+      { name: "Tommy Gun", cost: 200, hoochCost: 0, type: "Weapon", bulletCost: 10, bonus: { success: 0.2 } },
+      { name: "Custom Tommy Gun", cost: 0, hoochCost: 50, type: "Weapon", bulletCost: 10, bonus: { success: 0.25 } },
+      { name: "Ford Model T", cost: 300, hoochCost: 0, type: "Vehicle", bulletCost: 0, bonus: { getaway: 0.1 }, sellPrice: 150, scrapBullets: 5 },
+      { name: "Cadillac", cost: 1000, hoochCost: 0, type: "Vehicle", bulletCost: 0, bonus: { getaway: 0.2, influence: 0.05 }, sellPrice: 500, scrapBullets: 15 },
+      { name: "Boat", cost: 2000, hoochCost: 0, type: "Vehicle", bulletCost: 0, bonus: { success: 0.15 }, sellPrice: 1000, scrapBullets: 20 },
+      { name: "Moonshine Still", cost: 150, hoochCost: 0, type: "Supply", bulletCost: 0, bonus: { produces: "Liquor Crate" } },
+      { name: "Liquor Crate", cost: 50, hoochCost: 0, type: "Supply", bulletCost: 0, bonus: {} },
+      { name: "Bribe Money", cost: 100, hoochCost: 0, type: "Supply", bulletCost: 0, bonus: { raidReduction: 0.1 } },
+      { name: "Fedora and Suit", cost: 75, hoochCost: 0, type: "Clothing", bulletCost: 0, bonus: { influence: 5 } },
+      { name: "Coffee", cost: 5, hoochCost: 0, type: "Consumable", bulletCost: 0, apCost: 10, bonus: { apRegen: 2, duration: 3600000 } },
+      { name: "First Aid Kit", cost: 25, hoochCost: 0, type: "Consumable", bulletCost: 0, apCost: 10, bonus: { removeInjury: true } },
+      { name: "Safehouse", cost: 500, hoochCost: 0, type: "Property", bulletCost: 0, bonus: {} },
+      { name: "Fast Talker", cost: 0, hoochCost: 100, type: "Perk", bulletCost: 0, bonus: { cooldownReduction: 0.1 } },
+      { name: "Connected", cost: 0, hoochCost: 150, type: "Perk", bulletCost: 0, bonus: { raidReduction: 0.2 } },
+      { name: "Bullets", cost: 1, hoochCost: 0, type: "Resource", bulletCost: 0, bonus: {} }
+    ];
+
+    // Load/Save Player Data
+    function loadGame() {
+      const saved = localStorage.getItem("bootlegEmpire");
+      if (saved) player = JSON.parse(saved);
+      updateUI();
+    }
+
+    function saveGame() {
+      localStorage.setItem("bootlegEmpire", JSON.stringify(player));
+    }
+
+    // Update UI
+    function updateUI() {
+      document.getElementById("playerName").textContent = player.name;
+      document.getElementById("rank").textContent = player.rank;
+      document.getElementById("cash").textContent = player.cash;
+      document.getElementById("hooch").textContent = player.hooch;
+      document.getElementById("bullets").textContent = player.bullets;
+      document.getElementById("ap").textContent = player.ap;
+      document.getElementById("xp").textContent = player.xp;
+      document.getElementById("influence").textContent = player.influence;
+
+      // Inventory
+      const inventory = document.getElementById("inventory");
+      inventory.innerHTML = player.inventory.map(item => `<li>${item}</li>`).join("") || "Empty";
+
+      // Crimes
+      const crimeList = document.getElementById("crimeList");
+      crimeList.innerHTML = crimes
+        .filter(crime => {
+          const rankIndex = ranks.findIndex(r => r.name === player.rank);
+          return crime.tier <= Math.ceil((rankIndex + 1) / 2);
+        })
+        .map(crime => {
+          const cooldownEnd = player.cooldowns[crime.name] || 0;
+          const now = Date.now();
+          const remaining = cooldownEnd > now ? Math.ceil((cooldownEnd - now) / 1000) : 0;
+          const disabled = (crime.apCost > 0 && player.ap < crime.apCost) || (remaining > 0) || player.injury || player.lastDeath;
+          return `
+            <div class="card p-4">
+              <h3 class="text-xl art-deco">${crime.name}</h3>
+              <p>${crime.apCost > 0 ? `AP Cost: ${crime.apCost}` : `Cooldown: ${crime.cooldown / 3600000} hours`}</p>
+              <p>Reward: $${crime.cashMin}–$${crime.cashMax}, ${crime.hoochMin}–${crime.hoochMax} Hooch, ${crime.xpMin}–${crime.xpMax} XP, ${crime.influenceMin}–${crime.influenceMax} Influence</p>
+              <p>Risk: ${(crime.risk * 100).toFixed(0)}%</p>
+              <p>Bullets: ${crime.bulletCost}</p>
+              <p>Requires: ${crime.requirements.length ? crime.requirements.join(", ") : "None"}</p>
+              ${remaining > 0 ? `<p>Cooldown: ${Math.floor(remaining / 60)}m ${remaining % 60}s</p>` : ""}
+              <button class="commit-crime mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800" data-crime="${crime.name}" ${disabled ? "disabled" : ""}>Commit</button>
+            </div>
+          `;
+        }).join("");
+
+      // Shop
+      const shopItemsList = document.getElementById("shopItems");
+      shopItemsList.innerHTML = shopItems.map(item => `
+        <div class="card p-4">
+          <h3 class="text-xl art-deco">${item.name}</h3>
+          <p>Cost: ${item.cost > 0 ? `$${item.cost}` : `${item.hoochCost} Hooch`}${item.apCost ? `, ${item.apCost} AP` : ""}</p>
+          <p>Type: ${item.type}</p>
+          <button class="buy-item mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800" data-item="${item.name}" ${player.cash < item.cost || player.hooch < item.hoochCost || player.ap < (item.apCost || 0) ? "disabled" : ""}>${item.type === "Resource" ? "Buy 1" : "Buy"}</button>
+          ${item.sellPrice ? `<button class="sell-vehicle mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800" data-item="${item.name}">Sell ($${item.sellPrice})</button>` : ""}
+          ${item.scrapBullets ? `<button class="scrap-vehicle mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800" data-item="${item.name}">Scrap (${item.scrapBullets} Bullets)</button>` : ""}
+        </div>
+      `).join("");
+
+      // Crew
+      const crewStatus = document.getElementById("crewStatus");
+      crewStatus.innerHTML = player.crew 
+        ? `<p>You are in a crew: ${player.crew.name} (Rank: ${player.crew.rank})</p>`
+        : `<p>You are a lone wolf. Join or form a crew!</p>`;
+      
+      // Business
+      const businessStatus = document.getElementById("businessStatus");
+      businessStatus.innerHTML = player.businesses.length 
+        ? player.businesses.map(b => `<p>${b.name}: $${b.dailyIncome}/day</p>`).join("")
+        : "No businesses owned.";
+    }
+
+    // AP Regeneration
+    setInterval(() => {
+      if (player.ap < player.maxAp && (!player.injury || Date.now() > player.injury) && (!player.lastDeath || Date.now() > player.lastDeath + 3600000)) {
+        const regen = player.perks.includes("Coffee") ? 7 : 5;
+        player.ap = Math.min(player.maxAp, player.ap + regen);
+        updateUI();
+        saveGame();
+      }
+    }, 60000); // 1 minute
+
+    // Commit Crime
+    document.addEventListener("click", e => {
+      if (e.target.classList.contains("commit-crime")) {
+        const crimeName = e.target.dataset.crime;
+        const crime = crimes.find(c => c.name === crimeName);
+        if (player.injury && Date.now() < player.injury) {
+          logEvent("You're injured! Wait until recovery.");
+          return;
+        }
+        if (player.lastDeath && Date.now() < player.lastDeath + 3600000) {
+          logEvent("You're dead! Wait for respawn.");
+          return;
+        }
+        if (crime.apCost > 0 && player.ap < crime.apCost) {
+          logEvent("Not enough AP!");
+          return;
+        }
+        if (crime.cooldown && player.cooldowns[crime.name] && Date.now() < player.cooldowns[crime.name]) {
+          logEvent(`On cooldown for ${crime.name}!`);
+          return;
+        }
+        if (!crime.requirements.every(req => req === "Crew" ? player.crew : player.inventory.includes(req))) {
+          logEvent(`Missing requirements for ${crime.name}!`);
+          return;
+        }
+        if (player.bullets < crime.bulletCost) {
+          logEvent(`Not enough Bullets for ${crime.name}!`);
+          return;
+        }
+        player.ap -= crime.apCost;
+        player.bullets -= crime.bulletCost;
+        if (crime.cooldown) {
+          player.cooldowns[crime.name] = Date.now() + crime.cooldown * (player.perks.includes("Fast Talker") ? 0.9 : 1);
+        }
+        const success = Math.random() > crime.risk * (1 - getSuccessBonus());
+        if (success) {
+          const cash = Math.floor(Math.random() * (crime.cashMax - crime.cashMin + 1)) + crime.cashMin;
+          const hooch = Math.floor(Math.random() * (crime.hoochMax - crime.hoochMin + 1)) + crime.hoochMin;
+          const xp = Math.floor(Math.random() * (crime.xpMax - crime.xpMin + 1)) + crime.xpMin;
+          const influence = Math.floor(Math.random() * (crime.influenceMax - crime.influenceMin + 1)) + crime.influenceMin + getInfluenceBonus();
+          let extra = "";
+          if (crime.name === "Steal a Car" && !player.inventory.includes("Ford Model T") && !player.inventory.includes("Cadillac")) {
+            const vehicle = Math.random() < 0.8 ? "Ford Model T" : "Cadillac";
+            player.inventory.push(vehicle);
+            extra = ` Stole a ${vehicle}!`;
+          } else if (crime.name === "Steal a Car") {
+            player.cash += cash;
+            extra = ` Sold stolen car for $${cash}.`;
+          } else {
+            player.cash += cash;
+          }
+          if (["Liquor Shipment Hijack", "Bank Heist"].includes(crime.name)) {
+            const bullets = Math.floor(Math.random() * 5) + 1;
+            player.bullets += bullets;
+            extra += ` Looted ${bullets} Bullets.`;
+          }
+          player.hooch += hooch;
+          player.xp += xp;
+          player.influence += influence;
+          logEvent(`Success! Gained $${cash}, ${hooch} Hooch, ${xp} XP, ${influence} Influence from ${crime.name}.${extra}`);
+          updateRank();
+        } else {
+          logEvent(`Failed ${crime.name}!`);
+          if (Math.random() < 0.2) {
+            player.lastDeath = Date.now();
+            player.cash = Math.floor(player.cash / 2);
+            player.bullets = 0;
+            if (player.inventory.length) {
+              const lostItems = player.inventory.splice(0, Math.min(2, player.inventory.length));
+              logEvent(`Killed! Lost 50% cash, all Bullets, and ${lostItems.join(", ")}. Respawn in 1 hour.`);
+            } else {
+              logEvent(`Killed! Lost 50% cash and all Bullets. Respawn in 1 hour.`);
+            }
+            player.ap = 50;
+          } else if (Math.random() < 0.5) {
+            player.injury = Date.now() + 3600000;
+            logEvent("Injured! Can't act for 1 hour.");
+          } else if (player.inventory.length) {
+            const lostItem = player.inventory.splice(Math.floor(Math.random() * player.inventory.length), 1)[0];
+            logEvent(`Lost ${lostItem} due to failure.`);
+          } else {
+            player.cash = Math.max(0, player.cash - 100);
+            logEvent("Lost $100 due to failure.");
+          }
+        }
+        updateUI();
+        saveGame();
+      }
+    });
+
+    // Buy/Sell Items
+    document.addEventListener("click", e => {
+      if (e.target.classList.contains("buy-item")) {
+        const itemName = e.target.dataset.item;
+        const item = shopItems.find(i => i.name === itemName);
+        if (player.cash >= item.cost && player.hooch >= item.hoochCost && player.ap >= (item.apCost || 0)) {
+          player.cash -= item.cost;
+          player.hooch -= item.hoochCost;
+          player.ap -= item.apCost || 0;
+          if (item.name === "Bullets") {
+            player.bullets += 1;
+          } else if (item.type === "Consumable") {
+            if (item.name === "Coffee") {
+              player.perks.push("Coffee");
+              setTimeout(() => {
+                player.perks = player.perks.filter(p => p !== "Coffee");
+                updateUI();
+                saveGame();
+              }, item.bonus.duration);
+            } else if (item.name === "First Aid Kit") {
+              player.injury = null;
+            }
+          } else if (item.type === "Perk") {
+            player.perks.push(item.name);
+          } else {
+            player.inventory.push(item.name);
+          }
+          logEvent(`Bought ${item.name} for $${item.cost}${item.hoochCost ? ` and ${item.hoochCost} Hooch` : ""}.`);
+          updateUI();
+          saveGame();
+        }
+      }
+      if (e.target.classList.contains("sell-vehicle")) {
+        const itemName = e.target.dataset.item;
+        const item = shopItems.find(i => i.name === itemName);
+        if (player.inventory.includes(itemName)) {
+          player.inventory = player.inventory.filter(i => i !== itemName);
+          player.cash += item.sellPrice;
+          logEvent(`Sold ${itemName} for $${item.sellPrice}.`);
+          updateUI();
+          saveGame();
+        }
+      }
+      if (e.target.classList.contains("scrap-vehicle")) {
+        const itemName = e.target.dataset.item;
+        const item = shopItems.find(i => i.name === itemName);
+        if (player.inventory.includes(itemName)) {
+          player.inventory = player.inventory.filter(i => i !== itemName);
+          player.bullets += item.scrapBullets;
+          logEvent(`Scrapped ${itemName} for ${item.scrapBullets} Bullets.`);
+          updateUI();
+          saveGame();
+        }
+      }
+    });
+
+    // Hooch Transactions
+    document.getElementById("buyHooch").addEventListener("click", () => {
+      const cost = Math.floor(Math.random() * 41) + 10;
+      if (player.cash >= cost) {
+        player.cash -= cost;
+        player.hooch += 1;
+        logEvent(`Bought 1 Hooch for $${cost}.`);
+        updateUI();
+        saveGame();
+      } else {
+        logEvent("Not enough cash!");
+      }
+    });
+
+    document.getElementById("sellHooch").addEventListener("click", () => {
+      if (player.hooch >= 1) {
+        const price = Math.floor(Math.random() * 33) + 8;
+        player.hooch -= 1;
+        player.cash += price;
+        logEvent(`Sold 1 Hooch for $${price}.`);
+        updateUI();
+        saveGame();
+      } else {
+        logEvent("Not enough Hooch!");
+      }
+    });
+
+    // Crew Management
+    document.getElementById("joinCrew").addEventListener("click", () => {
+      if (player.rank !== "Greenhorn") {
+        player.crew = { name: "Generic Crew", rank: "Soldier" };
+        logEvent("Joined a crew!");
+        updateUI();
+        saveGame();
+      } else {
+        logEvent("Need to be at least Soldier rank to join a crew!");
+      }
+    });
+
+    document.getElementById("formCrew").addEventListener("click", () => {
+      if (player.rank === "Consigliere" && player.cash >= 5000 && player.influence >= 201) {
+        player.cash -= 5000;
+        player.crew = { name: `${player.name}'s Family`, rank: "Boss" };
+        logEvent("Formed your own crew!");
+        updateUI();
+        saveGame();
+      } else {
+        logEvent("Need Consigliere rank, $5,000, and 201 Influence to form a crew!");
+      }
+    });
+
+    // Gambling
+    const gamblingGames = {
+      playPoker: { winChance: 0.5, multiplier: 2 },
+      playBlackjack: { winChance: 0.5, multiplier: 2 },
+      playKeno: { winChance: 0.5, multiplier: 2 },
+      playHorseRacing: { winChance: 0.2, multiplier: 5 },
+      playRoulette: { winChance: 0.48, multiplier: 2 },
+      playThreeCardMonte: { winChance: 0.33, multiplier: 3 },
+      playCraps: { winChance: 0.5, multiplier: 2 }
+    };
+
+    Object.keys(gamblingGames).forEach(game => {
+      document.getElementById(game).addEventListener("click", () => {
+        const bet = parseInt(document.getElementById("betAmount").value);
+        if (player.cash >= bet && bet >= 5 && bet <= 100) {
+          player.cash -= bet;
+          const gameName = game.replace("play", "");
+          if (Math.random() < gamblingGames[game].winChance) {
+            const winnings = bet * gamblingGames[game].multiplier;
+            player.cash += winnings;
+            logEvent(`Won $${winnings} at ${gameName}!`);
+          } else {
+            logEvent(`Lost $${bet} at ${gameName}.`);
+          }
+          updateUI();
+          saveGame();
+        } else {
+          logEvent("Invalid bet amount!");
+        }
+      });
+    });
+
+    // Chat
+    document.getElementById("sendChat").addEventListener("click", () => {
+      const message = document.getElementById("chatInput").value;
+      if (message) {
+        const chatMessages = document.getElementById("chatMessages");
+        chatMessages.innerHTML += `<p><strong>${player.name}:</strong> ${message}</p>`;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        document.getElementById("chatInput").value = "";
+      }
+    });
+
+    // Business
+    document.getElementById("buySpeakeasy").addEventListener("click", () => {
+      if (player.cash >= 1000 && player.inventory.includes("Safehouse") && !player.businesses.some(b => b.name === "Speakeasy")) {
+        player.cash -= 1000;
+        player.businesses.push({ name: "Speakeasy", dailyIncome: 50 });
+        logEvent("Bought a Speakeasy!");
+        updateUI();
+        saveGame();
+      } else {
+        logEvent("Need $1,000 and a Safehouse, or already own a Speakeasy!");
+      }
+    });
+
+    document.getElementById("buyDistillery").addEventListener("click", () => {
+      if (player.cash >= 2500 && !player.businesses.some(b => b.name === "Distillery")) {
+        player.cash -= 2500;
+        player.businesses.push({ name: "Distillery", dailyIncome: 100 });
+        logEvent("Bought a Distillery!");
+        updateUI();
+        saveGame();
+      } else {
+        logEvent("Not enough cash or already own a Distillery!");
+      }
+    });
+
+    // Daily Business Income
+    setInterval(() => {
+      player.businesses.forEach(b => {
+        let raidRisk = 0.1;
+        if (player.perks.includes("Connected")) raidRisk *= 0.8;
+        if (player.inventory.includes("Bribe Money")) {
+          player.inventory = player.inventory.filter(i => i !== "Bribe Money");
+          raidRisk *= 0.9;
+        }
+        if (Math.random() > raidRisk) {
+          const income = Math.floor(Math.random() * (b.dailyIncome * 2 - b.dailyIncome + 1)) + b.dailyIncome;
+          player.cash += income;
+          logEvent(`${b.name} earned $${income} today.`);
+          if (b.name === "Distillery") {
+            const crates = Math.floor(Math.random() * 3) + 3;
+            for (let i = 0; i < crates; i++) player.inventory.push("Liquor Crate");
+            logEvent(`Distillery produced ${crates} Liquor Crates.`);
+          }
+        } else {
+          logEvent(`${b.name} was raided! No income today.`);
+        }
+      });
+      if (player.businesses.some(b => b.name === "Distillery")) {
+        player.cash = Math.max(0, player.cash - 500);
+        logEvent("Paid $500 Distillery upkeep.");
+      }
+      updateUI();
+      saveGame();
+    }, 86400000); // 24 hours
+
+    // Random Events
+    setInterval(() => {
+      if (player.influence > 50 && Math.random() < 0.05 && (!player.lastDeath || Date.now() > player.lastDeath + 3600000)) {
+        if (Math.random() < 0.2) {
+          player.lastDeath = Date.now();
+          player.cash = Math.floor(player.cash / 2);
+          player.bullets = 0;
+          if (player.inventory.length) {
+            const lostItems = player.inventory.splice(0, Math.min(2, player.inventory.length));
+            logEvent(`Rival gang killed you! Lost 50% cash, all Bullets, and ${lostItems.join(", ")}. Respawn in 1 hour.`);
+          } else {
+            logEvent(`Rival gang killed you! Lost 50% cash and all Bullets. Respawn in 1 hour.`);
+          }
+          player.ap = 50;
+        } else {
+          player.cash = Math.max(0, player.cash - 100);
+          logEvent("Rival gang attacked! Lost $100.");
+        }
+        updateUI();
+        saveGame();
+      }
+    }, 3600000); // 1 hour
+
+    // Daily Moonshine Still Production
+    setInterval(() => {
+      if (player.inventory.includes("Moonshine Still")) {
+        player.inventory.push("Liquor Crate");
+        logEvent("Moonshine Still produced 1 Liquor Crate.");
+        updateUI();
+        saveGame();
+      }
+    }, 86400000); // 24 hours
+
+    // Helper Functions
+    function getSuccessBonus() {
+      return player.inventory.reduce((bonus, item) => {
+        const shopItem = shopItems.find(i => i.name === item);
+        return bonus + (shopItem?.bonus.success || 0) + (shopItem?.bonus.getaway || 0);
+      }, player.crew ? 0.1 : 0);
+    }
+
+    function getInfluenceBonus() {
+      return player.inventory.reduce((bonus, item) => {
+        const shopItem = shopItems.find(i => i.name === item);
+        return bonus + (shopItem?.bonus.influence || 0);
+      }, 0) + (player.inventory.includes("Fedora and Suit") ? 5 : 0);
+    }
+
+    function updateRank() {
+      for (let i = ranks.length - 1; i >= 0; i--) {
+        if (player.xp >= ranks[i].xp && player.influence >= ranks[i].influence) {
+          if (player.rank !== ranks[i].name) {
+            player.rank = ranks[i].name;
+            logEvent(`Promoted to ${player.rank}!`);
+          }
+          break;
+        }
+      }
+    }
+
+    function logEvent(message) {
+      const eventLog = document.getElementById("eventLog");
+      eventLog.innerHTML += `<p>${new Date().toLocaleTimeString()}: ${message}</p>`;
+      eventLog.scrollTop = eventLog.scrollHeight;
+    }
+
+    // Tab Navigation
+    document.querySelectorAll(".tab-button").forEach(button => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".tab-content").forEach(content => content.classList.add("hidden"));
+        document.getElementById(button.dataset.tab).classList.remove("hidden");
+        document.querySelectorAll(".tab-button").forEach(btn => btn.classList.remove("bg-gray-300"));
+        button.classList.add("bg-gray-300");
+      });
+    });
+
+    // Initialize
+    loadGame();
+    document.querySelector(".tab-button[data-tab='crimes']").click();
+  </script>
+</body>
+</html>
