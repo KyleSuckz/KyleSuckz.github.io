@@ -120,8 +120,8 @@
   </div>
 
   <script>
-    // Game State
-    let player = {
+    // Default Player State
+    const defaultPlayer = {
       name: "Greenhorn",
       rank: "Greenhorn",
       cash: 0,
@@ -141,6 +141,8 @@
       cooldowns: {},
       lastDeath: null
     };
+
+    let player = { ...defaultPlayer };
 
     const ranks = [
       { name: "Greenhorn", xp: 0, influence: 0 },
@@ -186,7 +188,11 @@
     // Load/Save Player Data
     function loadGame() {
       const saved = localStorage.getItem("bootlegEmpire");
-      if (saved) player = JSON.parse(saved);
+      if (saved) {
+        const savedPlayer = JSON.parse(saved);
+        // Merge saved data with default to ensure all properties, including equipped, are present
+        player = { ...defaultPlayer, ...savedPlayer, equipped: { ...defaultPlayer.equipped, ...savedPlayer.equipped } };
+      }
       updateUI();
     }
 
