@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bootleg Empire</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
       background-image: url('https://images.unsplash.com/photo-1591280063464-0a6336e93e43?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
@@ -44,6 +45,7 @@
         <p><strong>Health:</strong> <span id="health">100</span>/100</p>
         <p><strong>Experience:</strong> <span id="xp">0</span></p>
         <p><strong>Influence:</strong> <span id="influence">0</span></p>
+        <p><strong>Perks:</strong> <span id="perks">None</span></p>
       </div>
       <div class="card p-4">
         <h2 class="text-2xl art-deco">Inventory</h2>
@@ -192,6 +194,12 @@
         const savedPlayer = JSON.parse(saved);
         // Merge saved data with default to ensure all properties, including equipped, are present
         player = { ...defaultPlayer, ...savedPlayer, equipped: { ...defaultPlayer.equipped, ...savedPlayer.equipped } };
+        // Ensure AP starts at max for new games or invalid AP values
+        if (!savedPlayer.ap || savedPlayer.ap > defaultPlayer.maxAp) {
+          player.ap = defaultPlayer.maxAp;
+        }
+      } else {
+        player.ap = defaultPlayer.maxAp; // Ensure new game starts with full AP
       }
       updateUI();
     }
@@ -207,26 +215,29 @@
       document.getElementById("cash").textContent = player.cash;
       document.getElementById("hooch").textContent = player.hooch;
       document.getElementById("bullets").textContent = player.bullets;
-      document.getElementById("ap").textContent = player.ap;
+      document.getElementById("ap").textContent = `${player.ap}/${player.maxAp}`;
       document.getElementById("health").textContent = player.health;
       document.getElementById("xp").textContent = player.xp;
       document.getElementById("influence").textContent = player.influence;
+      document.getElementById("perks").textContent = player.perks.length ? player.perks.join(", ") : "None";
 
       // Inventory
       const inventory = document.getElementById("inventory");
-      inventory.innerHTML = player.inventory.map(item => {
-        const isEquipped = player.equipped.weapon === item || player.equipped.vehicle === item || player.equipped.clothing === item;
-        const itemData = shopItems.find(i => i.name === item);
-        const canEquip = itemData && ["Weapon", "Vehicle", "Clothing"].includes(itemData.type) && !isEquipped;
-        const equipType = itemData?.type.toLowerCase();
-        return `
-          <li>
-            ${item}
-            ${canEquip ? `<button class="equip-item ml-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" data-item="${item}" data-type="${equipType}">Equip</button>` : ""}
-            ${isEquipped ? `<button class="unequip-item ml-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" data-type="${equipType}">Unequip</button>` : ""}
-          </li>
-        `;
-      }).join("") || "Empty";
+      inventory.innerHTML = player.inventory
+        .filter(item => shopItems.some(i => i.name === item)) // Skip invalid items
+        .map(item => {
+          const isEquipped = player.equipped.weapon === item || player.equipped.vehicle === item || player.equipped.clothing === item;
+          const itemData = shopItems.find(i => i.name === item);
+          const canEquip = itemData && ["Weapon", "Vehicle", "Clothing"].includes(itemData.type) && !isEquipped;
+          const equipType = itemData?.type.toLowerCase();
+          return `
+            <li>
+              ${item}
+              ${canEquip ? `<button class="equip-item ml-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" data-item="${item}" data-type="${equipType}">Equip</button>` : ""}
+              ${isEquipped ? `<button class="unequip-item ml-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" data-type="${equipType}">Unequip</button>` : ""}
+            </li>
+          `;
+        }).join("") || "Empty";
 
       // Equipped Items
       document.getElementById("equippedWeapon").textContent = player.equipped.weapon || "None";
@@ -338,7 +349,7 @@
           const xp = Math.floor(Math.random() * (crime.xpMax - crime.xpMin + 1)) + crime.xpMin;
           const influence = Math.floor(Math.random() * (crime.influenceMax - crime.influenceMin + 1)) + crime.influenceMin + getInfluenceBonus();
           let extra = "";
-          if (crime.name === "Steal a Car" && !player.inventory.includes("Ford Model T") && !player.inventory.includes("Cadillac")) {
+          if (crime.name === "Steal a Car" && !player.equipped.vehicle) {
             const vehicle = Math.random() < 0.8 ? "Ford Model T" : "Cadillac";
             player.inventory.push(vehicle);
             extra = ` Stole a ${vehicle}!`;
@@ -416,7 +427,7 @@
           if (item.name === "Bullets") {
             player.bullets += 1;
           } else if (item.type === "Consumable") {
-            if (item.name === "Coffee") {
+            if (item.name === "Coffee" && !player.perks.includes("Coffee")) {
               player.perks.push("Coffee");
               setTimeout(() => {
                 player.perks = player.perks.filter(p => p !== "Coffee");
@@ -549,11 +560,14 @@
         if (player.cash >= bet && bet >= 5 && bet <= 100) {
           player.cash -= bet;
           const gameName = game.replace("play", "");
+          document.getElementById("gamblingResult").textContent = "";
           if (Math.random() < gamblingGames[game].winChance) {
             const winnings = bet * gamblingGames[game].multiplier;
             player.cash += winnings;
+            document.getElementById("gamblingResult").textContent = `Won $${winnings} at ${gameName}!`;
             logEvent(`Won $${winnings} at ${gameName}!`);
           } else {
+            document.getElementById("gamblingResult").textContent = `Lost $${bet} at ${gameName}.`;
             logEvent(`Lost $${bet} at ${gameName}.`);
           }
           updateUI();
@@ -566,7 +580,7 @@
 
     // Chat
     document.getElementById("sendChat").addEventListener("click", () => {
-      const message = document.getElementById("chatInput").value;
+      const message = document.getElementById("chatInput").value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
       if (message) {
         const chatMessages = document.getElementById("chatMessages");
         chatMessages.innerHTML += `<p><strong>${player.name}:</strong> ${message}</p>`;
@@ -614,7 +628,14 @@
           player.cash += income;
           logEvent(`${b.name} earned $${income} today.`);
           if (b.name === "Speakeasy" && player.inventory.filter(i => i === "Liquor Crate").length >= 2) {
-            player.inventory = player.inventory.filter(i => i !== "Liquor Crate").slice(0, -2);
+            let cratesRemoved = 0;
+            player.inventory = player.inventory.filter(i => {
+              if (i === "Liquor Crate" && cratesRemoved < 2) {
+                cratesRemoved++;
+                return false;
+              }
+              return true;
+            });
           } else if (b.name === "Speakeasy") {
             logEvent("Speakeasy needs 2 Liquor Crates to operate!");
           }
@@ -715,6 +736,8 @@
     function logEvent(message) {
       const eventLog = document.getElementById("eventLog");
       eventLog.innerHTML += `<p>${new Date().toLocaleTimeString()}: ${message}</p>`;
+      const entries = eventLog.getElementsByTagName("p");
+      while (entries.length > 50) entries[0].remove();
       eventLog.scrollTop = eventLog.scrollHeight;
     }
 
