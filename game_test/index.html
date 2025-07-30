@@ -34,11 +34,58 @@
     .bg-sepia-900 {
       background-color: rgba(242, 226, 195, 0.9);
     }
+    .tab-button {
+      position: relative;
+    }
+    .tab-button::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: #8b5a2b;
+      transition: width 0.3s ease-in-out;
+    }
+    .tab-button.bg-gray-300::after {
+      width: 100%;
+    }
+    .tooltip {
+      display: none;
+      position: absolute;
+      background-color: rgba(242, 226, 195, 0.95);
+      border: 1px solid #8b5a2b;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      z-index: 10;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .group:hover .tooltip {
+      display: block;
+    }
+    .hide-timestamp .timestamp {
+      display: none;
+    }
+    .grayscale-theme {
+      filter: grayscale(100%);
+    }
+    .grayscale-theme .sepia {
+      background-color: rgba(200, 200, 200, 0.95);
+    }
+    .grayscale-theme .bg-sepia-900 {
+      background-color: rgba(200, 200, 200, 0.9);
+    }
   </style>
 </head>
 <body class="min-h-screen">
   <div id="game" class="container mx-auto p-4 max-w-5xl sepia rounded-lg min-h-screen">
-    <h1 class="text-4xl font-bold text-center mb-6 art-deco">Bootleg Empire</h1>
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-4xl font-bold text-center art-deco">Bootleg Empire</h1>
+      <button id="themeToggle" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Toggle Theme</button>
+    </div>
     
     <!-- Dashboard -->
     <div id="dashboard" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -46,17 +93,30 @@
         <summary class="text-2xl art-deco cursor-pointer">Player Stats</summary>
         <p><strong>Name:</strong> <span id="playerName">Greenhorn</span></p>
         <p><strong>Rank:</strong> <span id="rank">Greenhorn</span></p>
-        <p><strong>Cash:</strong> $<span id="cash">0</span></p>
-        <p><strong>Hooch:</strong> <span id="hooch">0</span></p>
-        <p><strong>Bullets:</strong> <span id="bullets">0</span></p>
+        <p><strong>Cash:</strong> <span class="text-green-700">$<span id="cash">0</span></span></p>
+        <p><strong>Hooch:</strong> <span class="text-amber-800"><span id="hooch">0</span></span></p>
+        <p><strong>Bullets:</strong> <span class="text-gray-700"><span id="bullets">0</span></span></p>
         <p><strong>Action Points:</strong> <span id="ap">30000/30000</span></p>
-        <p><strong>Health:</strong> <span id="health">100</span>/100</p>
+        <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+          <div id="apBar" class="bg-green-600 h-2.5 rounded-full" style="width: 100%"></div>
+        </div>
+        <p><strong>Health:</strong> <span id="health" class="inline-block">100</span>/100</p>
+        <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+          <div id="healthBar" class="bg-red-600 h-2.5 rounded-full" style="width: 100%"></div>
+        </div>
         <p><strong>Experience:</strong> <span id="xp">0</span></p>
+        <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+          <div id="xpBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+        </div>
         <p><strong>Influence:</strong> <span id="influence">0</span></p>
         <p><strong>Perks:</strong> <span id="perks">None</span></p>
       </details>
       <details open class="card p-4">
         <summary class="text-2xl art-deco cursor-pointer">Inventory</summary>
+        <div class="mb-2">
+          <button id="sortName" class="px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800">Sort by Name</button>
+          <button id="sortType" class="px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800">Sort by Type</button>
+        </div>
         <ul id="inventory" class="list-disc pl-5"></ul>
         <h2 class="text-2xl art-deco mt-4">Equipped Items</h2>
         <p><strong>Weapon:</strong> <span id="equippedWeapon">None</span></p>
@@ -78,15 +138,29 @@
     <!-- Tab Content -->
     <div id="crimes" class="tab-content hidden">
       <h2 class="text-2xl art-deco mb-4">Available Crimes</h2>
-      <div id="crimeList" class="grid grid-cols-1 sm:grid-cols-2 gap-6"></div>
+      <div class="mb-4">
+        <button class="filter-crime px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" data-filter="all">All</button>
+        <button class="filter-crime px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" data-filter="tier-1">Tier 1</button>
+        <button class="filter-crime px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" data-filter="tier-2">Tier 2</button>
+        <button class="filter-crime px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" data-filter="tier-3">Tier 3</button>
+        <button class="filter-crime px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" data-filter="ap-based">AP-Based</button>
+        <button class="filter-crime px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" data-filter="cooldown-based">Cooldown-Based</button>
+      </div>
+      <div id="crimeList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </div>
     <div id="shop" class="tab-content hidden">
       <h2 class="text-2xl art-deco mb-4">Black Market</h2>
       <div class="mb-4">
-        <button id="buyHooch" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Buy Hooch ($10–$50)</button>
-        <button id="sellHooch" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Sell Hooch ($8–$40)</button>
+        <button id="buyHooch" class="group relative px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">
+          Buy Hooch ($10–$50)
+          <span class="tooltip">Purchase 1 Hooch at a random price between $10 and $50</span>
+        </button>
+        <button id="sellHooch" class="group relative px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">
+          Sell Hooch ($8–$40)
+          <span class="tooltip">Sell 1 Hooch at a random price between $8 and $40</span>
+        </button>
       </div>
-      <div id="shopItems" class="grid grid-cols-1 sm:grid-cols-2 gap-6"></div>
+      <div id="shopItems" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </div>
     <div id="crew" class="tab-content hidden">
       <h2 class="text-2xl art-deco mb-4">Crew Management</h2>
@@ -101,7 +175,7 @@
         <input id="betAmount" type="number" min="5" max="100" value="10" class="border p-2">
         <button id="playPoker" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Poker</button>
         <button id="playBlackjack" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Blackjack</button>
-        <button id="playKeno" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Keno</button>
+        <button id="playKeno" class="px-4 py-1 bg-gray-700 text-white rounded hover:bg-gray-800">Keno</button>
         <button id="playHorseRacing" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Horse Racing</button>
         <button id="playRoulette" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Roulette</button>
         <button id="playThreeCardMonte" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Three Card Monte</button>
@@ -127,8 +201,20 @@
     <!-- Event Log -->
     <div class="mt-6 card p-4">
       <h2 class="text-2xl art-deco mb-4">Event Log</h2>
-      <button id="clearLog" class="mb-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Clear Log</button>
+      <div class="mb-2">
+        <button id="clearLog" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Clear Log</button>
+        <button id="toggleTimestamps" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Toggle Timestamps</button>
+      </div>
       <div id="eventLog" class="h-64 overflow-y-auto"></div>
+    </div>
+
+    <!-- Quick Action Button (Mobile) -->
+    <div class="fixed bottom-4 right-4 md:hidden">
+      <button id="quickActionToggle" class="p-4 bg-gray-700 text-white rounded-full hover:bg-gray-800">⚡</button>
+      <div id="quickActions" class="hidden absolute bottom-16 right-0 bg-sepia-900 p-4 rounded-lg shadow-lg">
+        <button id="quickBuyHooch" class="block w-full text-left px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 mb-2">Buy Hooch</button>
+        <button id="quickPickpocket" class="block w-full text-left px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Pickpocket</button>
+      </div>
     </div>
   </div>
 
@@ -156,6 +242,8 @@
     };
 
     let player = { ...defaultPlayer };
+    let currentCrimeFilter = "all";
+    let showTimestamps = true;
 
     const ranks = [
       { name: "Greenhorn", xp: 0, influence: 0 },
@@ -210,6 +298,11 @@
       } else {
         player.ap = defaultPlayer.maxAp;
       }
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme === "grayscale") {
+        document.body.classList.add("grayscale-theme");
+        document.getElementById("themeToggle").textContent = "Switch to Sepia";
+      }
       updateUI();
     }
 
@@ -225,8 +318,12 @@
       document.getElementById("hooch").textContent = player.hooch;
       document.getElementById("bullets").textContent = player.bullets;
       document.getElementById("ap").textContent = `${player.ap}/${player.maxAp}`;
+      document.getElementById("apBar").style.width = `${(player.ap / player.maxAp) * 100}%`;
       document.getElementById("health").textContent = player.health;
+      document.getElementById("health").className = player.health < player.maxHealth * 0.5 ? "border-2 border-red-600 inline-block px-1" : "inline-block";
+      document.getElementById("healthBar").style.width = `${(player.health / player.maxHealth) * 100}%`;
       document.getElementById("xp").textContent = player.xp;
+      document.getElementById("xpBar").style.width = `${Math.min((player.xp / (ranks.find(r => r.xp > player.xp)?.xp || 10001)) * 100, 100)}%`;
       document.getElementById("influence").textContent = player.influence;
       document.getElementById("perks").textContent = player.perks.length ? player.perks.join(", ") : "None";
 
@@ -240,7 +337,7 @@
           const canEquip = itemData && ["Weapon", "Vehicle", "Clothing"].includes(itemData.type) && !isEquipped;
           const equipType = itemData?.type.toLowerCase();
           return `
-            <li>
+            <li class="${isEquipped ? 'border-2 border-yellow-600' : ''}">
               ${item}
               ${canEquip ? `<button class="equip-item ml-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" data-item="${item}" data-type="${equipType}">Equip</button>` : ""}
               ${isEquipped ? `<button class="unequip-item ml-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" data-type="${equipType}">Unequip</button>` : ""}
@@ -255,27 +352,36 @@
 
       // Crimes
       const crimeList = document.getElementById("crimeList");
-      crimeList.innerHTML = crimes
-        .filter(crime => {
-          const rankIndex = ranks.findIndex(r => r.name === player.rank);
-          return crime.tier <= Math.ceil((rankIndex + 1) / 2);
-        })
+      let filteredCrimes = crimes.filter(crime => {
+        const rankIndex = ranks.findIndex(r => r.name === player.rank);
+        if (!crime.tier <= Math.ceil((rankIndex + 1) / 2)) return false;
+        if (currentCrimeFilter === "all") return true;
+        if (currentCrimeFilter === `tier-${crime.tier}`) return true;
+        if (currentCrimeFilter === "ap-based" && crime.apCost > 0) return true;
+        if (currentCrimeFilter === "cooldown-based" && crime.cooldown) return true;
+        return false;
+      });
+      crimeList.innerHTML = filteredCrimes
         .map(crime => {
           const cooldownEnd = player.cooldowns[crime.name] || 0;
           const now = Date.now();
           const remaining = cooldownEnd > now ? Math.ceil((cooldownEnd - now) / 1000) : 0;
           const disabled = (crime.apCost > 0 && player.ap < crime.apCost) || (remaining > 0) || (player.health < player.maxHealth * 0.5);
+          const progress = remaining > 0 ? ((crime.cooldown - remaining * 1000) / crime.cooldown) * 100 : 100;
           return `
-            <div class="card p-4">
+            <div class="card p-3">
               <h3 class="text-xl art-deco">${crime.name}</h3>
               <p>${crime.apCost > 0 ? `AP Cost: ${crime.apCost}` : `Cooldown: ${crime.cooldown / 3600000} hours`}</p>
               <p>Reward: $${crime.cashMin}–$${crime.cashMax}, ${crime.hoochMin}–${crime.hoochMax} Hooch, ${crime.xpMin}–${crime.xpMax} XP, ${crime.influenceMin}–${crime.influenceMax} Influence</p>
-              <p>Risk: ${(crime.risk * 100).toFixed(0)}%</p>
-              <p>Bullets: ${crime.bulletCost}</p>
-              <p>Health Cost on Failure: ${crime.healthCost}</p>
-              <p>Requires: ${crime.requirements.length ? crime.requirements.join(", ") : "None"}</p>
-              ${remaining > 0 ? `<p>Cooldown: ${Math.floor(remaining / 60)}m ${remaining % 60}s</p>` : ""}
-              <button class="commit-crime mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800" data-crime="${crime.name}" ${disabled ? "disabled" : ""}>Commit</button>
+              <p class="text-sm">Risk: ${(crime.risk * 100).toFixed(0)}%</p>
+              <p class="text-sm">Bullets: ${crime.bulletCost}</p>
+              <p class="text-sm">Health Cost on Failure: ${crime.healthCost}</p>
+              <p class="text-sm">Requires: ${crime.requirements.length ? crime.requirements.join(", ") : "None"}</p>
+              ${remaining > 0 ? `<p class="text-sm">Cooldown: ${Math.floor(remaining / 60)}m ${remaining % 60}s</p><div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-blue-600 h-2.5 rounded-full" style="width: ${progress}%"></div></div>` : ""}
+              <button class="commit-crime group relative mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 ${disabled ? 'opacity-50 cursor-not-allowed' : ''}" data-crime="${crime.name}" ${disabled ? "disabled" : ""}>
+                Commit
+                <span class="tooltip">Requires: ${crime.requirements.length ? crime.requirements.join(", ") : "None"}${crime.apCost ? `, ${crime.apCost} AP` : ""}${crime.bulletCost ? `, ${crime.bulletCost} Bullets` : ""}, Health ≥ 50%</span>
+              </button>
             </div>
           `;
         }).join("");
@@ -283,14 +389,17 @@
       // Shop
       const shopItemsList = document.getElementById("shopItems");
       shopItemsList.innerHTML = shopItems.map(item => `
-        <div class="card p-4">
+        <div class="card p-3">
           <h3 class="text-xl art-deco">${item.name}</h3>
           <p>Cost: ${item.cost > 0 ? `$${item.cost}` : `${item.hoochCost} Hooch`}${item.apCost ? `, ${item.apCost} AP` : ""}</p>
           <p>Type: ${item.type}</p>
-          <p>${item.description}</p>
-          <button class="buy-item mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800" data-item="${item.name}" ${player.cash < item.cost || player.hooch < item.hoochCost || player.ap < (item.apCost || 0) ? "disabled" : ""}>${item.type === "Resource" ? "Buy 1" : "Buy"}</button>
-          ${item.sellPrice ? `<button class="sell-vehicle mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800" data-item="${item.name}" ${!player.inventory.includes(item.name) ? "disabled" : ""}>Sell ($${item.sellPrice})</button>` : ""}
-          ${item.scrapBullets ? `<button class="scrap-vehicle mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800" data-item="${item.name}" ${!player.inventory.includes(item.name) ? "disabled" : ""}>Scrap (${item.scrapBullets} Bullets)</button>` : ""}
+          <p class="text-sm">${item.description}</p>
+          <button class="buy-item group relative mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 ${player.cash < item.cost || player.hooch < item.hoochCost || player.ap < (item.apCost || 0) ? 'opacity-50 cursor-not-allowed' : ''}" data-item="${item.name}" ${player.cash < item.cost || player.hooch < item.hoochCost || player.ap < (item.apCost || 0) ? "disabled" : ""}>
+            ${item.type === "Resource" ? "Buy 1" : "Buy"}
+            <span class="tooltip">${item.description}</span>
+          </button>
+          ${item.sellPrice ? `<button class="sell-vehicle group relative mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 ${!player.inventory.includes(item.name) ? 'opacity-50 cursor-not-allowed' : ''}" data-item="${item.name}" ${!player.inventory.includes(item.name) ? "disabled" : ""}>Sell ($${item.sellPrice})<span class="tooltip">Sell for $${item.sellPrice}</span></button>` : ""}
+          ${item.scrapBullets ? `<button class="scrap-vehicle group relative mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 ${!player.inventory.includes(item.name) ? 'opacity-50 cursor-not-allowed' : ''}" data-item="${item.name}" ${!player.inventory.includes(item.name) ? "disabled" : ""}>Scrap (${item.scrapBullets} Bullets)<span class="tooltip">Scrap for ${item.scrapBullets} Bullets</span></button>` : ""}
         </div>
       `).join("");
 
@@ -303,7 +412,7 @@
       // Business
       const businessStatus = document.getElementById("businessStatus");
       businessStatus.innerHTML = player.businesses.length 
-        ? player.businesses.map(b => `<p>${b.name}: $${b.dailyIncome}/day</p>`).join("")
+        ? player.businesses.map(b => `<p>${b.name}: $${b.dailyIncome}/day ${b.raided ? '🚨 Raided' : '✅ Operational'}</p>`).join("")
         : "No businesses owned.";
     }
 
@@ -321,10 +430,15 @@
       saveGame();
     }, 60000); // 1 minute
 
+    // Cooldown Progress Update
+    setInterval(() => {
+      updateUI();
+    }, 1000); // 1 second for smooth cooldown progress bars
+
     // Commit Crime
     document.addEventListener("click", e => {
-      if (e.target.classList.contains("commit-crime")) {
-        const crimeName = e.target.dataset.crime;
+      if (e.target.classList.contains("commit-crime") || e.target.id === "quickPickpocket") {
+        const crimeName = e.target.dataset.crime || "Pickpocketing";
         const crime = crimes.find(c => c.name === crimeName);
         if (player.health < player.maxHealth * 0.5) {
           logEvent("Health too low! Need at least 50% health to commit crimes.", "failure");
@@ -351,8 +465,7 @@
         if (crime.cooldown) {
           player.cooldowns[crime.name] = Date.now() + crime.cooldown * (player.perks.includes("Fast Talker") ? 0.9 : 1);
         }
-        const
-        success = Math.random() > crime.risk * (1 - getSuccessBonus());
+        const success = Math.random() > crime.risk * (1 - getSuccessBonus());
         if (success) {
           const cash = Math.floor(Math.random() * (crime.cashMax - crime.cashMin + 1)) + crime.cashMin;
           const hooch = Math.floor(Math.random() * (crime.hoochMax - crime.hoochMin + 1)) + crime.hoochMin;
@@ -391,8 +504,21 @@
 
     // Buy/Sell/Equip/Unequip Items
     document.addEventListener("click", e => {
-      if (e.target.classList.contains("buy-item")) {
-        const itemName = e.target.dataset.item;
+      if (e.target.classList.contains("buy-item") || e.target.id === "quickBuyHooch") {
+        const itemName = e.target.dataset.item || "Hooch";
+        if (itemName === "Hooch") {
+          const cost = Math.floor(Math.random() * 41) + 10;
+          if (player.cash >= cost) {
+            player.cash -= cost;
+            player.hooch += 1;
+            logEvent(`Bought 1 Hooch for $${cost}.`, "success");
+            updateUI();
+            saveGame();
+          } else {
+            logEvent("Not enough cash!", "failure");
+          }
+          return;
+        }
         const item = shopItems.find(i => i.name === itemName);
         if (player.cash >= item.cost && player.hooch >= item.hoochCost && player.ap >= (item.apCost || 0)) {
           player.cash -= item.cost;
@@ -466,6 +592,40 @@
       }
       if (e.target.id === "clearLog") {
         document.getElementById("eventLog").innerHTML = "";
+      }
+      if (e.target.id === "toggleTimestamps") {
+        showTimestamps = !showTimestamps;
+        document.getElementById("eventLog").classList.toggle("hide-timestamp");
+        e.target.textContent = showTimestamps ? "Toggle Timestamps" : "Show Timestamps";
+      }
+      if (e.target.id === "quickActionToggle") {
+        document.getElementById("quickActions").classList.toggle("hidden");
+      }
+      if (e.target.classList.contains("filter-crime")) {
+        currentCrimeFilter = e.target.dataset.filter;
+        document.querySelectorAll(".filter-crime").forEach(btn => btn.classList.remove("bg-gray-800"));
+        e.target.classList.add("bg-gray-800");
+        updateUI();
+      }
+      if (e.target.id === "sortName") {
+        player.inventory.sort((a, b) => a.localeCompare(b));
+        updateUI();
+        saveGame();
+      }
+      if (e.target.id === "sortType") {
+        player.inventory.sort((a, b) => {
+          const typeA = shopItems.find(i => i.name === a)?.type || "";
+          const typeB = shopItems.find(i => i.name === b)?.type || "";
+          return typeA.localeCompare(typeB) || a.localeCompare(b);
+        });
+        updateUI();
+        saveGame();
+      }
+      if (e.target.id === "themeToggle") {
+        document.body.classList.toggle("grayscale-theme");
+        const isGrayscale = document.body.classList.contains("grayscale-theme");
+        e.target.textContent = isGrayscale ? "Switch to Sepia" : "Switch to Grayscale";
+        localStorage.setItem("theme", isGrayscale ? "grayscale" : "sepia");
       }
     });
 
@@ -568,7 +728,8 @@
       const message = document.getElementById("chatInput").value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
       if (message) {
         const chatMessages = document.getElementById("chatMessages");
-        chatMessages.innerHTML += `<p><strong>${player.name}:</strong> ${message}</p>`;
+        const messageCount = chatMessages.getElementsByTagName("p").length;
+        chatMessages.innerHTML += `<p class="${messageCount % 2 === 0 ? 'bg-sepia-900' : 'bg-gray-200'} p-1"><strong>${player.name}:</strong> ${message}</p>`;
         chatMessages.scrollTop = chatMessages.scrollHeight;
         document.getElementById("chatInput").value = "";
       }
@@ -578,7 +739,7 @@
     document.getElementById("buySpeakeasy").addEventListener("click", () => {
       if (player.cash >= 1000 && player.inventory.includes("Safehouse") && !player.businesses.some(b => b.name === "Speakeasy")) {
         player.cash -= 1000;
-        player.businesses.push({ name: "Speakeasy", dailyIncome: 50 });
+        player.businesses.push({ name: "Speakeasy", dailyIncome: 50, raided: false });
         logEvent("Bought a Speakeasy!", "success");
         updateUI();
         saveGame();
@@ -590,7 +751,7 @@
     document.getElementById("buyDistillery").addEventListener("click", () => {
       if (player.cash >= 2500 && !player.businesses.some(b => b.name === "Distillery")) {
         player.cash -= 2500;
-        player.businesses.push({ name: "Distillery", dailyIncome: 100 });
+        player.businesses.push({ name: "Distillery", dailyIncome: 100, raided: false });
         logEvent("Bought a Distillery!", "success");
         updateUI();
         saveGame();
@@ -608,7 +769,8 @@
           player.inventory = player.inventory.filter(i => i !== "Bribe Money");
           raidRisk *= 0.9;
         }
-        if (Math.random() > raidRisk) {
+        b.raided = Math.random() <= raidRisk;
+        if (!b.raided) {
           const income = Math.floor(Math.random() * (b.dailyIncome * 2 - b.dailyIncome + 1)) + b.dailyIncome;
           player.cash += income;
           logEvent(`${b.name} earned $${income} today.`, "success");
@@ -623,6 +785,7 @@
             });
           } else if (b.name === "Speakeasy") {
             logEvent("Speakeasy needs 2 Liquor Crates to operate!", "failure");
+            b.raided = true;
           }
           if (b.name === "Distillery") {
             const crates = Math.floor(Math.random() * 3) + 3;
@@ -699,7 +862,7 @@
         failure: "text-red-600",
         death: "text-red-800 font-bold"
       };
-      eventLog.innerHTML += `<p class="${classMap[type]}">${new Date().toLocaleTimeString()}: ${message}</p>`;
+      eventLog.innerHTML += `<p class="${classMap[type]}"><span class="timestamp">${new Date().toLocaleTimeString()}: </span>${message}</p>`;
       const entries = eventLog.getElementsByTagName("p");
       while (entries.length > 50) entries[0].remove();
       eventLog.scrollTop = eventLog.scrollHeight;
