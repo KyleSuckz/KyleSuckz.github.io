@@ -15,13 +15,46 @@
       font-family: 'Times New Roman', Times, serif;
       color: #2c2c2c;
     }
+    .dark-theme {
+      background-color: #1a1a1a;
+      color: #e0e0e0;
+    }
+    .dark-theme .main-bg {
+      background-color: rgba(30, 30, 30, 0.95);
+    }
+    .dark-theme .tab-bg {
+      background-color: rgba(30, 30, 30, 0.9);
+    }
+    .dark-theme .tooltip {
+      background-color: rgba(30, 30, 30, 0.95);
+      color: #2c2c2c;
+      border: 1px solid #8b5a2b;
+    }
+    .dark-theme .card {
+      background-color: rgba(40, 40, 40, 0.95);
+    }
+    .light-theme {
+      background-color: #f2e2c3;
+      color: #2c2c2c;
+    }
+    .light-theme .main-bg {
+      background-color: rgba(242, 226, 195, 0.95);
+    }
+    .light-theme .tab-bg {
+      background-color: rgba(242, 226, 195, 0.9);
+    }
+    .light-theme .tooltip {
+      background-color: rgba(242, 226, 195, 0.95);
+      color: #000;
+      border: 1px solid #8b5a2b;
+    }
+    .light-theme .card {
+      background-color: rgba(255, 255, 255, 0.95);
+    }
     .art-deco {
       font-family: 'Cinzel', serif;
       letter-spacing: 1px;
       text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-    }
-    .sepia {
-      background-color: rgba(242, 226, 195, 0.95);
     }
     .card {
       border: 2px solid #8b5a2b;
@@ -30,9 +63,6 @@
     .card:hover {
       transform: scale(1.02);
       transition: transform 0.2s;
-    }
-    .bg-sepia-900 {
-      background-color: rgba(242, 226, 195, 0.9);
     }
     .tab-button {
       position: relative;
@@ -53,8 +83,6 @@
     .tooltip {
       display: none;
       position: absolute;
-      background-color: rgba(242, 226, 195, 0.95);
-      border: 1px solid #8b5a2b;
       padding: 4px 8px;
       border-radius: 4px;
       font-size: 0.9rem;
@@ -71,22 +99,13 @@
     .hide-timestamp .timestamp {
       display: none;
     }
-    .grayscale-theme {
-      filter: grayscale(100%);
-    }
-    .grayscale-theme .sepia {
-      background-color: rgba(200, 200, 200, 0.95);
-    }
-    .grayscale-theme .bg-sepia-900 {
-      background-color: rgba(200, 200, 200, 0.9);
-    }
   </style>
 </head>
-<body class="min-h-screen">
-  <div id="game" class="container mx-auto p-4 max-w-5xl sepia rounded-lg min-h-screen">
+<body class="min-h-screen light-theme">
+  <div id="game" class="container mx-auto p-4 max-w-5xl main-bg rounded-lg min-h-screen">
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-4xl font-bold text-center art-deco">Bootleg Empire</h1>
-      <button id="themeToggle" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Toggle Theme</button>
+      <button id="themeToggle" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Switch to Dark Theme</button>
     </div>
     
     <!-- Dashboard -->
@@ -128,7 +147,7 @@
     </div>
 
     <!-- Navigation Tabs -->
-    <div class="flex flex-wrap border-b-2 border-gray-700 mb-4 sticky top-0 z-10 bg-sepia-900">
+    <div class="flex flex-wrap border-b-2 border-gray-700 mb-4 sticky top-0 z-10 tab-bg">
       <button class="tab-button px-4 py-2 font-bold art-deco bg-gray-200 hover:bg-gray-300" data-tab="crimes">Crimes</button>
       <button class="tab-button px-4 py-2 font-bold art-deco bg-gray-200 hover:bg-gray-300" data-tab="shop">Shop</button>
       <button class="tab-button px-4 py-2 font-bold art-deco bg-gray-200 hover:bg-gray-300" data-tab="crew">Crew</button>
@@ -213,7 +232,7 @@
     <!-- Quick Action Button (Mobile) -->
     <div class="fixed bottom-4 right-4 md:hidden">
       <button id="quickActionToggle" class="p-4 bg-gray-700 text-white rounded-full hover:bg-gray-800">⚡</button>
-      <div id="quickActions" class="hidden absolute bottom-16 right-0 bg-sepia-900 p-4 rounded-lg shadow-lg">
+      <div id="quickActions" class="hidden absolute bottom-16 right-0 tab-bg p-4 rounded-lg shadow-lg">
         <button id="quickBuyHooch" class="block w-full text-left px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 mb-2">Buy Hooch</button>
         <button id="quickPickpocket" class="block w-full text-left px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Pickpocket</button>
       </div>
@@ -300,9 +319,14 @@
         player.ap = defaultPlayer.maxAp;
       }
       const savedTheme = localStorage.getItem("theme");
-      if (savedTheme === "grayscale") {
-        document.body.classList.add("grayscale-theme");
-        document.getElementById("themeToggle").textContent = "Switch to Sepia";
+      if (savedTheme === "dark") {
+        document.body.classList.remove("light-theme");
+        document.body.classList.add("dark-theme");
+        document.getElementById("themeToggle").textContent = "Switch to Light Theme";
+      } else {
+        document.body.classList.remove("dark-theme");
+        document.body.classList.add("light-theme");
+        document.getElementById("themeToggle").textContent = "Switch to Dark Theme";
       }
       updateUI();
     }
@@ -358,7 +382,9 @@
               ${canEquip ? `<button class="equip-item ml-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" data-item="${item}" data-type="${equipType}">Equip</button>` : ""}
               ${isEquipped ? `<button class="unequip-item ml-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" data-type="${equipType}">Unequip</button>` : ""}
               <button class="sell-item ml-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" data-item="${item}">Sell ($${sellPrice})</button>
+              <button class="sell-all-item ml-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" data-item="${item}">Sell All ($${sellPrice * count})</button>
               <button class="drop-item ml-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800 ${isEquipped ? 'opacity-50 cursor-not-allowed' : ''}" data-item="${item}" ${isEquipped ? 'disabled' : ''}>Drop</button>
+              <button class="drop-all-item ml-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800 ${isEquipped ? 'opacity-50 cursor-not-allowed' : ''}" data-item="${item}" ${isEquipped ? 'disabled' : ''}>Drop All</button>
             </li>
           `;
         }).join("") || "Empty";
@@ -395,7 +421,7 @@
             <div class="card p-3">
               <h3 class="text-xl art-deco">${crime.name}</h3>
               <p>${crime.apCost > 0 ? `AP Cost: ${crime.apCost}` : `Cooldown: ${crime.cooldown / 3600000} hours`}</p>
-              <p>Reward: $${crime.cashMin}–$${crime.cashMax}, ${crime.hoochMin}–${crime.hoochMax} Hooch, ${crime.xpMin}–${crime.xpMax} XP, ${crime.influenceMin}–${crime.influenceMax} Influence</p>
+              <p>Reward: $${crime.cashMin}–$${crime.cashMax}, ${crime.hoochMin}–${crime.hoochMax} Hooch, ${crime.xpMin * 10}–${crime.xpMax * 10} XP, ${crime.influenceMin}–${crime.influenceMax} Influence</p>
               <p class="text-sm">Risk: ${(crime.risk * 100).toFixed(0)}%</p>
               <p class="text-sm">Bullets: ${crime.bulletCost}</p>
               <p class="text-sm">Health Cost on Failure: ${crime.healthCost}</p>
@@ -424,7 +450,9 @@
               ${item.description && !disabled ? `<span class="tooltip">${item.description}</span>` : ""}
             </button>
             ${item.sellPrice ? `<button class="sell-vehicle group relative mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 ${!player.inventory.includes(item.name) ? 'opacity-50 cursor-not-allowed' : ''}" data-item="${item.name}" ${!player.inventory.includes(item.name) ? "disabled" : ""}>Sell ($${item.sellPrice})<span class="tooltip">Sell for $${item.sellPrice}</span></button>` : ""}
+            ${item.sellPrice ? `<button class="sell-all-vehicle group relative mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 ${!player.inventory.includes(item.name) ? 'opacity-50 cursor-not-allowed' : ''}" data-item="${item.name}" ${!player.inventory.includes(item.name) ? "disabled" : ""}>Sell All ($${item.sellPrice * (itemCounts[item.name] || 0)})<span class="tooltip">Sell all for $${item.sellPrice * (itemCounts[item.name] || 0)}</span></button>` : ""}
             ${item.scrapBullets ? `<button class="scrap-vehicle group relative mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 ${!player.inventory.includes(item.name) ? 'opacity-50 cursor-not-allowed' : ''}" data-item="${item.name}" ${!player.inventory.includes(item.name) ? "disabled" : ""}>Scrap (${item.scrapBullets} Bullets)<span class="tooltip">Scrap for ${item.scrapBullets} Bullets</span></button>` : ""}
+            ${item.scrapBullets ? `<button class="scrap-all-vehicle group relative mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 ${!player.inventory.includes(item.name) ? 'opacity-50 cursor-not-allowed' : ''}" data-item="${item.name}" ${!player.inventory.includes(item.name) ? "disabled" : ""}>Scrap All (${item.scrapBullets * (itemCounts[item.name] || 0)} Bullets)<span class="tooltip">Scrap all for ${item.scrapBullets * (itemCounts[item.name] || 0)} Bullets</span></button>` : ""}
           </div>
         `;
       }).join("");
@@ -476,20 +504,26 @@
           return;
         }
         if (crime.apCost > 0 && player.ap < crime.apCost) {
-          logEvent("Not enough AP!", "failure");
+          logEvent(`Not enough AP! Need ${crime.apCost} AP for ${crime.name}.`, "failure");
           return;
         }
         if (crime.cooldown && player.cooldowns[crime.name] && Date.now() < player.cooldowns[crime.name]) {
           logEvent(`On cooldown for ${crime.name}!`, "failure");
           return;
         }
-        if (!crime.requirements.every(req => req === "Crew" ? player.crew : player.inventory.includes(req))) {
-          logEvent(`Missing requirements for ${crime.name}!`, "failure");
+        if (crime.bulletCost > player.bullets) {
+          logEvent(`Not enough Bullets! Need ${crime.bulletCost} Bullets for ${crime.name}.`, "failure");
           return;
         }
-        if (player.bullets < crime.bulletCost) {
-          logEvent(`Not enough Bullets for ${crime.name}!`, "failure");
-          return;
+        for (const req of crime.requirements) {
+          if (req === "Crew" && !player.crew) {
+            logEvent(`Need a Crew for ${crime.name}!`, "failure");
+            return;
+          }
+          if (req !== "Crew" && !player.inventory.includes(req)) {
+            logEvent(`Missing ${req} for ${crime.name}!`, "failure");
+            return;
+          }
         }
         player.ap -= crime.apCost;
         player.bullets -= crime.bulletCost;
@@ -500,7 +534,7 @@
         if (success) {
           const cash = Math.floor(Math.random() * (crime.cashMax - crime.cashMin + 1)) + crime.cashMin;
           const hooch = Math.floor(Math.random() * (crime.hoochMax - crime.hoochMin + 1)) + crime.hoochMin;
-          const xp = Math.floor(Math.random() * (crime.xpMax - crime.xpMin + 1)) + crime.xpMin;
+          const xp = (Math.floor(Math.random() * (crime.xpMax - crime.xpMin + 1)) + crime.xpMin) * 10; // Temporary x10 for testing
           const influence = Math.floor(Math.random() * (crime.influenceMax - crime.influenceMin + 1)) + crime.influenceMin + getInfluenceBonus();
           let extra = "";
           if (crime.name === "Steal a Car" && !player.equipped.vehicle) {
@@ -542,7 +576,7 @@
         return;
       }
       if (player.ap < crime.apCost) {
-        logEvent("Not enough AP!", "failure");
+        logEvent(`Not enough AP! Need ${crime.apCost} AP for Pickpocketing.`, "failure");
         return;
       }
       player.ap -= crime.apCost;
@@ -550,7 +584,7 @@
       if (success) {
         const cash = Math.floor(Math.random() * (crime.cashMax - crime.cashMin + 1)) + crime.cashMin;
         const hooch = Math.floor(Math.random() * (crime.hoochMax - crime.hoochMin + 1)) + crime.hoochMin;
-        const xp = Math.floor(Math.random() * (crime.xpMax - crime.xpMin + 1)) + crime.xpMin;
+        const xp = (Math.floor(Math.random() * (crime.xpMax - crime.xpMin + 1)) + crime.xpMin) * 10; // Temporary x10 for testing
         const influence = Math.floor(Math.random() * (crime.influenceMax - crime.influenceMin + 1)) + crime.influenceMin + getInfluenceBonus();
         player.cash += cash;
         player.hooch += hooch;
@@ -628,6 +662,19 @@
           saveGame();
         }
       }
+      if (e.target.classList.contains("sell-all-vehicle")) {
+        const itemName = e.target.dataset.item;
+        const item = shopItems.find(i => i.name === itemName);
+        const count = player.inventory.filter(i => i === itemName).length;
+        if (count > 0) {
+          player.inventory = player.inventory.filter(i => i !== itemName);
+          if (player.equipped.vehicle === itemName) player.equipped.vehicle = null;
+          player.cash += item.sellPrice * count;
+          logEvent(`Sold ${count} ${itemName}(s) for $${item.sellPrice * count}.`, "success");
+          updateUI();
+          saveGame();
+        }
+      }
       if (e.target.classList.contains("scrap-vehicle")) {
         const itemName = e.target.dataset.item;
         const item = shopItems.find(i => i.name === itemName);
@@ -636,6 +683,19 @@
           if (player.equipped.vehicle === itemName) player.equipped.vehicle = null;
           player.bullets += item.scrapBullets;
           logEvent(`Scrapped ${itemName} for ${item.scrapBullets} Bullets.`, "success");
+          updateUI();
+          saveGame();
+        }
+      }
+      if (e.target.classList.contains("scrap-all-vehicle")) {
+        const itemName = e.target.dataset.item;
+        const item = shopItems.find(i => i.name === itemName);
+        const count = player.inventory.filter(i => i === itemName).length;
+        if (count > 0) {
+          player.inventory = player.inventory.filter(i => i !== itemName);
+          if (player.equipped.vehicle === itemName) player.equipped.vehicle = null;
+          player.bullets += item.scrapBullets * count;
+          logEvent(`Scrapped ${count} ${itemName}(s) for ${item.scrapBullets * count} Bullets.`, "success");
           updateUI();
           saveGame();
         }
@@ -655,11 +715,37 @@
           saveGame();
         }
       }
+      if (e.target.classList.contains("sell-all-item")) {
+        const itemName = e.target.dataset.item;
+        const count = player.inventory.filter(i => i === itemName).length;
+        if (count > 0) {
+          const item = shopItems.find(i => i.name === itemName);
+          const sellPrice = item.sellPrice || (item.cost > 0 ? Math.floor(item.cost * 0.5) : Math.floor(item.hoochCost * 0.1 * 10));
+          player.inventory = player.inventory.filter(i => i !== itemName);
+          if (player.equipped.weapon === itemName) player.equipped.weapon = null;
+          if (player.equipped.vehicle === itemName) player.equipped.vehicle = null;
+          if (player.equipped.clothing === itemName) player.equipped.clothing = null;
+          player.cash += sellPrice * count;
+          logEvent(`Sold ${count} ${itemName}(s) for $${sellPrice * count}.`, "success");
+          updateUI();
+          saveGame();
+        }
+      }
       if (e.target.classList.contains("drop-item") && !e.target.disabled) {
         const itemName = e.target.dataset.item;
         if (player.inventory.includes(itemName)) {
           player.inventory.splice(player.inventory.indexOf(itemName), 1);
           logEvent(`Dropped ${itemName}.`, "info");
+          updateUI();
+          saveGame();
+        }
+      }
+      if (e.target.classList.contains("drop-all-item") && !e.target.disabled) {
+        const itemName = e.target.dataset.item;
+        const count = player.inventory.filter(i => i === itemName).length;
+        if (count > 0) {
+          player.inventory = player.inventory.filter(i => i !== itemName);
+          logEvent(`Dropped ${count} ${itemName}(s).`, "info");
           updateUI();
           saveGame();
         }
@@ -709,10 +795,12 @@
         updateUI();
       }
       if (e.target.id === "themeToggle") {
-        document.body.classList.toggle("grayscale-theme");
-        const isGrayscale = document.body.classList.contains("grayscale-theme");
-        e.target.textContent = isGrayscale ? "Switch to Sepia" : "Switch to Grayscale";
-        localStorage.setItem("theme", isGrayscale ? "grayscale" : "sepia");
+        const isDark = document.body.classList.contains("dark-theme");
+        document.body.classList.toggle("dark-theme");
+        document.body.classList.toggle("light-theme");
+        e.target.textContent = isDark ? "Switch to Dark Theme" : "Switch to Light Theme";
+        localStorage.setItem("theme", isDark ? "light" : "dark");
+        updateUI();
       }
     });
 
@@ -816,7 +904,7 @@
       if (message) {
         const chatMessages = document.getElementById("chatMessages");
         const messageCount = chatMessages.getElementsByTagName("p").length;
-        chatMessages.innerHTML += `<p class="${messageCount % 2 === 0 ? 'bg-sepia-900' : 'bg-gray-200'} p-1"><strong>${player.name}:</strong> ${message}</p>`;
+        chatMessages.innerHTML += `<p class="${messageCount % 2 === 0 ? 'tab-bg' : 'bg-gray-200'} p-1"><strong>${player.name}:</strong> ${message}</p>`;
         chatMessages.scrollTop = chatMessages.scrollHeight;
         document.getElementById("chatInput").value = "";
       }
