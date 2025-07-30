@@ -7,44 +7,131 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #f4e9d8; font-family: Arial, sans-serif; color: #3c2f2f; }
+        body {
+            background: url('https://www.transparenttextures.com/patterns/paper-fibers.png') #f4e9d8;
+            font-family: Arial, sans-serif;
+            color: #3c2f2f;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M10 2L8 8l-3-1 4 5-6 1 6 4-4 5 3-1 2 6 2-6 3 1-4-5 6-1-6-4 4-5-3 1z" fill="%238b5e3c"/></svg>'), auto;
+        }
         h1, h2, h3 { font-family: 'Cinzel', serif; }
-        .header { background-color: #8b5e3c; color: white; padding: 10px; text-align: center; }
+        .header {
+            background: linear-gradient(to right, #8b5e3c, #a67b5b);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            animation: flicker 5s infinite;
+        }
+        .header img { width: 50px; vertical-align: middle; }
         .nav-tabs .nav-link { color: #3c2f2f; }
+        .nav-tabs .nav-link:hover { border-bottom: 2px solid #d4a373; }
         .nav-tabs .nav-link.active { background-color: #d4a373; color: white; }
-        .card { background-color: #fff8e7; border: 1px solid #8b5e3c; }
-        button { background-color: #8b5e3c; color: white; border: none; padding: 5px 10px; }
+        .card {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" opacity="0.1"><path d="M0 0h100v100h-100z" fill="none" stroke="%238b5e3c" stroke-width="2"><path d="M10 10l80 80m0-80l-80 80" stroke="%238b5e3c" stroke-width="2"/></svg>') #fff8e7;
+            border: 2px solid #d4a373;
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-5px); }
+        button {
+            background-color: #8b5e3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            transition: transform 0.1s;
+        }
         button:hover { background-color: #a67b5b; }
+        button:active { transform: translateY(2px); }
         button:disabled { background-color: #cccccc; cursor: not-allowed; }
-        .energy-bar { width: 100%; height: 20px; background-color: #ccc; border: 1px solid #3c2f2f; }
+        .energy-bar { width: 100%; height: 20px; background-color: #ccc; border: 1px solid #3c2f2f; margin-top: 10px; }
         .energy-fill { height: 100%; background-color: #4CAF50; transition: width 0.5s; }
+        .health-bar { width: 100%; height: 20px; background-color: #ccc; border: 1px solid #3c2f2f; }
+        .health-fill { height: 100%; background-color: #FF6347; transition: width 0.5s; }
         .success { animation: flashSuccess 0.5s; }
         .failure { animation: flashFailure 0.5s; }
         @keyframes flashSuccess { 0% { background-color: #4CAF50; } 100% { background-color: transparent; } }
         @keyframes flashFailure { 0% { background-color: #FF6347; } 100% { background-color: transparent; } }
         .tooltip { position: relative; display: inline-block; }
-        .tooltip .tooltiptext { visibility: hidden; width: 120px; background-color: #3c2f2f; color: white; text-align: center; border-radius: 6px; padding: 5px; position: absolute; z-index: 1; bottom: 100%; left: 50%; margin-left: -60px; }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: #3c2f2f;
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 100%;
+            left: 50%;
+            margin-left: -60px;
+        }
         .tooltip:hover .tooltiptext { visibility: visible; }
+        .gold { color: #FFD700; animation: shine 2s infinite; }
+        @keyframes shine { 0% { text-shadow: 0 0 5px #FFD700; } 50% { text-shadow: 0 0 10px #FFD700; } 100% { text-shadow: 0 0 5px #FFD700; } }
+        .cash { color: #2E7D32; }
+        .xp { color: #1976D2; }
+        .divider { border-top: 2px solid #d4a373; margin: 10px 0; }
+        .speakeasy-bg {
+            background: url('https://www.transparenttextures.com/patterns/dark-wood.png') rgba(139, 94, 60, 0.2);
+            background-blend-mode: overlay;
+        }
+        .inventory-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .item { border: 1px solid #d4a373; padding: 5px; text-align: center; }
+        .item-owned { border: 2px solid #FFD700; }
+        .coin-spinner::after {
+            content: '';
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #FFD700;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            margin-left: 5px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.95; } }
+        .newspaper { background: #fff8e7; border: 2px solid #3c2f2f; padding: 10px; font-family: 'Cinzel', serif; }
+        .smoke { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .smoke::before, .smoke::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: rgba(200, 200, 200, 0.3);
+            border-radius: 50%;
+            animation: smokeDrift 10s infinite;
+        }
+        .smoke::before { top: 10%; left: 10%; }
+        .smoke::after { top: 80%; right: 10%; }
+        @keyframes smokeDrift { 0% { transform: translateY(0); opacity: 0.3; } 100% { transform: translateY(-20px); opacity: 0; } }
+        .typewriter { display: inline-block; overflow: hidden; white-space: nowrap; animation: type 1s steps(20, end); }
+        @keyframes type { from { width: 0; } to { width: 100%; } }
     </style>
 </head>
 <body>
+    <div class="smoke"></div>
     <div class="header">
-        <h1>Prohibition Kings</h1>
-        <p id="player-stats">Player: Unknown | Rank: Thug | Cash: $0 | XP: 0 | Influence: 0 | Energy: 10000 | Gold: 0</p>
+        <h1><img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50'><path d='M10 10h30v10l10-10v30l-10-10v10h-30z' fill='%23d4a373'/><path d='M20 15v20m10-20v20' stroke='%233c2f2f' stroke-width='2'/></svg>" alt="Fedora"> Prohibition Kings</h1>
+        <p id="player-stats" class="typewriter">Player: Unknown | Rank: Thug | <span class="cash">Cash: $0</span> | <span class="xp">XP: 0</span> | Influence: 0 | Energy: 10000 | <span class="gold">Gold: 0</span></p>
         <div class="energy-bar"><div class="energy-fill" id="energy-fill" style="width: 100%;"></div></div>
     </div>
     <div class="container mt-3">
         <ul class="nav nav-tabs">
-            <li class="nav-item"><a class="nav-link active" href="#crimes" data-bs-toggle="tab">Crimes</a></li>
-            <li class="nav-item"><a class="nav-link" href="#inventory" data-bs-toggle="tab">Inventory</a></li>
-            <li class="nav-item"><a class="nav-link" href="#speakeasy" data-bs-toggle="tab">Speakeasy</a></li>
-            <li class="nav-item"><a class="nav-link" href="#profile" data-bs-toggle="tab">Profile</a></li>
+            <li class="nav-item"><a class="nav-link active" href="#crimes" data-bs-toggle="tab"><img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><path d='M2 8h12m-3-3l3 3-3 3' stroke='%233c2f2f' stroke-width='2'/></svg>" alt="Gun"> Crimes</a></li>
+            <li class="nav-item"><a class="nav-link" href="#inventory" data-bs-toggle="tab"><img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><rect x='2' y='2' width='12' height='12' fill='none' stroke='%233c2f2f' stroke-width='2'/></svg>" alt="Bag"> Inventory</a></li>
+            <li class="nav-item"><a class="nav-link" href="#speakeasy" data-bs-toggle="tab"><img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><path d='M2 12h12v2h-12zm4-10h4v10h-4z' fill='%233c2f2f'/></svg>" alt="Bottle"> Speakeasy</a></li>
+            <li class="nav-item"><a class="nav-link" href="#profile" data-bs-toggle="tab"><img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><circle cx='8' cy='5' r='3' fill='%233c2f2f'/><path d='M4 10h8v4h-8z' fill='%233c2f2f'/></svg>" alt="Profile"> Profile</a></li>
         </ul>
         <div class="tab-content mt-3">
             <div class="tab-pane active" id="crimes">
                 <div class="card">
                     <div class="card-body">
                         <h2>Crimes</h2>
+                        <div class="divider"></div>
                         <div id="crime-list"></div>
                     </div>
                 </div>
@@ -53,16 +140,19 @@
                 <div class="card">
                     <div class="card-body">
                         <h2>Inventory</h2>
+                        <div class="divider"></div>
                         <div id="inventory-list"></div>
                         <h3>Black Market</h3>
-                        <div id="market-list"></div>
+                        <div class="divider"></div>
+                        <div id="market-list" class="inventory-grid"></div>
                     </div>
                 </div>
             </div>
-            <div class="tab-pane" id="speakeasy">
+            <div class="tab-pane speakeasy-bg" id="speakeasy">
                 <div class="card">
                     <div class="card-body">
                         <h2>Speakeasy</h2>
+                        <div class="divider"></div>
                         <h3>Dice Roll</h3>
                         <input type="number" id="bet-amount" min="10" max="100" value="10">
                         <button onclick="gamble()">Bet Cash</button>
@@ -75,13 +165,16 @@
                 <div class="card">
                     <div class="card-body">
                         <h2>Profile</h2>
+                        <div class="divider"></div>
+                        <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50'><path d='M10 10h30v10l10-10v30l-10-10v10h-30z' fill='%233c2f2f'/><path d='M20 15v20m10-20v20' stroke='%23d4a373' stroke-width='2'/></svg>" alt="Avatar">
                         <p id="profile-stats"></p>
+                        <div class="health-bar"><div class="health-fill" id="health-fill" style="width: 100%;"></div></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <footer class="text-center mt-3">
+    <footer class="text-center mt-3" style="background: url('https://www.transparenttextures.com/patterns/dark-wood.png') #3c2f2f; padding: 10px; color: white;">
         <button onclick="logout()">Logout</button>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -105,16 +198,16 @@
         };
 
         const crimes = [
-            { name: "Pickpocketing", cash: [1, 5], xp: 5, influence: 2, energy: 10, risk: 0.1, tooltip: "Steal small cash, low risk." },
-            { name: "Bootleg Run", cash: [10, 20], xp: 10, influence: 5, energy: 15, risk: 0.15, tooltip: "Smuggle booze, moderate rewards." },
-            { name: "Speakeasy Heist", cash: [500, 2000], xp: 100, influence: 50, gold: [2, 5], risk: 0.25, maxPerDay: 3, tooltip: "Rob a rival speakeasy, high rewards." }
+            { name: "Pickpocketing", cash: [1, 5], xp: 5, influence: 2, energy: 10, risk: 0.1, tooltip: "Grab some dough from unsuspecting marks.", icon: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><rect x='2' y='4' width='12' height='8' fill='none' stroke='%233c2f2f' stroke-width='2'/></svg>" },
+            { name: "Bootleg Run", cash: [10, 20], xp: 10, influence: 5, energy: 15, risk: 0.15, tooltip: "Smuggle hooch past the coppers.", icon: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><path d='M2 12h12v2h-12zm4-10h4v10h-4z' fill='%233c2f2f'/></svg>" },
+            { name: "Speakeasy Heist", cash: [500, 2000], xp: 100, influence: 50, gold: [2, 5], risk: 0.25, maxPerDay: 3, tooltip: "Knock over a rival juice joint for big dough.", icon: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><rect x='2' y='2' width='12' height='12' fill='none' stroke='%233c2f2f' stroke-width='2'/><path d='M8 4v4m0 0h-4m4 0h4' stroke='%233c2f2f' stroke-width='2'/></svg>" }
         ];
 
         const market = [
-            { name: "Crowbar", price: 10, effect: { crime: "Pickpocketing", success: 0.05 }, tooltip: "+5% Pickpocketing success" },
-            { name: "Revolver", price: 50, effect: { crime: "Speakeasy Heist", success: 0.1 }, tooltip: "+10% Speakeasy Heist success" },
-            { name: "Bribe", price: 100, effect: { risk: -0.1 }, tooltip: "-10% risk for all crimes" },
-            { name: "Gold", price: 10000, tooltip: "Buy Gold for $10,000" }
+            { name: "Crowbar", price: 10, effect: { crime: "Pickpocketing", success: 0.05 }, tooltip: "Boosts Pickpocketing by 5%.", image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><path d='M2 12h12v2h-12z' fill='%233c2f2f'/><path d='M2 8h4v4' stroke='%233c2f2f' stroke-width='2'/></svg>" },
+            { name: "Revolver", price: 50, effect: { crime: "Speakeasy Heist", success: 0.1 }, tooltip: "Boosts Speakeasy Heist by 10%.", image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><path d='M2 10h8v2h-8zm10-4h2v6h-2z' fill='%233c2f2f'/><path d='M8 8h4' stroke='%233c2f2f' stroke-width='2'/></svg>" },
+            { name: "Bribe", price: 100, effect: { risk: -0.1 }, tooltip: "Cuts all crime risk by 10%.", image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><rect x='2' y='4' width='12' height='8' fill='none' stroke='%233c2f2f' stroke-width='2'/><path d='M4 6h8' stroke='%233c2f2f' stroke-width='2'/></svg>" },
+            { name: "Gold", price: 10000, tooltip: "Trade $10,000 for a shiny gold coin.", image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><circle cx='8' cy='8' r='6' fill='%23FFD700' stroke='%233c2f2f' stroke-width='2'/></svg>" }
         ];
 
         function savePlayer() {
@@ -137,15 +230,18 @@
         }
 
         function updateUI() {
+            console.log("Updating UI...");
             updateEnergy();
-            const stats = `Player: ${player.name} | Rank: ${player.rank} | Cash: $${player.cash} | XP: ${player.xp} | Influence: ${player.influence} | Energy: ${player.energy} | Gold: ${player.gold}`;
-            document.getElementById("player-stats").textContent = stats;
-            document.getElementById("profile-stats").textContent = stats + ` | Health: ${player.health}`;
+            const stats = `Player: ${player.name} | Rank: ${player.rank} | <span class="cash">Cash: $${player.cash}</span> | <span class="xp">XP: ${player.xp}</span> | Influence: ${player.influence} | Energy: ${player.energy} | <span class="gold">Gold: <img src="${market.find(i => i.name === 'Gold').image}" alt="Gold"> ${player.gold}</span>`;
+            document.getElementById("player-stats").innerHTML = stats;
+            document.getElementById("profile-stats").innerHTML = stats + ` | Health: ${player.health}`;
             document.getElementById("energy-fill").style.width = `${(player.energy / 10000) * 100}%`;
+            document.getElementById("health-fill").style.width = `${(player.health / 100) * 100}%`;
 
             let crimeList = "";
             const now = Date.now();
             for (let crime of crimes) {
+                console.log(`Processing crime: ${crime.name}`);
                 let canAttempt = true;
                 let status = "";
                 if (crime.name === "Speakeasy Heist" && player.xp < 500) {
@@ -165,35 +261,46 @@
                 }
                 crimeList += `
                     <div class="tooltip">
-                        <p>${crime.name}: $${crime.cash[0]}-$${crime.cash[1]}, ${crime.xp} XP, ${crime.influence} Influence${crime.gold ? `, ${crime.gold[0]}-${crime.gold[1]} Gold` : ""}, ${crime.energy ? crime.energy + " Energy" : crime.maxPerDay + "/day"} (Risk: ${crime.risk * 100}% Failure)<br>
-                        <button ${canAttempt ? "" : "disabled"} onclick="commitCrime('${crime.name}')">Attempt</button> ${status}</p>
+                        <p><img src="${crime.icon}" alt="${crime.name}"> ${crime.name}: $${crime.cash[0]}-$${crime.cash[1]}, ${crime.xp} XP, ${crime.influence} Influence${crime.gold ? `, ${crime.gold[0]}-${crime.gold[1]} Gold` : ""}, ${crime.energy ? crime.energy + " Energy" : crime.maxPerDay + "/day"} (Risk: ${crime.risk * 100}% Failure)<br>
+                        <button class="${canAttempt ? '' : 'disabled'} coin-spinner" ${canAttempt ? '' : 'disabled'} onclick="commitCrime('${crime.name}')">Attempt</button> ${status}</p>
                         <span class="tooltiptext">${crime.tooltip}</span>
                     </div>`;
             }
+            console.log("Crime list HTML:", crimeList);
             document.getElementById("crime-list").innerHTML = crimeList;
 
-            let inventoryList = `<p>Cash: $${player.cash} | Gold: ${player.gold}</p><p>Items: ${player.items.join(", ") || "None"}</p>`;
+            let inventoryList = `<p><span class="cash">Cash: $${player.cash}</span> | <span class="gold">Gold: <img src="${market.find(i => i.name === 'Gold').image}" alt="Gold"> ${player.gold}</span></p>`;
             document.getElementById("inventory-list").innerHTML = inventoryList;
 
             let marketList = "";
             for (let item of market) {
                 marketList += `
-                    <div class="tooltip">
-                        <p>${item.name}: $${item.price} <button onclick="buyItem('${item.name}')">Buy</button></p>
-                        <span class="tooltiptext">${item.tooltip}</span>
+                    <div class="item ${player.items.includes(item.name) ? 'item-owned' : ''}">
+                        <img src="${item.image}" alt="${item.name}">
+                        <div class="tooltip">
+                            <p>${item.name}: $${item.price} <button class="coin-spinner" onclick="buyItem('${item.name}')">Buy</button></p>
+                            <span class="tooltiptext">${item.tooltip}</span>
+                        </div>
                     </div>`;
             }
             document.getElementById("market-list").innerHTML = marketList;
         }
 
         function commitCrime(crimeName) {
+            console.log(`Attempting crime: ${crimeName}`);
             const crime = crimes.find(c => c.name === crimeName);
             if (!crime) return;
             const now = Date.now();
-            if (crime.energy && player.energy < crime.energy) return;
+            if (crime.energy && player.energy < crime.energy) {
+                console.log("Not enough Energy");
+                return;
+            }
             if (crime.maxPerDay) {
                 const attempts = player.crimeAttempts[crime.name].timestamps.filter(t => now - t < 86400000);
-                if (attempts.length >= crime.maxPerDay) return;
+                if (attempts.length >= crime.maxPerDay) {
+                    console.log("Max attempts reached for", crime.name);
+                    return;
+                }
                 player.crimeAttempts[crime.name].timestamps.push(now);
             }
             if (crime.energy) player.energy -= crime.energy;
@@ -217,17 +324,19 @@
                 } else {
                     message = `Success! Gained $${cash}, ${crime.xp} XP, ${crime.influence} Influence.`;
                 }
-                document.getElementById("crime-list").innerHTML += `<p class="success">${message}</p>`;
+                document.getElementById("crime-list").innerHTML += `<p class="newspaper success">${message}</p>`;
+                playSound('https://www.soundjay.com/buttons/coin-01.mp3');
             } else {
                 player.health -= 10;
-                message = `Failed! Lost 10 Health.`;
+                message = `Bust! Lost 10 Health.`;
                 if (player.health <= 0) {
                     player.cash = 0;
                     player.items = [];
                     player.health = 100;
-                    message += " You died and lost all cash and items (Gold preserved).";
+                    message += " You got rubbed out! Lost all cash and items (Gold preserved).";
                 }
-                document.getElementById("crime-list").innerHTML += `<p class="failure">${message}</p>`;
+                document.getElementById("crime-list").innerHTML += `<p class="newspaper failure">${message}</p>`;
+                playSound('https://www.soundjay.com/weapon/gunshot-01.mp3');
             }
             updateRank();
             savePlayer();
@@ -251,7 +360,7 @@
             const win = Math.random() < 0.5;
             const result = win ? `Won $${bet * 2}!` : `Lost $${bet}.`;
             if (win) player.cash += bet * 2;
-            document.getElementById("gamble-result").textContent = result;
+            document.getElementById("gamble-result").innerHTML = `<p class="newspaper">${result}</p>`;
             savePlayer();
             updateUI();
         }
@@ -262,7 +371,7 @@
             const win = Math.random() < 0.5;
             const result = win ? `Won 2 Gold!` : `Lost 1 Gold.`;
             if (win) player.gold += 2;
-            document.getElementById("gamble-result").textContent = result;
+            document.getElementById("gamble-result").innerHTML = `<p class="newspaper">${result}</p>`;
             savePlayer();
             updateUI();
         }
@@ -272,6 +381,11 @@
             else if (player.xp >= 500) player.rank = "Capo";
             else if (player.xp >= 100) player.rank = "Enforcer";
             else player.rank = "Thug";
+        }
+
+        function playSound(url) {
+            const audio = new Audio(url);
+            audio.play().catch(e => console.log("Audio error:", e));
         }
 
         function logout() {
