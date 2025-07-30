@@ -40,13 +40,18 @@
         <p><strong>Cash:</strong> $<span id="cash">0</span></p>
         <p><strong>Hooch:</strong> <span id="hooch">0</span></p>
         <p><strong>Bullets:</strong> <span id="bullets">0</span></p>
-        <p><strong>Action Points:</strong> <span id="ap">50</span>/300</p>
+        <p><strong>Action Points:</strong> <span id="ap">30000</span>/30000</p>
+        <p><strong>Health:</strong> <span id="health">100</span>/100</p>
         <p><strong>Experience:</strong> <span id="xp">0</span></p>
         <p><strong>Influence:</strong> <span id="influence">0</span></p>
       </div>
       <div class="card p-4">
         <h2 class="text-2xl art-deco">Inventory</h2>
         <ul id="inventory" class="list-disc pl-5"></ul>
+        <h2 class="text-2xl art-deco mt-4">Equipped Items</h2>
+        <p><strong>Weapon:</strong> <span id="equippedWeapon">None</span></p>
+        <p><strong>Vehicle:</strong> <span id="equippedVehicle">None</span></p>
+        <p><strong>Clothing:</strong> <span id="equippedClothing">None</span></p>
       </div>
     </div>
 
@@ -122,15 +127,17 @@
       cash: 0,
       hooch: 0,
       bullets: 0,
-      ap: 50,
-      maxAp: 300,
+      ap: 30000,
+      maxAp: 30000,
+      health: 100,
+      maxHealth: 100,
       xp: 0,
       influence: 0,
       inventory: [],
+      equipped: { weapon: null, vehicle: null, clothing: null },
       crew: null,
       businesses: [],
       perks: [],
-      injury: null,
       cooldowns: {},
       lastDeath: null
     };
@@ -145,34 +152,35 @@
     ];
 
     const crimes = [
-      { name: "Pickpocketing", tier: 1, apCost: 5, cashMin: 5, cashMax: 20, hoochMin: 0, hoochMax: 5, xpMin: 5, xpMax: 10, influenceMin: 0, influenceMax: 1, risk: 0.1, bulletCost: 0, requirements: [] },
-      { name: "Steal a Car", tier: 1, apCost: 10, cashMin: 100, cashMax: 300, hoochMin: 0, hoochMax: 5, xpMin: 5, xpMax: 15, influenceMin: 1, influenceMax: 3, risk: 0.2, bulletCost: 0, requirements: [] },
-      { name: "Bootlegging Small Batch", tier: 1, apCost: 10, cashMin: 50, cashMax: 100, hoochMin: 1, hoochMax: 5, xpMin: 10, xpMax: 15, influenceMin: 1, influenceMax: 2, risk: 0.15, bulletCost: 0, requirements: ["Moonshine Still", "Liquor Crate"] },
-      { name: "Order a Hit", tier: 2, apCost: 0, cooldown: 3600000, cashMin: 200, cashMax: 500, hoochMin: 5, hoochMax: 10, xpMin: 20, xpMax: 30, influenceMin: 10, influenceMax: 20, risk: 0.2, bulletCost: 10, requirements: ["Colt .45 Pistol"] },
-      { name: "Speakeasy Operation", tier: 2, apCost: 0, cooldown: 3600000, cashMin: 200, cashMax: 500, hoochMin: 5, hoochMax: 10, xpMin: 20, xpMax: 30, influenceMin: 5, influenceMax: 10, risk: 0.2, bulletCost: 0, requirements: ["Safehouse", "Liquor Crate", "Liquor Crate", "Liquor Crate"] },
-      { name: "Liquor Shipment Hijack", tier: 2, apCost: 0, cooldown: 3600000, cashMin: 300, cashMax: 700, hoochMin: 5, hoochMax: 10, xpMin: 25, xpMax: 40, influenceMin: 10, influenceMax: 15, risk: 0.25, bulletCost: 10, requirements: ["Ford Model T", "Colt .45 Pistol"] },
-      { name: "Bank Heist", tier: 3, apCost: 0, cooldown: 28800000, cashMin: 2000, cashMax: 5000, hoochMin: 10, hoochMax: 20, xpMin: 50, xpMax: 100, influenceMin: 20, influenceMax: 50, risk: 0.4, bulletCost: 20, requirements: ["Crew", "Cadillac", "Tommy Gun"] },
-      { name: "Large-Scale Smuggling", tier: 3, apCost: 0, cooldown: 28800000, cashMin: 5000, cashMax: 10000, hoochMin: 20, hoochMax: 50, xpMin: 80, xpMax: 150, influenceMin: 50, influenceMax: 100, risk: 0.5, bulletCost: 20, requirements: ["Crew", "Boat", "Bribe Money"] }
+      { name: "Pickpocketing", tier: 1, apCost: 5, cashMin: 5, cashMax: 20, hoochMin: 0, hoochMax: 5, xpMin: 5, xpMax: 10, influenceMin: 0, influenceMax: 1, risk: 0.1, bulletCost: 0, healthCost: 10, requirements: [] },
+      { name: "Steal a Car", tier: 1, apCost: 10, cashMin: 100, cashMax: 300, hoochMin: 0, hoochMax: 5, xpMin: 5, xpMax: 15, influenceMin: 1, influenceMax: 3, risk: 0.2, bulletCost: 0, healthCost: 15, requirements: [] },
+      { name: "Bootlegging Small Batch", tier: 1, apCost: 10, cashMin: 50, cashMax: 100, hoochMin: 1, hoochMax: 5, xpMin: 10, xpMax: 15, influenceMin: 1, influenceMax: 2, risk: 0.15, bulletCost: 0, healthCost: 10, requirements: ["Moonshine Still", "Liquor Crate"] },
+      { name: "Order a Hit", tier: 2, apCost: 0, cooldown: 3600000, cashMin: 200, cashMax: 500, hoochMin: 5, hoochMax: 10, xpMin: 20, xpMax: 30, influenceMin: 10, influenceMax: 20, risk: 0.2, bulletCost: 10, healthCost: 20, requirements: ["Colt .45 Pistol"] },
+      { name: "Speakeasy Operation", tier: 2, apCost: 0, cooldown: 3600000, cashMin: 200, cashMax: 500, hoochMin: 5, hoochMax: 10, xpMin: 20, xpMax: 30, influenceMin: 5, influenceMax: 10, risk: 0.2, bulletCost: 0, healthCost: 15, requirements: ["Safehouse", "Liquor Crate", "Liquor Crate", "Liquor Crate"] },
+      { name: "Liquor Shipment Hijack", tier: 2, apCost: 0, cooldown: 3600000, cashMin: 300, cashMax: 700, hoochMin: 5, hoochMax: 10, xpMin: 25, xpMax: 40, influenceMin: 10, influenceMax: 15, risk: 0.25, bulletCost: 10, healthCost: 20, requirements: ["Ford Model T", "Colt .45 Pistol"] },
+      { name: "Bank Heist", tier: 3, apCost: 0, cooldown: 28800000, cashMin: 2000, cashMax: 5000, hoochMin: 10, hoochMax: 20, xpMin: 50, xpMax: 100, influenceMin: 20, influenceMax: 50, risk: 0.4, bulletCost: 20, healthCost: 30, requirements: ["Crew", "Cadillac", "Tommy Gun"] },
+      { name: "Large-Scale Smuggling", tier: 3, apCost: 0, cooldown: 28800000, cashMin: 5000, cashMax: 10000, hoochMin: 20, hoochMax: 50, xpMin: 80, xpMax: 150, influenceMin: 50, influenceMax: 100, risk: 0.5, bulletCost: 20, healthCost: 30, requirements: ["Crew", "Boat", "Bribe Money"] }
     ];
 
     const shopItems = [
-      { name: "Switchblade", cost: 10, hoochCost: 0, type: "Weapon", bulletCost: 1, bonus: { success: 0.05 } },
-      { name: "Colt .45 Pistol", cost: 50, hoochCost: 0, type: "Weapon", bulletCost: 5, bonus: { success: 0.1 } },
-      { name: "Tommy Gun", cost: 200, hoochCost: 0, type: "Weapon", bulletCost: 10, bonus: { success: 0.2 } },
-      { name: "Custom Tommy Gun", cost: 0, hoochCost: 50, type: "Weapon", bulletCost: 10, bonus: { success: 0.25 } },
-      { name: "Ford Model T", cost: 300, hoochCost: 0, type: "Vehicle", bulletCost: 0, bonus: { getaway: 0.1 }, sellPrice: 150, scrapBullets: 5 },
-      { name: "Cadillac", cost: 1000, hoochCost: 0, type: "Vehicle", bulletCost: 0, bonus: { getaway: 0.2, influence: 0.05 }, sellPrice: 500, scrapBullets: 15 },
-      { name: "Boat", cost: 2000, hoochCost: 0, type: "Vehicle", bulletCost: 0, bonus: { success: 0.15 }, sellPrice: 1000, scrapBullets: 20 },
-      { name: "Moonshine Still", cost: 150, hoochCost: 0, type: "Supply", bulletCost: 0, bonus: { produces: "Liquor Crate" } },
-      { name: "Liquor Crate", cost: 50, hoochCost: 0, type: "Supply", bulletCost: 0, bonus: {} },
-      { name: "Bribe Money", cost: 100, hoochCost: 0, type: "Supply", bulletCost: 0, bonus: { raidReduction: 0.1 } },
-      { name: "Fedora and Suit", cost: 75, hoochCost: 0, type: "Clothing", bulletCost: 0, bonus: { influence: 5 } },
-      { name: "Coffee", cost: 5, hoochCost: 0, type: "Consumable", bulletCost: 0, apCost: 10, bonus: { apRegen: 2, duration: 3600000 } },
-      { name: "First Aid Kit", cost: 25, hoochCost: 0, type: "Consumable", bulletCost: 0, apCost: 10, bonus: { removeInjury: true } },
-      { name: "Safehouse", cost: 500, hoochCost: 0, type: "Property", bulletCost: 0, bonus: {} },
-      { name: "Fast Talker", cost: 0, hoochCost: 100, type: "Perk", bulletCost: 0, bonus: { cooldownReduction: 0.1 } },
-      { name: "Connected", cost: 0, hoochCost: 150, type: "Perk", bulletCost: 0, bonus: { raidReduction: 0.2 } },
-      { name: "Bullets", cost: 1, hoochCost: 0, type: "Resource", bulletCost: 0, bonus: {} }
+      { name: "Switchblade", cost: 10, hoochCost: 0, type: "Weapon", bulletCost: 1, apCost: 0, bonus: { success: 0.05 }, description: "+5% crime success, uses 1 Bullet/crime" },
+      { name: "Colt .45 Pistol", cost: 50, hoochCost: 0, type: "Weapon", bulletCost: 5, apCost: 0, bonus: { success: 0.1 }, description: "+10% crime success, uses 5 Bullets/crime" },
+      { name: "Tommy Gun", cost: 200, hoochCost: 0, type: "Weapon", bulletCost: 10, apCost: 0, bonus: { success: 0.2 }, description: "+20% crime success, uses 10 Bullets/crime" },
+      { name: "Custom Tommy Gun", cost: 0, hoochCost: 50, type: "Weapon", bulletCost: 10, apCost: 0, bonus: { success: 0.25 }, description: "+25% crime success, uses 10 Bullets/crime" },
+      { name: "Ford Model T", cost: 300, hoochCost: 0, type: "Vehicle", bulletCost: 0, apCost: 0, bonus: { getaway: 0.1 }, sellPrice: 150, scrapBullets: 5, description: "+10% getaway success, sell for $150, scrap for 5 Bullets" },
+      { name: "Cadillac", cost: 1000, hoochCost: 0, type: "Vehicle", bulletCost: 0, apCost: 0, bonus: { getaway: 0.2, influence: 0.05 }, sellPrice: 500, scrapBullets: 15, description: "+20% getaway success, +5% Influence/crime, sell for $500, scrap for 15 Bullets" },
+      { name: "Boat", cost: 2000, hoochCost: 0, type: "Vehicle", bulletCost: 0, apCost: 0, bonus: { success: 0.15 }, sellPrice: 1000, scrapBullets: 20, description: "+15% smuggling success, sell for $1000, scrap for 20 Bullets" },
+      { name: "Moonshine Still", cost: 150, hoochCost: 0, type: "Supply", bulletCost: 0, apCost: 0, bonus: { produces: "Liquor Crate" }, description: "Produces 1 Liquor Crate/day" },
+      { name: "Liquor Crate", cost: 50, hoochCost: 0, type: "Supply", bulletCost: 0, apCost: 0, bonus: {}, description: "Required for bootlegging and speakeasy crimes" },
+      { name: "Bribe Money", cost: 100, hoochCost: 0, type: "Supply", bulletCost: 0, apCost: 0, bonus: { raidReduction: 0.1 }, description: "-10% business raid risk (consumed)" },
+      { name: "Fedora and Suit", cost: 75, hoochCost: 0, type: "Clothing", bulletCost: 0, apCost: 0, bonus: { influence: 5 }, description: "+5 Influence/crime" },
+      { name: "Coffee", cost: 5, hoochCost: 0, type: "Consumable", bulletCost: 0, apCost: 10, bonus: { apRegen: 2, duration: 3600000 }, description: "+2 AP/min for 1 hour, costs 10 AP" },
+      { name: "Whiskey Shot", cost: 10, hoochCost: 0, type: "Consumable", bulletCost: 0, apCost: 10, bonus: { health: 20 }, description: "Restores 20 Health, costs 10 AP" },
+      { name: "First Aid Kit", cost: 25, hoochCost: 0, type: "Consumable", bulletCost: 0, apCost: 10, bonus: { health: 100 }, description: "Restores full Health, costs 10 AP" },
+      { name: "Safehouse", cost: 500, hoochCost: 0, type: "Property", bulletCost: 0, apCost: 0, bonus: {}, description: "Required for speakeasy crimes" },
+      { name: "Fast Talker", cost: 0, hoochCost: 100, type: "Perk", bulletCost: 0, apCost: 0, bonus: { cooldownReduction: 0.1 }, description: "-10% crime cooldowns (permanent)" },
+      { name: "Connected", cost: 0, hoochCost: 150, type: "Perk", bulletCost: 0, apCost: 0, bonus: { raidReduction: 0.2 }, description: "-20% business raid risk (permanent)" },
+      { name: "Bullets", cost: 1, hoochCost: 0, type: "Resource", bulletCost: 0, apCost: 0, bonus: {}, description: "Used for weapons in crimes and hits" }
     ];
 
     // Load/Save Player Data
@@ -194,12 +202,30 @@
       document.getElementById("hooch").textContent = player.hooch;
       document.getElementById("bullets").textContent = player.bullets;
       document.getElementById("ap").textContent = player.ap;
+      document.getElementById("health").textContent = player.health;
       document.getElementById("xp").textContent = player.xp;
       document.getElementById("influence").textContent = player.influence;
 
       // Inventory
       const inventory = document.getElementById("inventory");
-      inventory.innerHTML = player.inventory.map(item => `<li>${item}</li>`).join("") || "Empty";
+      inventory.innerHTML = player.inventory.map(item => {
+        const isEquipped = player.equipped.weapon === item || player.equipped.vehicle === item || player.equipped.clothing === item;
+        const itemData = shopItems.find(i => i.name === item);
+        const canEquip = itemData && ["Weapon", "Vehicle", "Clothing"].includes(itemData.type) && !isEquipped;
+        const equipType = itemData?.type.toLowerCase();
+        return `
+          <li>
+            ${item}
+            ${canEquip ? `<button class="equip-item ml-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" data-item="${item}" data-type="${equipType}">Equip</button>` : ""}
+            ${isEquipped ? `<button class="unequip-item ml-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" data-type="${equipType}">Unequip</button>` : ""}
+          </li>
+        `;
+      }).join("") || "Empty";
+
+      // Equipped Items
+      document.getElementById("equippedWeapon").textContent = player.equipped.weapon || "None";
+      document.getElementById("equippedVehicle").textContent = player.equipped.vehicle || "None";
+      document.getElementById("equippedClothing").textContent = player.equipped.clothing || "None";
 
       // Crimes
       const crimeList = document.getElementById("crimeList");
@@ -212,7 +238,7 @@
           const cooldownEnd = player.cooldowns[crime.name] || 0;
           const now = Date.now();
           const remaining = cooldownEnd > now ? Math.ceil((cooldownEnd - now) / 1000) : 0;
-          const disabled = (crime.apCost > 0 && player.ap < crime.apCost) || (remaining > 0) || player.injury || player.lastDeath;
+          const disabled = (crime.apCost > 0 && player.ap < crime.apCost) || (remaining > 0) || (player.lastDeath && now < player.lastDeath + 3600000);
           return `
             <div class="card p-4">
               <h3 class="text-xl art-deco">${crime.name}</h3>
@@ -220,6 +246,7 @@
               <p>Reward: $${crime.cashMin}–$${crime.cashMax}, ${crime.hoochMin}–${crime.hoochMax} Hooch, ${crime.xpMin}–${crime.xpMax} XP, ${crime.influenceMin}–${crime.influenceMax} Influence</p>
               <p>Risk: ${(crime.risk * 100).toFixed(0)}%</p>
               <p>Bullets: ${crime.bulletCost}</p>
+              <p>Health Cost on Failure: ${crime.healthCost}</p>
               <p>Requires: ${crime.requirements.length ? crime.requirements.join(", ") : "None"}</p>
               ${remaining > 0 ? `<p>Cooldown: ${Math.floor(remaining / 60)}m ${remaining % 60}s</p>` : ""}
               <button class="commit-crime mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800" data-crime="${crime.name}" ${disabled ? "disabled" : ""}>Commit</button>
@@ -234,9 +261,10 @@
           <h3 class="text-xl art-deco">${item.name}</h3>
           <p>Cost: ${item.cost > 0 ? `$${item.cost}` : `${item.hoochCost} Hooch`}${item.apCost ? `, ${item.apCost} AP` : ""}</p>
           <p>Type: ${item.type}</p>
+          <p>${item.description}</p>
           <button class="buy-item mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800" data-item="${item.name}" ${player.cash < item.cost || player.hooch < item.hoochCost || player.ap < (item.apCost || 0) ? "disabled" : ""}>${item.type === "Resource" ? "Buy 1" : "Buy"}</button>
-          ${item.sellPrice ? `<button class="sell-vehicle mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800" data-item="${item.name}">Sell ($${item.sellPrice})</button>` : ""}
-          ${item.scrapBullets ? `<button class="scrap-vehicle mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800" data-item="${item.name}">Scrap (${item.scrapBullets} Bullets)</button>` : ""}
+          ${item.sellPrice ? `<button class="sell-vehicle mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800" data-item="${item.name}" ${!player.inventory.includes(item.name) ? "disabled" : ""}>Sell ($${item.sellPrice})</button>` : ""}
+          ${item.scrapBullets ? `<button class="scrap-vehicle mt-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800" data-item="${item.name}" ${!player.inventory.includes(item.name) ? "disabled" : ""}>Scrap (${item.scrapBullets} Bullets)</button>` : ""}
         </div>
       `).join("");
 
@@ -253,14 +281,18 @@
         : "No businesses owned.";
     }
 
-    // AP Regeneration
+    // AP and Health Regeneration
     setInterval(() => {
-      if (player.ap < player.maxAp && (!player.injury || Date.now() > player.injury) && (!player.lastDeath || Date.now() > player.lastDeath + 3600000)) {
+      const now = Date.now();
+      if (player.ap < player.maxAp && (!player.lastDeath || now > player.lastDeath + 3600000)) {
         const regen = player.perks.includes("Coffee") ? 7 : 5;
         player.ap = Math.min(player.maxAp, player.ap + regen);
-        updateUI();
-        saveGame();
       }
+      if (player.health < player.maxHealth && (!player.lastDeath || now > player.lastDeath + 3600000)) {
+        player.health = Math.min(player.maxHealth, player.health + 5);
+      }
+      updateUI();
+      saveGame();
     }, 60000); // 1 minute
 
     // Commit Crime
@@ -268,10 +300,6 @@
       if (e.target.classList.contains("commit-crime")) {
         const crimeName = e.target.dataset.crime;
         const crime = crimes.find(c => c.name === crimeName);
-        if (player.injury && Date.now() < player.injury) {
-          logEvent("You're injured! Wait until recovery.");
-          return;
-        }
         if (player.lastDeath && Date.now() < player.lastDeath + 3600000) {
           logEvent("You're dead! Wait for respawn.");
           return;
@@ -326,22 +354,39 @@
           updateRank();
         } else {
           logEvent(`Failed ${crime.name}!`);
-          if (Math.random() < 0.2) {
+          player.health = Math.max(0, player.health - crime.healthCost);
+          if (player.health === 0 && crime.name !== "Order a Hit") {
             player.lastDeath = Date.now();
             player.cash = Math.floor(player.cash / 2);
             player.bullets = 0;
             if (player.inventory.length) {
               const lostItems = player.inventory.splice(0, Math.min(2, player.inventory.length));
+              player.equipped = { weapon: null, vehicle: null, clothing: null };
               logEvent(`Killed! Lost 50% cash, all Bullets, and ${lostItems.join(", ")}. Respawn in 1 hour.`);
             } else {
               logEvent(`Killed! Lost 50% cash and all Bullets. Respawn in 1 hour.`);
             }
             player.ap = 50;
-          } else if (Math.random() < 0.5) {
-            player.injury = Date.now() + 3600000;
-            logEvent("Injured! Can't act for 1 hour.");
+            player.health = 100;
+          } else if (crime.name === "Order a Hit" && player.health < 100) {
+            player.lastDeath = Date.now();
+            player.cash = Math.floor(player.cash / 2);
+            player.bullets = 0;
+            if (player.inventory.length) {
+              const lostItems = player.inventory.splice(0, Math.min(2, player.inventory.length));
+              player.equipped = { weapon: null, vehicle: null, clothing: null };
+              logEvent(`Killed by rival hit! Lost 50% cash, all Bullets, and ${lostItems.join(", ")}. Respawn in 1 hour.`);
+            } else {
+              logEvent(`Killed by rival hit! Lost 50% cash and all Bullets. Respawn in 1 hour.`);
+            }
+            player.ap = 50;
+            player.health = 100;
           } else if (player.inventory.length) {
             const lostItem = player.inventory.splice(Math.floor(Math.random() * player.inventory.length), 1)[0];
+            if (player.equipped.weapon === lostItem || player.equipped.vehicle === lostItem || player.equipped.clothing === lostItem) {
+              const type = shopItems.find(i => i.name === lostItem).type.toLowerCase();
+              player.equipped[type] = null;
+            }
             logEvent(`Lost ${lostItem} due to failure.`);
           } else {
             player.cash = Math.max(0, player.cash - 100);
@@ -353,7 +398,7 @@
       }
     });
 
-    // Buy/Sell Items
+    // Buy/Sell/Equip/Unequip Items
     document.addEventListener("click", e => {
       if (e.target.classList.contains("buy-item")) {
         const itemName = e.target.dataset.item;
@@ -373,14 +418,16 @@
                 saveGame();
               }, item.bonus.duration);
             } else if (item.name === "First Aid Kit") {
-              player.injury = null;
+              player.health = player.maxHealth;
+            } else if (item.name === "Whiskey Shot") {
+              player.health = Math.min(player.maxHealth, player.health + item.bonus.health);
             }
           } else if (item.type === "Perk") {
             player.perks.push(item.name);
           } else {
             player.inventory.push(item.name);
           }
-          logEvent(`Bought ${item.name} for $${item.cost}${item.hoochCost ? ` and ${item.hoochCost} Hooch` : ""}.`);
+          logEvent(`Bought ${item.name} for $${item.cost}${item.hoochCost ? ` and ${item.hoochCost} Hooch` : ""}${item.apCost ? ` and ${item.apCost} AP` : ""}.`);
           updateUI();
           saveGame();
         }
@@ -390,6 +437,7 @@
         const item = shopItems.find(i => i.name === itemName);
         if (player.inventory.includes(itemName)) {
           player.inventory = player.inventory.filter(i => i !== itemName);
+          if (player.equipped.vehicle === itemName) player.equipped.vehicle = null;
           player.cash += item.sellPrice;
           logEvent(`Sold ${itemName} for $${item.sellPrice}.`);
           updateUI();
@@ -401,11 +449,29 @@
         const item = shopItems.find(i => i.name === itemName);
         if (player.inventory.includes(itemName)) {
           player.inventory = player.inventory.filter(i => i !== itemName);
+          if (player.equipped.vehicle === itemName) player.equipped.vehicle = null;
           player.bullets += item.scrapBullets;
           logEvent(`Scrapped ${itemName} for ${item.scrapBullets} Bullets.`);
           updateUI();
           saveGame();
         }
+      }
+      if (e.target.classList.contains("equip-item")) {
+        const itemName = e.target.dataset.item;
+        const type = e.target.dataset.type;
+        if (player.inventory.includes(itemName)) {
+          player.equipped[type] = itemName;
+          logEvent(`Equipped ${itemName}.`);
+          updateUI();
+          saveGame();
+        }
+      }
+      if (e.target.classList.contains("unequip-item")) {
+        const type = e.target.dataset.type;
+        player.equipped[type] = null;
+        logEvent(`Unequipped ${type}.`);
+        updateUI();
+        saveGame();
       }
     });
 
@@ -541,6 +607,11 @@
           const income = Math.floor(Math.random() * (b.dailyIncome * 2 - b.dailyIncome + 1)) + b.dailyIncome;
           player.cash += income;
           logEvent(`${b.name} earned $${income} today.`);
+          if (b.name === "Speakeasy" && player.inventory.filter(i => i === "Liquor Crate").length >= 2) {
+            player.inventory = player.inventory.filter(i => i !== "Liquor Crate").slice(0, -2);
+          } else if (b.name === "Speakeasy") {
+            logEvent("Speakeasy needs 2 Liquor Crates to operate!");
+          }
           if (b.name === "Distillery") {
             const crates = Math.floor(Math.random() * 3) + 3;
             for (let i = 0; i < crates; i++) player.inventory.push("Liquor Crate");
@@ -560,21 +631,36 @@
 
     // Random Events
     setInterval(() => {
-      if (player.influence > 50 && Math.random() < 0.05 && (!player.lastDeath || Date.now() > player.lastDeath + 3600000)) {
-        if (Math.random() < 0.2) {
-          player.lastDeath = Date.now();
+      const now = Date.now();
+      if (player.influence > 50 && Math.random() < 0.05 && (!player.lastDeath || now > player.lastDeath + 3600000)) {
+        if (player.health < 100 && Math.random() < 0.2) {
+          player.lastDeath = now;
           player.cash = Math.floor(player.cash / 2);
           player.bullets = 0;
           if (player.inventory.length) {
             const lostItems = player.inventory.splice(0, Math.min(2, player.inventory.length));
+            player.equipped = { weapon: null, vehicle: null, clothing: null };
             logEvent(`Rival gang killed you! Lost 50% cash, all Bullets, and ${lostItems.join(", ")}. Respawn in 1 hour.`);
           } else {
             logEvent(`Rival gang killed you! Lost 50% cash and all Bullets. Respawn in 1 hour.`);
           }
           player.ap = 50;
+          player.health = 100;
         } else {
-          player.cash = Math.max(0, player.cash - 100);
-          logEvent("Rival gang attacked! Lost $100.");
+          player.health = Math.max(0, player.health - 20);
+          logEvent(`Rival gang attacked! Lost 20 Health${player.health === 0 ? " and died! Respawn in 1 hour." : "."}`);
+          if (player.health === 0) {
+            player.lastDeath = now;
+            player.cash = Math.floor(player.cash / 2);
+            player.bullets = 0;
+            if (player.inventory.length) {
+              const lostItems = player.inventory.splice(0, Math.min(2, player.inventory.length));
+              player.equipped = { weapon: null, vehicle: null, clothing: null };
+              logEvent(`Lost ${lostItems.join(", ")} due to death.`);
+            }
+            player.ap = 50;
+            player.health = 100;
+          }
         }
         updateUI();
         saveGame();
@@ -593,17 +679,19 @@
 
     // Helper Functions
     function getSuccessBonus() {
-      return player.inventory.reduce((bonus, item) => {
+      return Object.values(player.equipped).reduce((bonus, item) => {
+        if (!item) return bonus;
         const shopItem = shopItems.find(i => i.name === item);
         return bonus + (shopItem?.bonus.success || 0) + (shopItem?.bonus.getaway || 0);
       }, player.crew ? 0.1 : 0);
     }
 
     function getInfluenceBonus() {
-      return player.inventory.reduce((bonus, item) => {
+      return Object.values(player.equipped).reduce((bonus, item) => {
+        if (!item) return bonus;
         const shopItem = shopItems.find(i => i.name === item);
         return bonus + (shopItem?.bonus.influence || 0);
-      }, 0) + (player.inventory.includes("Fedora and Suit") ? 5 : 0);
+      }, 0);
     }
 
     function updateRank() {
