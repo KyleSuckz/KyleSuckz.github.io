@@ -264,7 +264,7 @@
           const cooldownEnd = player.cooldowns[crime.name] || 0;
           const now = Date.now();
           const remaining = cooldownEnd > now ? Math.ceil((cooldownEnd - now) / 1000) : 0;
-          const disabled = (crime.apCost > 0 && player.ap < crime.apCost) || (remaining > 0) || (player.lastDeath && now < player.lastDeath + 3600000);
+          const disabled = (crime.apCost > 0 && player.ap < crime.apCost) || (remaining > 0) || (player.health < player.maxHealth * 0.5);
           return `
             <div class="card p-4">
               <h3 class="text-xl art-deco">${crime.name}</h3>
@@ -310,11 +310,11 @@
     // AP and Health Regeneration
     setInterval(() => {
       const now = Date.now();
-      if (player.ap < player.maxAp && (!player.lastDeath || now > player.lastDeath + 3600000)) {
+      if (player.ap < player.maxAp) {
         const regen = player.perks.includes("Coffee") ? 7 : 5;
         player.ap = Math.min(player.maxAp, player.ap + regen);
       }
-      if (player.health < player.maxHealth && (!player.lastDeath || now > player.lastDeath + 3600000)) {
+      if (player.health < player.maxHealth) {
         player.health = Math.min(player.maxHealth, player.health + 5);
       }
       updateUI();
@@ -326,8 +326,8 @@
       if (e.target.classList.contains("commit-crime")) {
         const crimeName = e.target.dataset.crime;
         const crime = crimes.find(c => c.name === crimeName);
-        if (player.lastDeath && Date.now() < player.lastDeath + 3600000) {
-          logEvent("You're dead! Wait for respawn.", "death");
+        if (player.health < player.maxHealth * 0.5) {
+          logEvent("Health too low! Need at least 50% health to commit crimes.", "failure");
           return;
         }
         if (crime.apCost > 0 && player.ap < crime.apCost) {
@@ -351,7 +351,8 @@
         if (crime.cooldown) {
           player.cooldowns[crime.name] = Date.now() + crime.cooldown * (player.perks.includes("Fast Talker") ? 0.9 : 1);
         }
-        const success = Math.random() > crime.risk * (1 - getSuccessBonus());
+        const
+        success = Math.random() > crime.risk * (1 - getSuccessBonus());
         if (success) {
           const cash = Math.floor(Math.random() * (crime.cashMax - crime.cashMin + 1)) + crime.cashMin;
           const hooch = Math.floor(Math.random() * (crime.hoochMax - crime.hoochMin + 1)) + crime.hoochMin;
@@ -379,45 +380,9 @@
           logEvent(`Success! Gained $${cash}, ${hooch} Hooch, ${xp} XP, ${influence} Influence from ${crime.name}.${extra}`, "success");
           updateRank();
         } else {
-          logEvent(`Failed ${crime.name}!`, "failure");
           player.health = Math.max(0, player.health - crime.healthCost);
-          if (player.health === 0 && crime.name !== "Order a Hit") {
-            player.lastDeath = Date.now();
-            player.cash = Math.floor(player.cash / 2);
-            player.bullets = 0;
-            if (player.inventory.length) {
-              const lostItems = player.inventory.splice(0, Math.min(2, player.inventory.length));
-              player.equipped = { weapon: null, vehicle: null, clothing: null };
-              logEvent(`Killed! Lost 50% cash, all Bullets, and ${lostItems.join(", ")}. Respawn in 1 hour.`, "death");
-            } else {
-              logEvent(`Killed! Lost 50% cash and all Bullets. Respawn in 1 hour.`, "death");
-            }
-            player.ap = 50;
-            player.health = 100;
-          } else if (crime.name === "Order a Hit" && player.health < 100) {
-            player.lastDeath = Date.now();
-            player.cash = Math.floor(player.cash / 2);
-            player.bullets = 0;
-            if (player.inventory.length) {
-              const lostItems = player.inventory.splice(0, Math.min(2, player.inventory.length));
-              player.equipped = { weapon: null, vehicle: null, clothing: null };
-              logEvent(`Killed by rival hit! Lost 50% cash, all Bullets, and ${lostItems.join(", ")}. Respawn in 1 hour.`, "death");
-            } else {
-              logEvent(`Killed by rival hit! Lost 50% cash and all Bullets. Respawn in 1 hour.`, "death");
-            }
-            player.ap = 50;
-            player.health = 100;
-          } else if (player.inventory.length) {
-            const lostItem = player.inventory.splice(Math.floor(Math.random() * player.inventory.length), 1)[0];
-            if (player.equipped.weapon === lostItem || player.equipped.vehicle === lostItem || player.equipped.clothing === lostItem) {
-              const type = shopItems.find(i => i.name === lostItem).type.toLowerCase();
-              player.equipped[type] = null;
-            }
-            logEvent(`Lost ${lostItem} due to failure.`, "failure");
-          } else {
-            player.cash = Math.max(0, player.cash - 100);
-            logEvent("Lost $100 due to failure.", "failure");
-          }
+          player.cash = Math.max(0, player.cash - 100);
+          logEvent(`Failed ${crime.name}! Lost $100 and ${crime.healthCost} Health.`, "failure");
         }
         updateUI();
         saveGame();
@@ -679,36 +644,9 @@
     // Random Events
     setInterval(() => {
       const now = Date.now();
-      if (player.influence > 50 && Math.random() < 0.05 && (!player.lastDeath || now > player.lastDeath + 3600000)) {
-        if (player.health < 100 && Math.random() < 0.2) {
-          player.lastDeath = now;
-          player.cash = Math.floor(player.cash / 2);
-          player.bullets = 0;
-          if (player.inventory.length) {
-            const lostItems = player.inventory.splice(0, Math.min(2, player.inventory.length));
-            player.equipped = { weapon: null, vehicle: null, clothing: null };
-            logEvent(`Rival gang killed you! Lost 50% cash, all Bullets, and ${lostItems.join(", ")}. Respawn in 1 hour.`, "death");
-          } else {
-            logEvent(`Rival gang killed you! Lost 50% cash and all Bullets. Respawn in 1 hour.`, "death");
-          }
-          player.ap = 50;
-          player.health = 100;
-        } else {
-          player.health = Math.max(0, player.health - 20);
-          logEvent(`Rival gang attacked! Lost 20 Health${player.health === 0 ? " and died! Respawn in 1 hour." : "."}`, player.health === 0 ? "death" : "failure");
-          if (player.health === 0) {
-            player.lastDeath = now;
-            player.cash = Math.floor(player.cash / 2);
-            player.bullets = 0;
-            if (player.inventory.length) {
-              const lostItems = player.inventory.splice(0, Math.min(2, player.inventory.length));
-              player.equipped = { weapon: null, vehicle: null, clothing: null };
-              logEvent(`Lost ${lostItems.join(", ")} due to death.`, "death");
-            }
-            player.ap = 50;
-            player.health = 100;
-          }
-        }
+      if (player.influence > 50 && Math.random() < 0.05) {
+        player.health = Math.max(0, player.health - 20);
+        logEvent(`Rival gang attacked! Lost 20 Health.`, "failure");
         updateUI();
         saveGame();
       }
