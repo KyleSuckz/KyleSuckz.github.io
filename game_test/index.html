@@ -43,13 +43,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prohibition Kings</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/speakeasy.css">
+    <link rel="stylesheet" href="css/crimes.css">
+    <link rel="stylesheet" href="css/inventory.css">
+    <link rel="stylesheet" href="css/profile.css">
 </head>
 <body>
     <div class="bordered header">
         <h1>Prohibition Kings</h1>
         <p id="player-stats">Player: Unknown | Rank: Thug | Cash: $0 | XP: 0 | Influence: 0 | Energy: 10000 | Gold: 0 | Health: 100</p>
         <div class="progress-bar"><div class="health-fill" id="health-fill" style="width: 100%;"><span class="progress-text">100/100</span></div></div>
+        <div class="progress-bar"><div class="rank-fill" id="rank-fill" style="width: 0%;"><span class="progress-text">0/100</span></div></div>
     </div>
     <div class="nav-bordered">
         <a class="nav-link active" onclick="showTab('crimes')">Crimes</a>
@@ -94,11 +99,12 @@
             <h2>Profile</h2>
             <p id="profile-stats"></p>
             <div class="progress-bar"><div class="health-fill" id="health-fill-profile" style="width: 100%;"><span class="progress-text">100/100</span></div></div>
+            <div class="progress-bar"><div class="rank-fill" id="rank-fill-profile" style="width: 0%;"><span class="progress-text">0/100</span></div></div>
         </div>
     </div>
     <div class="logout-container">
         <button onclick="logout()">Logout</button>
     </div>
-    <script src="game.js"></script>
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>

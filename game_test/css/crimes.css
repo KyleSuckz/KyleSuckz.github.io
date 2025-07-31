@@ -1,0 +1,19 @@
+.crime-container {
+    border: 1px solid #FFFFFF;
+    padding: 10px;
+    margin: 5px 0;
+    height: auto;
+    overflow: visible;
+}
+.crime-action {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 30px;
+    flex-wrap: nowrap;
+    margin: 2px 0;
+}
+.crime-action p {
+    margin: 0;
+    padding: 5px;
+}
