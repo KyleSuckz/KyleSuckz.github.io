@@ -27,7 +27,7 @@
     min-width: 300px;
     text-align: left;
 }
-#inventory-list h3 {
-    text-align: left; /* Align Owned Items header with its list */
+#inventory .bordered #inventory-list h3 {
+    text-align: left; /* Override global.css to align Owned Items with its list */
     margin: 0 0 10px 0;
 }
