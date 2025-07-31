@@ -184,7 +184,6 @@ export function updateUI() {
                     }
                 }
             }
-            inventoryList += `<p>Cash: $${player.cash} | Gold: ${player.gold}</p>`;
             document.getElementById("inventory-list").innerHTML = inventoryList;
 
             let marketList = "";
