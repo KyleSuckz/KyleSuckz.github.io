@@ -43,6 +43,8 @@
             border: 1px solid #FFFFFF;
             padding: 10px;
             margin: 5px 0;
+            min-height: 100px;
+            overflow: visible;
         }
         .bordered.black-market {
             margin-bottom: 20px;
@@ -81,22 +83,25 @@
         <div class="progress-bar"><div class="health-fill" id="health-fill" style="width: 100%;"></div></div>
     </div>
     <div class="bordered">
-        <a class="nav-link active" onclick="showTab('inventory')">Inventory</a>
+        <a class="nav-link active" onclick="showTab('crimes')">Crimes</a>
+        <a class="nav-link" onclick="showTab('inventory')">Inventory</a>
         <a class="nav-link" onclick="showTab('speakeasy')">Speakeasy</a>
         <a class="nav-link" onclick="showTab('profile')">Profile</a>
     </div>
-    <div id="inventory" class="tab active">
-        <div class="bordered black-market">
-            <h2>Black Market Items</h2>
-            <div id="inventory-list"></div>
-            <div id="market-list"></div>
-        </div>
+    <div id="crimes" class="tab active">
         <div class="bordered">
             <h2>Available Crimes</h2>
             <p>Energy: <span id="energy-text">10000</span></p>
             <div class="progress-bar"><div class="energy-fill" id="energy-fill" style="width: 100%;"></div></div>
             <div id="crime-list"></div>
             <div id="crime-results"></div>
+        </div>
+    </div>
+    <div id="inventory" class="tab">
+        <div class="bordered black-market">
+            <h2>Black Market Items</h2>
+            <div id="inventory-list"></div>
+            <div id="market-list"></div>
         </div>
     </div>
     <div id="speakeasy" class="tab">
@@ -194,83 +199,93 @@
                 const stats = `Player: ${player.name} | Rank: ${player.rank} | Cash: $${player.cash} | XP: ${player.xp} | Influence: ${player.influence} | Energy: ${player.energy} | Gold: ${player.gold} | Health: ${player.health}`;
                 document.getElementById("player-stats").textContent = stats;
                 document.getElementById("profile-stats").textContent = stats;
-                document.getElementById("energy-text").textContent = player.energy;
-                document.getElementById("energy-fill").style.width = `${(player.energy / 10000) * 100}%`;
+                
+                // Update Crimes tab
+                const crimesTab = document.getElementById("crimes");
+                if (crimesTab.classList.contains("active")) {
+                    document.getElementById("energy-text").textContent = player.energy;
+                    document.getElementById("energy-fill").style.width = `${(player.energy / 10000) * 100}%`;
+                    console.log("Generating crime list...");
+                    let crimeList = "";
+                    const now = Date.now();
+                    let bribeActive = player.items.includes("Bribe");
+                    for (let crime of crimes) {
+                        console.log(`Processing crime: ${crime.name}, Energy: ${player.energy}, XP: ${player.xp}`);
+                        let canAttempt = true;
+                        let status = crime.tooltip;
+                        let adjustedRisk = crime.risk;
+                        let successBoost = 0;
+                        if (bribeActive) adjustedRisk = Math.max(0, adjustedRisk - 0.1);
+                        if (crime.name === "Pickpocketing" && player.items.includes("Crowbar")) successBoost += 0.05;
+                        if (crime.name === "Speakeasy Heist" && player.items.includes("Revolver")) successBoost += 0.1;
+                        adjustedRisk = Math.max(0, adjustedRisk - successBoost);
+                        if (crime.name === "Speakeasy Heist" && player.xp < 500) {
+                            canAttempt = false;
+                            status = "Need Capo rank (500 XP)";
+                        } else if (crime.energy && player.energy < crime.energy) {
+                            canAttempt = false;
+                            status = `Need ${crime.energy} Energy`;
+                        } else if (crime.maxPerDay) {
+                            const attempts = player.crimeAttempts[crime.name].timestamps.filter(t => now - t < 86400000);
+                            console.log(`${crime.name} attempts:`, attempts);
+                            if (attempts.length >= crime.maxPerDay) {
+                                canAttempt = false;
+                                const earliest = Math.min(...player.crimeAttempts[crime.name].timestamps);
+                                const remaining = Math.ceil((86400000 - (now - earliest)) / 3600000);
+                                status = `Next attempt in ${remaining} hours`;
+                            }
+                        }
+                        crimeList += `
+                            <div class="bordered">
+                                <p>${crime.name}: $${crime.cash[0]}-$${crime.cash[1]}, ${crime.xp} XP, ${crime.influence} Influence${crime.gold ? `, ${crime.gold[0]}-${crime.gold[1]} Gold` : ""}, ${crime.energy ? crime.energy + " Energy" : crime.maxPerDay + "/day"} (Risk: ${(adjustedRisk * 100).toFixed(1)}%)</p>
+                                <p>Status: ${status}</p>
+                                ${crime.maxPerDay ? `<div class="progress-bar"><div class="cooldown-fill" style="width: ${100 - ((player.crimeAttempts[crime.name].timestamps.filter(t => now - t < 86400000).length / crime.maxPerDay) * 100)}%"></div></div>` : ""}
+                                <button ${canAttempt ? "" : "disabled"} onclick="commitCrime('${crime.name}')">Attempt</button>
+                            </div>`;
+                    }
+                    console.log("Crime list HTML:", crimeList);
+                    document.getElementById("crime-list").innerHTML = crimeList || "<p>No crimes available. Check console.</p>";
+
+                    console.log("Rendering crime results:", player.crimeResults);
+                    let resultsList = player.crimeResults.length ? "" : "<p>No recent crime results.</p>";
+                    for (let result of player.crimeResults) {
+                        resultsList += `<div class="bordered"><p>${result}</p></div>`;
+                        console.log("Rendered crime result to DOM:", result);
+                    }
+                    document.getElementById("crime-results").innerHTML = resultsList;
+                }
+
+                // Update Inventory tab
+                const inventoryTab = document.getElementById("inventory");
+                if (inventoryTab.classList.contains("active")) {
+                    let inventoryList = "<p>Owned Items:</p>";
+                    if (player.items.length === 0) {
+                        inventoryList += "<p>None</p>";
+                    } else {
+                        for (let itemName of player.items) {
+                            const item = market.find(i => i.name === itemName);
+                            if (item) {
+                                inventoryList += `<p>${item.name}: Active - ${item.tooltip}</p>`;
+                            }
+                        }
+                    }
+                    inventoryList += `<p>Cash: $${player.cash} | Gold: ${player.gold}</p>`;
+                    document.getElementById("inventory-list").innerHTML = inventoryList;
+
+                    let marketList = "";
+                    for (let item of market) {
+                        const owned = player.items.includes(item.name) && item.name !== "Gold";
+                        marketList += `
+                            <div class="bordered">
+                                <p>${item.name}: $${item.price} - ${item.tooltip}</p>
+                                <button ${owned || player.cash < item.price ? "disabled" : ""} onclick="buyItem('${item.name}')">Buy</button>
+                            </div>`;
+                    }
+                    document.getElementById("market-list").innerHTML = marketList;
+                }
+
                 document.getElementById("health-fill").style.width = `${player.health}%`;
                 document.getElementById("health-fill-profile").style.width = `${player.health}%`;
-
-                console.log("Generating crime list...");
-                let crimeList = "";
-                const now = Date.now();
-                let bribeActive = player.items.includes("Bribe");
-                for (let crime of crimes) {
-                    console.log(`Processing crime: ${crime.name}, Energy: ${player.energy}, XP: ${player.xp}`);
-                    let canAttempt = true;
-                    let status = crime.tooltip;
-                    let adjustedRisk = crime.risk;
-                    let successBoost = 0;
-                    if (bribeActive) adjustedRisk = Math.max(0, adjustedRisk - 0.1);
-                    if (crime.name === "Pickpocketing" && player.items.includes("Crowbar")) successBoost += 0.05;
-                    if (crime.name === "Speakeasy Heist" && player.items.includes("Revolver")) successBoost += 0.1;
-                    adjustedRisk = Math.max(0, adjustedRisk - successBoost);
-                    if (crime.name === "Speakeasy Heist" && player.xp < 500) {
-                        canAttempt = false;
-                        status = "Need Capo rank (500 XP)";
-                    } else if (crime.energy && player.energy < crime.energy) {
-                        canAttempt = false;
-                        status = `Need ${crime.energy} Energy`;
-                    } else if (crime.maxPerDay) {
-                        const attempts = player.crimeAttempts[crime.name].timestamps.filter(t => now - t < 86400000);
-                        console.log(`${crime.name} attempts:`, attempts);
-                        if (attempts.length >= crime.maxPerDay) {
-                            canAttempt = false;
-                            const earliest = Math.min(...player.crimeAttempts[crime.name].timestamps);
-                            const remaining = Math.ceil((86400000 - (now - earliest)) / 3600000);
-                            status = `Next attempt in ${remaining} hours`;
-                        }
-                    }
-                    crimeList += `
-                        <div class="bordered">
-                            <p>${crime.name}: $${crime.cash[0]}-$${crime.cash[1]}, ${crime.xp} XP, ${crime.influence} Influence${crime.gold ? `, ${crime.gold[0]}-${crime.gold[1]} Gold` : ""}, ${crime.energy ? crime.energy + " Energy" : crime.maxPerDay + "/day"} (Risk: ${(adjustedRisk * 100).toFixed(1)}%)</p>
-                            <p>Status: ${status}</p>
-                            ${crime.maxPerDay ? `<div class="progress-bar"><div class="cooldown-fill" style="width: ${100 - ((player.crimeAttempts[crime.name].timestamps.filter(t => now - t < 86400000).length / crime.maxPerDay) * 100)}%"></div></div>` : ""}
-                            <button ${canAttempt ? "" : "disabled"} onclick="commitCrime('${crime.name}')">Attempt</button>
-                        </div>`;
-                }
-                console.log("Crime list HTML:", crimeList);
-                document.getElementById("crime-list").innerHTML = crimeList || "<p>No crimes available. Check console.</p>";
-
-                console.log("Rendering crime results:", player.crimeResults);
-                let resultsList = player.crimeResults.length ? "" : "<p>No recent crime results.</p>";
-                for (let result of player.crimeResults) {
-                    resultsList += `<div class="bordered"><p>${result}</p></div>`;
-                }
-                document.getElementById("crime-results").innerHTML = resultsList;
-
-                let inventoryList = "<p>Owned Items:</p>";
-                if (player.items.length === 0) {
-                    inventoryList += "<p>None</p>";
-                } else {
-                    for (let itemName of player.items) {
-                        const item = market.find(i => i.name === itemName);
-                        if (item) {
-                            inventoryList += `<p>${item.name}: Active - ${item.tooltip}</p>`;
-                        }
-                    }
-                }
-                inventoryList += `<p>Cash: $${player.cash} | Gold: ${player.gold}</p>`;
-                document.getElementById("inventory-list").innerHTML = inventoryList;
-
-                let marketList = "";
-                for (let item of market) {
-                    const owned = player.items.includes(item.name) && item.name !== "Gold";
-                    marketList += `
-                        <div class="bordered">
-                            <p>${item.name}: $${item.price} - ${item.tooltip}</p>
-                            <button ${owned || player.cash < item.price ? "disabled" : ""} onclick="buyItem('${item.name}')">Buy</button>
-                        </div>`;
-                }
-                document.getElementById("market-list").innerHTML = marketList;
             } catch (e) {
                 console.error("UI update error:", e);
                 document.getElementById("crime-list").innerHTML = "<p>Error loading crimes. Check console.</p>";
@@ -399,9 +414,14 @@
             document.querySelectorAll(".nav-link").forEach(link => link.classList.remove("active"));
             document.getElementById(tabId).classList.add("active");
             document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add("active");
-            player.crimeResults = [];
-            document.getElementById("crime-results").innerHTML = "";
-            updateUI();
+            setTimeout(() => {
+                player.crimeResults = [];
+                const crimeResults = document.getElementById("crime-results");
+                if (crimeResults) {
+                    crimeResults.innerHTML = "<p>No recent crime results.</p>";
+                }
+                updateUI();
+            }, 500);
         }
 
         function logout() {
