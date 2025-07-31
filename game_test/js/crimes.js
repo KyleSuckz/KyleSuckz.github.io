@@ -7,7 +7,16 @@ export const crimes = [
     { name: "Speakeasy Heist", cash: [500, 2000], xp: 100, influence: 50, gold: [2, 5], baseSuccess: 5, successIncrement: 0.5, maxPerDay: 3, tooltip: "Knock over a rival juice joint for big dough." }
 ];
 
+let lastClickTime = 0;
+const clickDebounceMs = 500; // Debounce clicks by 500ms
+
 export function commitCrime(crimeName) {
+    const now = Date.now();
+    if (now - lastClickTime < clickDebounceMs) {
+        console.log("Click debounced for", crimeName);
+        return;
+    }
+    lastClickTime = now;
     console.log(`Attempting crime: ${crimeName}`);
     try {
         const crime = crimes.find(c => c.name === crimeName);
@@ -24,7 +33,6 @@ export function commitCrime(crimeName) {
             return;
         }
         if (crime.maxPerDay) {
-            const now = Date.now();
             const attempts = player.crimeAttempts[crime.name].timestamps.filter(t => now - t < 86400000);
             if (attempts.length >= crime.maxPerDay) {
                 console.log("Max attempts reached for", crimeName);
@@ -34,7 +42,7 @@ export function commitCrime(crimeName) {
             }
             player.crimeAttempts[crime.name].timestamps.push(now);
         }
-        if (crime.energy) player.energy = Math.max(0, Math.min(50000, player.energy - crime.energy));
+        if (crime.energy) player.energy = Math.max(0, Math.min(50000, player.energy - crime.energy)); // Enforce 50,000 cap
         let successChance = crime.baseSuccess + (player.successCount[crime.name] * crime.successIncrement);
         let itemBonus = 0;
         if (player.items.includes("Bribe")) itemBonus += 10;
