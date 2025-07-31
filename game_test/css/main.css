@@ -1,0 +1,60 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f0f0f0;
+}
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.nav-link {
+    cursor: pointer;
+    padding: 10px;
+    background-color: #ddd;
+    border-radius: 5px;
+}
+.nav-link.active {
+    background-color: #007bff;
+    color: white;
+}
+.tab {
+    display: none;
+}
+.tab.active {
+    display: block;
+}
+.progress-bar {
+    width: 100%;
+    background-color: #ddd;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+.progress-fill {
+    height: 20px;
+    border-radius: 5px;
+    position: relative;
+}
+.progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+}
+.rank-fill {
+    background-color: #007bff;
+}
+.health-fill {
+    background-color: #28a745;
+}
+.energy-fill {
+    background-color: #17a2b8;
+}
