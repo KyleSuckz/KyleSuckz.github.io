@@ -28,7 +28,6 @@ export function savePlayer() {
 }
 
 export function loadPlayer() {
-    console.log("Loading player...");
     try {
         const saved = localStorage.getItem("prohibitionPlayer");
         if (saved) {
@@ -76,7 +75,6 @@ export function updateRank() {
 }
 
 export function logout() {
-    console.log("Logging out...");
     try {
         localStorage.removeItem("prohibitionPlayer");
         player = {

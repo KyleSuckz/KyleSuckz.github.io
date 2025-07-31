@@ -8,7 +8,6 @@ export const crimes = [
 ];
 
 export function commitCrime(crimeName) {
-    console.log(`Attempting crime: ${crimeName}`);
     try {
         const crime = crimes.find(c => c.name === crimeName);
         if (!crime) {

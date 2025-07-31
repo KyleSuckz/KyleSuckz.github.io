@@ -9,7 +9,6 @@ export const market = [
 ];
 
 export function gamble() {
-    console.log("Gambling cash...");
     try {
         const bet = parseInt(document.getElementById("bet-amount").value);
         if (bet < 10 || bet > 100 || player.cash < bet) {
@@ -36,7 +35,6 @@ export function gamble() {
 }
 
 export function gambleGold() {
-    console.log("Gambling gold...");
     try {
         const bet = parseInt(document.getElementById("gold-bet-amount").value);
         if (bet < 1 || bet > 100 || player.gold < bet) {
@@ -63,7 +61,6 @@ export function gambleGold() {
 }
 
 export function buyItem(itemName) {
-    console.log(`Buying item: ${itemName}`);
     try {
         const item = market.find(i => i.name === itemName);
         if (!item || player.cash < item.price || (item.name !== "Gold" && player.items.includes(item.name))) {

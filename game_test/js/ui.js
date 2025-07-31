@@ -210,7 +210,6 @@ function updateCrimeButtons() {
 }
 
 export function showTab(tabId) {
-    console.log(`Showing tab: ${tabId}`);
     try {
         document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
         document.querySelectorAll(".nav-link").forEach(link => link.classList.remove("active"));
