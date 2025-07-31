@@ -14,29 +14,28 @@ export function updateUI() {
         document.getElementById("player-stats").textContent = stats;
         document.getElementById("profile-stats").textContent = stats;
         
-        // Calculate rank progress
-        let rankThreshold = 100; // Thug → Runner
+        let rankThreshold = 100;
         let nextRank = "Runner";
         if (player.xp >= 10000) {
-            rankThreshold = 10000; // Boss (max)
+            rankThreshold = 10000;
             nextRank = "Boss";
         } else if (player.xp >= 5000) {
-            rankThreshold = 10000; // Underboss → Boss
+            rankThreshold = 10000;
             nextRank = "Boss";
         } else if (player.xp >= 2500) {
-            rankThreshold = 5000; // Capo → Underboss
+            rankThreshold = 5000;
             nextRank = "Underboss";
         } else if (player.xp >= 1000) {
-            rankThreshold = 2500; // Lieutenant → Capo
+            rankThreshold = 2500;
             nextRank = "Capo";
         } else if (player.xp >= 500) {
-            rankThreshold = 1000; // Enforcer → Lieutenant
+            rankThreshold = 1000;
             nextRank = "Lieutenant";
         } else if (player.xp >= 250) {
-            rankThreshold = 500; // Soldier → Enforcer
+            rankThreshold = 500;
             nextRank = "Enforcer";
         } else if (player.xp >= 100) {
-            rankThreshold = 250; // Runner → Soldier
+            rankThreshold = 250;
             nextRank = "Soldier";
         }
         const rankProgress = Math.min(100, (player.xp / rankThreshold) * 100);
@@ -253,10 +252,7 @@ export function showTab(tabId) {
         document.querySelectorAll(".nav-link").forEach(link => link.classList.remove("active"));
         document.getElementById(tabId).classList.add("active");
         document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add("active");
-        setTimeout(() => {
-            player.crimeResults = {};
-            updateUI();
-        }, 500);
+        updateUI();
     } catch (e) {
         console.error("Error in showTab:", e);
     }

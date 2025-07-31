@@ -5,7 +5,7 @@ import { updateEnergy } from './utils.js';
 window.onload = function() {
     console.log("Window loaded, initializing game...");
     loadPlayer();
-    updateEnergy(); // Ensure energy is set before UI renders
+    updateEnergy();
     updateUI();
     showTab('crimes');
 };
