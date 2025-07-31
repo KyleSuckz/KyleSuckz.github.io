@@ -184,6 +184,7 @@
             items: [],
             health: 100,
             lastEnergyUpdate: Date.now(),
+            lastEnergyTick: Date.now(),
             crimeAttempts: { "Speakeasy Heist": { timestamps: [] } },
             crimeResults: {},
             successCount: { "Pickpocketing": 0, "Bootleg Run": 0, "Speakeasy Heist": 0 }
@@ -219,6 +220,7 @@
                     console.log("Loaded player:", JSON.stringify(player));
                     if (!player.crimeResults) player.crimeResults = {};
                     if (!player.successCount) player.successCount = { "Pickpocketing": 0, "Bootleg Run": 0, "Speakeasy Heist": 0 };
+                    if (!player.lastEnergyTick) player.lastEnergyTick = Date.now();
                     const uniqueItems = [];
                     for (let item of player.items) {
                         if (item === "Gold" || !uniqueItems.includes(item)) {
@@ -234,15 +236,20 @@
                 console.error("Error loading player data:", e);
                 player.crimeResults = {};
                 player.successCount = { "Pickpocketing": 0, "Bootleg Run": 0, "Speakeasy Heist": 0 };
+                player.lastEnergyTick = Date.now();
             }
         }
 
         function updateEnergy() {
             console.log("Updating energy...");
             const now = Date.now();
-            const minutesPassed = (now - player.lastEnergyUpdate) / 60000;
-            player.energy = Math.min(10000, player.energy + Math.floor(minutesPassed * 5));
-            player.lastEnergyUpdate = now;
+            const minutesPassed = Math.floor((now - player.lastEnergyTick) / 60000);
+            if (minutesPassed >= 1) {
+                player.energy = Math.min(10000, player.energy + (minutesPassed * 5));
+                player.lastEnergyTick += minutesPassed * 60000;
+                player.lastEnergyUpdate = now;
+                console.log(`Energy updated: ${player.energy}, last tick: ${player.lastEnergyTick}`);
+            }
             savePlayer();
         }
 
@@ -256,8 +263,8 @@
 
         function formatEnergyCountdown() {
             const now = Date.now();
-            const msSinceLastUpdate = now - player.lastEnergyUpdate;
-            const msUntilNextMinute = 60000 - (msSinceLastUpdate % 60000);
+            const msSinceLastTick = now - player.lastEnergyTick;
+            const msUntilNextMinute = 60000 - (msSinceLastTick % 60000);
             if (msUntilNextMinute <= 0) return "00:00";
             const minutes = Math.floor(msUntilNextMinute / 60000);
             const seconds = Math.floor((msUntilNextMinute % 60000) / 1000);
@@ -294,17 +301,24 @@
                                 return;
                             }
                             const now = Date.now();
-                            const msSinceLastUpdate = now - player.lastEnergyUpdate;
-                            if (msSinceLastUpdate >= 60000) {
-                                updateEnergy();
-                            }
-                            if (player.energy >= 10000) {
-                                clearInterval(energyCountdownInterval);
-                                energyCountdownInterval = null;
-                                document.getElementById("energy-text").textContent = `${player.energy}`;
-                                return;
+                            const msSinceLastTick = now - player.lastEnergyTick;
+                            if (msSinceLastTick >= 60000) {
+                                player.energy = Math.min(10000, player.energy + 5);
+                                player.lastEnergyTick += 60000;
+                                player.lastEnergyUpdate = now;
+                                savePlayer();
+                                if (player.energy >= 10000) {
+                                    clearInterval(energyCountdownInterval);
+                                    energyCountdownInterval = null;
+                                    document.getElementById("energy-text").textContent = `${player.energy}`;
+                                    document.getElementById("energy-fill").style.width = `${(player.energy / 10000) * 100}%`;
+                                    document.getElementById("energy-fill").querySelector(".progress-text").textContent = `${player.energy}/10000`;
+                                    return;
+                                }
                             }
                             document.getElementById("energy-text").textContent = `${player.energy} (+5 in ${formatEnergyCountdown()})`;
+                            document.getElementById("energy-fill").style.width = `${(player.energy / 10000) * 100}%`;
+                            document.getElementById("energy-fill").querySelector(".progress-text").textContent = `${player.energy}/10000`;
                         }, 1000);
                     }
 
@@ -602,6 +616,7 @@
                     items: [],
                     health: 100,
                     lastEnergyUpdate: Date.now(),
+                    lastEnergyTick: Date.now(),
                     crimeAttempts: { "Speakeasy Heist": { timestamps: [] } },
                     crimeResults: {},
                     successCount: { "Pickpocketing": 0, "Bootleg Run": 0, "Speakeasy Heist": 0 }
