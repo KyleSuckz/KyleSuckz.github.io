@@ -1,4 +1,8 @@
 .bordered.black-market {
-    margin-bottom: 20px;
+    margin-bottom: 10px; /* Reduced from 20px for tighter borders */
+    padding: 5px; /* Reduced from default 10px */
     height: auto;
+    display: flex; /* Ensure button and text on same line */
+    align-items: center;
+    gap: 10px;
 }

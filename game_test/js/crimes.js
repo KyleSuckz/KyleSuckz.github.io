@@ -1,5 +1,5 @@
 import { player, savePlayer, updateRank } from './player.js';
-import { updateUI } from './ui.js'; // Add import for updateUI
+import { updateUI } from './ui.js';
 
 export const crimes = [
     { name: "Pickpocketing", cash: [1, 5], xp: 5, influence: 2, energy: 10, baseSuccess: 5, successIncrement: 2, tooltip: "Grab some dough from unsuspecting marks." },
@@ -8,22 +8,18 @@ export const crimes = [
 ];
 
 export function commitCrime(crimeName) {
-    console.log(`Attempting crime: ${crimeName}`);
     try {
         const crime = crimes.find(c => c.name === crimeName);
         if (!crime) {
-            console.log("Crime not found:", crimeName);
             return;
         }
         const now = Date.now();
         if (crime.energy && player.energy < crime.energy) {
-            console.log("Not enough Energy for", crimeName);
             return;
         }
         if (crime.maxPerDay) {
             const attempts = player.crimeAttempts[crime.name].timestamps.filter(t => now - t < 86400000);
             if (attempts.length >= crime.maxPerDay) {
-                console.log("Max attempts reached for", crimeName);
                 return;
             }
             player.crimeAttempts[crime.name].timestamps.push(now);
@@ -37,7 +33,6 @@ export function commitCrime(crimeName) {
         if (crime.name === "Speakeasy Heist" && player.items.includes("Revolver")) itemBonus += 10;
         successChance = Math.min(100, successChance + itemBonus);
         const risk = 1 - (successChance / 100);
-        console.log(`Crime: ${crimeName}, Success: ${successChance.toFixed(1)}%, Risk: ${(risk * 100).toFixed(1)}%, Successes: ${player.successCount[crime.name]}`);
 
         const success = Math.random() > risk;
         let message = "";
@@ -57,14 +52,13 @@ export function commitCrime(crimeName) {
         } else {
             message = "Failed: Try again!";
         }
-        console.log(`Crime result for ${crimeName}: ${message}`);
         player.crimeResults[crimeName] = message;
         updateRank();
         savePlayer();
-        updateUI(); // Add this to refresh UI immediately
+        updateUI();
     } catch (e) {
         console.error(`Error in commitCrime for ${crimeName}:`, e);
         player.crimeResults[crimeName] = "Error: Try again!";
-        updateUI(); // Add this to show error in UI
+        updateUI();
     }
 }

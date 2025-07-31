@@ -7,36 +7,34 @@ let countdownInterval = null;
 let energyCountdownInterval = null;
 
 export function updateUI() {
-    console.log("Updating UI...");
     try {
         updateEnergy();
         const stats = `Player: ${player.name} | Rank: ${player.rank} | Cash: $${player.cash} | XP: ${player.xp} | Influence: ${player.influence} | Energy: ${player.energy} | Gold: ${player.gold} | Health: ${player.health}`;
         document.getElementById("player-stats").textContent = stats;
         document.getElementById("profile-stats").textContent = stats;
         
-        // Calculate rank progress
-        let rankThreshold = 100; // Thug → Runner
+        let rankThreshold = 100;
         let nextRank = "Runner";
         if (player.xp >= 10000) {
-            rankThreshold = 10000; // Boss (max)
+            rankThreshold = 10000;
             nextRank = "Boss";
         } else if (player.xp >= 5000) {
-            rankThreshold = 10000; // Underboss → Boss
+            rankThreshold = 10000;
             nextRank = "Boss";
         } else if (player.xp >= 2500) {
-            rankThreshold = 5000; // Capo → Underboss
+            rankThreshold = 5000;
             nextRank = "Underboss";
         } else if (player.xp >= 1000) {
-            rankThreshold = 2500; // Lieutenant → Capo
+            rankThreshold = 2500;
             nextRank = "Capo";
         } else if (player.xp >= 500) {
-            rankThreshold = 1000; // Enforcer → Lieutenant
+            rankThreshold = 1000;
             nextRank = "Lieutenant";
         } else if (player.xp >= 250) {
-            rankThreshold = 500; // Soldier → Enforcer
+            rankThreshold = 500;
             nextRank = "Enforcer";
         } else if (player.xp >= 100) {
-            rankThreshold = 250; // Runner → Soldier
+            rankThreshold = 250;
             nextRank = "Soldier";
         }
         const rankProgress = Math.min(100, (player.xp / rankThreshold) * 100);
@@ -87,7 +85,6 @@ export function updateUI() {
                 }, 1000);
             }
 
-            console.log("Generating crime list...");
             let crimeList = "";
             const now = Date.now();
             let bribeActive = player.items.includes("Bribe");
@@ -98,7 +95,6 @@ export function updateUI() {
             }
 
             for (let crime of crimes) {
-                console.log(`Processing crime: ${crime.name}, Energy: ${player.energy}, XP: ${player.xp}, Successes: ${player.successCount[crime.name]}`);
                 let canAttempt = true;
                 let status = crime.tooltip;
                 let successChance = crime.baseSuccess + (player.successCount[crime.name] * crime.successIncrement);
@@ -107,7 +103,7 @@ export function updateUI() {
                 if (crime.name === "Pickpocketing" && player.items.includes("Crowbar")) itemBonus += 5;
                 if (crime.name === "Speakeasy Heist" && player.items.includes("Revolver")) itemBonus += 10;
                 successChance = Math.min(100, successChance + itemBonus);
-                if (crime.name === "Speakeasy Heist" && player.xp < 2500) { // Update to Capo (2500 XP)
+                if (crime.name === "Speakeasy Heist" && player.xp < 2500) {
                     canAttempt = false;
                     status = "Need Capo rank (2500 XP)";
                 } else if (crime.energy && player.energy < crime.energy) {
@@ -115,7 +111,6 @@ export function updateUI() {
                     status = `Need ${crime.energy} Energy`;
                 } else if (crime.maxPerDay) {
                     const attempts = player.crimeAttempts[crime.name].timestamps.filter(t => now - t < 86400000);
-                    console.log(`${crime.name} attempts:`, attempts);
                     if (attempts.length >= crime.maxPerDay) {
                         canAttempt = false;
                         const earliest = Math.min(...player.crimeAttempts[crime.name].timestamps);
@@ -147,17 +142,13 @@ export function updateUI() {
                     <div class="bordered">
                         <p>${crime.name}: $${crime.cash[0]}-$${crime.cash[1]}, ${crime.xp} XP, ${crime.influence} Influence${crime.gold ? `, ${crime.gold[0]}-${crime.gold[1]} Gold` : ""}, ${crime.energy ? crime.energy + " Energy" : crime.maxPerDay + "/day"} (Success: ${successChance.toFixed(1)}%)</p>
                         <p>Status: ${status}</p>
-                        <div class="city-action">
+                        <div class="crime-action">
                             <button ${canAttempt ? "" : "disabled"} onclick="commitCrime('${crime.name}')">Attempt</button>
                             ${resultMessage ? `<p>${resultMessage}</p>` : ""}
                         </div>
                         <div class="progress-bar"><div class="success-fill" style="width: ${successChance}%"><span class="success-text">${successChance.toFixed(1)}%</span></div></div>
                     </div>`;
-                if (resultMessage) {
-                    console.log(`Rendered crime result for ${crime.name}: ${resultMessage}`);
-                }
             }
-            console.log("Crime list HTML:", crimeList);
             document.getElementById("crime-list").innerHTML = crimeList || "<p>No crimes available. Check console.</p>";
         } else {
             if (countdownInterval) {
@@ -200,9 +191,9 @@ export function updateUI() {
             for (let item of market) {
                 const owned = player.items.includes(item.name) && item.name !== "Gold";
                 marketList += `
-                    <div class="bordered">
-                        <p>${item.name}: $${item.price} - ${item.tooltip}</p>
+                    <div class="bordered black-market">
                         <button ${owned || player.cash < item.price ? "disabled" : ""} onclick="buyItem('${item.name}')">Buy</button>
+                        <p>${item.name}: $${item.price} - ${item.tooltip}</p>
                     </div>`;
             }
             document.getElementById("market-list").innerHTML = marketList;
@@ -227,7 +218,6 @@ export function updateUI() {
 }
 
 export function showTab(tabId) {
-    console.log(`Showing tab: ${tabId}`);
     try {
         document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
         document.querySelectorAll(".nav-link").forEach(link => link.classList.remove("active"));

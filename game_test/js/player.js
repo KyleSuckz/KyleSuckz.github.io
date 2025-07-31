@@ -16,17 +16,14 @@ export let player = {
 };
 
 export function savePlayer() {
-    console.log("Saving player:", JSON.stringify(player));
     localStorage.setItem("prohibitionPlayer", JSON.stringify(player));
 }
 
 export function loadPlayer() {
-    console.log("Loading player...");
     try {
         const saved = localStorage.getItem("prohibitionPlayer");
         if (saved) {
             player = JSON.parse(saved);
-            console.log("Loaded player:", JSON.stringify(player));
             if (!player.crimeResults) player.crimeResults = {};
             if (!player.successCount) player.successCount = { "Pickpocketing": 0, "Bootleg Run": 0, "Speakeasy Heist": 0 };
             if (!player.lastEnergyTick) player.lastEnergyTick = Date.now();
@@ -64,7 +61,6 @@ export function updateRank() {
 }
 
 export function logout() {
-    console.log("Logging out...");
     try {
         localStorage.removeItem("prohibitionPlayer");
         player = {

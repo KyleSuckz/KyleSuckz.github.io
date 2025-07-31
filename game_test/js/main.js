@@ -12,7 +12,6 @@ window.showTab = showTab;
 window.logout = logout;
 
 window.onload = function() {
-    console.log("Window loaded, initializing game...");
     try {
         loadPlayer();
         updateUI();

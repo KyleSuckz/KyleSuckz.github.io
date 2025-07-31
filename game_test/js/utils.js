@@ -1,14 +1,12 @@
 import { player, savePlayer } from './player.js';
 
 export function updateEnergy() {
-    console.log("Updating energy...");
     const now = Date.now();
     const minutesPassed = Math.floor((now - player.lastEnergyTick) / 60000);
     if (minutesPassed >= 1) {
         player.energy = Math.min(10000, player.energy + (minutesPassed * 5));
         player.lastEnergyTick += minutesPassed * 60000;
         player.lastEnergyUpdate = now;
-        console.log(`Energy updated: ${player.energy}, last tick: ${player.lastEnergyTick}`);
     }
     savePlayer();
 }
