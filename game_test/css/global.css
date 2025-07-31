@@ -29,11 +29,13 @@ nav {
     padding: 10px 20px;
     color: #fff;
     background-color: #333;
+    border: 1px solid #333;
 }
 
 .nav-link.active {
     color: #fff;
     background-color: #333;
+    border: 1px solid #333;
 }
 
 .tab {
@@ -50,11 +52,17 @@ nav {
     height: 20px;
     margin: 10px auto;
     position: relative;
+    border: 1px solid #333;
 }
 
 .progress-fill {
     height: 100%;
     background-color: #C0C0C0;
+}
+
+.success-fill {
+    height: 100%;
+    background-color: #C0C0C0 !important;
 }
 
 .progress-text {
@@ -64,6 +72,15 @@ nav {
     transform: translate(-50%, -50%);
     color: #fff;
     font-size: 14px;
+}
+
+.success-text {
+    color: #fff;
+    font-size: 14px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .logout-container {
@@ -77,4 +94,5 @@ nav {
     color: #fff;
     padding: 10px;
     background-color: #333;
+    border: 1px solid #333;
 }

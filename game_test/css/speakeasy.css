@@ -25,4 +25,5 @@
 .cash-bet button, .gold-bet button {
     color: #fff;
     background-color: #333;
+    border: 1px solid #333;
 }
