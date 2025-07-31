@@ -1,103 +1,49 @@
 body {
     background-color: #000;
     color: #fff;
+    font-family: Arial, sans-serif;
     margin: 0;
-    padding: 20px;
-    -webkit-user-select: text !important;
-    -moz-user-select: text !important;
-    -ms-user-select: text !important;
-    user-select: text !important;
+    padding: 10px;
 }
 
-header {
+.bordered {
     border: 2px solid #333;
-    margin-bottom: 0;
+    padding: 10px;
+    margin: 10px 0;
 }
 
-nav {
-    border: 2px solid #333;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin: 0;
-}
-
-.nav-link {
-    padding: 10px 20px;
-    color: #fff;
+button {
     background-color: #333;
-    border: 1px solid #333;
-}
-
-.nav-link.active {
     color: #fff;
-    background-color: #333;
     border: 1px solid #333;
+    padding: 5px 10px;
+    cursor: pointer;
 }
 
-.tab {
-    display: none;
-}
-
-.tab.active {
-    display: block;
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
 .progress-bar {
-    width: 100%;
-    max-width: 500px;
-    height: 20px;
-    margin: 10px auto;
-    position: relative;
     border: 1px solid #333;
+    height: 20px;
+    position: relative;
+    background-color: #000;
+    margin: 5px 0;
 }
 
 .progress-fill {
     height: 100%;
-}
-
-.health-fill {
-    background-color: #00FF00;
-}
-
-.rank-fill {
-    background-color: #00FF00;
-}
-
-.energy-fill {
-    background-color: #FF0000;
-}
-
-.success-fill {
-    height: 100%;
-    background-color: #00FF00 !important;
+    transition: width 0.5s;
 }
 
 .progress-text {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #000;
-    font-size: 14px;
-}
-
-.success-text {
-    color: #000;
-    font-size: 14px;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-.logout-container {
-    border: 2px solid #333;
-    padding: 10px;
+    top: 0;
+    width: 100%;
     text-align: center;
-    margin: 0;
-}
-
-.logout-container button {
-    color: #fff;
-    padding: 0;
-    background-color: #333;
+    color: #000;
+    font-size: 14px;
+    line-height: 20px;
 }

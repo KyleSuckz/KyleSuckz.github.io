@@ -1,8 +1,17 @@
-.crime-container {
-    border: 2px solid #333;
-    padding: 10px;
-    max-width: 800px;
-    margin: 0 auto;
+#crimes {
+    display: none;
+}
+
+#crimes.active {
+    display: block;
+}
+
+#energy-fill {
+    background-color: #FF0000;
+}
+
+.success-fill {
+    background-color: #00FF00;
 }
 
 .crime-action {
@@ -11,18 +20,6 @@
     gap: 10px;
 }
 
-.crime-action button {
-    background-color: #333;
-    color: #fff;
-    border: 1px solid #333;
-}
-
 .crime-action p {
-    color: #fff;
-    margin: 0;
-}
-
-.bordered {
-    border: 2px solid #333;
     margin: 0;
 }

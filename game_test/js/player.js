@@ -8,8 +8,16 @@ export let player = {
     gold: 0,
     health: 100,
     items: [],
-    successCount: {},
-    crimeAttempts: {},
+    successCount: {
+        Pickpocketing: 0,
+        Bootlegging: 0,
+        "Speakeasy Heist": 0
+    },
+    crimeAttempts: {
+        Pickpocketing: { timestamps: [] },
+        Bootlegging: { timestamps: [] },
+        "Speakeasy Heist": { timestamps: [] }
+    },
     crimeResults: {},
     lastEnergyTick: Date.now(),
     lastEnergyUpdate: Date.now()
@@ -27,78 +35,45 @@ export function loadPlayer() {
     try {
         const saved = localStorage.getItem("player");
         if (saved) {
-            const loaded = JSON.parse(saved);
-            player.name = loaded.name || "Player";
-            player.rank = loaded.rank || "Thug";
-            player.cash = loaded.cash || 0;
-            player.xp = loaded.xp || 0;
-            player.influence = loaded.influence || 0;
-            player.energy = loaded.energy !== undefined ? loaded.energy : 50000;
-            player.gold = loaded.gold || 0;
-            player.health = loaded.health !== undefined ? loaded.health : 100;
-            player.items = loaded.items || [];
-            player.successCount = loaded.successCount || {};
-            player.crimeAttempts = loaded.crimeAttempts || {};
-            player.crimeResults = loaded.crimeResults || {};
-            player.lastEnergyTick = loaded.lastEnergyTick || Date.now();
-            player.lastEnergyUpdate = loaded.lastEnergyUpdate || Date.now();
-            // Initialize successCount and crimeAttempts for each crime
-            const crimes = ["Pickpocketing", "Bootlegging", "Speakeasy Heist"];
-            crimes.forEach(crime => {
-                if (!player.successCount[crime]) player.successCount[crime] = 0;
-                if (!player.crimeAttempts[crime]) player.crimeAttempts[crime] = { timestamps: [] };
-            });
-        } else {
-            player.lastEnergyTick = Date.now();
-            player.lastEnergyUpdate = Date.now();
-            player.successCount = {
+            player = JSON.parse(saved);
+            player.successCount = player.successCount || {
                 Pickpocketing: 0,
                 Bootlegging: 0,
                 "Speakeasy Heist": 0
             };
-            player.crimeAttempts = {
+            player.crimeAttempts = player.crimeAttempts || {
                 Pickpocketing: { timestamps: [] },
                 Bootlegging: { timestamps: [] },
                 "Speakeasy Heist": { timestamps: [] }
             };
-            savePlayer();
+            player.crimeResults = player.crimeResults || {};
+            updateRank();
         }
     } catch (e) {
         console.error("Error loading player:", e);
-        player.lastEnergyTick = Date.now();
-        player.lastEnergyUpdate = Date.now();
-        player.successCount = {
-            Pickpocketing: 0,
-            Bootlegging: 0,
-            "Speakeasy Heist": 0
-        };
-        player.crimeAttempts = {
-            Pickpocketing: { timestamps: [] },
-            Bootlegging: { timestamps: [] },
-            "Speakeasy Heist": { timestamps: [] }
-        };
-        savePlayer();
     }
 }
 
 export function updateRank() {
-    const ranks = [
-        { name: "Thug", xp: 0 },
-        { name: "Runner", xp: 100 },
-        { name: "Soldier", xp: 250 },
-        { name: "Enforcer", xp: 500 },
-        { name: "Lieutenant", xp: 1000 },
-        { name: "Capo", xp: 2500 },
-        { name: "Underboss", xp: 5000 },
-        { name: "Boss", xp: 10000 }
-    ];
-    for (let i = ranks.length - 1; i >= 0; i--) {
-        if (player.xp >= ranks[i].xp) {
-            player.rank = ranks[i].name;
-            break;
+    try {
+        if (player.xp >= 10000) {
+            player.rank = "Boss";
+        } else if (player.xp >= 5000) {
+            player.rank = "Underboss";
+        } else if (player.xp >= 2500) {
+            player.rank = "Capo";
+        } else if (player.xp >= 1000) {
+            player.rank = "Lieutenant";
+        } else if (player.xp >= 500) {
+            player.rank = "Enforcer";
+        } else if (player.xp >= 250) {
+            player.rank = "Soldier";
+        } else if (player.xp >= 100) {
+            player.rank = "Runner";
+        } else {
+            player.rank = "Thug";
         }
+    } catch (e) {
+        console.error("Error updating rank:", e);
     }
-    savePlayer();
 }
-
-loadPlayer();

@@ -1,24 +1,17 @@
-.black-market {
-    max-width: 800px;
-    margin: 0 auto;
+#inventory {
+    display: none;
 }
 
-.black-market .bordered {
-    border: 2px solid #333;
-    margin: 5px 0;
+#inventory.active {
+    display: block;
+}
+
+#market-list .bordered {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    gap: 10px;
 }
 
-.black-market .bordered p {
+#market-list p {
     margin: 0;
-    color: #fff;
-}
-
-.black-market .bordered button {
-    margin-right: 10px;
-    color: #fff;
-    background-color: #333;
-    border: 1px solid #333;
 }

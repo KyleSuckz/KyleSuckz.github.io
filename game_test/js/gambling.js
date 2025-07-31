@@ -81,7 +81,6 @@ export function gambleGold(amount) {
     }
 }
 
-// Add event listeners for gambling buttons
 document.addEventListener('DOMContentLoaded', () => {
     const cashBetButton = document.querySelector('#speakeasy button[data-gamble="cash"]');
     const goldBetButton = document.querySelector('#speakeasy button[data-gamble="gold"]');

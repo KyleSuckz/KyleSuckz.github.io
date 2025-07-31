@@ -13,7 +13,6 @@ function initialize() {
 
 export function logout() {
     try {
-        // Reset player data
         player.name = "Player";
         player.rank = "Thug";
         player.cash = 0;
@@ -43,8 +42,6 @@ export function logout() {
         console.error("Logout error:", e);
     }
 }
-
-window.logout = logout;
 
 document.addEventListener('DOMContentLoaded', () => {
     const logoutButton = document.getElementById('logout-button');

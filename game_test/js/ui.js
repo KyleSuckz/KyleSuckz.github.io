@@ -78,7 +78,6 @@ export function updateUI() {
                         energyCountdownInterval = null;
                         return;
                     }
-                    // Preserve text selection
                     const selection = window.getSelection();
                     const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
                     const now = Date.now();
@@ -99,8 +98,7 @@ export function updateUI() {
                     const newEnergyTextWidth = energyTextElement.offsetWidth / document.getElementById("energy-fill").parentElement.offsetWidth * 100;
                     energyTextElement.style.left = `${newEnergyProgress / 2 - newEnergyTextWidth / 2}%`;
                     energyTextElement.textContent = `${player.energy}/50000`;
-                    updateCrimeButtons(false); // Incremental update
-                    // Restore text selection
+                    updateCrimeButtons(false);
                     if (range) {
                         selection.removeAllRanges();
                         selection.addRange(range);
@@ -215,7 +213,6 @@ function updateCrimeButtons(fullUpdate = true) {
                                 countdownInterval = null;
                                 return;
                             }
-                            // Preserve text selection
                             const selection = window.getSelection();
                             const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
                             const newNow = Date.now();
@@ -224,8 +221,7 @@ function updateCrimeButtons(fullUpdate = true) {
                                 player.crimeAttempts[crime.name].timestamps = player.crimeAttempts[crime.name].timestamps.filter(t => newNow - t < 86400000);
                                 clearInterval(countdownInterval);
                                 countdownInterval = null;
-                                updateCrimeButtons(true); // Full update on reset
-                                // Restore text selection
+                                updateCrimeButtons(true);
                                 if (range) {
                                     selection.removeAllRanges();
                                     selection.addRange(range);
@@ -236,7 +232,6 @@ function updateCrimeButtons(fullUpdate = true) {
                             if (statusElement) {
                                 statusElement.textContent = `Status: Next attempt in ${formatCountdown(newRemainingMs)}`;
                             }
-                            // Restore text selection
                             if (range) {
                                 selection.removeAllRanges();
                                 selection.addRange(range);
@@ -266,21 +261,17 @@ function updateCrimeButtons(fullUpdate = true) {
                     <div class="progress-bar"><div class="success-fill" style="width: ${successChance}%"><span class="success-text" style="left: ${successChance / 2 - successTextWidth / 2}%">${successChance.toFixed(1)}%</span></div></div>
                 </div>`;
         }
-        // Preserve text selection
         const selection = window.getSelection();
         const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
         document.getElementById("crime-list").innerHTML = crimeList || "<p>No crimes available.</p>";
-        // Add event listeners for crime buttons
         document.querySelectorAll('#crime-list button[data-crime]').forEach(button => {
-            button.addEventListener('click', () => commitCrime(button.dataset.crime));
+            button.addEventListener('click', () => window.commitCrime(button.dataset.crime));
         });
-        // Restore text selection
         if (range) {
             selection.removeAllRanges();
             selection.addRange(range);
         }
     } else {
-        // Incremental update: only update button states and status
         for (let i = 0; i < crimes.length; i++) {
             const crime = crimes[i];
             let canAttempt = true;

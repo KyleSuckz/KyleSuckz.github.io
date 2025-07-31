@@ -1,33 +1,18 @@
 #speakeasy {
-    border: 2px solid #333;
-    padding: 10px;
-    max-width: 800px;
-    margin: 0 auto;
+    display: none;
 }
 
-.gamble-action {
-    border: 2px solid #333;
-    padding: 10px;
-    margin: 10px 0;
+#speakeasy.active {
+    display: block;
 }
 
-.cash-bet, .gold-bet {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 10px 0;
-}
-
-.cash-bet input, .gold-bet input {
-    color: #000;
+#speakeasy input {
     width: 80px;
     height: 30px;
+    color: #000;
 }
 
-.cash-bet button, .gold-bet button {
-    color: #fff;
-    background-color: #333;
-    border: 1px solid #333;
+#speakeasy button {
     width: 80px;
     height: 30px;
 }
