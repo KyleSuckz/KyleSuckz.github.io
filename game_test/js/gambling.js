@@ -79,3 +79,5 @@ export function buyItem(itemName) {
 }
 
 window.buyItem = buyItem;
+window.gamble = gamble;
+window.gambleGold = gambleGold;
