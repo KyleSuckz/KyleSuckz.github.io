@@ -40,7 +40,7 @@ export function updateUI() {
             nextRank = "Soldier";
         }
         const rankProgress = Math.min(100, (player.xp / rankThreshold) * 100);
-        const rankText = player.rank === "Boss" ? `${player.xp}/${rankThreshold}` : `${player.xp}/${rankThreshold} to ${nextRank}`;
+        const rankText = player.rank === "Boss" ? `${player.xp}/${rankThreshold} (100%)` : `${player.xp}/${rankThreshold} (${rankProgress.toFixed(0)}%) to ${nextRank}`;
         document.getElementById("rank-fill").style.width = `${rankProgress}%`;
         document.getElementById("rank-fill").querySelector(".progress-text").textContent = rankText;
         document.getElementById("rank-fill-profile").style.width = `${rankProgress}%`;
@@ -48,17 +48,17 @@ export function updateUI() {
 
         const crimesTab = document.getElementById("crimes");
         if (crimesTab.classList.contains("active")) {
-            const energyText = player.energy < 10000 ? `${player.energy} (+5 in ${formatEnergyCountdown()})` : `${player.energy}`;
+            const energyText = player.energy < 50000 ? `${player.energy} (+5 in ${formatEnergyCountdown()})` : `${player.energy}`;
             document.getElementById("energy-text").textContent = energyText;
-            document.getElementById("energy-fill").style.width = `${(player.energy / 10000) * 100}%`;
-            document.getElementById("energy-fill").querySelector(".progress-text").textContent = `${player.energy}/10000`;
+            document.getElementById("energy-fill").style.width = `${(player.energy / 50000) * 100}%`;
+            document.getElementById("energy-fill").querySelector(".progress-text").textContent = `${player.energy}/50000`;
 
             if (energyCountdownInterval) {
                 clearInterval(energyCountdownInterval);
                 energyCountdownInterval = null;
             }
 
-            if (player.energy < 10000) {
+            if (player.energy < 50000) {
                 energyCountdownInterval = setInterval(() => {
                     if (!document.getElementById("crimes").classList.contains("active")) {
                         clearInterval(energyCountdownInterval);
@@ -68,22 +68,24 @@ export function updateUI() {
                     const now = Date.now();
                     const msSinceLastTick = now - player.lastEnergyTick;
                     if (msSinceLastTick >= 60000) {
-                        player.energy = Math.min(10000, player.energy + 5);
+                        player.energy = Math.min(50000, player.energy + 5);
                         player.lastEnergyTick += 60000;
                         player.lastEnergyUpdate = now;
                         savePlayer();
-                        if (player.energy >= 10000) {
+                        if (player.energy >= 50000) {
                             clearInterval(energyCountdownInterval);
                             energyCountdownInterval = null;
                             document.getElementById("energy-text").textContent = `${player.energy}`;
-                            document.getElementById("energy-fill").style.width = `${(player.energy / 10000) * 100}%`;
-                            document.getElementById("energy-fill").querySelector(".progress-text").textContent = `${player.energy}/10000`;
+                            document.getElementById("energy-fill").style.width = `${(player.energy / 50000) * 100}%`;
+                            document.getElementById("energy-fill").querySelector(".progress-text").textContent = `${player.energy}/50000`;
+                            updateUI(); // Refresh buttons when energy cap reached
                             return;
                         }
                     }
                     document.getElementById("energy-text").textContent = `${player.energy} (+5 in ${formatEnergyCountdown()})`;
-                    document.getElementById("energy-fill").style.width = `${(player.energy / 10000) * 100}%`;
-                    document.getElementById("energy-fill").querySelector(".progress-text").textContent = `${player.energy}/10000`;
+                    document.getElementById("energy-fill").style.width = `${(player.energy / 50000) * 100}%`;
+                    document.getElementById("energy-fill").querySelector(".progress-text").textContent = `${player.energy}/50000`;
+                    updateUI(); // Refresh buttons on energy update
                 }, 1000);
             }
 
@@ -107,7 +109,7 @@ export function updateUI() {
                 if (crime.name === "Pickpocketing" && player.items.includes("Crowbar")) itemBonus += 5;
                 if (crime.name === "Speakeasy Heist" && player.items.includes("Revolver")) itemBonus += 10;
                 successChance = Math.min(100, successChance + itemBonus);
-                if (crime.name === "Speakeasy Heist" && player.xp < 2500) { // Update to Capo (2500 XP)
+                if (crime.name === "Speakeasy Heist" && player.xp < 2500) {
                     canAttempt = false;
                     status = "Need Capo rank (2500 XP)";
                 } else if (crime.energy && player.energy < crime.energy) {
@@ -147,7 +149,7 @@ export function updateUI() {
                     <div class="bordered">
                         <p>${crime.name}: $${crime.cash[0]}-$${crime.cash[1]}, ${crime.xp} XP, ${crime.influence} Influence${crime.gold ? `, ${crime.gold[0]}-${crime.gold[1]} Gold` : ""}, ${crime.energy ? crime.energy + " Energy" : crime.maxPerDay + "/day"} (Success: ${successChance.toFixed(1)}%)</p>
                         <p>Status: ${status}</p>
-                        <div class="city-action">
+                        <div class="crime-action">
                             <button ${canAttempt ? "" : "disabled"} onclick="commitCrime('${crime.name}')">Attempt</button>
                             ${resultMessage ? `<p>${resultMessage}</p>` : ""}
                         </div>
