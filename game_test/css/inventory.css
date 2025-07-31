@@ -8,6 +8,7 @@
 }
 #inventory .bordered {
     padding: 10px;
+    height: auto; /* Override global.css height: 90px to prevent clipping */
 }
 #inventory .bordered h3 {
     text-align: center;
@@ -25,4 +26,8 @@
     flex: 1;
     min-width: 300px;
     text-align: left;
+}
+#inventory-list h3 {
+    text-align: left; /* Align Owned Items header with its list */
+    margin: 0 0 10px 0;
 }
