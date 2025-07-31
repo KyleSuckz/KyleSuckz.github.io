@@ -39,13 +39,15 @@ export function updateUI() {
         }
         const rankProgress = Math.min(100, (player.xp / rankThreshold) * 100);
         const rankText = player.rank === "Boss" ? `${player.xp}/${rankThreshold} (100%)` : `${player.xp}/${rankThreshold} (${rankProgress.toFixed(0)}%) to ${nextRank}`;
-        const rankTextElement = document.getElementById("rank-fill").querySelector(".progress-text");
-        document.getElementById("rank-fill").style.width = `${rankProgress}%`;
+        const rankFill = document.getElementById("rank-fill");
+        const rankTextElement = rankFill.querySelector(".progress-text");
+        rankFill.style.width = `${rankProgress}%`;
         rankTextElement.textContent = rankText;
-        const rankTextWidth = rankTextElement.offsetWidth / document.getElementById("rank-fill").parentElement.offsetWidth * 100;
+        const rankTextWidth = rankTextElement.offsetWidth / rankFill.parentElement.offsetWidth * 100;
         rankTextElement.style.left = `${rankProgress / 2 - rankTextWidth / 2}%`;
-        const rankTextElementProfile = document.getElementById("rank-fill-profile").querySelector(".progress-text");
-        document.getElementById("rank-fill-profile").style.width = `${rankProgress}%`;
+        const rankFillProfile = document.getElementById("rank-fill-profile");
+        const rankTextElementProfile = rankFillProfile.querySelector(".progress-text");
+        rankFillProfile.style.width = `${rankProgress}%`;
         rankTextElementProfile.textContent = rankText;
         rankTextElementProfile.style.left = `${rankProgress / 2 - rankTextWidth / 2}%`;
 
@@ -59,7 +61,7 @@ export function updateUI() {
             energyTextElement.textContent = `${player.energy}/50000`;
             const energyTextWidth = energyTextElement.offsetWidth / document.getElementById("energy-fill").parentElement.offsetWidth * 100;
             energyTextElement.style.left = `${energyProgress / 2 - energyTextWidth / 2}%`;
-            updateCrimeButtons();
+            updateCrimeButtons(true);
             if (energyCountdownInterval) {
                 clearInterval(energyCountdownInterval);
                 energyCountdownInterval = null;
@@ -182,7 +184,7 @@ function updateCrimeButtons(fullUpdate = true) {
         for (let crime of crimes) {
             let canAttempt = true;
             let status = crime.tooltip;
-            let successChance = crime.baseSuccess + (player.successCount[crime.name] * crime.successIncrement);
+            let successChance = (crime.baseSuccess || 0) + ((player.successCount[crime.name] || 0) * (crime.successIncrement || 0));
             let itemBonus = 0;
             if (bribeActive) itemBonus += 10;
             if (crime.name === "Pickpocketing" && player.items.includes("Crowbar")) itemBonus += 5;
@@ -237,6 +239,7 @@ function updateCrimeButtons(fullUpdate = true) {
             }
             const resultMessage = player.crimeResults[crime.name] || "";
             const tempSpan = document.createElement('span');
+            tempSpan.className = 'success-text';
             tempSpan.style.fontSize = '14px';
             tempSpan.style.position = 'absolute';
             tempSpan.style.visibility = 'hidden';
@@ -270,7 +273,7 @@ function updateCrimeButtons(fullUpdate = true) {
             const crime = crimes[i];
             let canAttempt = true;
             let status = crime.tooltip;
-            let successChance = crime.baseSuccess + (player.successCount[crime.name] * crime.successIncrement);
+            let successChance = (crime.baseSuccess || 0) + ((player.successCount[crime.name] || 0) * (crime.successIncrement || 0));
             let itemBonus = 0;
             if (bribeActive) itemBonus += 10;
             if (crime.name === "Pickpocketing" && player.items.includes("Crowbar")) itemBonus += 5;

@@ -42,15 +42,41 @@ export function loadPlayer() {
             player.crimeResults = loaded.crimeResults || {};
             player.lastEnergyTick = loaded.lastEnergyTick || Date.now();
             player.lastEnergyUpdate = loaded.lastEnergyUpdate || Date.now();
+            // Initialize successCount and crimeAttempts for each crime
+            const crimes = ["Pickpocketing", "Bootlegging", "Speakeasy Heist"];
+            crimes.forEach(crime => {
+                if (!player.successCount[crime]) player.successCount[crime] = 0;
+                if (!player.crimeAttempts[crime]) player.crimeAttempts[crime] = { timestamps: [] };
+            });
         } else {
             player.lastEnergyTick = Date.now();
             player.lastEnergyUpdate = Date.now();
+            player.successCount = {
+                Pickpocketing: 0,
+                Bootlegging: 0,
+                "Speakeasy Heist": 0
+            };
+            player.crimeAttempts = {
+                Pickpocketing: { timestamps: [] },
+                Bootlegging: { timestamps: [] },
+                "Speakeasy Heist": { timestamps: [] }
+            };
             savePlayer();
         }
     } catch (e) {
         console.error("Error loading player:", e);
         player.lastEnergyTick = Date.now();
         player.lastEnergyUpdate = Date.now();
+        player.successCount = {
+            Pickpocketing: 0,
+            Bootlegging: 0,
+            "Speakeasy Heist": 0
+        };
+        player.crimeAttempts = {
+            Pickpocketing: { timestamps: [] },
+            Bootlegging: { timestamps: [] },
+            "Speakeasy Heist": { timestamps: [] }
+        };
         savePlayer();
     }
 }
