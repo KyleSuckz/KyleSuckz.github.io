@@ -24,6 +24,5 @@
 
 .bordered {
     border: 2px solid #333;
-    padding: 10px;
-    margin: 10px 0;
+    margin: 0;
 }

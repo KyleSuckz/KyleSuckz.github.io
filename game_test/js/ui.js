@@ -40,8 +40,10 @@ export function updateUI() {
         const rankProgress = Math.min(100, (player.xp / rankThreshold) * 100);
         const rankText = player.rank === "Boss" ? `${player.xp}/${rankThreshold} (100%)` : `${player.xp}/${rankThreshold} (${rankProgress.toFixed(0)}%) to ${nextRank}`;
         document.getElementById("rank-fill").style.width = `${rankProgress}%`;
+        document.getElementById("rank-fill").querySelector(".progress-text").style.left = `${rankProgress / 2}%`;
         document.getElementById("rank-fill").querySelector(".progress-text").textContent = rankText;
         document.getElementById("rank-fill-profile").style.width = `${rankProgress}%`;
+        document.getElementById("rank-fill-profile").querySelector(".progress-text").style.left = `${rankProgress / 2}%`;
         document.getElementById("rank-fill-profile").querySelector(".progress-text").textContent = rankText;
 
         const crimesTab = document.getElementById("crimes");
@@ -49,6 +51,7 @@ export function updateUI() {
             const energyText = player.energy < 50000 ? `${player.energy} (+5 in ${formatEnergyCountdown()})` : `${player.energy}`;
             document.getElementById("energy-text").textContent = `Energy: ${energyText}`;
             document.getElementById("energy-fill").style.width = `${(player.energy / 50000) * 100}%`;
+            document.getElementById("energy-fill").querySelector(".progress-text").style.left = `${(player.energy / 50000) * 50}%`;
             document.getElementById("energy-fill").querySelector(".progress-text").textContent = `${player.energy}/50000`;
             updateCrimeButtons();
             if (energyCountdownInterval) {
@@ -76,6 +79,7 @@ export function updateUI() {
                     }
                     document.getElementById("energy-text").textContent = `Energy: ${player.energy < 50000 ? `${player.energy} (+5 in ${formatEnergyCountdown()})` : player.energy}`;
                     document.getElementById("energy-fill").style.width = `${(player.energy / 50000) * 100}%`;
+                    document.getElementById("energy-fill").querySelector(".progress-text").style.left = `${(player.energy / 50000) * 50}%`;
                     document.getElementById("energy-fill").querySelector(".progress-text").textContent = `${player.energy}/50000`;
                     updateCrimeButtons();
                 }, 1000);
@@ -130,8 +134,10 @@ export function updateUI() {
         }
 
         document.getElementById("health-fill").style.width = `${player.health}%`;
+        document.getElementById("health-fill").querySelector(".progress-text").style.left = `${player.health / 2}%`;
         document.getElementById("health-fill").querySelector(".progress-text").textContent = `${player.health}/100`;
         document.getElementById("health-fill-profile").style.width = `${player.health}%`;
+        document.getElementById("health-fill-profile").querySelector(".progress-text").style.left = `${player.health / 2}%`;
         document.getElementById("health-fill-profile").querySelector(".progress-text").textContent = `${player.health}/100`;
     } catch (e) {
         console.error("UI update error:", e);
@@ -158,7 +164,7 @@ function updateCrimeButtons() {
         let itemBonus = 0;
         if (bribeActive) itemBonus += 10;
         if (crime.name === "Pickpocketing" && player.items.includes("Crowbar")) itemBonus += 5;
-        if (crime.name === "Speakeasy Heist" && player.items.includes("Revolver")) itemBonus += 10;
+        if (crimes.name === "Speakeasy Heist" && player.items.includes("Revolver")) itemBonus += 10;
         successChance = Math.min(100, successChance + itemBonus);
         if (crime.name === "Speakeasy Heist" && player.xp < 2500) {
             canAttempt = false;
@@ -203,7 +209,7 @@ function updateCrimeButtons() {
                     <button ${canAttempt ? "" : "disabled"} onclick="commitCrime('${crime.name}')">Attempt</button>
                     ${resultMessage ? `<p>${resultMessage}</p>` : ""}
                 </div>
-                <div class="progress-bar"><div class="success-fill" style="width: ${successChance}%"><span class="success-text">${successChance.toFixed(1)}%</span></div></div>
+                <div class="progress-bar"><div class="success-fill" style="width: ${successChance}%"><span class="success-text" style="left: ${successChance / 2}%">${successChance.toFixed(1)}%</span></div></div>
             </div>`;
     }
     document.getElementById("crime-list").innerHTML = crimeList || "<p>No crimes available.</p>";
