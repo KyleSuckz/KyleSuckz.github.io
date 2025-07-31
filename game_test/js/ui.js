@@ -140,7 +140,7 @@ export function updateUI() {
                 const resultMessage = player.crimeResults[crime.name] || "";
                 crimeList += `
                     <div class="bordered">
-                        <p>${crime.name}: $${crime.cash[0]}-$${crime.cash[1]}, ${crime.xp} XP, ${crime.influence} Influence${crime.gold ? `, ${crime.gold[0]}-${crime.gold[1]} Gold` : ""}, ${crime.energy ? crime.energy + " Energy" : crime.maxPerDay + "/day"} (Success: ${successChance.toFixed(1)}%)</p>
+                        <p>${crime.name}: $${crime.cash[0]}-$${crime.cash[1]}, ${crime.xp} XP, ${crime.influence} Influence${crime.gold ? `, ${crime.gold[0]}-${crime.gold[1]} Gold` : ""}, ${crime.energy ? crime.energy + " Energy" : "3/day"} (Success: ${successChance.toFixed(1)}%)</p>
                         <p>Status: ${status}</p>
                         <div class="crime-action">
                             <button ${canAttempt ? "" : "disabled"} onclick="commitCrime('${crime.name}')">Attempt</button>
@@ -173,7 +173,7 @@ export function updateUI() {
 
         const inventoryTab = document.getElementById("inventory");
         if (inventoryTab.classList.contains("active")) {
-            let inventoryList = "<h3>Owned Items:</h3>";
+            let inventoryList = "<h3>Owned Items</h3>";
             if (player.items.length === 0) {
                 inventoryList += "<p>None</p>";
             } else {
@@ -187,7 +187,7 @@ export function updateUI() {
             inventoryList += `<p>Cash: $${player.cash} | Gold: ${player.gold}</p>`;
             document.getElementById("inventory-list").innerHTML = inventoryList;
 
-            let marketList = "<h3>Black Market Items</h3>";
+            let marketList = "";
             for (let item of market) {
                 const owned = player.items.includes(item.name) && item.name !== "Gold";
                 marketList += `

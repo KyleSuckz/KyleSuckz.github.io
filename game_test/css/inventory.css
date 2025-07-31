@@ -6,9 +6,15 @@
     align-items: center;
     gap: 10px;
 }
-#inventory {
+#inventory .bordered {
+    padding: 10px;
+}
+#inventory .bordered h3 {
+    text-align: center;
+    margin: 0 0 10px 0;
+}
+.inventory-content {
     display: flex;
-    flex-wrap: wrap;
     gap: 20px;
 }
 #market-list {
@@ -19,8 +25,4 @@
     flex: 1;
     min-width: 300px;
     text-align: left;
-}
-#market-list h3 {
-    text-align: center;
-    margin: 0 0 10px 0;
 }
