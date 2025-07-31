@@ -263,7 +263,7 @@ function updateCrimeButtons(fullUpdate = true) {
                         <button ${canAttempt ? "" : "disabled"} data-crime="${crime.name}">Attempt</button>
                         ${resultMessage ? `<p>${resultMessage}</p>` : ""}
                     </div>
-                    <div class="progress-bar"><div class="success-fill" style="width: ${successChance}%"><span class="success-text" style="left: ${successChance / 2 - prospectTextWidth / 2}%">${successChance.toFixed(1)}%</span></div></div>
+                    <div class="progress-bar"><div class="success-fill" style="width: ${successChance}%"><span class="success-text" style="left: ${successChance / 2 - successTextWidth / 2}%">${successChance.toFixed(1)}%</span></div></div>
                 </div>`;
         }
         // Preserve text selection
