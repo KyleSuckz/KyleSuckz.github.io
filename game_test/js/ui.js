@@ -7,7 +7,6 @@ let countdownInterval = null;
 let energyCountdownInterval = null;
 
 export function updateUI() {
-    console.log("Updating UI...");
     try {
         updateEnergy();
         const stats = `Player: ${player.name} | Rank: ${player.rank} | Cash: $${player.cash} | XP: ${player.xp} | Influence: ${player.influence} | Energy: ${player.energy} | Gold: ${player.gold} | Health: ${player.health}`;

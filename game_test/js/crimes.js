@@ -18,7 +18,7 @@ export function commitCrime(crimeName) {
             return;
         }
         if (crime.energy && player.energy < crime.energy) {
-            console.log("Not enough Energy for", crimeName);
+            console.error("Not enough Energy for", crimeName);
             player.crimeResults[crimeName] = `Need ${crime.energy} Energy`;
             updateUI();
             return;
@@ -27,7 +27,7 @@ export function commitCrime(crimeName) {
             const now = Date.now();
             const attempts = player.crimeAttempts[crime.name].timestamps.filter(t => now - t < 86400000);
             if (attempts.length >= crime.maxPerDay) {
-                console.log("Max attempts reached for", crimeName);
+                console.error("Max attempts reached for", crimeName);
                 player.crimeResults[crimeName] = "Max attempts reached today!";
                 updateUI();
                 return;
@@ -42,8 +42,6 @@ export function commitCrime(crimeName) {
         if (crime.name === "Speakeasy Heist" && player.items.includes("Revolver")) itemBonus += 10;
         successChance = Math.min(100, successChance + itemBonus);
         const risk = 1 - (successChance / 100);
-        console.log(`Crime: ${crimeName}, Success: ${successChance.toFixed(1)}%, Risk: ${(risk * 100).toFixed(1)}%`);
-
         const success = Math.random() > risk;
         let message = "";
         if (success) {
