@@ -1,4 +1,5 @@
 import { player, savePlayer, updateRank } from './player.js';
+import { updateUI } from './ui.js'; // Add import for updateUI
 
 export const crimes = [
     { name: "Pickpocketing", cash: [1, 5], xp: 5, influence: 2, energy: 10, baseSuccess: 5, successIncrement: 2, tooltip: "Grab some dough from unsuspecting marks." },
@@ -60,8 +61,10 @@ export function commitCrime(crimeName) {
         player.crimeResults[crimeName] = message;
         updateRank();
         savePlayer();
+        updateUI(); // Add this to refresh UI immediately
     } catch (e) {
         console.error(`Error in commitCrime for ${crimeName}:`, e);
         player.crimeResults[crimeName] = "Error: Try again!";
+        updateUI(); // Add this to show error in UI
     }
 }
