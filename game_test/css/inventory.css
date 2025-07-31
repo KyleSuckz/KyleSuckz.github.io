@@ -1,8 +1,26 @@
 .bordered.black-market {
-    margin-bottom: 10px; /* Reduced from 20px for tighter borders */
-    padding: 5px; /* Reduced from default 10px */
+    margin-bottom: 10px;
+    padding: 5px;
     height: auto;
-    display: flex; /* Ensure button and text on same line */
+    display: flex;
     align-items: center;
     gap: 10px;
+}
+#inventory {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+#market-list {
+    flex: 1;
+    min-width: 300px;
+}
+#inventory-list {
+    flex: 1;
+    min-width: 300px;
+    text-align: left;
+}
+#market-list h3 {
+    text-align: center;
+    margin: 0 0 10px 0;
 }

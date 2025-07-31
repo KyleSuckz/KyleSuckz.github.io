@@ -173,7 +173,7 @@ export function updateUI() {
 
         const inventoryTab = document.getElementById("inventory");
         if (inventoryTab.classList.contains("active")) {
-            let inventoryList = "<p>Owned Items:</p>";
+            let inventoryList = "<h3>Owned Items:</h3>";
             if (player.items.length === 0) {
                 inventoryList += "<p>None</p>";
             } else {
@@ -187,7 +187,7 @@ export function updateUI() {
             inventoryList += `<p>Cash: $${player.cash} | Gold: ${player.gold}</p>`;
             document.getElementById("inventory-list").innerHTML = inventoryList;
 
-            let marketList = "";
+            let marketList = "<h3>Black Market Items</h3>";
             for (let item of market) {
                 const owned = player.items.includes(item.name) && item.name !== "Gold";
                 marketList += `
