@@ -48,6 +48,7 @@ export function updateUI() {
 
         const crimesTab = document.getElementById("crimes");
         if (crimesTab.classList.contains("active")) {
+            document.getElementById("energy-fill").querySelector(".progress-text").textContent = `${player.energy}/50000`; // Initialize with 50,000
             updateCrimeDisplay();
             updateEnergyDisplay();
             if (energyCountdownInterval) {
@@ -76,7 +77,7 @@ export function updateUI() {
                     updateEnergyDisplay();
                 }, 1000);
             } else {
-                updateEnergyDisplay(); // Ensure 50,000 cap on Crimes tab when full
+                updateEnergyDisplay();
             }
         } else {
             if (countdownInterval) {
@@ -233,7 +234,7 @@ function updateCrimeDisplay() {
         const resultMessage = player.crimeResults[crime.name] || "";
         crimeList += `
             <div class="bordered">
-                <p>${crime.name}: $${crime.cash[0]}-$${crime.cash[1]}, ${crime.xp} XP, ${crime.influence} Influence${crime.gold ? `, ${crime.gold[0]}-${crime.gold[1]} Gold` : ""}, ${crime.energy ? crime.energy + " Energy" : crime.maxPerDay + "/day"} (Success: ${successChance.toFixed(1)}%)</p>
+                <p>${crime.name}: $${crime.cash[0]}-$${crime.cash[1]}, ${crime.xp} XP, ${crime.influence} Influence${crime.gold ? `, ${crime.gold[0]}-${crime.gold[1]} Gold` : ""}, ${crime.energy ? crime.energy + " Energy" : crop.maxPerDay + "/day"} (Success: ${successChance.toFixed(1)}%)</p>
                 <p>Status: ${status}</p>
                 <div class="crime-action">
                     <button ${canAttempt ? "" : "disabled"} onclick="commitCrime('${crime.name}')">Attempt</button>

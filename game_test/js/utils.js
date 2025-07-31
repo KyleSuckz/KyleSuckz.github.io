@@ -6,7 +6,7 @@ export function updateEnergy() {
         const msSinceLastUpdate = now - player.lastEnergyUpdate;
         if (msSinceLastUpdate >= 60000) {
             const ticks = Math.floor(msSinceLastUpdate / 60000);
-            player.energy = Math.min(50000, player.energy + (ticks * 5)); // Enforce 50,000 cap
+            player.energy = Math.min(50000, player.energy + (ticks * 5));
             player.lastEnergyUpdate = now;
             player.lastEnergyTick = now;
             savePlayer();

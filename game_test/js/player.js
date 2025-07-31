@@ -42,7 +42,7 @@ export function loadPlayer() {
             player.items = uniqueItems;
             player.crimeAttempts = { "Speakeasy Heist": player.crimeAttempts["Speakeasy Heist"] || { timestamps: [] } };
             player.energy = Math.min(50000, player.energy);
-            updateEnergy(); // Ensure energy is updated with 50,000 cap
+            updateEnergy();
         }
         savePlayer();
     } catch (e) {
