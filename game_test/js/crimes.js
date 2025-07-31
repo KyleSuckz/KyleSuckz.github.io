@@ -114,3 +114,5 @@ export function commitCrime(crimeName) {
         updateUI();
     }
 }
+
+window.commitCrime = commitCrime;

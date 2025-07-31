@@ -2,82 +2,99 @@ import { player, savePlayer } from './player.js';
 import { updateUI } from './ui.js';
 
 export const market = [
-    { name: "Crowbar", price: 10, effect: { crime: "Pickpocketing", success: 5 }, tooltip: "Boosts Pickpocketing by 5% (1 max)." },
-    { name: "Revolver", price: 50, effect: { crime: "Speakeasy Heist", success: 10 }, tooltip: "Boosts Speakeasy Heist by 10% (1 max)." },
-    { name: "Bribe", price: 100, effect: { success: 10 }, tooltip: "Boosts all crime success by 10% (1 max)." },
-    { name: "Gold", price: 10000, tooltip: "Trade $10,000 for a shiny gold coin." }
+    { name: "Bribe", price: 1000, tooltip: "+10% success chance to all crimes." },
+    { name: "Crowbar", price: 500, tooltip: "+5% success chance to Pickpocketing." },
+    { name: "Revolver", price: 2000, tooltip: "+10% success chance to Speakeasy Heist." }
 ];
-
-export function gamble() {
-    try {
-        const bet = parseInt(document.getElementById("bet-amount").value);
-        if (bet < 10 || bet > 100 || player.cash < bet) {
-            console.error("Invalid bet:", bet);
-            document.getElementById("gamble-result").textContent = "Invalid bet: $10-$100 or insufficient cash.";
-            document.getElementById("speakeasy").dataset.resultSet = "true";
-            updateUI();
-            return;
-        }
-        player.cash -= bet;
-        const win = Math.random() < 0.5;
-        const result = win ? `Won $${bet * 2}!` : `Lost $${bet}.`;
-        if (win) player.cash += bet * 2;
-        document.getElementById("gamble-result").textContent = result;
-        document.getElementById("speakeasy").dataset.resultSet = "true";
-        savePlayer();
-        updateUI();
-    } catch (e) {
-        console.error("Error in gamble:", e);
-        document.getElementById("gamble-result").textContent = "Error: Try again!";
-        document.getElementById("speakeasy").dataset.resultSet = "true";
-        updateUI();
-    }
-}
-
-export function gambleGold() {
-    try {
-        const bet = parseInt(document.getElementById("gold-bet-amount").value);
-        if (bet < 1 || bet > 100 || player.gold < bet) {
-            console.error("Invalid gold bet:", bet);
-            document.getElementById("gamble-result").textContent = "Invalid bet: 1-100 Gold or insufficient Gold.";
-            document.getElementById("speakeasy").dataset.resultSet = "true";
-            updateUI();
-            return;
-        }
-        player.gold -= bet;
-        const win = Math.random() < 0.5;
-        const result = win ? `Won ${bet * 2} Gold!` : `Lost ${bet} Gold.`;
-        if (win) player.gold += bet * 2;
-        document.getElementById("gamble-result").textContent = result;
-        document.getElementById("speakeasy").dataset.resultSet = "true";
-        savePlayer();
-        updateUI();
-    } catch (e) {
-        console.error("Error in gambleGold:", e);
-        document.getElementById("gamble-result").textContent = "Error: Try again!";
-        document.getElementById("speakeasy").dataset.resultSet = "true";
-        updateUI();
-    }
-}
 
 export function buyItem(itemName) {
     try {
         const item = market.find(i => i.name === itemName);
-        if (!item || player.cash < item.price || (item.name !== "Gold" && player.items.includes(item.name))) {
-            console.error("Cannot buy:", !item ? "Item not found" : player.cash < item.price ? "Not enough cash" : "Item already owned");
+        if (!item) {
+            console.error("Item not found:", itemName);
+            return;
+        }
+        if (player.cash < item.price || player.items.includes(itemName)) {
+            console.error("Cannot buy item:", itemName);
             return;
         }
         player.cash -= item.price;
-        if (itemName === "Gold") player.gold++;
-        else player.items.push(itemName);
+        player.items.push(itemName);
         savePlayer();
         updateUI();
     } catch (e) {
-        console.error("Error in buyItem:", e);
-        updateUI();
+        console.error("Error buying item:", e);
     }
 }
 
-window.buyItem = buyItem;
-window.gamble = gamble;
-window.gambleGold = gambleGold;
+export function gamble(amount) {
+    try {
+        amount = parseInt(amount);
+        if (isNaN(amount) || amount <= 0 || player.cash < amount) {
+            console.error("Invalid bet:", amount);
+            document.getElementById("gamble-result").textContent = "Invalid bet: Must be a positive number and less than or equal to your cash.";
+            document.getElementById("speakeasy").dataset.resultSet = "true";
+            return;
+        }
+        player.cash -= amount;
+        const roll = Math.random();
+        if (roll < 0.5) {
+            player.cash += amount * 2;
+            document.getElementById("gamble-result").textContent = `Won $${amount * 2}!`;
+        } else {
+            document.getElementById("gamble-result").textContent = `Lost $${amount}.`;
+        }
+        document.getElementById("speakeasy").dataset.resultSet = "true";
+        savePlayer();
+        updateUI();
+    } catch (e) {
+        console.error("Gambling error:", e);
+        document.getElementById("gamble-result").textContent = "Error gambling.";
+        document.getElementById("speakeasy").dataset.resultSet = "true";
+    }
+}
+
+export function gambleGold(amount) {
+    try {
+        amount = parseInt(amount);
+        if (isNaN(amount) || amount <= 0 || player.gold < amount) {
+            console.error("Invalid gold bet:", amount);
+            document.getElementById("gamble-result").textContent = "Invalid gold bet: Must be a positive number and less than or equal to your gold.";
+            document.getElementById("speakeasy").dataset.resultSet = "true";
+            return;
+        }
+        player.gold -= amount;
+        const roll = Math.random();
+        if (roll < 0.5) {
+            player.gold += amount * 2;
+            document.getElementById("gamble-result").textContent = `Won ${amount * 2} Gold!`;
+        } else {
+            document.getElementById("gamble-result").textContent = `Lost ${amount} Gold.`;
+        }
+        document.getElementById("speakeasy").dataset.resultSet = "true";
+        savePlayer();
+        updateUI();
+    } catch (e) {
+        console.error("Gold gambling error:", e);
+        document.getElementById("gamble-result").textContent = "Error gambling gold.";
+        document.getElementById("speakeasy").dataset.resultSet = "true";
+    }
+}
+
+// Add event listeners for gambling buttons
+document.addEventListener('DOMContentLoaded', () => {
+    const cashBetButton = document.querySelector('#speakeasy button[data-gamble="cash"]');
+    const goldBetButton = document.querySelector('#speakeasy button[data-gamble="gold"]');
+    if (cashBetButton) {
+        cashBetButton.addEventListener('click', () => {
+            const amount = document.getElementById("bet-amount").value;
+            gamble(amount);
+        });
+    }
+    if (goldBetButton) {
+        goldBetButton.addEventListener('click', () => {
+            const amount = document.getElementById("gold-bet-amount").value;
+            gambleGold(amount);
+        });
+    }
+});

@@ -40,16 +40,20 @@ export function updateUI() {
         const rankProgress = Math.min(100, (player.xp / rankThreshold) * 100);
         const rankText = player.rank === "Boss" ? `${player.xp}/${rankThreshold} (100%)` : `${player.xp}/${rankThreshold} (${rankProgress.toFixed(0)}%) to ${nextRank}`;
         const rankFill = document.getElementById("rank-fill");
-        const rankTextElement = rankFill.querySelector(".progress-text");
-        rankFill.style.width = `${rankProgress}%`;
-        rankTextElement.textContent = rankText;
-        const rankTextWidth = rankTextElement.offsetWidth / rankFill.parentElement.offsetWidth * 100;
-        rankTextElement.style.left = `${rankProgress / 2 - rankTextWidth / 2}%`;
+        const rankTextElement = rankFill?.querySelector(".progress-text");
+        if (rankFill && rankTextElement) {
+            rankFill.style.width = `${rankProgress}%`;
+            rankTextElement.textContent = rankText;
+            const rankTextWidth = rankTextElement.offsetWidth / rankFill.parentElement.offsetWidth * 100;
+            rankTextElement.style.left = `${rankProgress / 2 - rankTextWidth / 2}%`;
+        }
         const rankFillProfile = document.getElementById("rank-fill-profile");
-        const rankTextElementProfile = rankFillProfile.querySelector(".progress-text");
-        rankFillProfile.style.width = `${rankProgress}%`;
-        rankTextElementProfile.textContent = rankText;
-        rankTextElementProfile.style.left = `${rankProgress / 2 - rankTextWidth / 2}%`;
+        const rankTextElementProfile = rankFillProfile?.querySelector(".progress-text");
+        if (rankFillProfile && rankTextElementProfile) {
+            rankFillProfile.style.width = `${rankProgress}%`;
+            rankTextElementProfile.textContent = rankText;
+            rankTextElementProfile.style.left = `${rankProgress / 2 - rankTextWidth / 2}%`;
+        }
 
         const crimesTab = document.getElementById("crimes");
         if (crimesTab.classList.contains("active")) {
@@ -227,7 +231,10 @@ function updateCrimeButtons(fullUpdate = true) {
                                 }
                                 return;
                             }
-                            document.querySelector(`#crime-list .bordered:nth-child(${crimes.indexOf(crime) + 1}) p:nth-child(2)`).textContent = `Status: Next attempt in ${formatCountdown(newRemainingMs)}`;
+                            const statusElement = document.querySelector(`#crime-list .bordered:nth-child(${crimes.indexOf(crime) + 1}) p:nth-child(2)`);
+                            if (statusElement) {
+                                statusElement.textContent = `Status: Next attempt in ${formatCountdown(newRemainingMs)}`;
+                            }
                             // Restore text selection
                             if (range) {
                                 selection.removeAllRanges();
@@ -252,7 +259,7 @@ function updateCrimeButtons(fullUpdate = true) {
                     <p>${crime.name}: $${crime.cash[0]}-$${crime.cash[1]}, ${crime.xp} XP, ${crime.influence} Influence${crime.gold ? `, ${crime.gold[0]}-${crime.gold[1]} Gold` : ""}, ${crime.energy ? crime.energy + " Energy" : crime.maxPerDay + "/day"} (Success: ${successChance.toFixed(1)}%)</p>
                     <p>Status: ${status}</p>
                     <div class="crime-action">
-                        <button ${canAttempt ? "" : "disabled"} onclick="commitCrime('${crime.name}')">Attempt</button>
+                        <button ${canAttempt ? "" : "disabled"} data-crime="${crime.name}">Attempt</button>
                         ${resultMessage ? `<p>${resultMessage}</p>` : ""}
                     </div>
                     <div class="progress-bar"><div class="success-fill" style="width: ${successChance}%"><span class="success-text" style="left: ${successChance / 2 - successTextWidth / 2}%">${successChance.toFixed(1)}%</span></div></div>
@@ -262,6 +269,10 @@ function updateCrimeButtons(fullUpdate = true) {
         const selection = window.getSelection();
         const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
         document.getElementById("crime-list").innerHTML = crimeList || "<p>No crimes available.</p>";
+        // Add event listeners for crime buttons
+        document.querySelectorAll('#crime-list button[data-crime]').forEach(button => {
+            button.addEventListener('click', () => commitCrime(button.dataset.crime));
+        });
         // Restore text selection
         if (range) {
             selection.removeAllRanges();
