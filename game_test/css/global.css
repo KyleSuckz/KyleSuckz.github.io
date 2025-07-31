@@ -1,121 +1,109 @@
 body {
+    background-color: #000000;
+    color: #FFFFFF;
     font-family: Arial, sans-serif;
-    background-color: #000;
-    color: #fff;
-    margin: 0;
-    padding: 20px;
-    -webkit-user-select: text;
-    -moz-user-select: text;
-    -ms-user-select: text;
-    user-select: text;
+    margin: 10px;
 }
-
-header {
-    text-align: center;
-    margin-bottom: 20px;
-    border: 2px solid #333;
-    padding: 10px;
-    color: #fff;
-}
-
-nav {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    border: 2px solid #333;
-    padding: 10px;
-}
-
-.nav-link {
+button {
+    background-color: #666666;
+    color: #FFFFFF;
+    border: none;
+    padding: 5px 10px;
+    margin: 5px;
     cursor: pointer;
-    padding: 10px 20px;
-    background-color: #333;
-    color: #fff;
-    border-radius: 5px;
 }
-
-.nav-link.active {
-    background-color: #555;
-    color: #fff;
+button:disabled {
+    background-color: #333333;
+    cursor: not-allowed;
 }
-
 .tab {
     display: none;
 }
-
 .tab.active {
     display: block;
 }
-
+.nav-link {
+    color: #FFFFFF;
+    text-decoration: none;
+    margin: 0 10px;
+    cursor: pointer;
+}
+.nav-link.active {
+    font-weight: bold;
+    text-decoration: underline;
+}
+.bordered {
+    border: 1px solid #FFFFFF;
+    padding: 10px;
+    margin: 5px 0;
+    height: 90px;
+    overflow: hidden;
+}
+.bordered.header, .bordered.profile, .bordered.speakeasy {
+    height: auto;
+    min-height: 100px;
+}
+.nav-bordered {
+    border: 1px solid #FFFFFF;
+    padding: 5px;
+    margin: 5px 0;
+}
 .progress-bar {
     width: 100%;
-    max-width: 500px;
     height: 20px;
-    background-color: #333;
-    border-radius: 5px;
-    margin: 10px auto;
-    overflow: hidden;
+    background-color: #333333;
+    border: 1px solid #FFFFFF;
+    margin: 2px 0;
     position: relative;
 }
-
-.progress-fill {
-    height: 100%;
-    transition: width 0.3s;
-}
-
-.progress-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #fff;
-    text-shadow: 1px 1px 1px #000;
-    font-size: 14px;
-}
-
-.rank-fill {
-    background-color: #007bff;
-}
-
-.health-fill {
-    background-color: #28a745;
-}
-
 .energy-fill {
-    background-color: #ffc107;
+    height: 100%;
+    background-color: #4CAF50;
+    transition: width 0.5s;
+    position: relative;
 }
-
+.health-fill {
+    height: 100%;
+    background-color: #FF6347;
+    transition: width 0.5s;
+    position: relative;
+}
+.rank-fill {
+    height: 100%;
+    background-color: #4682B4; /* Blue to distinguish from health (red) and energy (green) */
+    transition: width 0.5s;
+    position: relative;
+}
 .success-fill {
-    background-color: #007bff;
+    height: 100%;
+    background-color: #FFD700;
+    transition: width 0.5s;
+    position: relative;
 }
-
-.success-text {
-    color: #fff;
-    text-shadow: 1px 1px 1px #000;
-    font-size: 14px;
+.progress-text, .success-text {
     position: absolute;
-    top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.bordered {
-    border: 2px solid #333;
-    padding: 10px;
-    margin: 10px 0;
-    color: #fff;
-}
-
-.logout-container {
+    transform: translateX(-50%);
+    color: #000000;
+    font-size: 12px;
+    line-height: 20px;
     text-align: center;
-    margin-top: 20px;
 }
-
-.logout-container button {
-    color: #fff;
-    background-color: #333;
-    border: 2px solid #555;
-    padding: 10px;
-    border-radius: 5px;
+p {
+    margin: 0;
+}
+h2, h3 {
+    font-size: 1.5em;
+    margin: 5px 0;
+}
+input[type="number"] {
+    background-color: #333333;
+    color: #FFFFFF;
+    border: 1px solid #FFFFFF;
+    padding: 5px;
+    margin: 5px;
+    width: 80px;
+}
+.logout-container {
+    margin: 10px 0;
 }
