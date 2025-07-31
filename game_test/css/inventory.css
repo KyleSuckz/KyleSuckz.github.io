@@ -4,19 +4,21 @@
 }
 
 .black-market .bordered {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     border: 2px solid #333;
     padding: 5px;
     margin: 5px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .black-market .bordered p {
     margin: 0;
     flex-grow: 1;
+    color: #fff;
 }
 
 .black-market .bordered button {
     margin-left: 10px;
+    color: #fff;
 }

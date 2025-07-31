@@ -1,8 +1,8 @@
 #speakeasy {
-    max-width: 800px;
-    margin: 0 auto;
     border: 2px solid #333;
     padding: 10px;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .gamble-action {
@@ -16,4 +16,12 @@
     align-items: center;
     gap: 10px;
     margin: 10px 0;
+}
+
+.cash-bet input, .gold-bet input {
+    color: #fff;
+}
+
+.cash-bet button, .gold-bet button {
+    color: #fff;
 }
