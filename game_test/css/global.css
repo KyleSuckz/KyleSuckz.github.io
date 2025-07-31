@@ -28,6 +28,12 @@ nav {
 .nav-link {
     padding: 10px 20px;
     color: #fff;
+    background-color: #333;
+}
+
+.nav-link.active {
+    color: #fff;
+    background-color: #333;
 }
 
 .tab {
@@ -48,6 +54,7 @@ nav {
 
 .progress-fill {
     height: 100%;
+    background-color: #C0C0C0;
 }
 
 .progress-text {
@@ -69,4 +76,5 @@ nav {
 .logout-container button {
     color: #fff;
     padding: 10px;
+    background-color: #333;
 }
