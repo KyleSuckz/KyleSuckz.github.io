@@ -48,7 +48,8 @@ export function updateUI() {
 
         const crimesTab = document.getElementById("crimes");
         if (crimesTab.classList.contains("active")) {
-            updateCrimeDisplay(); // Initial render of crime list
+            updateCrimeDisplay();
+            updateEnergyDisplay(); // Initialize energy display with 50,000 cap
             if (energyCountdownInterval) {
                 clearInterval(energyCountdownInterval);
                 energyCountdownInterval = null;
@@ -72,7 +73,7 @@ export function updateUI() {
                             energyCountdownInterval = null;
                         }
                     }
-                    updateEnergyDisplay(); // Update only energy and buttons
+                    updateEnergyDisplay();
                 }, 1000);
             }
         } else {

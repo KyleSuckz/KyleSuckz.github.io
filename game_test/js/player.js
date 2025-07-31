@@ -16,7 +16,7 @@ export let player = {
 };
 
 export function savePlayer() {
-    console.log("Saving player..."); // Keep for debugging
+    console.log("Saving player...");
     localStorage.setItem("prohibitionPlayer", JSON.stringify(player));
 }
 
@@ -40,6 +40,7 @@ export function loadPlayer() {
             player.items = uniqueItems;
             player.crimeAttempts = { "Speakeasy Heist": player.crimeAttempts["Speakeasy Heist"] || { timestamps: [] } };
             player.energy = Math.min(50000, player.energy); // Enforce 50,000 cap
+            updateEnergy(); // Ensure energy is updated on load
         }
         savePlayer();
     } catch (e) {
