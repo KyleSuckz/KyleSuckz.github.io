@@ -3,40 +3,38 @@ import { player, savePlayer } from './player.js';
 export function updateEnergy() {
     try {
         const now = Date.now();
-        const msSinceLastUpdate = now - player.lastEnergyUpdate;
-        if (msSinceLastUpdate >= 60000) {
-            const ticks = Math.floor(msSinceLastUpdate / 60000);
-            player.energy = Math.min(50000, player.energy + (ticks * 5)); // Enforce 50,000 cap
+        // Only update energy if lastEnergyUpdate is set and valid
+        if (player.lastEnergyUpdate && player.lastEnergyUpdate > 0) {
+            const msSinceLastUpdate = now - player.lastEnergyUpdate;
+            const energyToAdd = Math.floor(msSinceLastUpdate / 60000) * 5;
+            if (energyToAdd > 0) {
+                player.energy = Math.min(50000, player.energy + energyToAdd);
+                player.lastEnergyTick = now - (msSinceLastUpdate % 60000);
+                player.lastEnergyUpdate = now;
+                savePlayer();
+            }
+        } else {
+            // Initialize timestamps if not set
             player.lastEnergyUpdate = now;
             player.lastEnergyTick = now;
             savePlayer();
         }
     } catch (e) {
-        console.error("Error in updateEnergy:", e);
+        console.error("Error updating energy:", e);
     }
 }
 
 export function formatCountdown(ms) {
-    try {
-        const hours = Math.floor(ms / 3600000);
-        const minutes = Math.floor((ms % 3600000) / 60000);
-        const seconds = Math.floor((ms % 60000) / 1000);
-        return `${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
-    } catch (e) {
-        console.error("Error in formatCountdown:", e);
-        return "00h 00m 00s";
-    }
+    if (ms <= 0) return "0s";
+    const hours = Math.floor(ms / 3600000);
+    const minutes = Math.floor((ms % 3600000) / 60000);
+    const seconds = Math.floor((ms % 60000) / 1000);
+    return `${hours > 0 ? hours + "h " : ""}${minutes > 0 ? minutes + "m " : ""}${seconds}s`;
 }
 
 export function formatEnergyCountdown() {
-    try {
-        const now = Date.now();
-        const msSinceLastTick = now - player.lastEnergyTick;
-        const msTillNextTick = 60000 - (msSinceLastTick % 60000);
-        const seconds = Math.floor(msTillNextTick / 1000);
-        return `${seconds.toString().padStart(2, '0')}s`;
-    } catch (e) {
-        console.error("Error in formatEnergyCountdown:", e);
-        return "00s";
-    }
+    const now = Date.now();
+    const msSinceLastTick = now - player.lastEnergyTick;
+    const msUntilNextTick = 60000 - (msSinceLastTick % 60000);
+    return formatCountdown(msUntilNextTick);
 }

@@ -6,22 +6,18 @@ export let player = {
     influence: 0,
     energy: 50000,
     gold: 0,
-    items: [],
     health: 100,
-    lastEnergyUpdate: Date.now(),
-    lastEnergyTick: Date.now(),
-    crimeAttempts: {
-        "Pickpocketing": { timestamps: [] },
-        "Bootleg Run": { timestamps: [] },
-        "Speakeasy Heist": { timestamps: [] }
-    },
+    items: [],
+    successCount: {},
+    crimeAttempts: {},
     crimeResults: {},
-    successCount: { "Pickpocketing": 0, "Bootleg Run": 0, "Speakeasy Heist": 0 }
+    lastEnergyTick: Date.now(),
+    lastEnergyUpdate: Date.now()
 };
 
 export function savePlayer() {
     try {
-        localStorage.setItem("prohibitionPlayer", JSON.stringify(player));
+        localStorage.setItem("player", JSON.stringify(player));
     } catch (e) {
         console.error("Error saving player:", e);
     }
@@ -29,78 +25,54 @@ export function savePlayer() {
 
 export function loadPlayer() {
     try {
-        const saved = localStorage.getItem("prohibitionPlayer");
+        const saved = localStorage.getItem("player");
         if (saved) {
-            player = JSON.parse(saved);
-            if (!player.crimeResults) player.crimeResults = {};
-            if (!player.successCount) player.successCount = { "Pickpocketing": 0, "Bootleg Run": 0, "Speakeasy Heist": 0 };
-            if (!player.lastEnergyTick) player.lastEnergyTick = Date.now();
-            const uniqueItems = [];
-            for (let item of player.items) {
-                if (item === "Gold" || !uniqueItems.includes(item)) {
-                    uniqueItems.push(item);
-                }
-            }
-            player.items = uniqueItems;
-            player.crimeAttempts = {
-                "Pickpocketing": player.crimeAttempts["Pickpocketing"] || { timestamps: [] },
-                "Bootleg Run": player.crimeAttempts["Bootleg Run"] || { timestamps: [] },
-                "Speakeasy Heist": player.crimeAttempts["Speakeasy Heist"] || { timestamps: [] }
-            };
-            player.energy = Math.min(50000, player.energy);
+            const loaded = JSON.parse(saved);
+            player.name = loaded.name || "Player";
+            player.rank = loaded.rank || "Thug";
+            player.cash = loaded.cash || 0;
+            player.xp = loaded.xp || 0;
+            player.influence = loaded.influence || 0;
+            player.energy = loaded.energy !== undefined ? loaded.energy : 50000;
+            player.gold = loaded.gold || 0;
+            player.health = loaded.health !== undefined ? loaded.health : 100;
+            player.items = loaded.items || [];
+            player.successCount = loaded.successCount || {};
+            player.crimeAttempts = loaded.crimeAttempts || {};
+            player.crimeResults = loaded.crimeResults || {};
+            player.lastEnergyTick = loaded.lastEnergyTick || Date.now();
+            player.lastEnergyUpdate = loaded.lastEnergyUpdate || Date.now();
+        } else {
+            player.lastEnergyTick = Date.now();
+            player.lastEnergyUpdate = Date.now();
+            savePlayer();
         }
-        savePlayer();
     } catch (e) {
-        console.error("Error loading player data:", e);
-        player.crimeResults = {};
-        player.successCount = { "Pickpocketing": 0, "Bootleg Run": 0, "Speakeasy Heist": 0 };
+        console.error("Error loading player:", e);
         player.lastEnergyTick = Date.now();
-        player.energy = 50000;
+        player.lastEnergyUpdate = Date.now();
+        savePlayer();
     }
 }
 
 export function updateRank() {
-    try {
-        if (player.xp >= 10000) player.rank = "Boss";
-        else if (player.xp >= 5000) player.rank = "Underboss";
-        else if (player.xp >= 2500) player.rank = "Capo";
-        else if (player.xp >= 1000) player.rank = "Lieutenant";
-        else if (player.xp >= 500) player.rank = "Enforcer";
-        else if (player.xp >= 250) player.rank = "Soldier";
-        else if (player.xp >= 100) player.rank = "Runner";
-        else player.rank = "Thug";
-    } catch (e) {
-        console.error("Error in updateRank:", e);
+    const ranks = [
+        { name: "Thug", xp: 0 },
+        { name: "Runner", xp: 100 },
+        { name: "Soldier", xp: 250 },
+        { name: "Enforcer", xp: 500 },
+        { name: "Lieutenant", xp: 1000 },
+        { name: "Capo", xp: 2500 },
+        { name: "Underboss", xp: 5000 },
+        { name: "Boss", xp: 10000 }
+    ];
+    for (let i = ranks.length - 1; i >= 0; i--) {
+        if (player.xp >= ranks[i].xp) {
+            player.rank = ranks[i].name;
+            break;
+        }
     }
+    savePlayer();
 }
 
-export function logout() {
-    try {
-        localStorage.removeItem("prohibitionPlayer");
-        player = {
-            name: "Player",
-            rank: "Thug",
-            cash: 0,
-            xp: 0,
-            influence: 0,
-            energy: 50000,
-            gold: 0,
-            items: [],
-            health: 100,
-            lastEnergyUpdate: Date.now(),
-            lastEnergyTick: Date.now(),
-            crimeAttempts: {
-                "Pickpocketing": { timestamps: [] },
-                "Bootleg Run": { timestamps: [] },
-                "Speakeasy Heist": { timestamps: [] }
-            },
-            crimeResults: {},
-            successCount: { "Pickpocketing": 0, "Bootleg Run": 0, "Speakeasy Heist": 0 }
-        };
-        savePlayer();
-    } catch (e) {
-        console.error("Error in logout:", e);
-    }
-}
-
-window.logout = logout;
+loadPlayer();
