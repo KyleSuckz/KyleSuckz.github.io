@@ -14,6 +14,26 @@ export function updateUI() {
         document.getElementById("player-stats").textContent = stats;
         document.getElementById("profile-stats").textContent = stats;
         
+        // Calculate rank progress
+        let rankThreshold = 100; // Thug → Enforcer
+        let nextRank = "Enforcer";
+        if (player.xp >= 2000) {
+            rankThreshold = 2000; // Boss (max)
+            nextRank = "Boss";
+        } else if (player.xp >= 500) {
+            rankThreshold = 2000; // Capo → Boss
+            nextRank = "Boss";
+        } else if (player.xp >= 100) {
+            rankThreshold = 500; // Enforcer → Capo
+            nextRank = "Capo";
+        }
+        const rankProgress = Math.min(100, (player.xp / rankThreshold) * 100);
+        const rankText = player.rank === "Boss" ? `${player.xp}/${rankThreshold}` : `${player.xp}/${rankThreshold} to ${nextRank}`;
+        document.getElementById("rank-fill").style.width = `${rankProgress}%`;
+        document.getElementById("rank-fill").querySelector(".progress-text").textContent = rankText;
+        document.getElementById("rank-fill-profile").style.width = `${rankProgress}%`;
+        document.getElementById("rank-fill-profile").querySelector(".progress-text").textContent = rankText;
+
         const crimesTab = document.getElementById("crimes");
         if (crimesTab.classList.contains("active")) {
             const energyText = player.energy < 10000 ? `${player.energy} (+5 in ${formatEnergyCountdown()})` : `${player.energy}`;
