@@ -1,12 +1,10 @@
-import { updateEnergy } from './utils.js';
-
 export let player = {
     name: "Player",
     rank: "Thug",
     cash: 0,
     xp: 0,
     influence: 0,
-    energy: 50000,
+    energy: 50000, // Updated to 50,000
     gold: 0,
     items: [],
     health: 100,
@@ -18,7 +16,7 @@ export let player = {
 };
 
 export function savePlayer() {
-    console.log("Saving player...");
+    console.log("Saving player:", JSON.stringify(player));
     localStorage.setItem("prohibitionPlayer", JSON.stringify(player));
 }
 
@@ -32,7 +30,6 @@ export function loadPlayer() {
             if (!player.crimeResults) player.crimeResults = {};
             if (!player.successCount) player.successCount = { "Pickpocketing": 0, "Bootleg Run": 0, "Speakeasy Heist": 0 };
             if (!player.lastEnergyTick) player.lastEnergyTick = Date.now();
-            if (!player.lastEnergyUpdate) player.lastEnergyUpdate = Date.now();
             const uniqueItems = [];
             for (let item of player.items) {
                 if (item === "Gold" || !uniqueItems.includes(item)) {
@@ -41,8 +38,7 @@ export function loadPlayer() {
             }
             player.items = uniqueItems;
             player.crimeAttempts = { "Speakeasy Heist": player.crimeAttempts["Speakeasy Heist"] || { timestamps: [] } };
-            player.energy = Math.min(50000, player.energy);
-            updateEnergy();
+            player.energy = Math.min(50000, player.energy); // Ensure energy doesn't exceed new cap
         }
         savePlayer();
     } catch (e) {
@@ -50,9 +46,7 @@ export function loadPlayer() {
         player.crimeResults = {};
         player.successCount = { "Pickpocketing": 0, "Bootleg Run": 0, "Speakeasy Heist": 0 };
         player.lastEnergyTick = Date.now();
-        player.lastEnergyUpdate = Date.now();
-        player.energy = 50000;
-        updateEnergy();
+        player.energy = 50000; // Reset to new cap on error
     }
 }
 
@@ -81,7 +75,7 @@ export function logout() {
             cash: 0,
             xp: 0,
             influence: 0,
-            energy: 50000,
+            energy: 50000, // Updated to 50,000
             gold: 0,
             items: [],
             health: 100,
