@@ -34,7 +34,7 @@ export function commitCrime(crimeName) {
             }
             player.crimeAttempts[crime.name].timestamps.push(now);
         }
-        if (crime.energy) player.energy = Math.max(0, Math.min(50000, player.energy - crime.energy)); // Enforce 50,000 cap
+        if (crime.energy) player.energy = Math.max(0, Math.min(50000, player.energy - crime.energy));
         let successChance = crime.baseSuccess + (player.successCount[crime.name] * crime.successIncrement);
         let itemBonus = 0;
         if (player.items.includes("Bribe")) itemBonus += 10;

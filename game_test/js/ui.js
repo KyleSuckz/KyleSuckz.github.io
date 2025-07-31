@@ -49,7 +49,7 @@ export function updateUI() {
         const crimesTab = document.getElementById("crimes");
         if (crimesTab.classList.contains("active")) {
             updateCrimeDisplay();
-            updateEnergyDisplay(); // Initialize energy display with 50,000 cap
+            updateEnergyDisplay();
             if (energyCountdownInterval) {
                 clearInterval(energyCountdownInterval);
                 energyCountdownInterval = null;
@@ -75,6 +75,8 @@ export function updateUI() {
                     }
                     updateEnergyDisplay();
                 }, 1000);
+            } else {
+                updateEnergyDisplay(); // Ensure 50,000 cap on Crimes tab when full
             }
         } else {
             if (countdownInterval) {

@@ -1,3 +1,5 @@
+import { updateEnergy } from './utils.js';
+
 export let player = {
     name: "Player",
     rank: "Thug",
@@ -39,8 +41,8 @@ export function loadPlayer() {
             }
             player.items = uniqueItems;
             player.crimeAttempts = { "Speakeasy Heist": player.crimeAttempts["Speakeasy Heist"] || { timestamps: [] } };
-            player.energy = Math.min(50000, player.energy); // Enforce 50,000 cap
-            updateEnergy(); // Ensure energy is updated on load
+            player.energy = Math.min(50000, player.energy);
+            updateEnergy(); // Ensure energy is updated with 50,000 cap
         }
         savePlayer();
     } catch (e) {
@@ -50,6 +52,7 @@ export function loadPlayer() {
         player.lastEnergyTick = Date.now();
         player.lastEnergyUpdate = Date.now();
         player.energy = 50000;
+        updateEnergy();
     }
 }
 
