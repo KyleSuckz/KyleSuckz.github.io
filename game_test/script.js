@@ -329,8 +329,6 @@ function updateCrimeButtons(fullUpdate = true) {
                                 window.countdownInterval = null;
                                 return;
                             }
-                            const selection = window.getSelection();
-                            const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
                             const newNow = Date.now();
                             const newRemainingMs = 86400000 - (newNow - earliest);
                             if (newRemainingMs <= 0) {
@@ -338,34 +336,17 @@ function updateCrimeButtons(fullUpdate = true) {
                                 clearInterval(window.countdownInterval);
                                 window.countdownInterval = null;
                                 updateCrimeButtons(true);
-                                if (range) {
-                                    selection.removeAllRanges();
-                                    selection.addRange(range);
-                                }
                                 return;
                             }
                             const statusElement = document.querySelector(`#crime-list .bordered:nth-child(${crimes.indexOf(crime) + 1}) p:nth-child(2)`);
                             if (statusElement) {
                                 statusElement.textContent = `Status: Next attempt in ${formatCountdown(newRemainingMs)}`;
                             }
-                            if (range) {
-                                selection.removeAllRanges();
-                                selection.addRange(range);
-                            }
                         }, 1000);
                     }
                 }
             }
             const resultMessage = player.crimeResults[crime.name] || "";
-            const tempSpan = document.createElement('span');
-            tempSpan.className = 'success-text';
-            tempSpan.style.fontSize = '14px';
-            tempSpan.style.position = 'absolute';
-            tempSpan.style.visibility = 'hidden';
-            tempSpan.textContent = `${successChance.toFixed(1)}%`;
-            document.body.appendChild(tempSpan);
-            const successTextWidth = tempSpan.offsetWidth / 500 * 100;
-            document.body.removeChild(tempSpan);
             crimeList += `
                 <div class="bordered">
                     <p>${crime.name}: $${crime.cash[0]}-$${crime.cash[1]}, ${crime.xp} XP, ${crime.influence} Influence${crime.gold ? `, ${crime.gold[0]}-${crime.gold[1]} Gold` : ""}, ${crime.energy ? crime.energy + " Energy" : crime.maxPerDay + "/day"} (Success: ${successChance.toFixed(1)}%)</p>
@@ -374,16 +355,10 @@ function updateCrimeButtons(fullUpdate = true) {
                         <button ${canAttempt ? "" : "disabled"} onclick="commitCrime('${crime.name}')">Attempt</button>
                         ${resultMessage ? `<p>${resultMessage}</p>` : ""}
                     </div>
-                    <div class="progress-bar"><div class="success-fill" style="width: ${successChance}%"><span class="success-text" style="left: ${successChance / 2 - successTextWidth / 2}%">${successChance.toFixed(1)}%</span></div></div>
+                    <div class="progress-bar"><div class="success-fill" style="width: ${successChance}%"><span class="success-text" style="left: ${successChance / 2 - prospectTextWidth / 2}%">${successChance.toFixed(1)}%</span></div></div>
                 </div>`;
         }
-        const selection = window.getSelection();
-        const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
         document.getElementById("crime-list").innerHTML = crimeList || "<p>No crimes available.</p>";
-        if (range) {
-            selection.removeAllRanges();
-            selection.addRange(range);
-        }
     } else {
         for (let i = 0; i < crimes.length; i++) {
             const crime = crimes[i];
@@ -523,9 +498,9 @@ function buyItem(itemName) {
 function gamble(amount) {
     try {
         amount = parseInt(amount);
-        if (isNaN(amount) || amount <= 0 || player.cash < amount) {
+        if (isNaN(amount) || amount < 0) {
             console.error("Invalid bet:", amount);
-            document.getElementById("gamble-result").textContent = "Invalid bet: Must be a positive number and less than or equal to your cash.";
+            document.getElementById("gamble-result").textContent = "Invalid bet.";
             document.getElementById("speakeasy").dataset.resultSet = "true";
             return;
         }
@@ -550,9 +525,9 @@ function gamble(amount) {
 function gambleGold(amount) {
     try {
         amount = parseInt(amount);
-        if (isNaN(amount) || amount <= 0 || player.gold < amount) {
+        if (isNaN(amount) || amount < 0) {
             console.error("Invalid gold bet:", amount);
-            document.getElementById("gamble-result").textContent = "Invalid gold bet: Must be a positive number and less than or equal to your gold.";
+            document.getElementById("gamble-result").textContent = "Invalid gold bet.";
             document.getElementById("speakeasy").dataset.resultSet = "true";
             return;
         }
@@ -626,40 +601,5 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoutButton = document.getElementById('logout-button');
     if (logoutButton) {
         logoutButton.addEventListener('click', logout);
-    }
-    if (player.energy < 50000) {
-        window.energyCountdownInterval = setInterval(() => {
-            if (!document.getElementById("crimes").classList.contains("active")) {
-                clearInterval(window.energyCountdownInterval);
-                window.energyCountdownInterval = null;
-                return;
-            }
-            const selection = window.getSelection();
-            const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
-            const now = Date.now();
-            const msSinceLastTick = now - player.lastEnergyTick;
-            if (msSinceLastTick >= 60000) {
-                player.energy = Math.min(50000, player.energy + 5);
-                player.lastEnergyTick += 60000;
-                player.lastEnergyUpdate = now;
-                savePlayer();
-                if (player.energy >= 50000) {
-                    clearInterval(window.energyCountdownInterval);
-                    window.energyCountdownInterval = null;
-                }
-            }
-            document.getElementById("energy-text").textContent = `Energy: ${player.energy < 50000 ? `${player.energy} (+5 in ${formatEnergyCountdown()})` : player.energy}`;
-            const energyProgress = (player.energy / 50000) * 100;
-            const energyTextElement = document.getElementById("energy-fill").querySelector(".progress-text");
-            document.getElementById("energy-fill").style.width = `${energyProgress}%`;
-            const energyTextWidth = energyTextElement.offsetWidth / document.getElementById("energy-fill").parentElement.offsetWidth * 100;
-            energyTextElement.style.left = `${energyProgress / 2 - energyTextWidth / 2}%`;
-            energyTextElement.textContent = `${player.energy}/50000`;
-            updateCrimeButtons(false);
-            if (range) {
-                selection.removeAllRanges();
-                selection.addRange(range);
-            }
-        }, 1000);
     }
 });
