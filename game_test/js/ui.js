@@ -15,17 +15,29 @@ export function updateUI() {
         document.getElementById("profile-stats").textContent = stats;
         
         // Calculate rank progress
-        let rankThreshold = 100; // Thug → Enforcer
-        let nextRank = "Enforcer";
-        if (player.xp >= 2000) {
-            rankThreshold = 2000; // Boss (max)
+        let rankThreshold = 100; // Thug → Runner
+        let nextRank = "Runner";
+        if (player.xp >= 10000) {
+            rankThreshold = 10000; // Boss (max)
             nextRank = "Boss";
-        } else if (player.xp >= 500) {
-            rankThreshold = 2000; // Capo → Boss
+        } else if (player.xp >= 5000) {
+            rankThreshold = 10000; // Underboss → Boss
             nextRank = "Boss";
-        } else if (player.xp >= 100) {
-            rankThreshold = 500; // Enforcer → Capo
+        } else if (player.xp >= 2500) {
+            rankThreshold = 5000; // Capo → Underboss
+            nextRank = "Underboss";
+        } else if (player.xp >= 1000) {
+            rankThreshold = 2500; // Lieutenant → Capo
             nextRank = "Capo";
+        } else if (player.xp >= 500) {
+            rankThreshold = 1000; // Enforcer → Lieutenant
+            nextRank = "Lieutenant";
+        } else if (player.xp >= 250) {
+            rankThreshold = 500; // Soldier → Enforcer
+            nextRank = "Enforcer";
+        } else if (player.xp >= 100) {
+            rankThreshold = 250; // Runner → Soldier
+            nextRank = "Soldier";
         }
         const rankProgress = Math.min(100, (player.xp / rankThreshold) * 100);
         const rankText = player.rank === "Boss" ? `${player.xp}/${rankThreshold}` : `${player.xp}/${rankThreshold} to ${nextRank}`;
@@ -95,9 +107,9 @@ export function updateUI() {
                 if (crime.name === "Pickpocketing" && player.items.includes("Crowbar")) itemBonus += 5;
                 if (crime.name === "Speakeasy Heist" && player.items.includes("Revolver")) itemBonus += 10;
                 successChance = Math.min(100, successChance + itemBonus);
-                if (crime.name === "Speakeasy Heist" && player.xp < 500) {
+                if (crime.name === "Speakeasy Heist" && player.xp < 2500) { // Update to Capo (2500 XP)
                     canAttempt = false;
-                    status = "Need Capo rank (500 XP)";
+                    status = "Need Capo rank (2500 XP)";
                 } else if (crime.energy && player.energy < crime.energy) {
                     canAttempt = false;
                     status = `Need ${crime.energy} Energy`;
@@ -135,7 +147,7 @@ export function updateUI() {
                     <div class="bordered">
                         <p>${crime.name}: $${crime.cash[0]}-$${crime.cash[1]}, ${crime.xp} XP, ${crime.influence} Influence${crime.gold ? `, ${crime.gold[0]}-${crime.gold[1]} Gold` : ""}, ${crime.energy ? crime.energy + " Energy" : crime.maxPerDay + "/day"} (Success: ${successChance.toFixed(1)}%)</p>
                         <p>Status: ${status}</p>
-                        <div class="crime-action">
+                        <div class="city-action">
                             <button ${canAttempt ? "" : "disabled"} onclick="commitCrime('${crime.name}')">Attempt</button>
                             ${resultMessage ? `<p>${resultMessage}</p>` : ""}
                         </div>

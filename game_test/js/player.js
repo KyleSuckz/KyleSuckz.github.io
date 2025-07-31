@@ -50,9 +50,13 @@ export function loadPlayer() {
 
 export function updateRank() {
     try {
-        if (player.xp >= 2000) player.rank = "Boss";
-        else if (player.xp >= 500) player.rank = "Capo";
-        else if (player.xp >= 100) player.rank = "Enforcer";
+        if (player.xp >= 10000) player.rank = "Boss";
+        else if (player.xp >= 5000) player.rank = "Underboss";
+        else if (player.xp >= 2500) player.rank = "Capo";
+        else if (player.xp >= 1000) player.rank = "Lieutenant";
+        else if (player.xp >= 500) player.rank = "Enforcer";
+        else if (player.xp >= 250) player.rank = "Soldier";
+        else if (player.xp >= 100) player.rank = "Runner";
         else player.rank = "Thug";
     } catch (e) {
         console.error("Error in updateRank:", e);
