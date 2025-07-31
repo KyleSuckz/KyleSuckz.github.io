@@ -1,4 +1,5 @@
 import { player, savePlayer } from './player.js';
+import { updateUI } from './ui.js'; // Add import for updateUI
 
 export const market = [
     { name: "Crowbar", price: 10, effect: { crime: "Pickpocketing", success: 5 }, tooltip: "Boosts Pickpocketing by 5% (1 max)." },
@@ -15,6 +16,7 @@ export function gamble() {
             console.log("Invalid bet:", bet);
             document.getElementById("gamble-result").textContent = "Invalid bet: $10-$100 or insufficient cash.";
             document.getElementById("speakeasy").dataset.resultSet = "true";
+            updateUI(); // Add to refresh UI for error
             return;
         }
         player.cash -= bet;
@@ -25,10 +27,12 @@ export function gamble() {
         document.getElementById("gamble-result").textContent = result;
         document.getElementById("speakeasy").dataset.resultSet = "true";
         savePlayer();
+        updateUI(); // Add to refresh header cash
     } catch (e) {
         console.error("Error in gamble:", e);
         document.getElementById("gamble-result").textContent = "Error: Try again!";
         document.getElementById("speakeasy").dataset.resultSet = "true";
+        updateUI(); // Add to refresh UI for error
     }
 }
 
@@ -40,6 +44,7 @@ export function gambleGold() {
             console.log("Invalid gold bet:", bet);
             document.getElementById("gamble-result").textContent = "Invalid bet: 1-100 Gold or insufficient Gold.";
             document.getElementById("speakeasy").dataset.resultSet = "true";
+            updateUI(); // Add to refresh UI for error
             return;
         }
         player.gold -= bet;
@@ -50,10 +55,12 @@ export function gambleGold() {
         document.getElementById("gamble-result").textContent = result;
         document.getElementById("speakeasy").dataset.resultSet = "true";
         savePlayer();
+        updateUI(); // Add to refresh header gold
     } catch (e) {
         console.error("Error in gambleGold:", e);
         document.getElementById("gamble-result").textContent = "Error: Try again!";
         document.getElementById("speakeasy").dataset.resultSet = "true";
+        updateUI(); // Add to refresh UI for error
     }
 }
 
@@ -69,7 +76,9 @@ export function buyItem(itemName) {
         if (itemName === "Gold") player.gold++;
         else player.items.push(itemName);
         savePlayer();
+        updateUI(); // Add to refresh Owned Items and header cash
     } catch (e) {
         console.error("Error in buyItem:", e);
+        updateUI(); // Add to refresh UI for error
     }
 }
