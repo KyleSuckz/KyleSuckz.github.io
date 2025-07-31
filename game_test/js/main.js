@@ -6,6 +6,8 @@ window.onload = function() {
     console.log("Window loaded, initializing game...");
     loadPlayer();
     updateEnergy();
-    updateUI();
-    showTab('crimes');
+    setTimeout(() => {
+        updateUI();
+        showTab('crimes');
+    }, 0);
 };
