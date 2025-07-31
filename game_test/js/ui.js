@@ -122,8 +122,8 @@ export function updateUI() {
                 const owned = player.items.includes(item.name) && item.name !== "Gold";
                 marketList += `
                     <div class="bordered">
-                        <p>${item.name}: $${item.price} - ${item.tooltip}</p>
                         <button ${owned || player.cash < item.price ? "disabled" : ""} onclick="buyItem('${item.name}')">Buy</button>
+                        <p>${item.name}: $${item.price} - ${item.tooltip}</p>
                     </div>`;
             }
             document.getElementById("market-list").innerHTML = marketList;
