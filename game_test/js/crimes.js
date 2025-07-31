@@ -1,5 +1,5 @@
 import { player, savePlayer, updateRank } from './player.js';
-import { updateUI } from './ui.js'; // Add import for updateUI
+import { updateUI } from './ui.js';
 
 export const crimes = [
     { name: "Pickpocketing", cash: [1, 5], xp: 5, influence: 2, energy: 10, baseSuccess: 5, successIncrement: 2, tooltip: "Grab some dough from unsuspecting marks." },
@@ -7,29 +7,42 @@ export const crimes = [
     { name: "Speakeasy Heist", cash: [500, 2000], xp: 100, influence: 50, gold: [2, 5], baseSuccess: 5, successIncrement: 0.5, maxPerDay: 3, tooltip: "Knock over a rival juice joint for big dough." }
 ];
 
+let lastClickTime = 0;
+const clickDebounceMs = 500; // Debounce clicks by 500ms
+
 export function commitCrime(crimeName) {
+    const now = Date.now();
+    if (now - lastClickTime < clickDebounceMs) {
+        console.log("Click debounced for", crimeName);
+        return;
+    }
+    lastClickTime = now;
     console.log(`Attempting crime: ${crimeName}`);
     try {
         const crime = crimes.find(c => c.name === crimeName);
         if (!crime) {
-            console.log("Crime not found:", crimeName);
+            console.error("Crime not found:", crimeName);
+            player.crimeResults[crimeName] = "Error: Crime not found!";
+            updateUI();
             return;
         }
-        const now = Date.now();
         if (crime.energy && player.energy < crime.energy) {
             console.log("Not enough Energy for", crimeName);
+            player.crimeResults[crimeName] = `Need ${crime.energy} Energy`;
+            updateUI();
             return;
         }
         if (crime.maxPerDay) {
             const attempts = player.crimeAttempts[crime.name].timestamps.filter(t => now - t < 86400000);
             if (attempts.length >= crime.maxPerDay) {
                 console.log("Max attempts reached for", crimeName);
+                player.crimeResults[crimeName] = "Max attempts reached today!";
+                updateUI();
                 return;
             }
             player.crimeAttempts[crime.name].timestamps.push(now);
         }
-        if (crime.energy) player.energy -= crime.energy;
-
+        if (crime.energy) player.energy = Math.max(0, Math.min(50000, player.energy - crime.energy)); // Enforce 50,000 cap
         let successChance = crime.baseSuccess + (player.successCount[crime.name] * crime.successIncrement);
         let itemBonus = 0;
         if (player.items.includes("Bribe")) itemBonus += 10;
@@ -37,7 +50,7 @@ export function commitCrime(crimeName) {
         if (crime.name === "Speakeasy Heist" && player.items.includes("Revolver")) itemBonus += 10;
         successChance = Math.min(100, successChance + itemBonus);
         const risk = 1 - (successChance / 100);
-        console.log(`Crime: ${crimeName}, Success: ${successChance.toFixed(1)}%, Risk: ${(risk * 100).toFixed(1)}%, Successes: ${player.successCount[crime.name]}`);
+        console.log(`Crime: ${crimeName}, Success: ${successChance.toFixed(1)}%, Risk: ${(risk * 100).toFixed(1)}%`);
 
         const success = Math.random() > risk;
         let message = "";
@@ -57,14 +70,13 @@ export function commitCrime(crimeName) {
         } else {
             message = "Failed: Try again!";
         }
-        console.log(`Crime result for ${crimeName}: ${message}`);
         player.crimeResults[crimeName] = message;
         updateRank();
         savePlayer();
-        updateUI(); // Add this to refresh UI immediately
+        updateUI();
     } catch (e) {
         console.error(`Error in commitCrime for ${crimeName}:`, e);
         player.crimeResults[crimeName] = "Error: Try again!";
-        updateUI(); // Add this to show error in UI
+        updateUI();
     }
 }

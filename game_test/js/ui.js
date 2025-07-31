@@ -7,7 +7,7 @@ let countdownInterval = null;
 let energyCountdownInterval = null;
 
 export function updateUI() {
-    console.log("Updating UI..."); // Keep for debugging
+    console.log("Updating UI...");
     try {
         updateEnergy();
         const stats = `Player: ${player.name} | Rank: ${player.rank} | Cash: $${player.cash} | XP: ${player.xp} | Influence: ${player.influence} | Energy: ${player.energy} | Gold: ${player.gold} | Health: ${player.health}`;
@@ -48,16 +48,11 @@ export function updateUI() {
 
         const crimesTab = document.getElementById("crimes");
         if (crimesTab.classList.contains("active")) {
-            const energyText = player.energy < 50000 ? `${player.energy} (+5 in ${formatEnergyCountdown()})` : `${player.energy}`;
-            document.getElementById("energy-text").textContent = energyText;
-            document.getElementById("energy-fill").style.width = `${(player.energy / 50000) * 100}%`;
-            document.getElementById("energy-fill").querySelector(".progress-text").textContent = `${player.energy}/50000`;
-
+            updateCrimeDisplay(); // Initial render of crime list
             if (energyCountdownInterval) {
                 clearInterval(energyCountdownInterval);
                 energyCountdownInterval = null;
             }
-
             if (player.energy < 50000) {
                 energyCountdownInterval = setInterval(() => {
                     if (!document.getElementById("crimes").classList.contains("active")) {
@@ -77,15 +72,9 @@ export function updateUI() {
                             energyCountdownInterval = null;
                         }
                     }
-                    // Update only energy and crime buttons
-                    document.getElementById("energy-text").textContent = player.energy < 50000 ? `${player.energy} (+5 in ${formatEnergyCountdown()})` : `${player.energy}`;
-                    document.getElementById("energy-fill").style.width = `${(player.energy / 50000) * 100}%`;
-                    document.getElementById("energy-fill").querySelector(".progress-text").textContent = `${player.energy}/50000`;
-                    updateCrimeButtons(); // Update buttons without full UI refresh
+                    updateEnergyDisplay(); // Update only energy and buttons
                 }, 1000);
             }
-
-            updateCrimeButtons(); // Initial button update
         } else {
             if (countdownInterval) {
                 clearInterval(countdownInterval);
@@ -153,7 +142,45 @@ export function updateUI() {
     }
 }
 
-function updateCrimeButtons() {
+function updateEnergyDisplay() {
+    const energyText = player.energy < 50000 ? `${player.energy} (+5 in ${formatEnergyCountdown()})` : `${player.energy}`;
+    document.getElementById("energy-text").textContent = energyText;
+    document.getElementById("energy-fill").style.width = `${(player.energy / 50000) * 100}%`;
+    document.getElementById("energy-fill").querySelector(".progress-text").textContent = `${player.energy}/50000`;
+    const now = Date.now();
+    let bribeActive = player.items.includes("Bribe");
+    crimes.forEach((crime, index) => {
+        let canAttempt = true;
+        let status = crime.tooltip;
+        let successChance = crime.baseSuccess + (player.successCount[crime.name] * crime.successIncrement);
+        let itemBonus = 0;
+        if (bribeActive) itemBonus += 10;
+        if (crime.name === "Pickpocketing" && player.items.includes("Crowbar")) itemBonus += 5;
+        if (crime.name === "Speakeasy Heist" && player.items.includes("Revolver")) itemBonus += 10;
+        successChance = Math.min(100, successChance + itemBonus);
+        if (crime.name === "Speakeasy Heist" && player.xp < 2500) {
+            canAttempt = false;
+            status = "Need Capo rank (2500 XP)";
+        } else if (crime.energy && player.energy < crime.energy) {
+            canAttempt = false;
+            status = `Need ${crime.energy} Energy`;
+        } else if (crime.maxPerDay) {
+            const attempts = player.crimeAttempts[crime.name].timestamps.filter(t => now - t < 86400000);
+            if (attempts.length >= crime.maxPerDay) {
+                canAttempt = false;
+                const earliest = Math.min(...player.crimeAttempts[crime.name].timestamps);
+                const remainingMs = 86400000 - (now - earliest);
+                status = `Next attempt in ${formatCountdown(remainingMs)}`;
+            }
+        }
+        const button = document.querySelector(`#crime-list .bordered:nth-child(${index + 1}) .crime-action button`);
+        const statusElement = document.querySelector(`#crime-list .bordered:nth-child(${index + 1}) p:nth-child(2)`);
+        if (button) button.disabled = !canAttempt;
+        if (statusElement) statusElement.textContent = `Status: ${status}`;
+    });
+}
+
+function updateCrimeDisplay() {
     const now = Date.now();
     let bribeActive = player.items.includes("Bribe");
     let crimeList = "";
@@ -179,6 +206,25 @@ function updateCrimeButtons() {
                 const earliest = Math.min(...player.crimeAttempts[crime.name].timestamps);
                 const remainingMs = 86400000 - (now - earliest);
                 status = `Next attempt in ${formatCountdown(remainingMs)}`;
+                if (!countdownInterval) {
+                    countdownInterval = setInterval(() => {
+                        if (!document.getElementById("crimes").classList.contains("active")) {
+                            clearInterval(countdownInterval);
+                            countdownInterval = null;
+                            return;
+                        }
+                        const newNow = Date.now();
+                        const newRemainingMs = 86400000 - (newNow - earliest);
+                        if (newRemainingMs <= 0) {
+                            player.crimeAttempts[crime.name].timestamps = player.crimeAttempts[crime.name].timestamps.filter(t => newNow - t < 86400000);
+                            clearInterval(countdownInterval);
+                            countdownInterval = null;
+                            updateEnergyDisplay();
+                            return;
+                        }
+                        document.querySelector(`#crime-list .bordered:nth-child(${crimes.indexOf(crime) + 1}) p:nth-child(2)`).textContent = `Status: Next attempt in ${formatCountdown(newRemainingMs)}`;
+                    }, 1000);
+                }
             }
         }
         const resultMessage = player.crimeResults[crime.name] || "";
@@ -197,7 +243,7 @@ function updateCrimeButtons() {
 }
 
 export function showTab(tabId) {
-    console.log(`Showing tab: ${tabId}`); // Keep for debugging
+    console.log(`Showing tab: ${tabId}`);
     try {
         document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
         document.querySelectorAll(".nav-link").forEach(link => link.classList.remove("active"));
