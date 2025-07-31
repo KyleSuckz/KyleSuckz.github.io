@@ -71,6 +71,9 @@ export function updateUI() {
                         energyCountdownInterval = null;
                         return;
                     }
+                    // Preserve text selection
+                    const selection = window.getSelection();
+                    const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
                     const now = Date.now();
                     const msSinceLastTick = now - player.lastEnergyTick;
                     if (msSinceLastTick >= 60000) {
@@ -90,6 +93,11 @@ export function updateUI() {
                     energyTextElement.style.left = `${newEnergyProgress / 2 - newEnergyTextWidth / 2}%`;
                     energyTextElement.textContent = `${player.energy}/50000`;
                     updateCrimeButtons();
+                    // Restore text selection
+                    if (range) {
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                    }
                 }, 1000);
             }
         } else {
@@ -199,6 +207,9 @@ function updateCrimeButtons() {
                             countdownInterval = null;
                             return;
                         }
+                        // Preserve text selection
+                        const selection = window.getSelection();
+                        const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
                         const newNow = Date.now();
                         const newRemainingMs = 86400000 - (newNow - earliest);
                         if (newRemainingMs <= 0) {
@@ -206,9 +217,19 @@ function updateCrimeButtons() {
                             clearInterval(countdownInterval);
                             countdownInterval = null;
                             updateCrimeButtons();
+                            // Restore text selection
+                            if (range) {
+                                selection.removeAllRanges();
+                                selection.addRange(range);
+                            }
                             return;
                         }
                         document.querySelector(`#crime-list .bordered:nth-child(${crimes.indexOf(crime) + 1}) p:nth-child(2)`).textContent = `Status: Next attempt in ${formatCountdown(newRemainingMs)}`;
+                        // Restore text selection
+                        if (range) {
+                            selection.removeAllRanges();
+                            selection.addRange(range);
+                        }
                     }, 1000);
                 }
             }
