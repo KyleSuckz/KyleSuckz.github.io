@@ -39,20 +39,26 @@ export function updateUI() {
         }
         const rankProgress = Math.min(100, (player.xp / rankThreshold) * 100);
         const rankText = player.rank === "Boss" ? `${player.xp}/${rankThreshold} (100%)` : `${player.xp}/${rankThreshold} (${rankProgress.toFixed(0)}%) to ${nextRank}`;
+        const rankTextElement = document.getElementById("rank-fill").querySelector(".progress-text");
         document.getElementById("rank-fill").style.width = `${rankProgress}%`;
-        document.getElementById("rank-fill").querySelector(".progress-text").style.left = `${rankProgress / 2}%`;
-        document.getElementById("rank-fill").querySelector(".progress-text").textContent = rankText;
+        rankTextElement.textContent = rankText;
+        const rankTextWidth = rankTextElement.offsetWidth / document.getElementById("rank-fill").parentElement.offsetWidth * 100;
+        rankTextElement.style.left = `${rankProgress / 2 - rankTextWidth / 2}%`;
+        const rankTextElementProfile = document.getElementById("rank-fill-profile").querySelector(".progress-text");
         document.getElementById("rank-fill-profile").style.width = `${rankProgress}%`;
-        document.getElementById("rank-fill-profile").querySelector(".progress-text").style.left = `${rankProgress / 2}%`;
-        document.getElementById("rank-fill-profile").querySelector(".progress-text").textContent = rankText;
+        rankTextElementProfile.textContent = rankText;
+        rankTextElementProfile.style.left = `${rankProgress / 2 - rankTextWidth / 2}%`;
 
         const crimesTab = document.getElementById("crimes");
         if (crimesTab.classList.contains("active")) {
             const energyText = player.energy < 50000 ? `${player.energy} (+5 in ${formatEnergyCountdown()})` : `${player.energy}`;
             document.getElementById("energy-text").textContent = `Energy: ${energyText}`;
-            document.getElementById("energy-fill").style.width = `${(player.energy / 50000) * 100}%`;
-            document.getElementById("energy-fill").querySelector(".progress-text").style.left = `${(player.energy / 50000) * 50}%`;
-            document.getElementById("energy-fill").querySelector(".progress-text").textContent = `${player.energy}/50000`;
+            const energyProgress = (player.energy / 50000) * 100;
+            const energyTextElement = document.getElementById("energy-fill").querySelector(".progress-text");
+            document.getElementById("energy-fill").style.width = `${energyProgress}%`;
+            energyTextElement.textContent = `${player.energy}/50000`;
+            const energyTextWidth = energyTextElement.offsetWidth / document.getElementById("energy-fill").parentElement.offsetWidth * 100;
+            energyTextElement.style.left = `${energyProgress / 2 - energyTextWidth / 2}%`;
             updateCrimeButtons();
             if (energyCountdownInterval) {
                 clearInterval(energyCountdownInterval);
@@ -78,9 +84,11 @@ export function updateUI() {
                         }
                     }
                     document.getElementById("energy-text").textContent = `Energy: ${player.energy < 50000 ? `${player.energy} (+5 in ${formatEnergyCountdown()})` : player.energy}`;
-                    document.getElementById("energy-fill").style.width = `${(player.energy / 50000) * 100}%`;
-                    document.getElementById("energy-fill").querySelector(".progress-text").style.left = `${(player.energy / 50000) * 50}%`;
-                    document.getElementById("energy-fill").querySelector(".progress-text").textContent = `${player.energy}/50000`;
+                    const newEnergyProgress = (player.energy / 50000) * 100;
+                    document.getElementById("energy-fill").style.width = `${newEnergyProgress}%`;
+                    const newEnergyTextWidth = energyTextElement.offsetWidth / document.getElementById("energy-fill").parentElement.offsetWidth * 100;
+                    energyTextElement.style.left = `${newEnergyProgress / 2 - newEnergyTextWidth / 2}%`;
+                    energyTextElement.textContent = `${player.energy}/50000`;
                     updateCrimeButtons();
                 }, 1000);
             }
@@ -133,12 +141,15 @@ export function updateUI() {
             document.getElementById("market-list").innerHTML = marketList;
         }
 
+        const healthTextElement = document.getElementById("health-fill").querySelector(".progress-text");
         document.getElementById("health-fill").style.width = `${player.health}%`;
-        document.getElementById("health-fill").querySelector(".progress-text").style.left = `${player.health / 2}%`;
-        document.getElementById("health-fill").querySelector(".progress-text").textContent = `${player.health}/100`;
+        healthTextElement.textContent = `${player.health}/100`;
+        const healthTextWidth = healthTextElement.offsetWidth / document.getElementById("health-fill").parentElement.offsetWidth * 100;
+        healthTextElement.style.left = `${player.health / 2 - healthTextWidth / 2}%`;
+        const healthTextElementProfile = document.getElementById("health-fill-profile").querySelector(".progress-text");
         document.getElementById("health-fill-profile").style.width = `${player.health}%`;
-        document.getElementById("health-fill-profile").querySelector(".progress-text").style.left = `${player.health / 2}%`;
-        document.getElementById("health-fill-profile").querySelector(".progress-text").textContent = `${player.health}/100`;
+        healthTextElementProfile.textContent = `${player.health}/100`;
+        healthTextElementProfile.style.left = `${player.health / 2 - healthTextWidth / 2}%`;
     } catch (e) {
         console.error("UI update error:", e);
         document.getElementById("crime-list").innerHTML = "<p>Error loading crimes. Check console.</p>";
@@ -164,7 +175,7 @@ function updateCrimeButtons() {
         let itemBonus = 0;
         if (bribeActive) itemBonus += 10;
         if (crime.name === "Pickpocketing" && player.items.includes("Crowbar")) itemBonus += 5;
-        if (crimes.name === "Speakeasy Heist" && player.items.includes("Revolver")) itemBonus += 10;
+        if (crime.name === "Speakeasy Heist" && player.items.includes("Revolver")) itemBonus += 10;
         successChance = Math.min(100, successChance + itemBonus);
         if (crime.name === "Speakeasy Heist" && player.xp < 2500) {
             canAttempt = false;
@@ -209,7 +220,7 @@ function updateCrimeButtons() {
                     <button ${canAttempt ? "" : "disabled"} onclick="commitCrime('${crime.name}')">Attempt</button>
                     ${resultMessage ? `<p>${resultMessage}</p>` : ""}
                 </div>
-                <div class="progress-bar"><div class="success-fill" style="width: ${successChance}%"><span class="success-text" style="left: ${successChance / 2}%">${successChance.toFixed(1)}%</span></div></div>
+                <div class="progress-bar"><div class="success-fill" style="width: ${successChance}%"><span class="success-text" style="left: ${successChance / 2 - (document.createElement('span').textContent = successChance.toFixed(1) + '%', document.createElement('span').style.fontSize = '14px', document.createElement('span').offsetWidth / 500 * 100) / 2}%">${successChance.toFixed(1)}%</span></div></div>
             </div>`;
     }
     document.getElementById("crime-list").innerHTML = crimeList || "<p>No crimes available.</p>";
