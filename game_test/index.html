@@ -43,79 +43,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prohibition Kings</title>
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/crimes.css">
-    <link rel="stylesheet" href="css/profile.css">
+    <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/speakeasy.css">
+    <link rel="stylesheet" href="css/crimes.css">
+    <link rel="stylesheet" href="css/inventory.css">
+    <link rel="stylesheet" href="css/profile.css">
 </head>
 <body>
-    <header>
+    <div class="bordered header">
         <h1>Prohibition Kings</h1>
-        <p id="player-stats">Player: Loading...</p>
-        <div class="progress-bar">
-            <div id="rank-fill" class="progress-fill rank-fill">
-                <span class="progress-text">Rank: Loading...</span>
-            </div>
-        </div>
-        <div class="progress-bar">
-            <div id="health-fill" class="progress-fill health-fill">
-                <span class="progress-text">Health: Loading...</span>
-            </div>
-        </div>
-    </header>
-    <nav>
+        <p id="player-stats">Player: Unknown | Rank: Thug | Cash: $0 | XP: 0 | Influence: 0 | Energy: 10000 | Gold: 0 | Health: 100</p>
+        <div class="progress-bar"><div class="health-fill" id="health-fill" style="width: 100%;"><span class="progress-text">100/100</span></div></div>
+        <div class="progress-bar"><div class="rank-fill" id="rank-fill" style="width: 0%;"><span class="progress-text">0/100</span></div></div>
+    </div>
+    <div class="nav-bordered">
         <a class="nav-link active" onclick="showTab('crimes')">Crimes</a>
-        <a class="nav-link" onclick="showTab('speakeasy')">Speakeasy</a>
         <a class="nav-link" onclick="showTab('inventory')">Inventory</a>
+        <a class="nav-link" onclick="showTab('speakeasy')">Speakeasy</a>
         <a class="nav-link" onclick="showTab('profile')">Profile</a>
-        <a class="nav-link" onclick="logout()">Logout</a>
-    </nav>
-    <main>
-        <section id="crimes" class="tab active">
-            <div class="crime-container">
-                <h2>Crimes</h2>
-                <p id="energy-text">Energy: Loading...</p>
-                <div class="progress-bar">
-                    <div id="energy-fill" class="progress-fill energy-fill">
-                        <span class="progress-text">50000/50000</span>
-                    </div>
-                </div>
-                <div id="crime-list">Loading crimes...</div>
-            </div>
-        </section>
-        <section id="speakeasy" class="tab">
+    </div>
+    <div id="crimes" class="tab active">
+        <div class="crime-container">
+            <h2>Available Crimes</h2>
+            <p>Energy: <span id="energy-text">10000</span></p>
+            <div class="progress-bar"><div class="energy-fill" id="energy-fill" style="width: 100%;"><span class="progress-text">10000/10000</span></div></div>
+            <div id="crime-list"></div>
+        </div>
+    </div>
+    <div id="inventory" class="tab">
+        <div class="bordered black-market">
+            <h2>Black Market Items</h2>
+            <div id="inventory-list"></div>
+            <div id="market-list"></div>
+        </div>
+    </div>
+    <div id="speakeasy" class="tab">
+        <div class="bordered speakeasy">
             <h2>Speakeasy</h2>
-            <div id="gamble-result">Double your bet or lose it.</div>
-            <div>
-                <input id="bet-amount" type="number" min="1">
-                <button onclick="gamble()">Bet Cash</button>
+            <h3>Dice Roll</h3>
+            <p id="gamble-result">Double your bet or lose it.</p>
+            <div class="gamble-action">
+                <div class="cash-bet">
+                    <input type="number" id="bet-amount" min="10" max="100" value="10">
+                    <button onclick="gamble()">Bet Cash</button>
+                </div>
+                <div class="gold-bet">
+                    <input type="number" id="gold-bet-amount" min="1" max="100" value="1">
+                    <button onclick="gambleGold()">Bet Gold</button>
+                </div>
             </div>
-            <div>
-                <input id="gold-bet-amount" type="number" min="1">
-                <button onclick="goldGamble()">Bet Gold</button>
-            </div>
-        </section>
-        <section id="inventory" class="tab">
-            <h2>Inventory</h2>
-            <div id="inventory-list">Loading inventory...</div>
-            <h2>Market</h2>
-            <div id="market-list">Loading market...</div>
-        </section>
-        <section id="profile" class="tab">
+        </div>
+    </div>
+    <div id="profile" class="tab">
+        <div class="bordered profile">
             <h2>Profile</h2>
-            <p id="profile-stats">Player: Loading...</p>
-            <div class="progress-bar">
-                <div id="rank-fill-profile" class="progress-fill rank-fill">
-                    <span class="progress-text">Rank: Loading...</span>
-                </div>
-            </div>
-            <div class="progress-bar">
-                <div id="health-fill-profile" class="progress-fill health-fill">
-                    <span class="progress-text">Health: Loading...</span>
-                </div>
-            </div>
-        </section>
-    </main>
+            <p id="profile-stats"></p>
+            <div class="progress-bar"><div class="health-fill" id="health-fill-profile" style="width: 100%;"><span class="progress-text">100/100</span></div></div>
+            <div class="progress-bar"><div class="rank-fill" id="rank-fill-profile" style="width: 0%;"><span class="progress-text">0/100</span></div></div>
+        </div>
+    </div>
+    <div class="logout-container">
+        <button onclick="logout()">Logout</button>
+    </div>
     <script type="module" src="js/main.js"></script>
 </body>
 </html>
