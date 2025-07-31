@@ -1,0 +1,112 @@
+body {
+    background-color: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 10px;
+}
+
+.bordered {
+    border: 2px solid #333;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+button {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #333;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.progress-bar {
+    border: 1px solid #333;
+    height: 20px;
+    position: relative;
+    background-color: #000;
+    margin: 5px 0;
+}
+
+.progress-fill {
+    height: 100%;
+    transition: width 0.5s;
+}
+
+.progress-text {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    text-align: center;
+    color: #000;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+#energy-fill {
+    background-color: #FF0000;
+}
+
+.success-fill {
+    background-color: #00FF00;
+}
+
+.crime-action {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.crime-action p {
+    margin: 0;
+}
+
+#market-list .bordered {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#market-list p {
+    margin: 0;
+}
+
+#speakeasy {
+    display: none;
+}
+
+#speakeasy.active {
+    display: block;
+}
+
+#speakeasy input {
+    width: 80px;
+    height: 30px;
+    color: #000;
+}
+
+#speakeasy button {
+    width: 80px;
+    height: 30px;
+}
+
+#inventory, #crimes, #profile {
+    display: none;
+}
+
+#inventory.active, #crimes.active, #profile.active {
+    display: block;
+}
+
+.logout-container {
+    margin-top: 10px;
+}
+
+#logout-button {
+    border: none;
+}
