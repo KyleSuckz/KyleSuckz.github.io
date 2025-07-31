@@ -7,36 +7,35 @@ let countdownInterval = null;
 let energyCountdownInterval = null;
 
 export function updateUI() {
-    console.log("Updating UI..."); // Keep for debugging
+    console.log("Updating UI...");
     try {
         updateEnergy();
         const stats = `Player: ${player.name} | Rank: ${player.rank} | Cash: $${player.cash} | XP: ${player.xp} | Influence: ${player.influence} | Energy: ${player.energy} | Gold: ${player.gold} | Health: ${player.health}`;
         document.getElementById("player-stats").textContent = stats;
         document.getElementById("profile-stats").textContent = stats;
         
-        // Calculate rank progress
-        let rankThreshold = 100; // Thug → Runner
+        let rankThreshold = 100;
         let nextRank = "Runner";
         if (player.xp >= 10000) {
-            rankThreshold = 10000; // Boss (max)
+            rankThreshold = 10000;
             nextRank = "Boss";
         } else if (player.xp >= 5000) {
-            rankThreshold = 10000; // Underboss → Boss
+            rankThreshold = 10000;
             nextRank = "Boss";
         } else if (player.xp >= 2500) {
-            rankThreshold = 5000; // Capo → Underboss
+            rankThreshold = 5000;
             nextRank = "Underboss";
         } else if (player.xp >= 1000) {
-            rankThreshold = 2500; // Lieutenant → Capo
+            rankThreshold = 2500;
             nextRank = "Capo";
         } else if (player.xp >= 500) {
-            rankThreshold = 1000; // Enforcer → Lieutenant
+            rankThreshold = 1000;
             nextRank = "Lieutenant";
         } else if (player.xp >= 250) {
-            rankThreshold = 500; // Soldier → Enforcer
+            rankThreshold = 500;
             nextRank = "Enforcer";
         } else if (player.xp >= 100) {
-            rankThreshold = 250; // Runner → Soldier
+            rankThreshold = 250;
             nextRank = "Soldier";
         }
         const rankProgress = Math.min(100, (player.xp / rankThreshold) * 100);
@@ -49,15 +48,14 @@ export function updateUI() {
         const crimesTab = document.getElementById("crimes");
         if (crimesTab.classList.contains("active")) {
             const energyText = player.energy < 50000 ? `${player.energy} (+5 in ${formatEnergyCountdown()})` : `${player.energy}`;
-            document.getElementById("energy-text").textContent = energyText;
+            document.getElementById("energy-text").textContent = `Energy: ${energyText}`;
             document.getElementById("energy-fill").style.width = `${(player.energy / 50000) * 100}%`;
             document.getElementById("energy-fill").querySelector(".progress-text").textContent = `${player.energy}/50000`;
-
+            updateCrimeButtons();
             if (energyCountdownInterval) {
                 clearInterval(energyCountdownInterval);
                 energyCountdownInterval = null;
             }
-
             if (player.energy < 50000) {
                 energyCountdownInterval = setInterval(() => {
                     if (!document.getElementById("crimes").classList.contains("active")) {
@@ -77,15 +75,12 @@ export function updateUI() {
                             energyCountdownInterval = null;
                         }
                     }
-                    // Update only energy and crime buttons
-                    document.getElementById("energy-text").textContent = player.energy < 50000 ? `${player.energy} (+5 in ${formatEnergyCountdown()})` : `${player.energy}`;
+                    document.getElementById("energy-text").textContent = `Energy: ${player.energy < 50000 ? `${player.energy} (+5 in ${formatEnergyCountdown()})` : player.energy}`;
                     document.getElementById("energy-fill").style.width = `${(player.energy / 50000) * 100}%`;
                     document.getElementById("energy-fill").querySelector(".progress-text").textContent = `${player.energy}/50000`;
-                    updateCrimeButtons(); // Update buttons without full UI refresh
+                    updateCrimeButtons();
                 }, 1000);
             }
-
-            updateCrimeButtons(); // Initial button update
         } else {
             if (countdownInterval) {
                 clearInterval(countdownInterval);
@@ -179,6 +174,25 @@ function updateCrimeButtons() {
                 const earliest = Math.min(...player.crimeAttempts[crime.name].timestamps);
                 const remainingMs = 86400000 - (now - earliest);
                 status = `Next attempt in ${formatCountdown(remainingMs)}`;
+                if (!countdownInterval) {
+                    countdownInterval = setInterval(() => {
+                        if (!document.getElementById("crimes").classList.contains("active")) {
+                            clearInterval(countdownInterval);
+                            countdownInterval = null;
+                            return;
+                        }
+                        const newNow = Date.now();
+                        const newRemainingMs = 86400000 - (newNow - earliest);
+                        if (newRemainingMs <= 0) {
+                            player.crimeAttempts[crime.name].timestamps = player.crimeAttempts[crime.name].timestamps.filter(t => newNow - t < 86400000);
+                            clearInterval(countdownInterval);
+                            countdownInterval = null;
+                            updateCrimeButtons();
+                            return;
+                        }
+                        document.querySelector(`#crime-list .bordered:nth-child(${crimes.indexOf(crime) + 1}) p:nth-child(2)`).textContent = `Status: Next attempt in ${formatCountdown(newRemainingMs)}`;
+                    }, 1000);
+                }
             }
         }
         const resultMessage = player.crimeResults[crime.name] || "";
@@ -197,17 +211,17 @@ function updateCrimeButtons() {
 }
 
 export function showTab(tabId) {
-    console.log(`Showing tab: ${tabId}`); // Keep for debugging
+    console.log(`Showing tab: ${tabId}`);
     try {
         document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
         document.querySelectorAll(".nav-link").forEach(link => link.classList.remove("active"));
         document.getElementById(tabId).classList.add("active");
         document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add("active");
-        setTimeout(() => {
-            player.crimeResults = {};
-            updateUI();
-        }, 500);
+        player.crimeResults = {};
+        updateUI();
     } catch (e) {
         console.error("Error in showTab:", e);
     }
 }
+
+window.showTab = showTab;

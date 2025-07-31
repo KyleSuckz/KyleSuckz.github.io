@@ -4,13 +4,17 @@ export let player = {
     cash: 0,
     xp: 0,
     influence: 0,
-    energy: 50000, // Updated to 50,000
+    energy: 50000,
     gold: 0,
     items: [],
     health: 100,
     lastEnergyUpdate: Date.now(),
     lastEnergyTick: Date.now(),
-    crimeAttempts: { "Speakeasy Heist": { timestamps: [] } },
+    crimeAttempts: {
+        "Pickpocketing": { timestamps: [] },
+        "Bootleg Run": { timestamps: [] },
+        "Speakeasy Heist": { timestamps: [] }
+    },
     crimeResults: {},
     successCount: { "Pickpocketing": 0, "Bootleg Run": 0, "Speakeasy Heist": 0 }
 };
@@ -37,8 +41,12 @@ export function loadPlayer() {
                 }
             }
             player.items = uniqueItems;
-            player.crimeAttempts = { "Speakeasy Heist": player.crimeAttempts["Speakeasy Heist"] || { timestamps: [] } };
-            player.energy = Math.min(50000, player.energy); // Ensure energy doesn't exceed new cap
+            player.crimeAttempts = {
+                "Pickpocketing": player.crimeAttempts["Pickpocketing"] || { timestamps: [] },
+                "Bootleg Run": player.crimeAttempts["Bootleg Run"] || { timestamps: [] },
+                "Speakeasy Heist": player.crimeAttempts["Speakeasy Heist"] || { timestamps: [] }
+            };
+            player.energy = Math.min(50000, player.energy);
         }
         savePlayer();
     } catch (e) {
@@ -46,7 +54,7 @@ export function loadPlayer() {
         player.crimeResults = {};
         player.successCount = { "Pickpocketing": 0, "Bootleg Run": 0, "Speakeasy Heist": 0 };
         player.lastEnergyTick = Date.now();
-        player.energy = 50000; // Reset to new cap on error
+        player.energy = 50000;
     }
 }
 
@@ -75,13 +83,17 @@ export function logout() {
             cash: 0,
             xp: 0,
             influence: 0,
-            energy: 50000, // Updated to 50,000
+            energy: 50000,
             gold: 0,
             items: [],
             health: 100,
             lastEnergyUpdate: Date.now(),
             lastEnergyTick: Date.now(),
-            crimeAttempts: { "Speakeasy Heist": { timestamps: [] } },
+            crimeAttempts: {
+                "Pickpocketing": { timestamps: [] },
+                "Bootleg Run": { timestamps: [] },
+                "Speakeasy Heist": { timestamps: [] }
+            },
             crimeResults: {},
             successCount: { "Pickpocketing": 0, "Bootleg Run": 0, "Speakeasy Heist": 0 }
         };
@@ -90,3 +102,5 @@ export function logout() {
         console.error("Error in logout:", e);
     }
 }
+
+window.logout = logout;
