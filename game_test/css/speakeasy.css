@@ -1,0 +1,15 @@
+.gamble-action {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin: 5px 0;
+}
+.cash-bet, .gold-bet {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.gamble-action p {
+    margin: 0;
+    padding: 5px;
+}
