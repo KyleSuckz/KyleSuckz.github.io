@@ -143,11 +143,13 @@ export function updateUI() {
 
         const healthTextElement = document.getElementById("health-fill").querySelector(".progress-text");
         document.getElementById("health-fill").style.width = `${player.health}%`;
+        document.getElementById("health-fill").style.backgroundColor = player.health < 100 ? '#FF0000' : '#00FF00';
         healthTextElement.textContent = `${player.health}/100`;
         const healthTextWidth = healthTextElement.offsetWidth / document.getElementById("health-fill").parentElement.offsetWidth * 100;
         healthTextElement.style.left = `${player.health / 2 - healthTextWidth / 2}%`;
         const healthTextElementProfile = document.getElementById("health-fill-profile").querySelector(".progress-text");
         document.getElementById("health-fill-profile").style.width = `${player.health}%`;
+        document.getElementById("health-fill-profile").style.backgroundColor = player.health < 100 ? '#FF0000' : '#00FF00';
         healthTextElementProfile.textContent = `${player.health}/100`;
         healthTextElementProfile.style.left = `${player.health / 2 - healthTextWidth / 2}%`;
     } catch (e) {
@@ -212,6 +214,14 @@ function updateCrimeButtons() {
             }
         }
         const resultMessage = player.crimeResults[crime.name] || "";
+        const tempSpan = document.createElement('span');
+        tempSpan.style.fontSize = '14px';
+        tempSpan.style.position = 'absolute';
+        tempSpan.style.visibility = 'hidden';
+        tempSpan.textContent = `${successChance.toFixed(1)}%`;
+        document.body.appendChild(tempSpan);
+        const successTextWidth = tempSpan.offsetWidth / 500 * 100;
+        document.body.removeChild(tempSpan);
         crimeList += `
             <div class="bordered">
                 <p>${crime.name}: $${crime.cash[0]}-$${crime.cash[1]}, ${crime.xp} XP, ${crime.influence} Influence${crime.gold ? `, ${crime.gold[0]}-${crime.gold[1]} Gold` : ""}, ${crime.energy ? crime.energy + " Energy" : crime.maxPerDay + "/day"} (Success: ${successChance.toFixed(1)}%)</p>
@@ -220,7 +230,7 @@ function updateCrimeButtons() {
                     <button ${canAttempt ? "" : "disabled"} onclick="commitCrime('${crime.name}')">Attempt</button>
                     ${resultMessage ? `<p>${resultMessage}</p>` : ""}
                 </div>
-                <div class="progress-bar"><div class="success-fill" style="width: ${successChance}%"><span class="success-text" style="left: ${successChance / 2 - (document.createElement('span').textContent = successChance.toFixed(1) + '%', document.createElement('span').style.fontSize = '14px', document.createElement('span').offsetWidth / 500 * 100) / 2}%">${successChance.toFixed(1)}%</span></div></div>
+                <div class="progress-bar"><div class="success-fill" style="width: ${successChance}%"><span class="success-text" style="left: ${successChance / 2 - successTextWidth / 2}%">${successChance.toFixed(1)}%</span></div></div>
             </div>`;
     }
     document.getElementById("crime-list").innerHTML = crimeList || "<p>No crimes available.</p>";
