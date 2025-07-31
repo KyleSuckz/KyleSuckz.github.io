@@ -1,0 +1,134 @@
+body {
+    background-color: #000000;
+    color: #FFFFFF;
+    font-family: Arial, sans-serif;
+    margin: 10px;
+}
+button {
+    background-color: #666666;
+    color: #FFFFFF;
+    border: none;
+    padding: 5px 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+button:disabled {
+    background-color: #333333;
+    cursor: not-allowed;
+}
+.tab {
+    display: none;
+}
+.tab.active {
+    display: block;
+}
+.nav-link {
+    color: #FFFFFF;
+    text-decoration: none;
+    margin: 0 10px;
+    cursor: pointer;
+}
+.nav-link.active {
+    font-weight: bold;
+    text-decoration: underline;
+}
+.bordered {
+    border: 1px solid #FFFFFF;
+    padding: 10px;
+    margin: 5px 0;
+    height: 90px;
+    overflow: hidden;
+}
+.bordered.header, .bordered.profile, .bordered.speakeasy {
+    height: auto;
+    min-height: 100px;
+}
+.nav-bordered {
+    border: 1px solid #FFFFFF;
+    padding: 5px;
+    margin: 5px 0;
+}
+.crime-container {
+    border: 1px solid #FFFFFF;
+    padding: 10px;
+    margin: 5px 0;
+    height: auto;
+    overflow: visible;
+}
+.bordered.black-market {
+    margin-bottom: 20px;
+    height: auto;
+}
+.logout-container {
+    margin: 10px 0;
+}
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background-color: #333333;
+    border: 1px solid #FFFFFF;
+    margin: 2px 0;
+    position: relative;
+}
+.energy-fill {
+    height: 100%;
+    background-color: #4CAF50;
+    transition: width 0.5s;
+    position: relative;
+}
+.health-fill {
+    height: 100%;
+    background-color: #FF6347;
+    transition: width 0.5s;
+    position: relative;
+}
+.success-fill {
+    height: 100%;
+    background-color: #FFD700;
+    transition: width 0.5s;
+    position: relative;
+}
+.progress-text, .success-text {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #000000;
+    font-size: 12px;
+    line-height: 20px;
+    text-align: center;
+}
+.crime-action {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 30px;
+    flex-wrap: nowrap;
+    margin: 2px 0;
+}
+.gamble-action {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 30px;
+    flex-wrap: nowrap;
+    margin: 2px 0;
+}
+.crime-action p, .gamble-action p {
+    margin: 0;
+    padding: 5px;
+}
+p {
+    margin: 0;
+}
+h2, h3 {
+    font-size: 1.5em;
+    margin: 5px 0;
+}
+input[type="number"] {
+    background-color: #333333;
+    color: #FFFFFF;
+    border: 1px solid #FFFFFF;
+    padding: 5px;
+    margin: 5px;
+    width: 80px;
+}
