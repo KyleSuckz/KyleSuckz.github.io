@@ -17,17 +17,13 @@
     border: 1px solid #333;
 }
 
+.crime-action p {
+    color: #fff;
+    margin: 0;
+}
+
 .bordered {
     border: 2px solid #333;
     padding: 10px;
     margin: 10px 0;
-    position: relative;
-    min-height: 120px;
-}
-
-.crime-result {
-    position: absolute;
-    bottom: 10px;
-    left: 150px;
-    color: #fff;
 }

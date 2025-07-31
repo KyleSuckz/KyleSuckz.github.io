@@ -201,8 +201,8 @@ function updateCrimeButtons() {
                 <p>Status: ${status}</p>
                 <div class="crime-action">
                     <button ${canAttempt ? "" : "disabled"} onclick="commitCrime('${crime.name}')">Attempt</button>
+                    ${resultMessage ? `<p>${resultMessage}</p>` : ""}
                 </div>
-                <div class="crime-result">${resultMessage}</div>
                 <div class="progress-bar"><div class="success-fill" style="width: ${successChance}%"><span class="success-text">${successChance.toFixed(1)}%</span></div></div>
             </div>`;
     }

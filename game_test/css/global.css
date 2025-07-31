@@ -57,12 +57,23 @@ nav {
 
 .progress-fill {
     height: 100%;
+}
+
+.health-fill {
+    background-color: #90EE90;
+}
+
+.rank-fill {
     background-color: #C0C0C0;
+}
+
+.energy-fill {
+    background-color: #FF0000;
 }
 
 .success-fill {
     height: 100%;
-    background-color: #C0C0C0 !important;
+    background-color: #90EE90 !important;
 }
 
 .progress-text {
