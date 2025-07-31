@@ -107,11 +107,14 @@ button:disabled {
 }
 .gamble-action {
     display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin: 5px 0;
+}
+.cash-bet, .gold-bet {
+    display: flex;
     align-items: center;
     gap: 10px;
-    min-height: 30px;
-    flex-wrap: nowrap;
-    margin: 2px 0;
 }
 .crime-action p, .gamble-action p {
     margin: 0;

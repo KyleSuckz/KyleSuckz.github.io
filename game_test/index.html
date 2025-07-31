@@ -37,11 +37,16 @@
         <div class="bordered speakeasy">
             <h2>Speakeasy</h2>
             <h3>Dice Roll</h3>
+            <p id="gamble-result">Double your bet or lose it.</p>
             <div class="gamble-action">
-                <input type="number" id="bet-amount" min="10" max="100" value="10">
-                <button onclick="gamble()">Bet Cash</button>
-                <button onclick="gambleGold()">Bet 1 Gold</button>
-                <p id="gamble-result"></p>
+                <div class="cash-bet">
+                    <input type="number" id="bet-amount" min="10" max="100" value="10">
+                    <button onclick="gamble()">Bet Cash</button>
+                </div>
+                <div class="gold-bet">
+                    <input type="number" id="gold-bet-amount" min="1" max="100" value="1">
+                    <button onclick="gambleGold()">Bet Gold</button>
+                </div>
             </div>
         </div>
     </div>

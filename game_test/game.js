@@ -235,8 +235,11 @@ function updateUI() {
         const speakeasyTab = document.getElementById("speakeasy");
         if (speakeasyTab.classList.contains("active")) {
             document.getElementById("bet-amount").value = 10;
-            document.getElementById("gamble-result").textContent = "";
-            speakeasyTab.dataset.resultSet = "false";
+            document.getElementById("gold-bet-amount").value = 1;
+            if (!speakeasyTab.dataset.resultSet || speakeasyTab.dataset.resultSet === "false") {
+                document.getElementById("gamble-result").textContent = "Double your bet or lose it.";
+                speakeasyTab.dataset.resultSet = "false";
+            }
         }
 
         const inventoryTab = document.getElementById("inventory");
@@ -315,7 +318,7 @@ function commitCrime(crimeName) {
         if (crime.name === "Speakeasy Heist" && player.items.includes("Revolver")) itemBonus += 10;
         successChance = Math.min(100, successChance + itemBonus);
         const risk = 1 - (successChance / 100);
-        console.log(`Crime: ${crimeName}, Success: ${successChance.toFixed(1)}%, Risk: ${(risk * 100).toFixed(1)}%, Successes: ${player.successCount[crimeName]}`);
+        console.log(`Crime: ${crimeName}, Success: ${successChance.toFixed(1)}%, Risk: ${(risk * 100).toFixed(1)}%, Successes: ${player.successCount[crime.name]}`);
 
         const success = Math.random() > risk;
         let message = "";
@@ -328,7 +331,7 @@ function commitCrime(crimeName) {
             if (crime.gold) {
                 const gold = Math.floor(Math.random() * (crime.gold[1] - crime.gold[0] + 1)) + crime.gold[0];
                 player.gold += gold;
-                message = `Success: Snagged $${cash}, ${crime.xp} XP, ${crime.influence} Influence, ${gold} Gold.`;
+                message = `Success: Snagged $${cash}, ${crime.xp} XP, ${crop.influence} Influence, ${gold} Gold.`;
             } else {
                 message = `Success: Snagged $${cash}, ${crime.xp} XP, ${crime.influence} Influence.`;
             }
@@ -394,17 +397,18 @@ function gamble() {
 function gambleGold() {
     console.log("Gambling gold...");
     try {
-        if (player.gold < 1) {
-            console.log("Not enough Gold");
-            document.getElementById("gamble-result").textContent = "Not enough Gold!";
+        const bet = parseInt(document.getElementById("gold-bet-amount").value);
+        if (bet < 1 || bet > 100 || player.gold < bet) {
+            console.log("Invalid gold bet:", bet);
+            document.getElementById("gamble-result").textContent = "Invalid bet: 1-100 Gold or insufficient Gold.";
             document.getElementById("speakeasy").dataset.resultSet = "true";
             return;
         }
-        player.gold--;
+        player.gold -= bet;
         const win = Math.random() < 0.5;
-        const result = win ? `Won 2 Gold!` : `Lost 1 Gold.`;
-        console.log(`Gold bet: 1, Outcome: ${result}, New gold: ${player.gold}`);
-        if (win) player.gold += 2;
+        const result = win ? `Won ${bet * 2} Gold!` : `Lost ${bet} Gold.`;
+        console.log(`Gold bet: ${bet}, Outcome: ${result}, New gold: ${player.gold}`);
+        if (win) player.gold += bet * 2;
         document.getElementById("gamble-result").textContent = result;
         document.getElementById("speakeasy").dataset.resultSet = "true";
         savePlayer();
@@ -434,9 +438,6 @@ function showTab(tabId) {
         document.querySelectorAll(".nav-link").forEach(link => link.classList.remove("active"));
         document.getElementById(tabId).classList.add("active");
         document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add("active");
-        if (tabId === "speakeasy") {
-            document.getElementById("speakeasy").dataset.resultSet = "false";
-        }
         setTimeout(() => {
             player.crimeResults = {};
             updateUI();
